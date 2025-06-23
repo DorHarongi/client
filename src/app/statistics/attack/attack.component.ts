@@ -67,7 +67,7 @@ export class AttackComponent implements OnInit, OnDestroy {
     this.maxPossibleTroops.archers = this.userInformationService.currentVillage.troops.archers - this.chosenTroops.archers;
     this.maxPossibleTroops.magicians = this.userInformationService.currentVillage.troops.magicians - this.chosenTroops.magicians;
     this.maxPossibleTroops.horsemen = this.userInformationService.currentVillage.troops.horsemen - this.chosenTroops.horsemen;
-    this.maxPossibleTroops.catapults = this.userInformationService.currentVillage.troops.catapults - this.chosenTroops.spearFighters;
+    this.maxPossibleTroops.catapults = this.userInformationService.currentVillage.troops.catapults - this.chosenTroops.catapults;
   }
 
 }
