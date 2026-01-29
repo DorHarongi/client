@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://pasiflora.hopto.org'
+  apiUrl: 'http://pasiflora.hopto.org:3000'
 };
