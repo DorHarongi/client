@@ -1,0 +1,45 @@
+<div class="flexContainer playerContainer">
+    <h2 id="titleText" class="center margin-top">Player Profile</h2>
+
+    <div *ngIf="loading" class="center">
+        Loading...
+    </div>
+
+    <div *ngIf="!loading && playerInfo" class="profile-content">
+        <div class="profile-card center">
+            <h3>{{playerInfo.username}}</h3>
+            
+            <div class="profile-info">
+                <p><strong>Joined:</strong> {{formatDate(playerInfo.joinDate)}}</p>
+                <p><strong>Clan:</strong> 
+                    <span *ngIf="playerInfo.clanName" class="clan-link" (click)="goToClan()">{{playerInfo.clanName}}</span>
+                    <span *ngIf="!playerInfo.clanName">No clan</span>
+                </p>
+                <p><strong>Total Population:</strong> {{getTotalPopulation()}}</p>
+                <p><strong>Villages:</strong> {{playerInfo.villages?.length || 0}}</p>
+            </div>
+
+            <div class="villages-section">
+                <h4>Villages</h4>
+                <table class="villages-table bordered">
+                    <tr>
+                        <th>Name</th>
+                        <th>Population</th>
+                        <th>Location</th>
+                    </tr>
+                    <tr *ngFor="let village of playerInfo.villages">
+                        <td>{{village.villageName}}</td>
+                        <td>{{village.population}}</td>
+                        <td>{{village.location?.x}}, {{village.location?.y}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="actions" *ngIf="!isOwnProfile">
+                <button class="action-btn" (click)="goToMap()">Find on Map</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="back" class="buttons center" (click)="goBack()">Back</button>
+</div>

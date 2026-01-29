@@ -3,8 +3,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { ClanService, ClanStatisticDTO } from 'src/app/clan/services/clan.service';
 
 const WINDOW_SIZE = 6;
+
+type ViewMode = 'players' | 'clans';
 
 @Component({
   selector: 'app-statistics',
@@ -16,33 +19,72 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   openAttackPopup: boolean = false;
   userToAttack: string = "";
+  viewMode: ViewMode = 'players';
 
-  constructor(private router: Router, private http: HttpClient, private userInformationService: UserInformationService) {
+  constructor(
+    private router: Router, 
+    private http: HttpClient, 
+    private userInformationService: UserInformationService,
+    private clanService: ClanService
+  ) {
     this.username = userInformationService.userInformation.username;
    }
 
   ngOnDestroy(): void {
     this.subscription1 && this.subscription1.unsubscribe();
     this.subscription2 && this.subscription2.unsubscribe();
+    this.subscription3 && this.subscription3.unsubscribe();
+    this.subscription4 && this.subscription4.unsubscribe();
   }
 
   page: number = 1;
   numberOfPages: number = 1;
   displayedPages: number[] = [];
   usersInPage: Array<any> = [];
+  clansInPage: Array<ClanStatisticDTO> = [];
   subscription1!: Subscription;
   subscription2!: Subscription;
+  subscription3!: Subscription;
+  subscription4!: Subscription;
   username: string;
 
   ngOnInit(): void {
-    this.getNumberOfUserStatisticsPages();
-    this.getUserStatistics();
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.page = 1;
+    if (this.viewMode === 'players') {
+      this.getNumberOfUserStatisticsPages();
+      this.getUserStatistics();
+    } else {
+      this.getNumberOfClanStatisticsPages();
+      this.getClanStatistics();
+    }
+  }
+
+  switchToPlayers(): void {
+    if (this.viewMode !== 'players') {
+      this.viewMode = 'players';
+      this.loadData();
+    }
+  }
+
+  switchToClans(): void {
+    if (this.viewMode !== 'clans') {
+      this.viewMode = 'clans';
+      this.loadData();
+    }
   }
 
   moveToPage(page: number): void {
     if (page < 1 || page > this.numberOfPages) return; 
     this.page = page;
-    this.getUserStatistics();
+    if (this.viewMode === 'players') {
+      this.getUserStatistics();
+    } else {
+      this.getClanStatistics();
+    }
     this.updateDisplayedPages();
   }
 
@@ -77,6 +119,23 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     })
   }
 
+  getNumberOfClanStatisticsPages()
+  {
+    this.subscription3 = this.clanService.getNumberOfClanStatisticsPages()
+      .subscribe((numberOfPages)=>{
+        this.numberOfPages = numberOfPages || 1;
+        this.updateDisplayedPages();
+      });
+  }
+
+  getClanStatistics()
+  {
+    this.subscription4 = this.clanService.getClanStatistics(this.page)
+      .subscribe((clans)=>{
+        this.clansInPage = clans;
+      });
+  }
+
   attackPlayer(playerName: string){
     this.userToAttack = playerName; 
     this.openAttackPopup = true;
@@ -89,6 +148,14 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   getEnergy(): number
   {
     return this.userInformationService.userInformation.energy;
+  }
+
+  goToClan(clanName: string): void {
+    this.router.navigate(['clan', clanName]);
+  }
+
+  goToPlayer(username: string): void {
+    this.router.navigate(['player', username]);
   }
 
   goBack()

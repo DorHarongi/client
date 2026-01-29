@@ -31,7 +31,43 @@ $topToolbarMinHeight: 75px;
 }
 
 #table{
-    width: 35%;
+    width: 45%;
+    min-width: 600px;
+}
+
+.toggle-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.toggle-btn {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 10px 25px;
+    cursor: pointer;
+    
+    &.active {
+        background-color: #4CAF50;
+        color: white;
+    }
+    
+    &:hover:not(.active) {
+        background-color: #ddd;
+    }
+}
+
+.clickable {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+    
+    &:hover {
+        color: #0056b3;
+    }
 }
 
 .margin-top{

@@ -1,0 +1,90 @@
+<div class="flexContainer interactionContainer round-square">
+    <h4 class="center">{{village.villageName}}</h4>
+    <h5 class="center">Owner: {{village.ownerUsername}}</h5>
+    
+    <div *ngIf="loading" class="center">
+        Loading...
+    </div>
+
+    <div *ngIf="!loading && !showAttackPanel && !showSupportPanel && !showResourcesPanel">
+        <div class="info-section">
+            <p>Population: {{getVillagePopulation()}}</p>
+            <p *ngIf="playerInfo?.clanName">Clan: {{playerInfo.clanName}}</p>
+            <p *ngIf="!playerInfo?.clanName">Clan: No clan</p>
+        </div>
+
+        <div class="actions center">
+            <button class="action-btn" (click)="viewPlayerProfile()">View Player Profile</button>
+            <button class="action-btn" *ngIf="playerInfo?.clanName" (click)="viewPlayerClan()">View Clan</button>
+            
+            <div *ngIf="!isOwnVillage">
+                <button class="action-btn attack-btn" 
+                        *ngIf="!isSameClan" 
+                        (click)="openAttackPanel()"
+                        [disabled]="getEnergy() < 1">
+                    Attack Village
+                </button>
+                
+                <button class="action-btn support-btn" 
+                        *ngIf="isSameClan" 
+                        (click)="openSupportPanel()">
+                    Send Support Troops
+                </button>
+                
+                <button class="action-btn resources-btn" 
+                        *ngIf="isSameClan" 
+                        (click)="openResourcesPanel()">
+                    Send Resources
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attack Panel -->
+    <div *ngIf="showAttackPanel">
+        <h5 class="center">Attack {{village.villageName}}</h5>
+        <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
+        <div class="panel-actions center">
+            <button class="action-btn" (click)="attack()">Attack</button>
+            <button class="action-btn" (click)="showAttackPanel = false">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Support Panel -->
+    <div *ngIf="showSupportPanel">
+        <h5 class="center">Send Support to {{village.villageName}}</h5>
+        <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
+        <div class="panel-actions center">
+            <button class="action-btn" (click)="sendSupport()">Send Support</button>
+            <button class="action-btn" (click)="showSupportPanel = false">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Resources Panel -->
+    <div *ngIf="showResourcesPanel">
+        <h5 class="center">Send Resources to {{village.villageName}}</h5>
+        <div class="resources-inputs center">
+            <div class="resource-input">
+                <img class="resource-icon" src="assets/wood.jpg">
+                <input type="number" [(ngModel)]="resourcesWood" [max]="getMaxWood()" min="0">
+                <span class="max-link" (click)="resourcesWood = getMaxWood()">({{getMaxWood()}})</span>
+            </div>
+            <div class="resource-input">
+                <img class="resource-icon" src="assets/rock.jpg">
+                <input type="number" [(ngModel)]="resourcesStones" [max]="getMaxStones()" min="0">
+                <span class="max-link" (click)="resourcesStones = getMaxStones()">({{getMaxStones()}})</span>
+            </div>
+            <div class="resource-input">
+                <img class="resource-icon" src="assets/crop.jpg">
+                <input type="number" [(ngModel)]="resourcesCrop" [max]="getMaxCrop()" min="0">
+                <span class="max-link" (click)="resourcesCrop = getMaxCrop()">({{getMaxCrop()}})</span>
+            </div>
+        </div>
+        <div class="panel-actions center">
+            <button class="action-btn" (click)="sendResources()">Send Resources</button>
+            <button class="action-btn" (click)="showResourcesPanel = false">Cancel</button>
+        </div>
+    </div>
+
+    <button id="back" class="buttons center" (click)="close()">Close</button>
+</div>

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { warehouseStorageByLevel, quartersPopulationByLevel, maxEnergy, energyProductionSpeedPerSecond } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { LoginService } from 'src/app/login/login.service';
 import { ResourcesAmounts } from '../models/resourcesAmounts';
 import { Village } from '../models/Village';
 import { Router } from '@angular/router';
@@ -26,7 +27,11 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
 
   subscription!: Subscription;
 
-  constructor(private userInformationService: UserInformationService, private router: Router) { 
+  constructor(
+    private userInformationService: UserInformationService, 
+    private router: Router,
+    private loginService: LoginService
+  ) { 
     this.updateVillage();
   }
   
@@ -66,6 +71,16 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   goToHome()
   {
     this.router.navigate(['home']);
+  }
+
+  goToMap()
+  {
+    this.router.navigate(['Map']);
+  }
+
+  logout()
+  {
+    this.loginService.logout();
   }
 
   updateVillage()

@@ -7,4 +7,5 @@ export class User
     clanName!: string;
     villages!: Village[];
     energy!: number;
+    pendingClanRequests!: string[];
 }

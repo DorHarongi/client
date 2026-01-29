@@ -1,6 +1,8 @@
 import { BuildingsLevels } from "./buildingsLevels";
+import { Location } from "./Location";
 import { ResourcesAmounts } from "./resourcesAmounts";
 import { ResourcesWorkers } from "./resourcesWorkers";
+import { SupportSentEntry } from "./SupportSent";
 import { TroopsAmounts } from "./troopsAmounts";
 export class Village
 {
@@ -11,6 +13,8 @@ export class Village
     resourcesWorkers!: ResourcesWorkers;
     troops!: TroopsAmounts; 
     clanTroops!: TroopsAmounts;
+    location!: Location;
+    supportSent!: SupportSentEntry[];
     woodProductionPerSecond!: number;
     stoneProductionPerSecond!: number; 
     cropProductionPerSecond!: number;

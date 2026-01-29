@@ -1,0 +1,206 @@
+$topToolbarHeight: 7.5vh;
+$topToolbarMinHeight: 75px;
+
+.clanContainer {
+    min-width: 100%;
+    margin-top: max($topToolbarHeight, $topToolbarMinHeight);
+    min-height: 92.5vh;
+}
+
+.center {
+    align-self: center;
+    text-align: center;
+}
+
+.margin-top {
+    margin-top: 2%;
+}
+
+#titleText {
+    margin-bottom: 25px;
+}
+
+.clan-content {
+    display: flex;
+    justify-content: center;
+}
+
+.clan-card {
+    background-image: url(../../../assets/top-bg.png);
+    border: 2px black solid;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 30px;
+    min-width: 500px;
+    border-radius: 7px;
+}
+
+.clan-info {
+    margin: 20px 0;
+    text-align: left;
+
+    p {
+        margin: 10px 0;
+    }
+}
+
+.member-link {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+        color: #0056b3;
+    }
+}
+
+.members-section, .requests-section {
+    margin-top: 20px;
+
+    h4 {
+        margin-bottom: 15px;
+    }
+}
+
+.members-table, .requests-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 8px 12px;
+        text-align: center;
+    }
+
+    th {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.member-row {
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+}
+
+.bordered {
+    border: 2px black solid;
+
+    th, td {
+        border: 1px black solid;
+    }
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.action-btn {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.join-btn {
+    background-color: #ccffcc;
+}
+
+.leave-btn {
+    background-color: #ffcccc;
+}
+
+.request-pending {
+    color: #856404;
+    background-color: #fff3cd;
+    padding: 10px 20px;
+    border-radius: 0.25rem;
+    border: 1px solid #ffeeba;
+}
+
+.small-btn {
+    padding: 5px 10px;
+    margin: 0 3px;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 3px;
+
+    &.accept {
+        background-color: #90EE90;
+    }
+
+    &.decline {
+        background-color: #FFB6C1;
+    }
+}
+
+.buttons {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+#back {
+    width: 100px;
+    margin-top: 50px;
+    height: 50px;
+}
+
+// Modal styles
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    padding: 30px;
+    min-width: 400px;
+    box-shadow: 1px 1px 3px 3px;
+
+    textarea {
+        width: 100%;
+        margin: 15px 0;
+        padding: 10px;
+        border: 1px solid #7d5210;
+        resize: vertical;
+    }
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.round-square {
+    border-radius: 7px;
+}
+
+.show {
+    opacity: 1 !important;
+}
+
+.hide {
+    pointer-events: none;
+}
+
+.step {
+    opacity: 0.5;
+    transition: .25s ease-in-out all;
+}

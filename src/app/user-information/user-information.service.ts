@@ -5,6 +5,8 @@ import { Village } from '../main-panel/models/Village';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
+const USER_KEY = 'user_info';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,11 +20,28 @@ export class UserInformationService {
   constructor(private http: HttpClient) {
     this.villageChagnedSubject = new Subject<any>();
     this.villageChanged$ = this.villageChagnedSubject.asObservable();
+    this.restoreUserFromSession();
    }
+
+  private restoreUserFromSession(): void {
+    const userJson = sessionStorage.getItem(USER_KEY);
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson) as User;
+        this.setUserInformation(user);
+        // Refresh user data from server
+        this.updateUser();
+      } catch (e) {
+        sessionStorage.removeItem(USER_KEY);
+      }
+    }
+  }
 
   setUserInformation(user: User)
   {
     this.userInformation = user;
+    // Store in session for refresh persistence
+    sessionStorage.setItem(USER_KEY, JSON.stringify(user));
 
     if(!this.currentVillage && !this.currentVillageIndex) // first time when loading the app
     {
@@ -36,6 +55,10 @@ export class UserInformationService {
     }
   }
 
+  clearUserInformation(): void {
+    sessionStorage.removeItem(USER_KEY);
+  }
+
   switchVillage(index: number)
   {
     this.requestVillage(index).subscribe((village: Village)=>{
@@ -43,11 +66,14 @@ export class UserInformationService {
       this.currentVillageIndex = index;
       this.currentVillage = this.userInformation.villages[index];
       this.villageChagnedSubject.next();
+      // Update stored user
+      sessionStorage.setItem(USER_KEY, JSON.stringify(this.userInformation));
     })
   }
 
   updateUser(): void
   {
+    if (!this.userInformation?.username) return;
     this.requestUser().subscribe((user: User)=>{
       this.setUserInformation(user);
     })

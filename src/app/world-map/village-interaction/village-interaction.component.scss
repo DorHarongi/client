@@ -1,0 +1,138 @@
+$topToolbarHeight: max(7.5vh, 75px);
+
+.interactionContainer {
+    height: fit-content;
+    width: fit-content;
+    min-width: 400px;
+    max-width: 90%;
+    max-height: 80%;
+    box-shadow: 1px 1px 3px 3px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    flex-wrap: nowrap;
+    padding: 20px;
+    z-index: 100;
+}
+
+.round-square {
+    border-radius: 7px;
+}
+
+.center {
+    align-self: center;
+    align-items: center;
+    text-align: center;
+}
+
+h4 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+h5 {
+    margin-bottom: 15px;
+}
+
+.info-section {
+    text-align: center;
+    margin-bottom: 20px;
+
+    p {
+        margin: 5px 0;
+    }
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 200px;
+    margin: 0 auto;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+        background-color: #e0e0e0;
+    }
+}
+
+.attack-btn {
+    background-color: #ffcccc;
+}
+
+.support-btn {
+    background-color: #ccffcc;
+}
+
+.resources-btn {
+    background-color: #ccccff;
+}
+
+.panel-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.resources-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.resource-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    input {
+        width: 80px;
+        padding: 5px;
+        text-align: center;
+        border: 1px solid #7d5210;
+    }
+
+    .resource-icon {
+        width: 25px;
+        height: 25px;
+    }
+
+    .max-link {
+        color: green;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}
+
+.buttons {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+#back {
+    width: 100px;
+    margin-top: 20px;
+    height: 40px;
+}

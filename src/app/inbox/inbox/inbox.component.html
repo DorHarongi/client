@@ -1,26 +1,58 @@
 <div class = "flexContainer inboxContainer step" [class.show]="!attackReportPopupOpened" [class.hide]="attackReportPopupOpened">
 
-    <table id="table" class="center bordered margin-top">
-        <th class="center">
-            Title 
-         </th>
-         <th class="center">
-            Result 
-         </th>
-         <th class="center">
-            Date 
-         </th>
+    <h2 id="titleText" class="center margin-top">Inbox</h2>
 
-         <tr (click)="openAttackReportPopup(attackReport)" *ngFor="let attackReport of attackReportsInPage" class="bordered">
+    <div class="toggle-container center">
+        <button class="toggle-btn" [class.active]="viewMode === 'reports'" (click)="switchToReports()">Battle Reports</button>
+        <button class="toggle-btn" [class.active]="viewMode === 'messages'" (click)="switchToMessages()">Messages</button>
+    </div>
+
+    <!-- Battle Reports Table -->
+    <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'reports'">
+        <tr>
+            <th class="center">Title</th>
+            <th class="center">Result</th>
+            <th class="center">Date</th>
+        </tr>
+        <tr (click)="openAttackReportPopup(attackReport)" *ngFor="let attackReport of attackReportsInPage" class="bordered clickable-row">
             <td class="title">
                 <img *ngIf = "attackReport.attackerName == this.username" src="../../../assets/swords.png" class="icons"> 
                 <img *ngIf = "attackReport.attackerName != this.username" src="../../../assets/shield.png" class="icons"> 
                 {{makeAttackReportTitle(attackReport)}}
             </td>
-            
             <td>{{getAttackResult(attackReport)}}</td>
-
             <td> {{attackReport.date | date:'d/MM/yyyy H:mm'}} </td>
+        </tr>
+        <tr *ngIf="attackReportsInPage.length === 0">
+            <td colspan="3" class="center">No battle reports</td>
+        </tr>
+    </table>
+
+    <!-- Messages Table -->
+    <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'messages'">
+        <tr>
+            <th class="center">Subject</th>
+            <th class="center">From</th>
+            <th class="center">Date</th>
+            <th class="center">Actions</th>
+        </tr>
+        <tr *ngFor="let message of messagesInPage" class="bordered" [class.unread]="!message.read">
+            <td class="title">
+                <img [src]="getMessageIcon(message.type)" class="icons">
+                {{message.subject}}
+            </td>
+            <td>{{message.senderUsername || 'System'}}</td>
+            <td>{{message.date | date:'d/MM/yyyy H:mm'}}</td>
+            <td>
+                <div *ngIf="message.actionable && message.type === 'clan_join_request'" class="message-actions">
+                    <button class="small-btn accept" (click)="handleClanRequest(message, true)">Accept</button>
+                    <button class="small-btn decline" (click)="handleClanRequest(message, false)">Decline</button>
+                </div>
+                <span *ngIf="!message.actionable">-</span>
+            </td>
+        </tr>
+        <tr *ngIf="messagesInPage.length === 0">
+            <td colspan="4" class="center">No messages</td>
         </tr>
     </table>
     

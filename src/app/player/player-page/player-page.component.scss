@@ -1,0 +1,112 @@
+$topToolbarHeight: 7.5vh;
+$topToolbarMinHeight: 75px;
+
+.playerContainer {
+    min-width: 100%;
+    margin-top: max($topToolbarHeight, $topToolbarMinHeight);
+    min-height: 92.5vh;
+}
+
+.center {
+    align-self: center;
+    text-align: center;
+}
+
+.margin-top {
+    margin-top: 2%;
+}
+
+#titleText {
+    margin-bottom: 25px;
+}
+
+.profile-content {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-card {
+    background-image: url(../../../assets/top-bg.png);
+    border: 2px black solid;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 30px;
+    min-width: 400px;
+    border-radius: 7px;
+}
+
+.profile-info {
+    margin: 20px 0;
+    text-align: left;
+
+    p {
+        margin: 10px 0;
+    }
+}
+
+.clan-link {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+        color: #0056b3;
+    }
+}
+
+.villages-section {
+    margin-top: 20px;
+
+    h4 {
+        margin-bottom: 15px;
+    }
+}
+
+.villages-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 8px 12px;
+        text-align: center;
+    }
+
+    th {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.bordered {
+    border: 2px black solid;
+
+    th, td {
+        border: 1px black solid;
+    }
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+.action-btn {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.buttons {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+}
+
+#back {
+    width: 100px;
+    margin-top: 50px;
+    height: 50px;
+}

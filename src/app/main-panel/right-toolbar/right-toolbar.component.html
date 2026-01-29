@@ -43,4 +43,28 @@
             <h5> Catapults: {{catapults}} </h5>
         </div>
     </div>
+    <div class="subContainer" id="clanTroops" *ngIf="hasClanTroops">
+        <h4> Clan Support </h4>
+        <div class="troops-container flex-container" *ngIf="clanSpearFighters > 0"> <img class="material" src="../../../assets/spear.png">
+            <h5> Spear: {{clanSpearFighters}} </h5>
+        </div>
+        <div class="troops-container flex-container" *ngIf="clanSwordFighters > 0"> <img class="material" src="../../../assets/sword.png">
+            <h5> Sword: {{clanSwordFighters}} </h5>
+        </div>
+        <div class="troops-container flex-container" *ngIf="clanAxeFighters > 0"> <img class="material" src="../../../assets/axe.png">
+            <h5> Axe: {{clanAxeFighters}} </h5>
+        </div>
+        <div class="troops-container flex-container" *ngIf="clanArchers > 0"> <img class="material" src="../../../assets/bow.png">
+            <h5> Archers: {{clanArchers}} </h5>
+        </div>
+        <div class="troops-container flex-container" *ngIf="clanMagicians > 0"> <img class="material" src="../../../assets/hat.png">
+            <h5> Magicians: {{clanMagicians}} </h5>
+        </div>
+        <div class="troops-container flex-container" *ngIf="clanHorsemen > 0"> <img class="material" src="../../../assets/horse.png">
+            <h5> Horsemen: {{clanHorsemen}} </h5>
+        </div>
+        <div class="troops-container flex-container" *ngIf="clanCatapults > 0"> <img class="material" src="../../../assets/trebuchet.png">
+            <h5> Catapults: {{clanCatapults}} </h5>
+        </div>
+    </div>
 </div>

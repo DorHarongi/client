@@ -1,0 +1,55 @@
+<div class="flexContainer mapContainer step" [class.show]="!selectedVillage" [class.hide]="selectedVillage">
+    <h2 id="titleText" class="center margin-top">World Map</h2>
+    
+    <div class="map-content">
+        <div class="map-grid-container">
+            <div class="navigation-arrows">
+                <button class="nav-arrow up" (click)="moveUp()" [disabled]="windowStartY < 10"><span class="arrow-up"></span></button>
+                <div class="horizontal-arrows">
+                    <button class="nav-arrow left" (click)="moveLeft()" [disabled]="windowStartX < 10"><span class="arrow-left"></span></button>
+                    <div class="map-grid">
+                        <div class="grid-row" *ngFor="let row of gridCells">
+                            <div class="grid-cell" 
+                                 *ngFor="let cell of row" 
+                                 (click)="onCellClick(cell)"
+                                 [class.has-village]="cell.village"
+                                 [class.own-village]="cell.village && isOwnVillage(cell.village)"
+                                 [class.other-village]="cell.village && !isOwnVillage(cell.village)">
+                                <span class="coords">{{cell.x}},{{cell.y}}</span>
+                                <div *ngIf="cell.village" class="village-marker">
+                                    <img src="assets/village.png" class="village-icon">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="nav-arrow right" (click)="moveRight()" [disabled]="windowStartX + 10 >= worldSize"><span class="arrow-right"></span></button>
+                </div>
+                <button class="nav-arrow down" (click)="moveDown()" [disabled]="windowStartY + 10 >= worldSize"><span class="arrow-down"></span></button>
+            </div>
+        </div>
+
+        <div class="minimap-container">
+            <h4>Minimap</h4>
+            <div class="minimap" 
+                 [style.width.px]="getMinimapSize()" 
+                 [style.height.px]="getMinimapSize()"
+                 (click)="onMinimapClick($event)">
+                <div class="minimap-village" 
+                     *ngFor="let village of allVillages"
+                     [ngStyle]="getMinimapVillageStyle(village)"
+                     [class.own]="isOwnVillage(village)">
+                </div>
+                <div class="minimap-window" [ngStyle]="getMinimapWindowStyle()"></div>
+            </div>
+        </div>
+    </div>
+    
+    <button id="back" class="buttons center" (click)="goBack()">Back</button>
+</div>
+
+<app-village-interaction 
+    *ngIf="selectedVillage" 
+    [village]="selectedVillage"
+    [currentUsername]="currentUsername"
+    (closed)="closeVillageInteraction()">
+</app-village-interaction>

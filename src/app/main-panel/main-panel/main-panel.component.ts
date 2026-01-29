@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { BuildingTypes } from '../models/BuildingTypes';
@@ -16,8 +16,13 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   hoveredBuildingIndex: number = -1;
   village!: Village;
   subscription!: Subscription;
-  constructor(private userInformationService: UserInformationService, private router: Router,
-     private intervalService: IntervalService)
+  routeSubscription!: Subscription;
+  constructor(
+    private userInformationService: UserInformationService, 
+    private router: Router,
+    private route: ActivatedRoute,
+    private intervalService: IntervalService
+  )
   { 
     this.intervalService.startIntervals();
   }
@@ -25,13 +30,31 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if(this.subscription)
       this.subscription.unsubscribe();
+    if(this.routeSubscription)
+      this.routeSubscription.unsubscribe();
   }
 
   ngOnInit(): void
   {
     this.village = this.userInformationService.currentVillage;
+    
+    // Handle village name from route parameter
+    this.routeSubscription = this.route.params.subscribe(params => {
+      const villageName = params['villageName'];
+      if (villageName) {
+        const villageIndex = this.userInformationService.userInformation.villages.findIndex(
+          v => v.villageName === villageName
+        );
+        if (villageIndex >= 0 && villageIndex !== this.userInformationService.currentVillageIndex) {
+          this.userInformationService.switchVillage(villageIndex);
+        }
+      }
+    });
+
     this.subscription = this.userInformationService.villageChanged$.subscribe(()=>{
       this.village = this.userInformationService.currentVillage;
+      // Update URL to reflect current village
+      this.router.navigate(['home', this.village.villageName], { replaceUrl: true });
     })
   }
 

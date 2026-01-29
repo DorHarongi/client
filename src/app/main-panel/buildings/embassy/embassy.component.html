@@ -9,5 +9,37 @@
                 <h5> Next level maximum support troops : {{nextLevelMaximumDefenceTroops}}</h5>
             </div>
         </div>
+
+        <!-- Support Sent Section -->
+        <div *ngIf="hasSupportSent() && !showWithdrawPanel" class="support-sent-section">
+            <h4>Support Troops Sent</h4>
+            <table class="support-table bordered">
+                <tr>
+                    <th>Recipient</th>
+                    <th>Village</th>
+                    <th>Troops</th>
+                    <th>Action</th>
+                </tr>
+                <tr *ngFor="let support of supportSent">
+                    <td>{{support.recipientUsername}}</td>
+                    <td>{{support.recipientVillageName}}</td>
+                    <td>{{getTotalTroops(support.troops)}} total</td>
+                    <td>
+                        <button class="withdraw-btn" (click)="openWithdrawPanel(support)">Withdraw</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Withdraw Panel -->
+        <div *ngIf="showWithdrawPanel && selectedSupport" class="withdraw-panel">
+            <h4>Withdraw Support from {{selectedSupport.recipientUsername}} - {{selectedSupport.recipientVillageName}}</h4>
+            <p>Select troops to withdraw:</p>
+            <app-troops-choosing [maxPossibleTroops]="maxWithdrawTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
+            <div class="withdraw-actions">
+                <button class="action-btn" (click)="withdrawSupport()">Withdraw</button>
+                <button class="action-btn cancel-btn" (click)="closeWithdrawPanel()">Cancel</button>
+            </div>
+        </div>
     </div>
 </app-building>

@@ -1,0 +1,113 @@
+.new-village-section {
+    margin-top: 30px;
+    text-align: center;
+
+    p {
+        margin: 15px 0;
+        color: #228B22;
+    }
+}
+
+.new-village-title {
+    color: #228B22;
+    margin-bottom: 15px;
+}
+
+.new-village-ui {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.mini-map {
+    display: inline-block;
+    border: 2px solid black;
+    margin: 15px 0;
+}
+
+.grid-row {
+    display: flex;
+}
+
+.grid-cell {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #654321;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 8px;
+    
+    &.available {
+        background-color: #90EE90;
+        cursor: pointer;
+        
+        &:hover {
+            background-color: #7CCD7C;
+        }
+    }
+    
+    &.current-village {
+        background-color: #4169E1;
+        color: white;
+    }
+    
+    &.selected {
+        background-color: #FFD700;
+        border: 2px solid #FF8C00;
+    }
+    
+    &.unavailable {
+        background-color: #D3D3D3;
+    }
+    
+    .coords {
+        font-size: 7px;
+        color: #333;
+    }
+}
+
+.village-name-input {
+    margin: 20px 0;
+    
+    label {
+        margin-right: 10px;
+    }
+    
+    input {
+        padding: 8px 12px;
+        border: 1px solid #7d5210;
+        border-radius: 3px;
+        width: 200px;
+    }
+}
+
+.new-village-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    background-image: url(../../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 10px 20px;
+    cursor: pointer;
+    
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.create-btn {
+    background-color: #90EE90;
+}
+
+.cancel-btn {
+    background-color: #FFB6C1;
+}

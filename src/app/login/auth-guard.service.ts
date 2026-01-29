@@ -13,7 +13,9 @@ export class AuthGuardService implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot,
                 state: RouterStateSnapshot): boolean|UrlTree {
  
-        if (!this.loginService.isUserLoggedIn()) {            
+        // Check both the service state and session storage for token
+        const token = this.loginService.getToken();
+        if (!this.loginService.isUserLoggedIn() && !token) {            
             this.router.navigate(["login"],{ queryParams: { retUrl: route.url} });
             return false;
         } 

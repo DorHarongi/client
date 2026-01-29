@@ -1,3 +1,77 @@
 .center{
     align-self: center;
 }
+
+.support-sent-section {
+    margin-top: 30px;
+    
+    h4 {
+        margin-bottom: 15px;
+        color: #228B22;
+    }
+}
+
+.support-table {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    
+    th, td {
+        padding: 10px 15px;
+        text-align: center;
+        border: 1px black solid;
+    }
+    
+    th {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.bordered {
+    border: 2px black solid;
+}
+
+.withdraw-btn {
+    background-image: url(../../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 1px 1px 1px 1px;
+    padding: 5px 15px;
+    cursor: pointer;
+    background-color: #FFB6C1;
+}
+
+.withdraw-panel {
+    margin-top: 30px;
+    
+    h4 {
+        margin-bottom: 10px;
+    }
+    
+    p {
+        margin-bottom: 15px;
+    }
+}
+
+.withdraw-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    background-image: url(../../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background-color: #FFB6C1;
+}

@@ -1,1 +1,40 @@
-<app-building [building]="buildingInformation"></app-building>
+<app-building [building]="buildingInformation">
+    <div extraInformation *ngIf="canCreateNewVillage && !showNewVillageUI" class="new-village-section">
+        <h4 class="new-village-title">Create New Village</h4>
+        <p>Your center building has reached level 10! You can now create a new village.</p>
+        <button class="action-btn" (click)="openNewVillageUI()">Create New Village</button>
+    </div>
+
+    <div extraInformation *ngIf="showNewVillageUI" class="new-village-ui">
+        <h4 class="new-village-title">Select Location for New Village</h4>
+        <p>Click on an available cell (green) to select it</p>
+        
+        <div class="mini-map">
+            <div class="grid-row" *ngFor="let row of getGridCells()">
+                <div class="grid-cell" 
+                     *ngFor="let cell of row"
+                     [class.current-village]="isCurrentVillage(cell.x, cell.y)"
+                     [class.available]="isCellAvailable(cell.x, cell.y)"
+                     [class.selected]="isCellSelected(cell.x, cell.y)"
+                     [class.unavailable]="!isCellAvailable(cell.x, cell.y) && !isCurrentVillage(cell.x, cell.y)"
+                     (click)="isCellAvailable(cell.x, cell.y) && selectCell(cell)">
+                    <span class="coords">{{cell.x}},{{cell.y}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="village-name-input" *ngIf="selectedCell">
+            <label>Village Name:</label>
+            <input type="text" [(ngModel)]="newVillageName" placeholder="Enter village name" maxlength="20">
+        </div>
+
+        <div class="new-village-actions">
+            <button class="action-btn create-btn" 
+                    (click)="createNewVillage()" 
+                    [disabled]="!selectedCell || !newVillageName.trim()">
+                Create Village
+            </button>
+            <button class="action-btn cancel-btn" (click)="closeNewVillageUI()">Cancel</button>
+        </div>
+    </div>
+</app-building>

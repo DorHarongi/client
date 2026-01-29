@@ -24,7 +24,15 @@
 }
 
 #troops {
-    height: 450px;
+    height: 350px;
+}
+
+#clanTroops {
+    height: fit-content;
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: rgba(144, 238, 144, 0.3);
 }
 
 #production {

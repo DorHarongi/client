@@ -1,0 +1,85 @@
+<div class="flexContainer clanContainer step" [class.show]="!showJoinModal" [class.hide]="showJoinModal">
+    <h2 id="titleText" class="center margin-top">Clan: {{clanName}}</h2>
+
+    <div *ngIf="loading" class="center">
+        Loading...
+    </div>
+
+    <div *ngIf="!loading && clanInfo" class="clan-content">
+        <div class="clan-card center">
+            <div class="clan-info">
+                <p><strong>Description:</strong> {{clanInfo.description || 'No description'}}</p>
+                <p><strong>Leader:</strong> 
+                    <span class="member-link" (click)="goToMember(clanInfo.leaderUsername)">{{clanInfo.leaderUsername}}</span>
+                </p>
+                <p><strong>Members:</strong> {{clanInfo.members.length}}</p>
+                <p><strong>Status:</strong> {{clanInfo.isOpen ? 'Open' : 'Closed'}}</p>
+                <p><strong>Created:</strong> {{formatDate(clanInfo.createdDate)}}</p>
+            </div>
+
+            <div class="members-section">
+                <h4>Members</h4>
+                <table class="members-table bordered">
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                    </tr>
+                    <tr *ngFor="let member of clanInfo.members" 
+                        class="member-row" 
+                        (click)="goToMember(member)">
+                        <td>{{member}}</td>
+                        <td>{{member === clanInfo.leaderUsername ? 'Leader' : 'Member'}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Pending Requests (only visible to leader) -->
+            <div class="requests-section" *ngIf="isLeader && clanInfo.pendingRequests && clanInfo.pendingRequests.length > 0">
+                <h4>Pending Join Requests</h4>
+                <table class="requests-table bordered">
+                    <tr>
+                        <th>Username</th>
+                        <th>Message</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr *ngFor="let request of clanInfo.pendingRequests">
+                        <td>{{request.username}}</td>
+                        <td>{{request.message || '-'}}</td>
+                        <td>
+                            <button class="small-btn accept" (click)="handleJoinRequest(request.username, true)">Accept</button>
+                            <button class="small-btn decline" (click)="handleJoinRequest(request.username, false)">Decline</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="actions">
+                <button class="action-btn join-btn" *ngIf="canJoin()" (click)="openJoinModal()">
+                    {{clanInfo.isOpen ? 'Join Clan' : 'Request to Join'}}
+                </button>
+                <span *ngIf="hasAlreadyRequested" class="request-pending">Request Pending</span>
+                <button class="action-btn leave-btn" *ngIf="isMember && !isLeader" (click)="leaveClan()">
+                    Leave Clan
+                </button>
+                <button class="action-btn leave-btn" *ngIf="isLeader" (click)="leaveClan()">
+                    {{clanInfo.members.length > 1 ? 'Leave & Transfer Leadership' : 'Dissolve Clan'}}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <button id="back" class="buttons center" (click)="goBack()">Back</button>
+</div>
+
+<!-- Join Modal -->
+<div *ngIf="showJoinModal" class="modal-overlay">
+    <div class="flexContainer modal-container round-square">
+        <h4 class="center">Request to Join {{clanName}}</h4>
+        <p class="center">This is a closed clan. Please introduce yourself:</p>
+        <textarea [(ngModel)]="joinMessage" placeholder="Why do you want to join this clan?" rows="4"></textarea>
+        <div class="modal-actions center">
+            <button class="action-btn" (click)="joinClan()">Send Request</button>
+            <button class="action-btn" (click)="closeJoinModal()">Cancel</button>
+        </div>
+    </div>
+</div>

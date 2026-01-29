@@ -8,6 +8,9 @@ import { InboxModule } from './inbox/inbox.module';
 import { LoginModule } from './login/login.module';
 import { MainPanelModule } from './main-panel/main-panel.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { WorldMapModule } from './world-map/world-map.module';
+import { PlayerModule } from './player/player.module';
+import { ClanModule } from './clan/clan.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,6 +21,9 @@ import { StatisticsModule } from './statistics/statistics.module';
     InboxModule,
     MainPanelModule,
     LoginModule,
+    WorldMapModule,
+    PlayerModule,
+    ClanModule,
     RouterModule.forRoot(appRoutes),
   ],
   providers: [],

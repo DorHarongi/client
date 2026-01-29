@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { InboxComponent } from './inbox/inbox/inbox.component';
 import { AuthGuardService } from './login/auth-guard.service';
 import { LoginComponent } from './login/login/login.component';
+import { RegisterComponent } from './login/register/register.component';
 import { ArsenalComponent } from './main-panel/buildings/arsenal/arsenal.component';
 import { CenterBuildingComponent } from './main-panel/buildings/center-building/center-building.component';
 import { CropFarmComponent } from './main-panel/buildings/crop-farm/crop-farm.component';
@@ -17,11 +18,16 @@ import { WoodWarehouseComponent } from './main-panel/buildings/wood-warehouse/wo
  
 import { MainPanelComponent} from './main-panel/main-panel/main-panel.component';
 import { StatisticsComponent } from './statistics/statistics/statistics.component';
+import { WorldMapComponent } from './world-map/world-map/world-map.component';
+import { PlayerPageComponent } from './player/player-page/player-page.component';
+import { ClanPageComponent } from './clan/clan-page/clan-page.component';
  
  
 export const appRoutes: Routes = [
   { path: 'home', component: MainPanelComponent, canActivate : [AuthGuardService] },
+  { path: 'home/:villageName', component: MainPanelComponent, canActivate : [AuthGuardService] },
   { path: 'login', component: LoginComponent},
+  { path: 'register', component: RegisterComponent},
   { path: 'Inbox', component: InboxComponent, canActivate : [AuthGuardService] },
   { path: 'CenterBuilding', component: CenterBuildingComponent, canActivate : [AuthGuardService] },
   { path: 'WoodWarehouse', component: WoodWarehouseComponent, canActivate : [AuthGuardService] },
@@ -35,5 +41,8 @@ export const appRoutes: Routes = [
   { path: 'Wall', component: WallComponent, canActivate : [AuthGuardService] },
   { path: 'Embassy', component: EmbassyComponent, canActivate : [AuthGuardService] },
   { path: 'Statistics', component: StatisticsComponent, canActivate : [AuthGuardService] },
+  { path: 'Map', component: WorldMapComponent, canActivate : [AuthGuardService] },
+  { path: 'player/:username', component: PlayerPageComponent, canActivate : [AuthGuardService] },
+  { path: 'clan/:clanName', component: ClanPageComponent, canActivate : [AuthGuardService] },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];

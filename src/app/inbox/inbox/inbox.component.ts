@@ -5,8 +5,26 @@ import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { ActiveContent } from '../models/activeContent.enum';
 import { AttackReport } from '../models/attackReport';
+import { ClanService } from 'src/app/clan/services/clan.service';
 
 const WINDOW_SIZE = 6;
+
+type ViewMode = 'reports' | 'messages';
+
+interface Message {
+  id: string;
+  senderUsername?: string;
+  type: string;
+  subject: string;
+  content: string;
+  date: Date;
+  read: boolean;
+  actionable: boolean;
+  metadata?: {
+    clanName?: string;
+    requestUsername?: string;
+  };
+}
 
 @Component({
   selector: 'app-inbox',
@@ -15,30 +33,63 @@ const WINDOW_SIZE = 6;
 })
 export class InboxComponent implements OnInit, OnDestroy {
 
-  constructor(private router: Router, private userInformationService: UserInformationService, private http: HttpClient) { 
+  constructor(
+    private router: Router, 
+    private userInformationService: UserInformationService, 
+    private http: HttpClient,
+    private clanService: ClanService
+  ) { 
     this.username = this.userInformationService.userInformation.username;
   }
 
-  //activeContentEnum = ActiveContent;
-  //activeContent: ActiveContent = ActiveContent.Reports;
+  viewMode: ViewMode = 'reports';
   page: number = 1;
   numberOfPages: number = 1;
   displayedPages: number[] = [];
   username: string;
   attackReportsInPage: Array<AttackReport> = [];
+  messagesInPage: Array<Message> = [];
   attackReportPopupOpened: boolean = false;
   clickedAttackReport!: AttackReport;
   subscription1!: Subscription;
   subscription2!: Subscription;
+  subscription3!: Subscription;
+  subscription4!: Subscription;
 
   ngOnDestroy(): void {
     this.subscription1 && this.subscription1.unsubscribe();
     this.subscription2 && this.subscription2.unsubscribe();
+    this.subscription3 && this.subscription3.unsubscribe();
+    this.subscription4 && this.subscription4.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.getNumberOfAttackReportPages();
-    this.getAttackReports();
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.page = 1;
+    if (this.viewMode === 'reports') {
+      this.getNumberOfAttackReportPages();
+      this.getAttackReports();
+    } else {
+      this.getNumberOfMessagePages();
+      this.getMessages();
+    }
+  }
+
+  switchToReports(): void {
+    if (this.viewMode !== 'reports') {
+      this.viewMode = 'reports';
+      this.loadData();
+    }
+  }
+
+  switchToMessages(): void {
+    if (this.viewMode !== 'messages') {
+      this.viewMode = 'messages';
+      this.loadData();
+    }
   }
 
   updateDisplayedPages(): void {
@@ -59,15 +110,28 @@ export class InboxComponent implements OnInit, OnDestroy {
   {
     this.subscription1 = this.http.get<any>(`http://localhost:3000/reports/attackReports/${this.username}`, 
     ).subscribe((numberOfPages)=>{
-       this.numberOfPages = numberOfPages;
+       this.numberOfPages = numberOfPages || 1;
        this.updateDisplayedPages();
    });
+  }
+
+  getNumberOfMessagePages(): void
+  {
+    this.subscription3 = this.http.get<number>(`http://localhost:3000/messages/${this.username}/pages?type=messages`)
+      .subscribe((numberOfPages)=>{
+        this.numberOfPages = numberOfPages || 1;
+        this.updateDisplayedPages();
+      });
   }
 
   moveToPage(page: number): void {
     if (page < 1 || page > this.numberOfPages) return; 
     this.page = page;
-    this.getAttackReports();
+    if (this.viewMode === 'reports') {
+      this.getAttackReports();
+    } else {
+      this.getMessages();
+    }
     this.updateDisplayedPages();
   }
 
@@ -77,6 +141,14 @@ export class InboxComponent implements OnInit, OnDestroy {
      ).subscribe((attackReports)=>{
         this.attackReportsInPage = attackReports;
     });
+  }
+
+  getMessages()
+  {
+    this.subscription4 = this.http.get<Message[]>(`http://localhost:3000/messages/${this.username}/page/${this.page}?type=messages`)
+      .subscribe((messages)=>{
+        this.messagesInPage = messages;
+      });
   }
 
   openAttackReportPopup(clickedAttackReport: AttackReport)
@@ -121,6 +193,40 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   attackReportPopupClosed(){
     this.attackReportPopupOpened = false;
+  }
+
+  handleClanRequest(message: Message, accept: boolean): void {
+    if (!message.metadata?.clanName || !message.metadata?.requestUsername) return;
+    
+    this.clanService.handleJoinRequest(
+      message.metadata.clanName,
+      this.username,
+      message.metadata.requestUsername,
+      accept
+    ).subscribe({
+      next: () => {
+        // Send response message is handled by backend
+        this.getMessages(); // Refresh
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Failed to handle request');
+      }
+    });
+  }
+
+  getMessageIcon(type: string): string {
+    switch(type) {
+      case 'clan_join_request':
+        return 'assets/population.png';
+      case 'clan_request_accepted':
+        return 'assets/shield.png';
+      case 'clan_request_declined':
+        return 'assets/swords.png';
+      case 'player_message':
+        return 'assets/ancient-scroll.png';
+      default:
+        return 'assets/ancient-scroll.png';
+    }
   }
 
   goBack()
