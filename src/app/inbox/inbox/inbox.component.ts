@@ -6,6 +6,7 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
 import { ActiveContent } from '../models/activeContent.enum';
 import { AttackReport } from '../models/attackReport';
 import { ClanService } from 'src/app/clan/services/clan.service';
+import { environment } from 'src/environments/environment';
 
 const WINDOW_SIZE = 6;
 
@@ -108,7 +109,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   getNumberOfAttackReportPages(): void
   {
-    this.subscription1 = this.http.get<any>(`http://localhost:3000/reports/attackReports/${this.username}`, 
+    this.subscription1 = this.http.get<any>(`${environment.apiUrl}/reports/attackReports/${this.username}`, 
     ).subscribe((numberOfPages)=>{
        this.numberOfPages = numberOfPages || 1;
        this.updateDisplayedPages();
@@ -117,7 +118,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   getNumberOfMessagePages(): void
   {
-    this.subscription3 = this.http.get<number>(`http://localhost:3000/messages/${this.username}/pages?type=messages`)
+    this.subscription3 = this.http.get<number>(`${environment.apiUrl}/messages/${this.username}/pages?type=messages`)
       .subscribe((numberOfPages)=>{
         this.numberOfPages = numberOfPages || 1;
         this.updateDisplayedPages();
@@ -137,7 +138,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   getAttackReports()
   {
-    this.subscription2 = this.http.get<any>(`http://localhost:3000/reports/attackReports/${this.username}/${this.page}`, 
+    this.subscription2 = this.http.get<any>(`${environment.apiUrl}/reports/attackReports/${this.username}/${this.page}`, 
      ).subscribe((attackReports)=>{
         this.attackReportsInPage = attackReports;
     });
@@ -145,7 +146,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   getMessages()
   {
-    this.subscription4 = this.http.get<Message[]>(`http://localhost:3000/messages/${this.username}/page/${this.page}?type=messages`)
+    this.subscription4 = this.http.get<Message[]>(`${environment.apiUrl}/messages/${this.username}/page/${this.page}?type=messages`)
       .subscribe((messages)=>{
         this.messagesInPage = messages;
       });

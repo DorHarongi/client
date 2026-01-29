@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ResourcesWorkers } from '../../models/resourcesWorkers';
 import { User } from '../../models/User';
 import { Observable, Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-crop-farm',
@@ -52,7 +53,7 @@ export class CropFarmComponent implements OnInit, OnDestroy {
   {
     let village = this.userInformationService.currentVillage;
     let resourcesWorkers: ResourcesWorkers = new ResourcesWorkers(0, 0, this.cropWorkers - village.resourcesWorkers.cropWorkers);
-    let observable: Observable<User> = this.http.post<User>("http://localhost:3000/workers",
+    let observable: Observable<User> = this.http.post<User>(`${environment.apiUrl}/workers`,
     {
       username: this.userInformationService.userInformation.username,
       villageIndex: this.userInformationService.currentVillageIndex,

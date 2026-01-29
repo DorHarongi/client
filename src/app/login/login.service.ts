@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, interval, Subscription } from 'rxjs';
 import { User } from '../main-panel/models/User';
 import { UserInformationService } from '../user-information/user-information.service';
+import { environment } from '../../environments/environment';
 
 interface LoginResponse {
   user: User;
@@ -68,7 +69,7 @@ export class LoginService {
     const token = sessionStorage.getItem(TOKEN_KEY);
     if (!token) return;
 
-    this.http.post<{ token: string; ttlMinutes: number }>("http://localhost:3000/users/refresh-token", { token })
+    this.http.post<{ token: string; ttlMinutes: number }>(`${environment.apiUrl}/users/refresh-token`, { token })
       .subscribe({
         next: (response) => {
           this.storeToken(response.token, response.ttlMinutes);
@@ -93,7 +94,7 @@ export class LoginService {
 
   login(username: string, password: string): Observable<LoginResponse>
    {
-     let observable: Observable<LoginResponse> = this.http.post<LoginResponse>("http://localhost:3000/users/login", {
+     let observable: Observable<LoginResponse> = this.http.post<LoginResponse>(`${environment.apiUrl}/users/login`, {
        username: username,
        password: password
      });
@@ -110,7 +111,7 @@ export class LoginService {
 
   register(username: string, password: string): void
    {
-     this.http.post<LoginResponse>("http://localhost:3000/users/register", {
+     this.http.post<LoginResponse>(`${environment.apiUrl}/users/register`, {
        username: username,
        password: password
      }).subscribe({

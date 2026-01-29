@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface ClanDTO {
     clanName: string;
@@ -29,11 +30,11 @@ export class ClanService {
   constructor(private http: HttpClient) { }
 
   getClan(clanName: string): Observable<ClanDTO> {
-    return this.http.get<ClanDTO>(`http://localhost:3000/clans/${clanName}`);
+    return this.http.get<ClanDTO>(`${environment.apiUrl}/clans/${clanName}`);
   }
 
   createClan(clanName: string, description: string, leaderUsername: string, isOpen: boolean): Observable<ClanDTO> {
-    return this.http.post<ClanDTO>('http://localhost:3000/clans/create', {
+    return this.http.post<ClanDTO>(`${environment.apiUrl}/clans/create`, {
       clanName,
       description,
       leaderUsername,
@@ -42,15 +43,15 @@ export class ClanService {
   }
 
   getNumberOfClanStatisticsPages(): Observable<number> {
-    return this.http.get<number>('http://localhost:3000/clans/statistics/pages');
+    return this.http.get<number>(`${environment.apiUrl}/clans/statistics/pages`);
   }
 
   getClanStatistics(page: number): Observable<ClanStatisticDTO[]> {
-    return this.http.get<ClanStatisticDTO[]>(`http://localhost:3000/clans/statistics/page/${page}`);
+    return this.http.get<ClanStatisticDTO[]>(`${environment.apiUrl}/clans/statistics/page/${page}`);
   }
 
   requestToJoinClan(clanName: string, username: string, message?: string): Observable<{ success: boolean }> {
-    return this.http.post<{ success: boolean }>('http://localhost:3000/clans/join', {
+    return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/join`, {
       clanName,
       username,
       message
@@ -58,7 +59,7 @@ export class ClanService {
   }
 
   handleJoinRequest(clanName: string, leaderUsername: string, requestUsername: string, accept: boolean): Observable<{ success: boolean }> {
-    return this.http.post<{ success: boolean }>('http://localhost:3000/clans/handle-request', {
+    return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/handle-request`, {
       clanName,
       leaderUsername,
       requestUsername,
@@ -67,7 +68,7 @@ export class ClanService {
   }
 
   leaveClan(clanName: string, username: string): Observable<{ success: boolean }> {
-    return this.http.post<{ success: boolean }>('http://localhost:3000/clans/leave', {
+    return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/leave`, {
       clanName,
       username
     });

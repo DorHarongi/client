@@ -4,6 +4,7 @@ import { User } from '../main-panel/models/User';
 import { Village } from '../main-panel/models/Village';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 const USER_KEY = 'user_info';
 
@@ -81,7 +82,7 @@ export class UserInformationService {
 
   private requestVillage(newVillageIndex: number): Observable<Village>
   {
-    return this.http.post<Village>("http://localhost:3000/users/village",
+    return this.http.post<Village>(`${environment.apiUrl}/users/village`,
     {
       username: this.userInformation.username,
       villageIndex: newVillageIndex,
@@ -91,7 +92,7 @@ export class UserInformationService {
   private requestUser(): Observable<User>
   {
     let username = this.userInformation.username;
-    return this.http.get<User>("http://localhost:3000/users/" + username);
+    return this.http.get<User>(`${environment.apiUrl}/users/${username}`);
   }
 
 }

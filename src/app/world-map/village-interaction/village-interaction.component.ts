@@ -7,6 +7,7 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { ResourcesAmounts } from 'src/app/main-panel/models/resourcesAmounts';
 import { User } from 'src/app/main-panel/models/User';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-village-interaction',
@@ -62,7 +63,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   loadPlayerInfo(): void {
-    this.http.get<any>(`http://localhost:3000/users/profile/${this.village.ownerUsername}`)
+    this.http.get<any>(`${environment.apiUrl}/users/profile/${this.village.ownerUsername}`)
       .subscribe({
         next: (user) => {
           this.playerInfo = user;
@@ -128,7 +129,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   attack(): void {
-    this.subscription = this.http.post<User>("http://localhost:3000/attack", {
+    this.subscription = this.http.post<User>(`${environment.apiUrl}/attack`, {
       defenderName: this.village.ownerUsername,
       attackerName: this.currentUsername,
       attackerVillageIndex: this.userInformationService.currentVillageIndex,
@@ -146,7 +147,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   sendSupport(): void {
-    this.subscription = this.http.post<User>("http://localhost:3000/interactions/send-support", {
+    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/send-support`, {
       senderUsername: this.currentUsername,
       senderVillageIndex: this.userInformationService.currentVillageIndex,
       recipientUsername: this.village.ownerUsername,
@@ -164,7 +165,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   sendResources(): void {
-    this.subscription = this.http.post<User>("http://localhost:3000/interactions/send-resources", {
+    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/send-resources`, {
       senderUsername: this.currentUsername,
       senderVillageIndex: this.userInformationService.currentVillageIndex,
       recipientUsername: this.village.ownerUsername,

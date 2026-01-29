@@ -7,6 +7,7 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
 import { Building } from '../../classes/Building';
 import { WorldMapService } from 'src/app/world-map/services/world-map.service';
 import { User } from '../../models/User';
+import { environment } from 'src/environments/environment';
 
 const NEW_VILLAGE_REQUIRED_LEVEL = 10;
 
@@ -114,7 +115,7 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.subscription = this.http.post<User>('http://localhost:3000/interactions/create-village', {
+    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/create-village`, {
       username: this.userInformationService.userInformation.username,
       sourceVillageIndex: this.userInformationService.currentVillageIndex,
       newVillageName: this.newVillageName.trim(),

@@ -7,6 +7,7 @@ import { User } from '../../models/User';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-stone-mine',
@@ -52,7 +53,7 @@ export class StoneMineComponent implements OnInit, OnDestroy {
   {
     let village = this.userInformationService.currentVillage;
     let resourcesWorkers: ResourcesWorkers = new ResourcesWorkers(0,this.stoneWorkers - village.resourcesWorkers.stoneWorkers, 0);
-    let observable: Observable<User> = this.http.post<User>("http://localhost:3000/workers",
+    let observable: Observable<User> = this.http.post<User>(`${environment.apiUrl}/workers`,
     {
       username: this.userInformationService.userInformation.username,
       villageIndex: this.userInformationService.currentVillageIndex,

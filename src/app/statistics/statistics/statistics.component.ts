@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { ClanService, ClanStatisticDTO } from 'src/app/clan/services/clan.service';
+import { environment } from 'src/environments/environment';
 
 const WINDOW_SIZE = 6;
 
@@ -104,7 +105,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   getNumberOfUserStatisticsPages()
   {
-    this.subscription2 = this.http.get<number>(`http://localhost:3000/users/statistics`, 
+    this.subscription2 = this.http.get<number>(`${environment.apiUrl}/users/statistics`, 
     ).subscribe((numberOfPages)=>{
        this.numberOfPages = numberOfPages;
        this.updateDisplayedPages();
@@ -113,7 +114,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   getUserStatistics()
   {
-    this.subscription1 = this.http.get<any>(`http://localhost:3000/users/statistics/${this.page}`, 
+    this.subscription1 = this.http.get<any>(`${environment.apiUrl}/users/statistics/${this.page}`, 
      ).subscribe((users)=>{
         this.usersInPage = users;
     })

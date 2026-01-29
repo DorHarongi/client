@@ -8,6 +8,7 @@ import { Building } from '../../classes/Building';
 import { TroopsAmounts } from '../../models/troopsAmounts';
 import { SupportSentEntry } from '../../models/SupportSent';
 import { User } from '../../models/User';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-embassy',
@@ -97,7 +98,7 @@ export class EmbassyComponent implements OnInit, OnDestroy {
   withdrawSupport(): void {
     if (!this.selectedSupport || !this.withdrawTroops) return;
 
-    this.subscription = this.http.post<User>('http://localhost:3000/interactions/withdraw-support', {
+    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/withdraw-support`, {
       ownerUsername: this.userInformationService.userInformation.username,
       ownerVillageIndex: this.userInformationService.currentVillageIndex,
       recipientUsername: this.selectedSupport.recipientUsername,

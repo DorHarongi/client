@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { User } from 'src/app/main-panel/models/User';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-attack',
@@ -36,7 +37,7 @@ export class AttackComponent implements OnInit, OnDestroy {
 
   attackVillage()
   {
-    let observable: Observable<any>  = this.http.post<any>("http://localhost:3000/attack",
+    let observable: Observable<any>  = this.http.post<any>(`${environment.apiUrl}/attack`,
     {
       defenderName: this.defenderName,
       attackerName: this.userInformationService.userInformation.username,

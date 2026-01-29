@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { User } from '../../models/User';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-building',
@@ -36,7 +37,7 @@ export class BuildingComponent implements OnInit, OnDestroy {
   upgrade(): void{
     if(this.checkIfEnoughMaterialsToUpgrade())
     {
-      let observable: Observable<User> = this.http.post<User>("http://localhost:3000/buildings-upgrading/upgradeBuilding",
+      let observable: Observable<User> = this.http.post<User>(`${environment.apiUrl}/buildings-upgrading/upgradeBuilding`,
       {
         username: this.userInformationService.userInformation.username,
         villageIndex: this.userInformationService.currentVillageIndex,

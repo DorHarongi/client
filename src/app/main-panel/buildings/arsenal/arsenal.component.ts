@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Village } from '../../models/Village';
 import { ResourcesAmounts } from '../../models/resourcesAmounts';
 import { Observable, Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-arsenal',
@@ -152,7 +153,7 @@ export class ArsenalComponent implements OnInit, OnDestroy {
   {
     if(this.checkIfEnoughMaterialsToTrain())
     {
-      let observable: Observable<User> = this.http.post<User>("http://localhost:3000/troops-training",
+      let observable: Observable<User> = this.http.post<User>(`${environment.apiUrl}/troops-training`,
       {
         username: this.userInformationService.userInformation.username,
         villageIndex: this.userInformationService.currentVillageIndex,

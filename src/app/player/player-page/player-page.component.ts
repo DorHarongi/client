@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-player-page',
@@ -43,7 +44,7 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
 
   loadPlayerInfo(): void {
     this.loading = true;
-    this.subscription = this.http.get<any>(`http://localhost:3000/users/profile/${this.username}`)
+    this.subscription = this.http.get<any>(`${environment.apiUrl}/users/profile/${this.username}`)
       .subscribe({
         next: (user) => {
           this.playerInfo = user;
