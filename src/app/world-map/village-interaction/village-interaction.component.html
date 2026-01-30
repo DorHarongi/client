@@ -1,4 +1,5 @@
 <div class="flexContainer interactionContainer round-square">
+    <h3 class="center modal-title">Village Details</h3>
     <h4 class="center">{{village.villageName}}</h4>
     <h5 class="center">Owner: {{village.ownerUsername}}</h5>
     
@@ -14,29 +15,25 @@
         </div>
 
         <div class="actions center">
-            <button class="action-btn" (click)="viewPlayerProfile()">View Player Profile</button>
+            <button class="action-btn" *ngIf="!hideProfileButton" (click)="viewPlayerProfile()">View Player Profile</button>
             <button class="action-btn" *ngIf="playerInfo?.clanName" (click)="viewPlayerClan()">View Clan</button>
             
-            <div *ngIf="!isOwnVillage">
-                <button class="action-btn attack-btn" 
-                        *ngIf="!isSameClan" 
-                        (click)="openAttackPanel()"
-                        [disabled]="getEnergy() < 1">
-                    Attack Village
-                </button>
-                
-                <button class="action-btn support-btn" 
-                        *ngIf="isSameClan" 
-                        (click)="openSupportPanel()">
+            <div class="clan-actions" *ngIf="!isOwnVillage && isSameClan">
+                <button class="action-btn support-btn" (click)="openSupportPanel()">
                     Send Support Troops
                 </button>
                 
-                <button class="action-btn resources-btn" 
-                        *ngIf="isSameClan" 
-                        (click)="openResourcesPanel()">
+                <button class="action-btn resources-btn" (click)="openResourcesPanel()">
                     Send Resources
                 </button>
             </div>
+
+            <button class="action-btn attack-btn" 
+                    *ngIf="!isOwnVillage && !isSameClan" 
+                    (click)="openAttackPanel()"
+                    [disabled]="getEnergy() < 1">
+                Attack Village
+            </button>
         </div>
     </div>
 

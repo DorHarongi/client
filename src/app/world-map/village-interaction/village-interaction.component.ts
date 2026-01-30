@@ -18,6 +18,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
 
   @Input() village!: VillageOnMap;
   @Input() currentUsername!: string;
+  @Input() hideProfileButton: boolean = false;
   @Output() closed: EventEmitter<any> = new EventEmitter<any>();
 
   playerInfo: any;
