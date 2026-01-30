@@ -341,7 +341,9 @@ export class InboxComponent implements OnInit, OnDestroy {
   getDisplaySubject(message: Message): string {
     // Fix subjects that contain "undefined" due to missing senderUsername
     if (message.subject && message.subject.includes('undefined')) {
-      return message.subject.replace('undefined', 'System');
+      // Use actual senderUsername if available, otherwise 'Unknown'
+      const replacement = message.senderUsername || 'Unknown';
+      return message.subject.replace('undefined', replacement);
     }
     return message.subject || 'No subject';
   }

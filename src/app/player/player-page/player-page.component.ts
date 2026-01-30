@@ -54,6 +54,9 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Refresh username in case user info was loaded after component constructed
+    this.currentUsername = this.userInformationService.userInformation?.username || '';
+    
     this.route.params.subscribe(params => {
       this.username = params['username'];
       this.isOwnProfile = this.username === this.currentUsername;
@@ -112,6 +115,16 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   }
 
   sendMessage(): void {
+    // Ensure we have a valid username
+    if (!this.currentUsername) {
+      this.currentUsername = this.userInformationService.userInformation?.username;
+    }
+    
+    if (!this.currentUsername) {
+      this.messageError = 'Session expired. Please refresh the page.';
+      return;
+    }
+
     if (!this.messageContent.trim()) {
       this.messageError = 'Please enter a message';
       return;
