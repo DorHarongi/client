@@ -126,12 +126,22 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   leaveClan(): void {
-    if (confirm('Are you sure you want to leave this clan?')) {
+    const isDeleting = this.isLeader && this.clanInfo?.members.length === 1;
+    const confirmMsg = isDeleting 
+      ? 'Are you sure you want to delete this clan?' 
+      : 'Are you sure you want to leave this clan?';
+    
+    if (confirm(confirmMsg)) {
       this.clanService.leaveClan(this.clanName, this.currentUsername)
         .subscribe({
           next: () => {
             this.userInformationService.updateUser();
-            this.loadClanInfo();
+            if (isDeleting) {
+              // Navigate to village after clan deletion
+              this.router.navigate(['home']);
+            } else {
+              this.loadClanInfo();
+            }
           },
           error: (err) => {
             this.errorMessage = err.error?.message || 'Failed to leave clan';
