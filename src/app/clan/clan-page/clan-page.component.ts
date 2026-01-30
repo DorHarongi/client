@@ -45,6 +45,10 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Refresh username in case user info was loaded after component constructed
+    this.currentUsername = this.userInformationService.userInformation?.username || '';
+    this.currentUserClan = this.userInformationService.userInformation?.clanName || '';
+    
     this.route.params.subscribe(params => {
       this.clanName = params['clanName'];
       this.loadClanInfo();
@@ -91,6 +95,16 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   joinClan(): void {
+    // Ensure we have a valid username
+    if (!this.currentUsername) {
+      this.currentUsername = this.userInformationService.userInformation?.username;
+    }
+    
+    if (!this.currentUsername) {
+      this.errorMessage = 'User session expired. Please refresh the page.';
+      return;
+    }
+
     this.clanService.requestToJoinClan(this.clanName, this.currentUsername, this.joinMessage)
       .subscribe({
         next: () => {
