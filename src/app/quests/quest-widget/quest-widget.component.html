@@ -46,15 +46,15 @@
                 <h5>Rewards:</h5>
                 <div class="rewards-list">
                     <div class="reward-item" *ngIf="currentQuest.rewards.wood > 0">
-                        <img src="../../../assets/wood.png" alt="Wood">
+                        <img src="../../../assets/wood.jpg" alt="Wood">
                         <span>{{currentQuest.rewards.wood}}</span>
                     </div>
                     <div class="reward-item" *ngIf="currentQuest.rewards.stone > 0">
-                        <img src="../../../assets/stone.png" alt="Stone">
+                        <img src="../../../assets/rock.jpg" alt="Stone">
                         <span>{{currentQuest.rewards.stone}}</span>
                     </div>
                     <div class="reward-item" *ngIf="currentQuest.rewards.crop > 0">
-                        <img src="../../../assets/crop.png" alt="Crop">
+                        <img src="../../../assets/crop.jpg" alt="Crop">
                         <span>{{currentQuest.rewards.crop}}</span>
                     </div>
                     <span *ngIf="currentQuest.rewards.wood === 0 && currentQuest.rewards.stone === 0 && currentQuest.rewards.crop === 0" class="no-rewards">
@@ -93,15 +93,15 @@
             <h4>Rewards received:</h4>
             <div class="rewards-list">
                 <div class="reward-item" *ngIf="completedQuest.rewards.wood > 0">
-                    <img src="../../../assets/wood.png" alt="Wood">
+                    <img src="../../../assets/wood.jpg" alt="Wood">
                     <span>+{{completedQuest.rewards.wood}}</span>
                 </div>
                 <div class="reward-item" *ngIf="completedQuest.rewards.stone > 0">
-                    <img src="../../../assets/stone.png" alt="Stone">
+                    <img src="../../../assets/rock.jpg" alt="Stone">
                     <span>+{{completedQuest.rewards.stone}}</span>
                 </div>
                 <div class="reward-item" *ngIf="completedQuest.rewards.crop > 0">
-                    <img src="../../../assets/crop.png" alt="Crop">
+                    <img src="../../../assets/crop.jpg" alt="Crop">
                     <span>+{{completedQuest.rewards.crop}}</span>
                 </div>
             </div>
