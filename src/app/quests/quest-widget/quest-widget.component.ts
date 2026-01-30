@@ -114,7 +114,7 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.isClaimingRewards = false;
         if (response.questCompleted) {
-          this.userInformationService.userInformation = response.user;
+          this.userInformationService.setUserInformation(response.user);
           this.questService.notifyQuestCompleted(response.questCompleted);
         }
         this.isClaimable = false;

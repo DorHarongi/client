@@ -12,6 +12,7 @@ export class IntervalService {
 
   resourceGatheringInterval!: any;
   getUserInterval!: any;
+  private visibilityListenerAdded: boolean = false;
 
   constructor(private userInformationService: UserInformationService) {
     this.userInformationService.villageChanged$.subscribe(()=>{
@@ -21,12 +22,15 @@ export class IntervalService {
    }
   
   listenToApplicationMinimizing(){
+    // Only add the listener once to prevent memory leaks
+    if (this.visibilityListenerAdded) return;
+    this.visibilityListenerAdded = true;
+    
     let self = this;
     document.addEventListener("visibilitychange", function() {
       if (document.hidden) {
         self.stopIntervals();
       } else {
-        //todo research memory leak when switching tabs quickly
         self.userInformationService.updateUser();
         self.startIntervals();
       }
@@ -57,7 +61,12 @@ export class IntervalService {
       currentVillage.resourcesAmounts.woodAmount += currentVillage.woodProductionPerSecond;
       currentVillage.resourcesAmounts.stonesAmount += currentVillage.stoneProductionPerSecond;
       currentVillage.resourcesAmounts.cropAmount += currentVillage.cropProductionPerSecond;
-      userInformation.energy += energyProductionSpeedPerSecond;
+      // Guard against undefined energy to prevent NaN
+      if (typeof userInformation.energy === 'number' && !isNaN(userInformation.energy)) {
+        userInformation.energy += energyProductionSpeedPerSecond;
+      } else {
+        userInformation.energy = maxEnergy; // Reset to max if corrupted
+      }
 
       if(currentVillage.resourcesAmounts.woodAmount > maxWoodStorage)
         currentVillage.resourcesAmounts.woodAmount = maxWoodStorage;
