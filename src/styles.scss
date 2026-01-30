@@ -2,7 +2,9 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: auto;
-    background-color: #8B4513;
+    background-image: url("./assets/right-bg.jpg");
+    background-size: cover;
+    background-attachment: fixed;
     min-height: 100%;
     width: 100%;
     -webkit-overflow-scrolling: touch;
@@ -17,6 +19,6 @@ body {
     flex-direction: column;
     flex-wrap: wrap;
     align-content: center;
-    background-image: url("./assets//right-bg.jpg");
+    background-image: url("./assets/right-bg.jpg");
     overflow: auto;
 }

@@ -5,20 +5,19 @@ $topToolbarMinHeight: 75px;
     display: flex;
     margin-top: max($topToolbarHeight, $topToolbarMinHeight);
     position: relative;
-    min-height: calc(100vh - max($topToolbarHeight, $topToolbarMinHeight));
-    background-color: #8B4513;
+    background-color: transparent;
     overflow: auto;
-    -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+    -webkit-overflow-scrolling: touch;
 }
 
-// Desktop - hide scrollbars but allow scroll
+// Desktop - hide scrollbars
 @media (min-width: 1201px) {
     #mainPanel {
         overflow: hidden;
     }
 }
 
-// Mobile/tablet - allow both horizontal and vertical scroll with touch
+// Mobile/tablet - allow scrolling
 @media (max-width: 1200px) {
     #mainPanel {
         overflow: auto;
