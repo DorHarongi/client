@@ -84,7 +84,7 @@
 
 .current-clan {
     h4 {
-        color: #228B22;
+        text-align: center;
     }
 }
 
@@ -107,13 +107,15 @@
 
 .create-clan-form {
     margin-top: 15px;
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0.03);
+    padding: 20px;
+    background: url(../../../../assets/top-bg.png);
+    border: 2px black solid;
+    box-shadow: 2px 2px 2px 2px;
     border-radius: 5px;
     
     h4 {
         margin-bottom: 15px;
-        color: #228B22;
+        text-align: center;
     }
 }
 
