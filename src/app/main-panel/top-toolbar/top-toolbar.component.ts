@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { warehouseStorageByLevel, quartersPopulationByLevel, maxEnergy, energyProductionSpeedPerSecond } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { LoginService } from 'src/app/login/login.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { ResourcesAmounts } from '../models/resourcesAmounts';
 import { Village } from '../models/Village';
 import { Router } from '@angular/router';
@@ -31,12 +32,14 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
 
   subscription!: Subscription;
   unreadSubscription?: Subscription;
+  notificationSubscription?: Subscription;
 
   constructor(
     private userInformationService: UserInformationService, 
     private router: Router,
     private loginService: LoginService,
-    private http: HttpClient
+    private http: HttpClient,
+    private notificationService: NotificationService
   ) { 
     this.updateVillage();
   }
@@ -45,6 +48,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     if(this.subscription)
       this.subscription.unsubscribe();
     this.unreadSubscription?.unsubscribe();
+    this.notificationSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -56,6 +60,13 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     this.loadUnreadCount();
     this.unreadSubscription = timer(30000, 30000).subscribe(() => {
       this.loadUnreadCount();
+    });
+
+    // Immediately decrement count when an item is marked as read
+    this.notificationSubscription = this.notificationService.onItemRead$.subscribe(() => {
+      if (this.unreadCount > 0) {
+        this.unreadCount--;
+      }
     });
   }
 

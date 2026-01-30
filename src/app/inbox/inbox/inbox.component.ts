@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { ActiveContent } from '../models/activeContent.enum';
 import { AttackReport } from '../models/attackReport';
 import { ClanService } from 'src/app/clan/services/clan.service';
@@ -38,7 +39,8 @@ export class InboxComponent implements OnInit, OnDestroy {
     private router: Router, 
     private userInformationService: UserInformationService, 
     private http: HttpClient,
-    private clanService: ClanService
+    private clanService: ClanService,
+    private notificationService: NotificationService
   ) { 
     this.username = this.userInformationService.userInformation.username;
   }
@@ -181,6 +183,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: () => {
         report.read = true;
+        this.notificationService.notifyItemRead();
       }
     });
   }
@@ -279,6 +282,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: () => {
         message.read = true;
+        this.notificationService.notifyItemRead();
       }
     });
   }
