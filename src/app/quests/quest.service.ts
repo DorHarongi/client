@@ -14,9 +14,13 @@ interface QuestStatusResponse {
   providedIn: 'root'
 })
 export class QuestService {
-  // Event emitter for quest completion
+  // Event emitter for quest completion (after manual claim)
   private questCompleted$ = new Subject<QuestCompletionResult>();
   onQuestCompleted$ = this.questCompleted$.asObservable();
+
+  // Event emitter for when quest becomes claimable
+  private questClaimable$ = new Subject<void>();
+  onQuestClaimable$ = this.questClaimable$.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -46,10 +50,17 @@ export class QuestService {
   }
 
   /**
-   * Emit quest completion event
+   * Emit quest completion event (after manual claim)
    */
   notifyQuestCompleted(result: QuestCompletionResult): void {
     this.questCompleted$.next(result);
+  }
+
+  /**
+   * Emit quest claimable event (quest conditions met, ready for manual claim)
+   */
+  notifyQuestClaimable(): void {
+    this.questClaimable$.next();
   }
 
   /**

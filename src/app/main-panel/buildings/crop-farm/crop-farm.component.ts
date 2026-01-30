@@ -68,9 +68,9 @@ export class CropFarmComponent implements OnInit, OnDestroy {
     this.subscription = observable.subscribe((response: QuestAwareResponse)=>{
       this.userInformationService.setUserInformation(response.user);
       
-      // Check for quest completion
-      if (response.questCompleted) {
-        this.questService.notifyQuestCompleted(response.questCompleted);
+      // Notify quest service if quest is now claimable
+      if (response.isQuestClaimable) {
+        this.questService.notifyQuestClaimable();
       }
       
       this.router.navigateByUrl('home');

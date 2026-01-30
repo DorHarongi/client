@@ -47,10 +47,17 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Subscribe to quest completion events
+    // Subscribe to quest completion events (after manual claim)
     this.subscriptions.push(
       this.questService.onQuestCompleted$.subscribe((result) => {
         this.handleQuestCompleted(result);
+      })
+    );
+
+    // Subscribe to quest claimable events (when action completes quest conditions)
+    this.subscriptions.push(
+      this.questService.onQuestClaimable$.subscribe(() => {
+        this.isClaimable = true;
       })
     );
   }
