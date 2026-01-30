@@ -5,13 +5,13 @@ import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
 
+const MAX_MESSAGE_LENGTH = 100;
+
 @Component({
   selector: 'app-player-page',
   templateUrl: './player-page.component.html',
   styleUrls: ['./player-page.component.scss']
 })
-const MAX_MESSAGE_LENGTH = 100;
-
 export class PlayerPageComponent implements OnInit, OnDestroy {
 
   username: string = '';
