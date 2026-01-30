@@ -1,17 +1,20 @@
 <app-building [building]="buildingInformation">
     <div extraInformation class="center">
-        <div *ngIf = "buildingInformation.level < embassyMinimumLevelForClanJoin">
+        <!-- Show level requirement message only if user has no clan AND embassy is below required level -->
+        <div *ngIf="!hasClan() && buildingInformation.level < embassyMinimumLevelForClanJoin">
             <h5> You can only join or create a clan once your embassy reaches level {{embassyMinimumLevelForClanJoin}}</h5>
         </div>
-        <div *ngIf = "buildingInformation.level >= embassyMinimumLevelForClanJoin">
+        
+        <!-- Show support troops capacity info -->
+        <div>
             <h5> Current maximum support troops: {{currentMaximumDefenceTroops}}</h5>
             <div *ngIf="nextLevelMaximumDefenceTroops">
                 <h5> Next level maximum support troops : {{nextLevelMaximumDefenceTroops}}</h5>
             </div>
         </div>
 
-        <!-- Clan Status Section -->
-        <div class="clan-section" *ngIf="buildingInformation.level >= embassyMinimumLevelForClanJoin">
+        <!-- Clan Status Section - show if user has clan OR embassy level is high enough -->
+        <div class="clan-section" *ngIf="hasClan() || buildingInformation.level >= embassyMinimumLevelForClanJoin">
             <div *ngIf="hasClan()" class="current-clan">
                 <h4>Your Clan: <span class="clan-link" (click)="goToClan()">{{getClanName()}}</span></h4>
             </div>
