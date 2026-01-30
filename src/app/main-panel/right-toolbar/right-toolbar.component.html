@@ -15,7 +15,8 @@
         <h4> Villages </h4>
         <ul>
             <li *ngFor = "let village of villages; let i = index" (click)="switchToVillage(i)" [class.active-li]="i == activeVillage">
-                 {{village}} 
+                 <span class="village-name">{{village}}</span>
+                 <span class="edit-icon" (click)="openRenameModal($event, i)" title="Rename village">✏️</span>
             </li>
         </ul>
     </div>
@@ -65,6 +66,29 @@
         </div>
         <div class="troops-container flex-container" *ngIf="clanCatapults > 0"> <img class="material" src="../../../assets/trebuchet.png">
             <h5> Catapults: {{clanCatapults}} </h5>
+        </div>
+    </div>
+</div>
+
+<!-- Rename Village Modal -->
+<div *ngIf="showRenameModal" class="modal-overlay" (click)="closeRenameModal()">
+    <div class="rename-modal" (click)="$event.stopPropagation()">
+        <h4>Rename Village</h4>
+        <input type="text" 
+               [(ngModel)]="newVillageName" 
+               [maxlength]="maxVillageNameLength"
+               placeholder="Enter new village name"
+               class="rename-input">
+        <div class="char-counter" [class.limit-reached]="newVillageName.length >= maxVillageNameLength">
+            {{newVillageName.length}}/{{maxVillageNameLength}}
+        </div>
+        <p class="success-message" *ngIf="renameSuccess">{{renameSuccess}}</p>
+        <p class="error-message" *ngIf="renameError">{{renameError}}</p>
+        <div class="modal-actions">
+            <button class="action-btn save-btn" (click)="saveVillageName()" [disabled]="renameSaving">
+                {{renameSaving ? 'Saving...' : 'Save'}}
+            </button>
+            <button class="action-btn cancel-btn" (click)="closeRenameModal()">Cancel</button>
         </div>
     </div>
 </div>

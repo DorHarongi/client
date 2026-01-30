@@ -41,7 +41,10 @@
 
         <div class="village-name-input" *ngIf="selectedCell">
             <label>Village Name:</label>
-            <input type="text" [(ngModel)]="newVillageName" placeholder="Enter village name" maxlength="20">
+            <input type="text" [(ngModel)]="newVillageName" placeholder="Enter village name" [maxlength]="maxVillageNameLength">
+            <div class="char-counter" [class.limit-reached]="newVillageName.length >= maxVillageNameLength">
+                {{newVillageName.length}}/{{maxVillageNameLength}}
+            </div>
         </div>
 
         <p class="error-message" *ngIf="errorMessage">{{errorMessage}}</p>

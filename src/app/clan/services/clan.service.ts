@@ -81,4 +81,12 @@ export class ClanService {
       memberUsername
     });
   }
+
+  updateClanName(oldClanName: string, newClanName: string, leaderUsername: string): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/update-name`, {
+      oldClanName,
+      newClanName,
+      leaderUsername
+    });
+  }
 }

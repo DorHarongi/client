@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Village } from '../models/Village';
 import { TroopsAmounts } from '../models/troopsAmounts';
+import { environment } from 'src/environments/environment';
+
+const MAX_VILLAGE_NAME_LENGTH = 20;
 
 @Component({
   selector: 'app-right-toolbar',
@@ -11,7 +15,10 @@ import { TroopsAmounts } from '../models/troopsAmounts';
 })
 export class RightToolbarComponent implements OnInit, OnDestroy {
 
-  constructor(private userInformationService: UserInformationService) { 
+  constructor(
+    private userInformationService: UserInformationService,
+    private http: HttpClient
+  ) { 
 
   }
   cropProduction!: number;
@@ -38,6 +45,15 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
 
   villages: Array<string> = [];
   activeVillage: number = 0;
+
+  // Rename village
+  showRenameModal: boolean = false;
+  renameVillageIndex: number = -1;
+  newVillageName: string = '';
+  renameError: string = '';
+  renameSuccess: string = '';
+  renameSaving: boolean = false;
+  maxVillageNameLength = MAX_VILLAGE_NAME_LENGTH;
 
   subscription!: Subscription;
 
@@ -102,5 +118,56 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
   switchToVillage(index: number) // clicked on a differnet village
   {
     this.userInformationService.switchVillage(index);
+  }
+
+  openRenameModal(event: Event, index: number): void {
+    event.stopPropagation(); // Prevent village switch
+    this.renameVillageIndex = index;
+    this.newVillageName = this.villages[index];
+    this.renameError = '';
+    this.renameSuccess = '';
+    this.showRenameModal = true;
+  }
+
+  closeRenameModal(): void {
+    this.showRenameModal = false;
+    this.renameVillageIndex = -1;
+    this.newVillageName = '';
+    this.renameError = '';
+    this.renameSuccess = '';
+  }
+
+  saveVillageName(): void {
+    if (!this.newVillageName.trim()) {
+      this.renameError = 'Village name cannot be empty';
+      return;
+    }
+
+    if (this.newVillageName.length > MAX_VILLAGE_NAME_LENGTH) {
+      this.renameError = `Village name cannot exceed ${MAX_VILLAGE_NAME_LENGTH} characters`;
+      return;
+    }
+
+    this.renameSaving = true;
+    this.renameError = '';
+
+    this.http.post(`${environment.apiUrl}/interactions/rename-village`, {
+      username: this.userInformationService.userInformation.username,
+      villageIndex: this.renameVillageIndex,
+      newVillageName: this.newVillageName.trim()
+    }).subscribe({
+      next: () => {
+        this.renameSaving = false;
+        this.renameSuccess = 'Village renamed successfully!';
+        this.userInformationService.updateUser();
+        setTimeout(() => {
+          this.closeRenameModal();
+        }, 1500);
+      },
+      error: (err) => {
+        this.renameSaving = false;
+        this.renameError = err.error?.message || 'Failed to rename village';
+      }
+    });
   }
 }

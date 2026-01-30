@@ -7,6 +7,7 @@ import { VillageOnMap } from 'src/app/world-map/models/mapModels';
 import { environment } from 'src/environments/environment';
 
 const MAX_MESSAGE_LENGTH = 100;
+const MAX_INTRO_LENGTH = 200;
 
 @Component({
   selector: 'app-player-page',
@@ -29,6 +30,14 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   messageSuccess: string = '';
   messageError: string = '';
   maxMessageLength = MAX_MESSAGE_LENGTH;
+
+  // Intro editing
+  editingIntro: boolean = false;
+  introContent: string = '';
+  introSaving: boolean = false;
+  introSuccess: string = '';
+  introError: string = '';
+  maxIntroLength = MAX_INTRO_LENGTH;
 
   // Village interaction
   selectedVillage: VillageOnMap | null = null;
@@ -152,5 +161,49 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
 
   closeVillageInteraction(): void {
     this.selectedVillage = null;
+  }
+
+  // Intro editing
+  startEditingIntro(): void {
+    this.editingIntro = true;
+    this.introContent = this.playerInfo?.intro || '';
+    this.introSuccess = '';
+    this.introError = '';
+  }
+
+  cancelEditingIntro(): void {
+    this.editingIntro = false;
+    this.introContent = '';
+    this.introSuccess = '';
+    this.introError = '';
+  }
+
+  saveIntro(): void {
+    if (this.introContent.length > MAX_INTRO_LENGTH) {
+      this.introError = `Intro cannot exceed ${MAX_INTRO_LENGTH} characters`;
+      return;
+    }
+
+    this.introSaving = true;
+    this.introError = '';
+
+    this.http.post(`${environment.apiUrl}/users/update-intro`, {
+      username: this.currentUsername,
+      intro: this.introContent.trim()
+    }).subscribe({
+      next: () => {
+        this.introSaving = false;
+        this.introSuccess = 'Intro updated successfully!';
+        this.playerInfo.intro = this.introContent.trim();
+        setTimeout(() => {
+          this.introSuccess = '';
+          this.editingIntro = false;
+        }, 1500);
+      },
+      error: (err) => {
+        this.introSaving = false;
+        this.introError = err.error?.message || 'Failed to update intro';
+      }
+    });
   }
 }

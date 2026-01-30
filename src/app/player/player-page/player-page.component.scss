@@ -180,3 +180,71 @@ $topToolbarMinHeight: 75px;
     font-style: italic;
     margin-top: 5px;
 }
+
+// Intro section
+.intro-section {
+    margin-top: 20px;
+    padding: 15px;
+    border-top: 1px solid #7d5210;
+
+    h4 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+.edit-icon {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    opacity: 0.7;
+    
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.intro-content {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 40px;
+    
+    p {
+        margin: 0;
+        white-space: pre-wrap;
+    }
+}
+
+.no-intro {
+    color: #888;
+    font-style: italic;
+}
+
+.intro-edit {
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #7d5210;
+        border-radius: 3px;
+        resize: none;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+}
+
+.intro-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.save-btn {
+    background-color: #90EE90;
+}
+
+.cancel-btn {
+    background-color: #FFB6C1;
+}

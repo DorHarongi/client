@@ -235,3 +235,22 @@ $topToolbarMinHeight: 75px;
     opacity: 0.5;
     transition: .25s ease-in-out all;
 }
+
+.edit-icon {
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.edit-clan-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.clan-name-input {
+    padding: 5px 10px;
+    border: 1px solid #7d5210;
+    border-radius: 3px;
+    font-size: 16px;
+}

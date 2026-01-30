@@ -1,5 +1,14 @@
 <div class="flexContainer clanContainer step" [class.show]="!showJoinModal" [class.hide]="showJoinModal">
-    <h2 id="titleText" class="center margin-top">Clan: {{clanName}}</h2>
+    <h2 id="titleText" class="center margin-top">
+        <span *ngIf="!editingClanName">Clan: {{clanName}}
+            <span *ngIf="isLeader" class="edit-icon clickable" (click)="startEditingClanName()" title="Edit clan name">✏️</span>
+        </span>
+        <span *ngIf="editingClanName" class="edit-clan-name">
+            Clan: <input type="text" [(ngModel)]="newClanName" maxlength="30" class="clan-name-input">
+            <button class="small-btn accept" (click)="saveClanName()">Save</button>
+            <button class="small-btn decline" (click)="cancelEditingClanName()">Cancel</button>
+        </span>
+    </h2>
 
     <div *ngIf="loading" class="center">
         Loading...

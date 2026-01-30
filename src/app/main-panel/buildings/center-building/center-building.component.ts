@@ -11,6 +11,7 @@ import { Village } from '../../models/Village';
 import { environment } from 'src/environments/environment';
 
 const NEW_VILLAGE_REQUIRED_LEVEL = 10;
+const MAX_VILLAGE_NAME_LENGTH = 20;
 
 interface GridCell {
   x: number;
@@ -34,6 +35,7 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
   newVillageName: string = '';
   subscription?: Subscription;
   errorMessage: string = '';
+  maxVillageNameLength = MAX_VILLAGE_NAME_LENGTH;
 
   constructor(
     private userInformationService: UserInformationService,
@@ -159,6 +161,11 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
   createNewVillage(): void {
     if (!this.selectedCell || !this.newVillageName.trim()) {
       this.errorMessage = 'Please select a cell and enter a village name';
+      return;
+    }
+
+    if (this.newVillageName.length > MAX_VILLAGE_NAME_LENGTH) {
+      this.errorMessage = `Village name cannot exceed ${MAX_VILLAGE_NAME_LENGTH} characters`;
       return;
     }
 

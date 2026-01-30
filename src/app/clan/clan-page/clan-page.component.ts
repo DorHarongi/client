@@ -28,6 +28,10 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   successMessage: string = '';
   errorMessage: string = '';
 
+  // Clan name editing
+  editingClanName: boolean = false;
+  newClanName: string = '';
+
   subscription?: Subscription;
 
   constructor(
@@ -148,6 +152,44 @@ export class ClanPageComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  // Clan name editing
+  startEditingClanName(): void {
+    this.editingClanName = true;
+    this.newClanName = this.clanName;
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  cancelEditingClanName(): void {
+    this.editingClanName = false;
+    this.newClanName = '';
+  }
+
+  saveClanName(): void {
+    if (!this.newClanName.trim()) {
+      this.errorMessage = 'Clan name cannot be empty';
+      return;
+    }
+
+    if (this.newClanName === this.clanName) {
+      this.editingClanName = false;
+      return;
+    }
+
+    this.clanService.updateClanName(this.clanName, this.newClanName.trim(), this.currentUsername)
+      .subscribe({
+        next: () => {
+          this.successMessage = 'Clan name updated successfully!';
+          this.userInformationService.updateUser();
+          // Navigate to the new clan page
+          this.router.navigate(['clan', this.newClanName.trim()]);
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to update clan name';
+        }
+      });
   }
 
   canJoin(): boolean {
