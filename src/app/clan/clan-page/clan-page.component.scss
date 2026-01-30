@@ -91,6 +91,20 @@ $topToolbarMinHeight: 75px;
     }
 }
 
+.success-message {
+    color: #28a745;
+    text-align: center;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.error-message {
+    color: #dc3545;
+    text-align: center;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
 .actions {
     margin-top: 20px;
     display: flex;

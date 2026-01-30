@@ -10,6 +10,8 @@ import { environment } from 'src/environments/environment';
   templateUrl: './player-page.component.html',
   styleUrls: ['./player-page.component.scss']
 })
+const MAX_MESSAGE_LENGTH = 100;
+
 export class PlayerPageComponent implements OnInit, OnDestroy {
 
   username: string = '';
@@ -18,6 +20,14 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   isOwnProfile: boolean = false;
   isSameClan: boolean = false;
   currentUsername: string;
+  
+  // Message sending
+  showMessageForm: boolean = false;
+  messageContent: string = '';
+  messageSending: boolean = false;
+  messageSuccess: string = '';
+  messageError: string = '';
+  maxMessageLength = MAX_MESSAGE_LENGTH;
 
   subscription?: Subscription;
 
@@ -79,5 +89,47 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
 
   formatDate(date: string): string {
     return new Date(date).toLocaleDateString();
+  }
+
+  toggleMessageForm(): void {
+    this.showMessageForm = !this.showMessageForm;
+    this.messageContent = '';
+    this.messageSuccess = '';
+    this.messageError = '';
+  }
+
+  sendMessage(): void {
+    if (!this.messageContent.trim()) {
+      this.messageError = 'Please enter a message';
+      return;
+    }
+
+    if (this.messageContent.length > MAX_MESSAGE_LENGTH) {
+      this.messageError = `Message cannot exceed ${MAX_MESSAGE_LENGTH} characters`;
+      return;
+    }
+
+    this.messageSending = true;
+    this.messageError = '';
+
+    this.http.post(`${environment.apiUrl}/messages/send`, {
+      senderUsername: this.currentUsername,
+      recipientUsername: this.username,
+      content: this.messageContent.trim()
+    }).subscribe({
+      next: () => {
+        this.messageSending = false;
+        this.messageSuccess = 'Message sent successfully!';
+        this.messageContent = '';
+        setTimeout(() => {
+          this.messageSuccess = '';
+          this.showMessageForm = false;
+        }, 2000);
+      },
+      error: (err) => {
+        this.messageSending = false;
+        this.messageError = err.error?.message || 'Failed to send message';
+      }
+    });
   }
 }

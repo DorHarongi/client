@@ -30,6 +30,16 @@ export class EmbassyComponent implements OnInit, OnDestroy {
   maxWithdrawTroops!: TroopsAmounts;
   subscription?: Subscription;
 
+  // Clan creation
+  showCreateClanForm: boolean = false;
+  newClanName: string = '';
+  newClanDescription: string = '';
+  newClanIsOpen: boolean = true;
+  createClanError: string = '';
+  
+  // Withdraw error
+  withdrawError: string = '';
+
   constructor(
     private userInformationService: UserInformationService,
     private http: HttpClient,
@@ -98,6 +108,7 @@ export class EmbassyComponent implements OnInit, OnDestroy {
   withdrawSupport(): void {
     if (!this.selectedSupport || !this.withdrawTroops) return;
 
+    this.withdrawError = '';
     this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/withdraw-support`, {
       ownerUsername: this.userInformationService.userInformation.username,
       ownerVillageIndex: this.userInformationService.currentVillageIndex,
@@ -111,7 +122,7 @@ export class EmbassyComponent implements OnInit, OnDestroy {
         this.closeWithdrawPanel();
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to withdraw support');
+        this.withdrawError = err.error?.message || 'Failed to withdraw support';
       }
     });
   }
@@ -119,5 +130,59 @@ export class EmbassyComponent implements OnInit, OnDestroy {
   getTotalTroops(troops: TroopsAmounts): number {
     return troops.spearFighters + troops.swordFighters + troops.axeFighters + 
            troops.archers + troops.magicians + troops.horsemen + troops.catapults;
+  }
+
+  // Clan creation methods
+  canCreateClan(): boolean {
+    return this.buildingInformation.level >= this.embassyMinimumLevelForClanJoin &&
+           !this.userInformationService.userInformation.clanName;
+  }
+
+  hasClan(): boolean {
+    return !!this.userInformationService.userInformation.clanName;
+  }
+
+  getClanName(): string {
+    return this.userInformationService.userInformation.clanName || '';
+  }
+
+  toggleCreateClanForm(): void {
+    this.showCreateClanForm = !this.showCreateClanForm;
+    this.createClanError = '';
+    if (!this.showCreateClanForm) {
+      this.newClanName = '';
+      this.newClanDescription = '';
+      this.newClanIsOpen = true;
+    }
+  }
+
+  createClan(): void {
+    if (!this.newClanName.trim()) {
+      this.createClanError = 'Please enter a clan name';
+      return;
+    }
+
+    this.http.post<any>(`${environment.apiUrl}/clans/create`, {
+      clanName: this.newClanName.trim(),
+      description: this.newClanDescription.trim(),
+      leaderUsername: this.userInformationService.userInformation.username,
+      isOpen: this.newClanIsOpen
+    }).subscribe({
+      next: () => {
+        // Update local user info
+        this.userInformationService.userInformation.clanName = this.newClanName.trim();
+        this.showCreateClanForm = false;
+        this.router.navigate(['clan', this.newClanName.trim()]);
+      },
+      error: (err) => {
+        this.createClanError = err.error?.message || 'Failed to create clan';
+      }
+    });
+  }
+
+  goToClan(): void {
+    if (this.hasClan()) {
+      this.router.navigate(['clan', this.getClanName()]);
+    }
   }
 }

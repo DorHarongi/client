@@ -36,6 +36,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   resourcesStones: number = 0;
   resourcesCrop: number = 0;
 
+  errorMessage: string = '';
+
   subscription?: Subscription;
 
   constructor(
@@ -144,7 +146,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('home');
       },
       error: (err) => {
-        alert(err.error?.message || 'Attack failed');
+        this.errorMessage = err.error?.message || 'Attack failed';
       }
     });
   }
@@ -173,7 +175,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
         this.closed.emit();
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to send support');
+        this.errorMessage = err.error?.message || 'Failed to send support';
       }
     });
   }
@@ -195,7 +197,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
         this.closed.emit();
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to send resources');
+        this.errorMessage = err.error?.message || 'Failed to send resources';
       }
     });
   }

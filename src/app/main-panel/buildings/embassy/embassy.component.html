@@ -1,12 +1,45 @@
 <app-building [building]="buildingInformation">
     <div extraInformation class="center">
         <div *ngIf = "buildingInformation.level < embassyMinimumLevelForClanJoin">
-            <h5> You can only join a clan once your embassy reaches level  {{embassyMinimumLevelForClanJoin}}</h5>
+            <h5> You can only join or create a clan once your embassy reaches level {{embassyMinimumLevelForClanJoin}}</h5>
         </div>
         <div *ngIf = "buildingInformation.level >= embassyMinimumLevelForClanJoin">
             <h5> Current maximum support troops: {{currentMaximumDefenceTroops}}</h5>
             <div *ngIf="nextLevelMaximumDefenceTroops">
                 <h5> Next level maximum support troops : {{nextLevelMaximumDefenceTroops}}</h5>
+            </div>
+        </div>
+
+        <!-- Clan Status Section -->
+        <div class="clan-section" *ngIf="buildingInformation.level >= embassyMinimumLevelForClanJoin">
+            <div *ngIf="hasClan()" class="current-clan">
+                <h4>Your Clan: <span class="clan-link" (click)="goToClan()">{{getClanName()}}</span></h4>
+            </div>
+
+            <div *ngIf="canCreateClan() && !showCreateClanForm" class="create-clan-prompt">
+                <p>You don't have a clan yet. Create your own or join an existing one!</p>
+                <button class="action-btn" (click)="toggleCreateClanForm()">Create Clan</button>
+            </div>
+
+            <div *ngIf="showCreateClanForm" class="create-clan-form">
+                <h4>Create New Clan</h4>
+                <div class="form-group">
+                    <label>Clan Name:</label>
+                    <input type="text" [(ngModel)]="newClanName" placeholder="Enter clan name" maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea [(ngModel)]="newClanDescription" placeholder="Enter clan description (optional)" maxlength="200" rows="3"></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" [(ngModel)]="newClanIsOpen" id="isOpenCheckbox">
+                    <label for="isOpenCheckbox">Open clan (anyone can request to join)</label>
+                </div>
+                <p class="error-message" *ngIf="createClanError">{{createClanError}}</p>
+                <div class="form-actions">
+                    <button class="action-btn create-btn" (click)="createClan()" [disabled]="!newClanName.trim()">Create</button>
+                    <button class="action-btn cancel-btn" (click)="toggleCreateClanForm()">Cancel</button>
+                </div>
             </div>
         </div>
 
@@ -36,6 +69,7 @@
             <h4>Withdraw Support from {{selectedSupport.recipientUsername}} - {{selectedSupport.recipientVillageName}}</h4>
             <p>Select troops to withdraw:</p>
             <app-troops-choosing [maxPossibleTroops]="maxWithdrawTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
+            <p class="error-message" *ngIf="withdrawError">{{withdrawError}}</p>
             <div class="withdraw-actions">
                 <button class="action-btn" (click)="withdrawSupport()">Withdraw</button>
                 <button class="action-btn cancel-btn" (click)="closeWithdrawPanel()">Cancel</button>

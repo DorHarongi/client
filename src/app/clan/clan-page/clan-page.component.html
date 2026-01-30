@@ -53,6 +53,9 @@
                 </table>
             </div>
 
+            <p class="success-message" *ngIf="successMessage">{{successMessage}}</p>
+            <p class="error-message" *ngIf="errorMessage">{{errorMessage}}</p>
+
             <div class="actions">
                 <button class="action-btn join-btn" *ngIf="canJoin()" (click)="openJoinModal()">
                     {{clanInfo.isOpen ? 'Join Clan' : 'Request to Join'}}

@@ -56,6 +56,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   subscription2!: Subscription;
   subscription3!: Subscription;
   subscription4!: Subscription;
+  clanRequestError: string = '';
 
   ngOnDestroy(): void {
     this.subscription1 && this.subscription1.unsubscribe();
@@ -210,7 +211,7 @@ export class InboxComponent implements OnInit, OnDestroy {
         this.getMessages(); // Refresh
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to handle request');
+        this.clanRequestError = err.error?.message || 'Failed to handle request';
       }
     });
   }

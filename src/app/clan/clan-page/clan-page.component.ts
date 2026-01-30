@@ -24,6 +24,10 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   isMember: boolean = false;
   hasAlreadyRequested: boolean = false;
 
+  // Messages for feedback instead of alerts
+  successMessage: string = '';
+  errorMessage: string = '';
+
   subscription?: Subscription;
 
   constructor(
@@ -93,11 +97,12 @@ export class ClanPageComponent implements OnInit, OnDestroy {
           } else {
             this.hasAlreadyRequested = true;
             this.closeJoinModal();
-            alert('Join request sent successfully!');
+            this.successMessage = 'Join request sent successfully!';
+            setTimeout(() => this.successMessage = '', 3000);
           }
         },
         error: (err) => {
-          alert(err.error?.message || 'Failed to join clan');
+          this.errorMessage = err.error?.message || 'Failed to join clan';
         }
       });
   }
@@ -111,7 +116,7 @@ export class ClanPageComponent implements OnInit, OnDestroy {
             this.loadClanInfo();
           },
           error: (err) => {
-            alert(err.error?.message || 'Failed to leave clan');
+            this.errorMessage = err.error?.message || 'Failed to leave clan';
           }
         });
     }
@@ -124,7 +129,7 @@ export class ClanPageComponent implements OnInit, OnDestroy {
           this.loadClanInfo();
         },
         error: (err) => {
-          alert(err.error?.message || 'Failed to handle request');
+          this.errorMessage = err.error?.message || 'Failed to handle request';
         }
       });
   }

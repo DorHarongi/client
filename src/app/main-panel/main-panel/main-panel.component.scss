@@ -4,7 +4,10 @@ $topToolbarMinHeight: 75px;
 #mainPanel{
     display: flex;
     margin-top: max($topToolbarHeight, $topToolbarMinHeight);
-    position: relative
+    position: relative;
+    min-height: calc(100vh - max($topToolbarHeight, $topToolbarMinHeight));
+    background-color: #8B4513;
+    overflow: hidden;
 }
 
 #buildingsMap{
@@ -21,6 +24,7 @@ area {
 
 #village{
     display: block;
+    flex-shrink: 0;
 }
 
 .buildingLevels{

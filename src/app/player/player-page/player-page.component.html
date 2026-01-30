@@ -37,6 +37,30 @@
 
             <div class="actions" *ngIf="!isOwnProfile">
                 <button class="action-btn" (click)="goToMap()">Find on Map</button>
+                <button class="action-btn message-btn" (click)="toggleMessageForm()">
+                    {{showMessageForm ? 'Cancel' : 'Send Message'}}
+                </button>
+            </div>
+
+            <div class="message-form" *ngIf="showMessageForm && !isOwnProfile">
+                <h4>Send Message to {{playerInfo.username}}</h4>
+                <textarea 
+                    [(ngModel)]="messageContent" 
+                    placeholder="Type your message..."
+                    [maxlength]="maxMessageLength"
+                    rows="3">
+                </textarea>
+                <div class="char-counter" [class.limit-reached]="messageContent.length >= maxMessageLength">
+                    {{messageContent.length}}/{{maxMessageLength}}
+                </div>
+                <p class="success-message" *ngIf="messageSuccess">{{messageSuccess}}</p>
+                <p class="error-message" *ngIf="messageError">{{messageError}}</p>
+                <button 
+                    class="action-btn send-btn" 
+                    (click)="sendMessage()" 
+                    [disabled]="messageSending || !messageContent.trim()">
+                    {{messageSending ? 'Sending...' : 'Send'}}
+                </button>
             </div>
         </div>
     </div>

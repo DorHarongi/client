@@ -75,3 +75,105 @@
 .cancel-btn {
     background-color: #FFB6C1;
 }
+
+.clan-section {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #7d5210;
+}
+
+.current-clan {
+    h4 {
+        color: #228B22;
+    }
+}
+
+.clan-link {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+    
+    &:hover {
+        color: #0056b3;
+    }
+}
+
+.create-clan-prompt {
+    p {
+        margin-bottom: 15px;
+        color: #666;
+    }
+}
+
+.create-clan-form {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px;
+    
+    h4 {
+        margin-bottom: 15px;
+        color: #228B22;
+    }
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+    
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #7d5210;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+    
+    textarea {
+        resize: none;
+        font-family: inherit;
+    }
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    label {
+        display: inline;
+        margin-bottom: 0;
+        font-weight: normal;
+    }
+    
+    input[type="checkbox"] {
+        width: auto;
+    }
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.create-btn {
+    background-color: #90EE90;
+}
+
+.error-message {
+    color: #dc3545;
+    margin: 10px 0;
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
