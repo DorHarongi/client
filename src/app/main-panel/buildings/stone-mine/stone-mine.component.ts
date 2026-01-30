@@ -3,11 +3,12 @@ import { stoneMineUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, 
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { ResourcesWorkers } from '../../models/resourcesWorkers';
-import { User } from '../../models/User';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { QuestAwareResponse } from 'src/app/quests/quest-response.model';
+import { QuestService } from 'src/app/quests/quest.service';
 
 @Component({
   selector: 'app-stone-mine',
@@ -23,7 +24,12 @@ export class StoneMineComponent implements OnInit, OnDestroy {
   stoneWorkers: number;
   subscription!: Subscription;
 
-  constructor(private userInformationService: UserInformationService, private http: HttpClient, private router: Router) {
+  constructor(
+    private userInformationService: UserInformationService, 
+    private http: HttpClient, 
+    private router: Router,
+    private questService: QuestService
+  ) {
     
     this.buildingInformation = new Building("stoneMine", "Stone Mine", this.userInformationService.currentVillage.buildingsLevels.stoneMineLevel, 
     "The stone mine produces the stones of your village. The higher its level and the more wood workers you employ there, the faster the production is.",
@@ -53,14 +59,20 @@ export class StoneMineComponent implements OnInit, OnDestroy {
   {
     let village = this.userInformationService.currentVillage;
     let resourcesWorkers: ResourcesWorkers = new ResourcesWorkers(0,this.stoneWorkers - village.resourcesWorkers.stoneWorkers, 0);
-    let observable: Observable<User> = this.http.post<User>(`${environment.apiUrl}/workers`,
+    let observable: Observable<QuestAwareResponse> = this.http.post<QuestAwareResponse>(`${environment.apiUrl}/workers`,
     {
       username: this.userInformationService.userInformation.username,
       villageIndex: this.userInformationService.currentVillageIndex,
       resourcesWorkers: resourcesWorkers
     });
-    this.subscription = observable.subscribe((user: User)=>{
-      this.userInformationService.setUserInformation(user);
+    this.subscription = observable.subscribe((response: QuestAwareResponse)=>{
+      this.userInformationService.setUserInformation(response.user);
+      
+      // Check for quest completion
+      if (response.questCompleted) {
+        this.questService.notifyQuestCompleted(response.questCompleted);
+      }
+      
       this.router.navigateByUrl('home');
     })
   }

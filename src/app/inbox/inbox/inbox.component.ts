@@ -13,6 +13,26 @@ const WINDOW_SIZE = 6;
 
 type ViewMode = 'reports' | 'messages';
 
+interface ResourcesMetadata {
+  wood: number;
+  stone: number;
+  crop: number;
+  senderVillageName?: string;
+  recipientVillageName?: string;
+}
+
+interface TroopsMetadata {
+  spearFighters: number;
+  swordFighters: number;
+  axeFighters: number;
+  archers: number;
+  magicians: number;
+  horsemen: number;
+  catapults: number;
+  senderVillageName?: string;
+  recipientVillageName?: string;
+}
+
 interface Message {
   id: string;
   senderUsername?: string;
@@ -25,6 +45,8 @@ interface Message {
   metadata?: {
     clanName?: string;
     requestUsername?: string;
+    resources?: ResourcesMetadata;
+    troops?: TroopsMetadata;
   };
 }
 
@@ -255,9 +277,33 @@ export class InboxComponent implements OnInit, OnDestroy {
         return 'assets/swords.png';
       case 'player_message':
         return 'assets/ancient-scroll.png';
+      case 'resources_sent':
+      case 'resources_received':
+        return 'assets/wood.png';
+      case 'support_sent':
+      case 'support_received':
+        return 'assets/spear.png';
       default:
         return 'assets/ancient-scroll.png';
     }
+  }
+
+  isResourceMessage(type: string): boolean {
+    return type === 'resources_sent' || type === 'resources_received';
+  }
+
+  isSupportMessage(type: string): boolean {
+    return type === 'support_sent' || type === 'support_received';
+  }
+
+  getTotalTroops(troops: TroopsMetadata): number {
+    return (troops.spearFighters || 0) + 
+           (troops.swordFighters || 0) + 
+           (troops.axeFighters || 0) + 
+           (troops.archers || 0) + 
+           (troops.magicians || 0) + 
+           (troops.horsemen || 0) + 
+           (troops.catapults || 0);
   }
 
   openMessageModal(message: Message): void {

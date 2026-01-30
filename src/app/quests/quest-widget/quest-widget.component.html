@@ -1,0 +1,109 @@
+<!-- Floating Quest Widget -->
+<div *ngIf="isVisible && currentQuest" 
+     class="quest-widget"
+     [style.left.px]="position.x"
+     [style.top.px]="position.y"
+     [class.dragging]="isDragging"
+     (mousedown)="onMouseDown($event)"
+     #widget>
+    
+    <div class="widget-header" (click)="toggleDetails()">
+        <span class="quest-icon">📜</span>
+        <span class="quest-progress">Quest {{questProgress}}</span>
+        <span class="expand-icon">{{showDetails ? '▼' : '▶'}}</span>
+    </div>
+    
+    <div class="widget-title" (click)="toggleDetails()">
+        {{currentQuest.title}}
+    </div>
+    
+    <div class="widget-hint" *ngIf="!showDetails">
+        {{currentQuest.hint}}
+    </div>
+</div>
+
+<!-- Quest Details Modal -->
+<div *ngIf="showDetails && currentQuest" class="modal-overlay" (click)="toggleDetails()">
+    <div class="quest-details-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>📜 Quest {{questProgress}}</h3>
+            <button class="close-btn" (click)="toggleDetails()">×</button>
+        </div>
+        
+        <div class="modal-body">
+            <h4>{{currentQuest.title}}</h4>
+            <p class="quest-description">{{currentQuest.description}}</p>
+            
+            <div class="rewards-section">
+                <h5>Rewards:</h5>
+                <div class="rewards-list">
+                    <div class="reward-item" *ngIf="currentQuest.rewards.wood > 0">
+                        <img src="../../../assets/wood.png" alt="Wood">
+                        <span>{{currentQuest.rewards.wood}}</span>
+                    </div>
+                    <div class="reward-item" *ngIf="currentQuest.rewards.stone > 0">
+                        <img src="../../../assets/stone.png" alt="Stone">
+                        <span>{{currentQuest.rewards.stone}}</span>
+                    </div>
+                    <div class="reward-item" *ngIf="currentQuest.rewards.crop > 0">
+                        <img src="../../../assets/crop.png" alt="Crop">
+                        <span>{{currentQuest.rewards.crop}}</span>
+                    </div>
+                    <span *ngIf="currentQuest.rewards.wood === 0 && currentQuest.rewards.stone === 0 && currentQuest.rewards.crop === 0" class="no-rewards">
+                        Next quest is free!
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="action-btn" (click)="toggleDetails()">Got it!</button>
+        </div>
+    </div>
+</div>
+
+<!-- Quest Completion Modal -->
+<div *ngIf="showCompletionModal && completedQuest" class="modal-overlay celebration">
+    <div class="completion-modal" (click)="$event.stopPropagation()">
+        <div class="celebration-header">
+            <span class="celebration-emoji">🎉</span>
+            <h3>Quest Completed!</h3>
+            <span class="celebration-emoji">🎉</span>
+        </div>
+        
+        <div class="completed-quest-title">
+            {{completedQuest.completedQuestTitle}}
+        </div>
+        
+        <div class="rewards-received">
+            <h4>Rewards received:</h4>
+            <div class="rewards-list">
+                <div class="reward-item" *ngIf="completedQuest.rewards.wood > 0">
+                    <img src="../../../assets/wood.png" alt="Wood">
+                    <span>+{{completedQuest.rewards.wood}}</span>
+                </div>
+                <div class="reward-item" *ngIf="completedQuest.rewards.stone > 0">
+                    <img src="../../../assets/stone.png" alt="Stone">
+                    <span>+{{completedQuest.rewards.stone}}</span>
+                </div>
+                <div class="reward-item" *ngIf="completedQuest.rewards.crop > 0">
+                    <img src="../../../assets/crop.png" alt="Crop">
+                    <span>+{{completedQuest.rewards.crop}}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="next-quest" *ngIf="completedQuest.nextQuest">
+            <h5>Next Quest:</h5>
+            <p>{{completedQuest.nextQuest.title}}</p>
+        </div>
+        
+        <div class="all-complete" *ngIf="!completedQuest.nextQuest">
+            <p>🏆 Congratulations! You've completed all beginner quests!</p>
+        </div>
+        
+        <button class="action-btn continue-btn" (click)="closeCompletionModal()">
+            {{completedQuest.nextQuest ? 'Continue' : 'Awesome!'}}
+        </button>
+    </div>
+</div>

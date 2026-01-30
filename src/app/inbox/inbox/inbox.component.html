@@ -78,6 +78,51 @@
         <div class="message-content">
             {{selectedMessage.content}}
         </div>
+
+        <!-- Resources Display for resource transfer messages -->
+        <div *ngIf="isResourceMessage(selectedMessage.type) && selectedMessage.metadata?.resources" class="transfer-details">
+            <h5 class="center">Resources Transferred:</h5>
+            <div class="resources-display">
+                <div class="resource-item">
+                    <img src="../../../assets/wood.png" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.resources?.wood}}</span>
+                </div>
+                <div class="resource-item">
+                    <img src="../../../assets/stone.png" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.resources?.stone}}</span>
+                </div>
+                <div class="resource-item">
+                    <img src="../../../assets/crop.png" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.resources?.crop}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troops Display for support troop messages -->
+        <div *ngIf="isSupportMessage(selectedMessage.type) && selectedMessage.metadata?.troops" class="transfer-details">
+            <h5 class="center">Troops Sent:</h5>
+            <table class="troops-table center bordered">
+                <tr>
+                    <th><img src="../../../assets/spear.png" class="troop-icon" title="Spear Fighters"></th>
+                    <th><img src="../../../assets/sword.png" class="troop-icon" title="Sword Fighters"></th>
+                    <th><img src="../../../assets/axe.png" class="troop-icon" title="Axe Fighters"></th>
+                    <th><img src="../../../assets/bow.png" class="troop-icon" title="Archers"></th>
+                    <th><img src="../../../assets/wizard-hat.png" class="troop-icon" title="Magicians"></th>
+                    <th><img src="../../../assets/horse.png" class="troop-icon" title="Horsemen"></th>
+                    <th><img src="../../../assets/catapult.png" class="troop-icon" title="Catapults"></th>
+                </tr>
+                <tr>
+                    <td>{{selectedMessage.metadata?.troops?.spearFighters}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.swordFighters}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.axeFighters}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.archers}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.magicians}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.horsemen}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.catapults}}</td>
+                </tr>
+            </table>
+        </div>
+
         <div class="modal-actions center" *ngIf="selectedMessage.actionable && selectedMessage.type === 'clan_join_request'">
             <button class="small-btn accept" (click)="handleClanRequest(selectedMessage, true); closeMessageModal()">Accept</button>
             <button class="small-btn decline" (click)="handleClanRequest(selectedMessage, false); closeMessageModal()">Decline</button>

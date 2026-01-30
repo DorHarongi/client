@@ -8,4 +8,5 @@ export class User
     villages!: Village[];
     energy!: number;
     pendingClanRequests!: string[];
+    currentQuestIndex!: number;
 }

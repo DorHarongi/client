@@ -11,6 +11,8 @@ import { StatisticsModule } from './statistics/statistics.module';
 import { WorldMapModule } from './world-map/world-map.module';
 import { PlayerModule } from './player/player.module';
 import { ClanModule } from './clan/clan.module';
+import { QuestsModule } from './quests/quests.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +26,7 @@ import { ClanModule } from './clan/clan.module';
     WorldMapModule,
     PlayerModule,
     ClanModule,
+    QuestsModule,
     RouterModule.forRoot(appRoutes),
   ],
   providers: [],

@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
-import { User } from '../../models/User';
 import { environment } from 'src/environments/environment';
+import { QuestAwareResponse } from 'src/app/quests/quest-response.model';
+import { QuestService } from 'src/app/quests/quest.service';
 
 @Component({
   selector: 'app-building',
@@ -14,7 +15,12 @@ import { environment } from 'src/environments/environment';
 })
 export class BuildingComponent implements OnInit, OnDestroy {
 
-  constructor(private router: Router, private userInformationService: UserInformationService, private http:HttpClient) { }
+  constructor(
+    private router: Router, 
+    private userInformationService: UserInformationService, 
+    private http: HttpClient,
+    private questService: QuestService
+  ) { }
 
   ngOnDestroy(): void {
     if(this.subscription)
@@ -37,14 +43,20 @@ export class BuildingComponent implements OnInit, OnDestroy {
   upgrade(): void{
     if(this.checkIfEnoughMaterialsToUpgrade())
     {
-      let observable: Observable<User> = this.http.post<User>(`${environment.apiUrl}/buildings-upgrading/upgradeBuilding`,
+      let observable: Observable<QuestAwareResponse> = this.http.post<QuestAwareResponse>(`${environment.apiUrl}/buildings-upgrading/upgradeBuilding`,
       {
         username: this.userInformationService.userInformation.username,
         villageIndex: this.userInformationService.currentVillageIndex,
         buildingName: this.building.name
       });
-      this.subscription = observable.subscribe((user: User)=>{
-        this.userInformationService.setUserInformation(user);
+      this.subscription = observable.subscribe((response: QuestAwareResponse)=>{
+        this.userInformationService.setUserInformation(response.user);
+        
+        // Check for quest completion
+        if (response.questCompleted) {
+          this.questService.notifyQuestCompleted(response.questCompleted);
+        }
+        
         this.router.navigateByUrl('home');
       })
     }

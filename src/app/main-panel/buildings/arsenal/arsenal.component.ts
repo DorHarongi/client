@@ -5,13 +5,14 @@ import { arsenalUpgradeMaterialCostByLevels, troopUnlockByLevel, MaterialsCost, 
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { TroopsAmounts } from '../../models/troopsAmounts';
-import { User } from '../../models/User';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Village } from '../../models/Village';
 import { ResourcesAmounts } from '../../models/resourcesAmounts';
 import { Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { QuestAwareResponse } from 'src/app/quests/quest-response.model';
+import { QuestService } from 'src/app/quests/quest.service';
 
 @Component({
   selector: 'app-arsenal',
@@ -27,7 +28,13 @@ export class ArsenalComponent implements OnInit, OnDestroy {
   maxPossibleTroops: TroopsAmounts;
   subscription!: Subscription;
 
-  constructor(private userInformationService: UserInformationService, private http:HttpClient, private router: Router, private changerDector: ChangeDetectorRef) { 
+  constructor(
+    private userInformationService: UserInformationService, 
+    private http: HttpClient, 
+    private router: Router, 
+    private changerDector: ChangeDetectorRef,
+    private questService: QuestService
+  ) { 
 
     this.buildingInformation = new Building("arsenal", "Arsenal", this.userInformationService.currentVillage.buildingsLevels.arsenalLevel,
     "In the arsenal you can train your army troops. Level up your arsenal to unlock new troops",
@@ -153,14 +160,20 @@ export class ArsenalComponent implements OnInit, OnDestroy {
   {
     if(this.checkIfEnoughMaterialsToTrain())
     {
-      let observable: Observable<User> = this.http.post<User>(`${environment.apiUrl}/troops-training`,
+      let observable: Observable<QuestAwareResponse> = this.http.post<QuestAwareResponse>(`${environment.apiUrl}/troops-training`,
       {
         username: this.userInformationService.userInformation.username,
         villageIndex: this.userInformationService.currentVillageIndex,
         troopsAmount: this.troops
       });
-      this.subscription = observable.subscribe((user: User)=>{
-        this.userInformationService.setUserInformation(user);
+      this.subscription = observable.subscribe((response: QuestAwareResponse)=>{
+        this.userInformationService.setUserInformation(response.user);
+        
+        // Check for quest completion
+        if (response.questCompleted) {
+          this.questService.notifyQuestCompleted(response.questCompleted);
+        }
+        
         this.router.navigateByUrl('home');
       })
     }

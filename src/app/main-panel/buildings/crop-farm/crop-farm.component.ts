@@ -5,9 +5,10 @@ import { Building } from '../../classes/Building';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ResourcesWorkers } from '../../models/resourcesWorkers';
-import { User } from '../../models/User';
 import { Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { QuestAwareResponse } from 'src/app/quests/quest-response.model';
+import { QuestService } from 'src/app/quests/quest.service';
 
 @Component({
   selector: 'app-crop-farm',
@@ -23,7 +24,12 @@ export class CropFarmComponent implements OnInit, OnDestroy {
   cropWorkers: number;
   subscription!: Subscription;
 
-  constructor(private userInformationService: UserInformationService, private http: HttpClient, private router: Router) {
+  constructor(
+    private userInformationService: UserInformationService, 
+    private http: HttpClient, 
+    private router: Router,
+    private questService: QuestService
+  ) {
 
     this.buildingInformation = new Building("cropFarm", "Crop Farm", this.userInformationService.currentVillage.buildingsLevels.cropFarmLevel, 
     "The crop farm produces the crop of your village. The higher its level and the more crop workers you employ there, the faster the production is.",
@@ -53,14 +59,20 @@ export class CropFarmComponent implements OnInit, OnDestroy {
   {
     let village = this.userInformationService.currentVillage;
     let resourcesWorkers: ResourcesWorkers = new ResourcesWorkers(0, 0, this.cropWorkers - village.resourcesWorkers.cropWorkers);
-    let observable: Observable<User> = this.http.post<User>(`${environment.apiUrl}/workers`,
+    let observable: Observable<QuestAwareResponse> = this.http.post<QuestAwareResponse>(`${environment.apiUrl}/workers`,
     {
       username: this.userInformationService.userInformation.username,
       villageIndex: this.userInformationService.currentVillageIndex,
       resourcesWorkers: resourcesWorkers
     });
-    this.subscription = observable.subscribe((user: User)=>{
-      this.userInformationService.setUserInformation(user);
+    this.subscription = observable.subscribe((response: QuestAwareResponse)=>{
+      this.userInformationService.setUserInformation(response.user);
+      
+      // Check for quest completion
+      if (response.questCompleted) {
+        this.questService.notifyQuestCompleted(response.questCompleted);
+      }
+      
       this.router.navigateByUrl('home');
     })
   }
