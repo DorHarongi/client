@@ -338,6 +338,14 @@ export class InboxComponent implements OnInit, OnDestroy {
     return message.read !== false;
   }
 
+  getDisplaySubject(message: Message): string {
+    // Fix subjects that contain "undefined" due to missing senderUsername
+    if (message.subject && message.subject.includes('undefined')) {
+      return message.subject.replace('undefined', 'System');
+    }
+    return message.subject || 'No subject';
+  }
+
   goBack()
   {
     this.router.navigateByUrl('home');
