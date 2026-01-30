@@ -73,4 +73,12 @@ export class ClanService {
       username
     });
   }
+
+  kickMember(clanName: string, leaderUsername: string, memberUsername: string): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/kick`, {
+      clanName,
+      leaderUsername,
+      memberUsername
+    });
+  }
 }

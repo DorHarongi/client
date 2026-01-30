@@ -19,6 +19,7 @@
                      *ngFor="let cell of row"
                      [class.current-village]="isCurrentVillage(cell)"
                      [class.own-village]="isOwnVillage(cell) && !isCurrentVillage(cell)"
+                     [class.clan-village]="isClanMemberVillage(cell)"
                      [class.enemy-village]="isEnemyVillage(cell)"
                      [class.available]="isCellAvailable(cell)"
                      [class.selected]="isCellSelected(cell)"
@@ -32,6 +33,7 @@
         <div class="legend">
             <div class="legend-item"><span class="legend-color current"></span> Your current village</div>
             <div class="legend-item"><span class="legend-color own"></span> Your other villages</div>
+            <div class="legend-item"><span class="legend-color clan"></span> Clan member villages</div>
             <div class="legend-item"><span class="legend-color enemy"></span> Enemy villages</div>
             <div class="legend-item"><span class="legend-color available-legend"></span> Available (click to select)</div>
             <div class="legend-item"><span class="legend-color selected-legend"></span> Selected</div>

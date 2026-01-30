@@ -2,7 +2,10 @@
     <div class="left-side flex-container">
         <img class="icons clickable" src="../../../assets/village.png" (click)="goToHome()" title="Village">
         <img class="icons clickable" src="../../../assets/pie-chart.png" (click)="goToStatistics()" title="Statistics">
-        <img class="icons clickable" src="../../../assets/ancient-scroll.png" (click)="goToMessages()" title="Messages">
+        <div class="icon-with-badge" (click)="goToMessages()">
+            <img class="icons clickable" src="../../../assets/ancient-scroll.png" title="Messages">
+            <span class="badge" *ngIf="unreadCount > 0">{{unreadCount}}</span>
+        </div>
         <img class="icons clickable" src="../../../assets/map.png" (click)="goToMap()" title="World Map">
     </div>
     <div class="right-side flex-container">

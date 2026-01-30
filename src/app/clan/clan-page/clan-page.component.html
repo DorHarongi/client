@@ -9,7 +9,7 @@
         <div class="clan-card center">
             <div class="clan-info">
                 <p><strong>Description:</strong> {{clanInfo.description || 'No description'}}</p>
-                <p><strong>Leader:</strong> 
+                <p><strong>Leader:</strong>&nbsp;
                     <span class="member-link" (click)="goToMember(clanInfo.leaderUsername)">{{clanInfo.leaderUsername}}</span>
                 </p>
                 <p><strong>Members:</strong> {{clanInfo.members.length}}</p>
@@ -23,12 +23,20 @@
                     <tr>
                         <th>Username</th>
                         <th>Role</th>
+                        <th *ngIf="isLeader">Actions</th>
                     </tr>
                     <tr *ngFor="let member of clanInfo.members" 
-                        class="member-row" 
-                        (click)="goToMember(member)">
-                        <td>{{member}}</td>
+                        class="member-row">
+                        <td class="clickable" (click)="goToMember(member)">{{member}}</td>
                         <td>{{member === clanInfo.leaderUsername ? 'Leader' : 'Member'}}</td>
+                        <td *ngIf="isLeader">
+                            <button class="small-btn kick" 
+                                    *ngIf="member !== currentUsername"
+                                    (click)="kickMember(member); $event.stopPropagation()">
+                                Kick
+                            </button>
+                            <span *ngIf="member === currentUsername">-</span>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -65,7 +73,7 @@
                     Leave Clan
                 </button>
                 <button class="action-btn leave-btn" *ngIf="isLeader" (click)="leaveClan()">
-                    {{clanInfo.members.length > 1 ? 'Leave & Transfer Leadership' : 'Dissolve Clan'}}
+                    {{clanInfo.members.length > 1 ? 'Leave & Transfer Leadership' : 'Disband Clan'}}
                 </button>
             </div>
         </div>

@@ -28,6 +28,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   subscription2?: Subscription;
   
   currentUsername: string;
+  currentUserClan: string;
 
   constructor(
     private router: Router,
@@ -35,6 +36,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     private userInformationService: UserInformationService
   ) {
     this.currentUsername = this.userInformationService.userInformation.username;
+    this.currentUserClan = this.userInformationService.userInformation.clanName || '';
     // Center map on user's first village
     const firstVillage = this.userInformationService.currentVillage;
     if (firstVillage?.location) {
@@ -134,6 +136,14 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   isOwnVillage(village: VillageOnMap): boolean {
     return village.ownerUsername === this.currentUsername;
+  }
+
+  isClanMemberVillage(village: VillageOnMap): boolean {
+    // Not own village, but same clan (if user has a clan)
+    if (!this.currentUserClan || this.isOwnVillage(village)) {
+      return false;
+    }
+    return village.clanName === this.currentUserClan;
   }
 
   goBack(): void {

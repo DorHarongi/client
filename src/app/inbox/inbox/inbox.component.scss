@@ -88,8 +88,8 @@ $topToolbarMinHeight: 75px;
 }
 
 .pagination p.active {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #5a3d2b;
+    color: #f5deb3;
     border-radius: 5px;
 }
 
@@ -155,4 +155,66 @@ tr, td{
 .step{
     opacity: 0.5;
     transition: .25s ease-in-out all;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.message-modal {
+    width: 400px;
+    max-width: 90%;
+    padding: 20px;
+    border: 2px solid black;
+    box-shadow: 2px 2px 5px 2px;
+    border-radius: 7px;
+    
+    h4 {
+        margin-bottom: 15px;
+    }
+}
+
+.message-from {
+    margin-bottom: 5px;
+}
+
+.message-date {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.message-content {
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    min-height: 50px;
+    white-space: pre-wrap;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.modal-close-btn {
+    width: 80px;
+    height: 35px;
+}
+
+.round-square {
+    border-radius: 7px;
 }

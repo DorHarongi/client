@@ -15,7 +15,7 @@ const NEW_VILLAGE_REQUIRED_LEVEL = 10;
 interface GridCell {
   x: number;
   y: number;
-  village?: { ownerUsername: string; villageName: string };
+  village?: { ownerUsername: string; villageName: string; clanName?: string };
 }
 
 @Component({
@@ -104,7 +104,8 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
             if (villageAtCell) {
               cell.village = {
                 ownerUsername: villageAtCell.ownerUsername,
-                villageName: villageAtCell.villageName
+                villageName: villageAtCell.villageName,
+                clanName: villageAtCell.clanName
               };
             }
             row.push(cell);
@@ -133,7 +134,17 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
 
   isEnemyVillage(cell: GridCell): boolean {
     if (!cell.village) return false;
+    // Not enemy if same clan
+    if (this.isClanMemberVillage(cell)) return false;
     return cell.village.ownerUsername !== this.userInformationService.userInformation.username;
+  }
+
+  isClanMemberVillage(cell: GridCell): boolean {
+    if (!cell.village) return false;
+    if (this.isOwnVillage(cell)) return false;
+    const userClan = this.userInformationService.userInformation.clanName;
+    if (!userClan) return false;
+    return cell.village.clanName === userClan;
   }
 
   isCellAvailable(cell: GridCell): boolean {

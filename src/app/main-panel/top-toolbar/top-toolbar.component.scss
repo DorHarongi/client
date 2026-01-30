@@ -63,3 +63,23 @@ h5 {
 #timeTillNextEnergy{
     margin-left: 5px;
 }
+
+.icon-with-badge {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: 0;
+    background-color: #dc3545;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 8px;
+    text-align: center;
+}

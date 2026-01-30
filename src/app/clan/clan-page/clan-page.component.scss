@@ -152,6 +152,23 @@ $topToolbarMinHeight: 75px;
     &.decline {
         background-color: #FFB6C1;
     }
+
+    &.kick {
+        background-color: #ff6b6b;
+        color: white;
+        
+        &:hover {
+            background-color: #ee5a5a;
+        }
+    }
+}
+
+.clickable {
+    cursor: pointer;
+    
+    &:hover {
+        color: #0056b3;
+    }
 }
 
 .buttons {

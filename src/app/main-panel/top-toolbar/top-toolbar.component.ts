@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { warehouseStorageByLevel, quartersPopulationByLevel, maxEnergy, energyProductionSpeedPerSecond } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { LoginService } from 'src/app/login/login.service';
 import { ResourcesAmounts } from '../models/resourcesAmounts';
 import { Village } from '../models/Village';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, timer } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-top-toolbar',
@@ -25,12 +27,16 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   usedPopulation: number = 0;
   math = Math;
 
+  unreadCount: number = 0;
+
   subscription!: Subscription;
+  unreadSubscription?: Subscription;
 
   constructor(
     private userInformationService: UserInformationService, 
     private router: Router,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private http: HttpClient
   ) { 
     this.updateVillage();
   }
@@ -38,12 +44,34 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if(this.subscription)
       this.subscription.unsubscribe();
+    this.unreadSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.subscription = this.userInformationService.villageChanged$.subscribe(()=>{
       this.updateVillage();
-    })
+    });
+    
+    // Load unread count initially and refresh every 30 seconds
+    this.loadUnreadCount();
+    this.unreadSubscription = timer(30000, 30000).subscribe(() => {
+      this.loadUnreadCount();
+    });
+  }
+
+  loadUnreadCount(): void {
+    const username = this.userInformationService.userInformation.username;
+    forkJoin({
+      messages: this.http.get<number>(`${environment.apiUrl}/messages/${username}/unread`),
+      reports: this.http.get<number>(`${environment.apiUrl}/reports/unread/${username}`)
+    }).subscribe({
+      next: (result) => {
+        this.unreadCount = result.messages + result.reports;
+      },
+      error: () => {
+        this.unreadCount = 0;
+      }
+    });
   }
 
 

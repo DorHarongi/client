@@ -3,6 +3,7 @@ import { TroopsAmounts } from "src/app/main-panel/models/troopsAmounts";
 
 export interface AttackReport 
 {
+    id: string;
     attackerName: string;
     attackerVillageName: string;
 
@@ -25,4 +26,6 @@ export interface AttackReport
     defenderTotalLostTroops: TroopsAmounts;
     supportTotalTroops: TroopsAmounts;
     supportTotalLostTroops: TroopsAmounts;
+    
+    read: boolean;
 }

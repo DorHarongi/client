@@ -6,8 +6,13 @@
         <button class="toggle-btn" [class.active]="viewMode === 'clans'" (click)="switchToClans()">Clans</button>
     </div>
 
+    <!-- Loading State -->
+    <div *ngIf="loading" class="center margin-top loading-text">
+        Loading...
+    </div>
+
     <!-- Players Table -->
-    <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'players'">
+    <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'players' && !loading">
         <tr>
             <th class="center">Rank</th>
             <th class="center">Name</th>
@@ -32,7 +37,7 @@
     </table>
 
     <!-- Clans Table -->
-    <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'clans'">
+    <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'clans' && !loading">
         <tr>
             <th class="center">Rank</th>
             <th class="center">Clan Name</th>

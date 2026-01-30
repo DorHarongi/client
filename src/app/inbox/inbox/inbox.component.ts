@@ -52,6 +52,11 @@ export class InboxComponent implements OnInit, OnDestroy {
   messagesInPage: Array<Message> = [];
   attackReportPopupOpened: boolean = false;
   clickedAttackReport!: AttackReport;
+  
+  // Message modal
+  messageModalOpened: boolean = false;
+  selectedMessage: Message | null = null;
+  
   subscription1!: Subscription;
   subscription2!: Subscription;
   subscription3!: Subscription;
@@ -157,6 +162,27 @@ export class InboxComponent implements OnInit, OnDestroy {
   {
     this.attackReportPopupOpened = true;
     this.clickedAttackReport = clickedAttackReport;
+    
+    // Mark report as read
+    if (!this.isReportRead(clickedAttackReport)) {
+      this.markReportAsRead(clickedAttackReport);
+    }
+  }
+
+  isReportRead(report: AttackReport): boolean {
+    // For backward compatibility, treat undefined as read
+    return report.read !== false;
+  }
+
+  markReportAsRead(report: AttackReport): void {
+    this.http.post(`${environment.apiUrl}/reports/read`, {
+      reportId: report.id,
+      username: this.username
+    }).subscribe({
+      next: () => {
+        report.read = true;
+      }
+    });
   }
 
   makeAttackReportTitle(attackReport: AttackReport): string
@@ -229,6 +255,37 @@ export class InboxComponent implements OnInit, OnDestroy {
       default:
         return 'assets/ancient-scroll.png';
     }
+  }
+
+  openMessageModal(message: Message): void {
+    this.selectedMessage = message;
+    this.messageModalOpened = true;
+    
+    // Mark as read if not already
+    if (!message.read) {
+      this.markMessageAsRead(message);
+    }
+  }
+
+  closeMessageModal(): void {
+    this.messageModalOpened = false;
+    this.selectedMessage = null;
+  }
+
+  markMessageAsRead(message: Message): void {
+    this.http.post(`${environment.apiUrl}/messages/read`, {
+      messageId: message.id,
+      username: this.username
+    }).subscribe({
+      next: () => {
+        message.read = true;
+      }
+    });
+  }
+
+  isMessageRead(message: Message): boolean {
+    // For backward compatibility, treat undefined as read
+    return message.read !== false;
   }
 
   goBack()

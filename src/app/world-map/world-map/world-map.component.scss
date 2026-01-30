@@ -134,6 +134,13 @@ $topToolbarMinHeight: 75px;
     }
   }
 
+  &.clan-village {
+    background-color: #87CEEB; // Light blue for clan members
+    &:hover {
+      background-color: #6CB4D9;
+    }
+  }
+
   &.other-village {
     background-color: #FFB6C1;
     &:hover {
@@ -186,6 +193,10 @@ $topToolbarMinHeight: 75px;
   
   &.own {
     background-color: green;
+  }
+
+  &.clan {
+    background-color: #1E90FF; // Dodger blue for clan members
   }
 }
 

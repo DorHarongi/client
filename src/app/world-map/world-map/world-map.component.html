@@ -14,7 +14,8 @@
                                  (click)="onCellClick(cell)"
                                  [class.has-village]="cell.village"
                                  [class.own-village]="cell.village && isOwnVillage(cell.village)"
-                                 [class.other-village]="cell.village && !isOwnVillage(cell.village)">
+                                 [class.clan-village]="cell.village && isClanMemberVillage(cell.village)"
+                                 [class.other-village]="cell.village && !isOwnVillage(cell.village) && !isClanMemberVillage(cell.village)">
                                 <span class="coords">{{cell.x}},{{cell.y}}</span>
                                 <div *ngIf="cell.village" class="village-marker">
                                     <img src="assets/village.png" class="village-icon">
@@ -37,7 +38,8 @@
                 <div class="minimap-village" 
                      *ngFor="let village of allVillages"
                      [ngStyle]="getMinimapVillageStyle(village)"
-                     [class.own]="isOwnVillage(village)">
+                     [class.own]="isOwnVillage(village)"
+                     [class.clan]="isClanMemberVillage(village)">
                 </div>
                 <div class="minimap-window" [ngStyle]="getMinimapWindowStyle()"></div>
             </div>

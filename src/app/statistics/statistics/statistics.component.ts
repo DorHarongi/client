@@ -43,6 +43,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   displayedPages: number[] = [];
   usersInPage: Array<any> = [];
   clansInPage: Array<ClanStatisticDTO> = [];
+  loading: boolean = true;
   subscription1!: Subscription;
   subscription2!: Subscription;
   subscription3!: Subscription;
@@ -55,6 +56,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   loadData(): void {
     this.page = 1;
+    this.loading = true;
     if (this.viewMode === 'players') {
       this.getNumberOfUserStatisticsPages();
       this.getUserStatistics();
@@ -117,6 +119,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.subscription1 = this.http.get<any>(`${environment.apiUrl}/users/statistics/${this.page}`, 
      ).subscribe((users)=>{
         this.usersInPage = users;
+        this.loading = false;
     })
   }
 
@@ -134,6 +137,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.subscription4 = this.clanService.getClanStatistics(this.page)
       .subscribe((clans)=>{
         this.clansInPage = clans;
+        this.loading = false;
       });
   }
 

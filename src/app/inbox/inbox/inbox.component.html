@@ -14,7 +14,7 @@
             <th class="center">Result</th>
             <th class="center">Date</th>
         </tr>
-        <tr (click)="openAttackReportPopup(attackReport)" *ngFor="let attackReport of attackReportsInPage" class="bordered clickable-row">
+        <tr (click)="openAttackReportPopup(attackReport)" *ngFor="let attackReport of attackReportsInPage" class="bordered clickable-row" [class.unread]="!isReportRead(attackReport)">
             <td class="title">
                 <img *ngIf = "attackReport.attackerName == this.username" src="../../../assets/swords.png" class="icons"> 
                 <img *ngIf = "attackReport.attackerName != this.username" src="../../../assets/shield.png" class="icons"> 
@@ -36,14 +36,14 @@
             <th class="center">Date</th>
             <th class="center">Actions</th>
         </tr>
-        <tr *ngFor="let message of messagesInPage" class="bordered" [class.unread]="!message.read">
+        <tr *ngFor="let message of messagesInPage" class="bordered clickable-row" [class.unread]="!isMessageRead(message)" (click)="openMessageModal(message)">
             <td class="title">
                 <img [src]="getMessageIcon(message.type)" class="icons">
                 {{message.subject}}
             </td>
             <td>{{message.senderUsername || 'System'}}</td>
             <td>{{message.date | date:'d/MM/yyyy H:mm'}}</td>
-            <td>
+            <td (click)="$event.stopPropagation()">
                 <div *ngIf="message.actionable && message.type === 'clan_join_request'" class="message-actions">
                     <button class="small-btn accept" (click)="handleClanRequest(message, true)">Accept</button>
                     <button class="small-btn decline" (click)="handleClanRequest(message, false)">Decline</button>
@@ -69,4 +69,20 @@
 
 <app-attack-report *ngIf="attackReportPopupOpened" [attackReport]="clickedAttackReport" (closed)="attackReportPopupClosed()"></app-attack-report>
 
+<!-- Message Modal -->
+<div *ngIf="messageModalOpened && selectedMessage" class="modal-overlay" (click)="closeMessageModal()">
+    <div class="flexContainer message-modal round-square" (click)="$event.stopPropagation()">
+        <h4 class="center">{{selectedMessage.subject}}</h4>
+        <p class="message-from" *ngIf="selectedMessage.senderUsername">From: <strong>{{selectedMessage.senderUsername}}</strong></p>
+        <p class="message-date">{{selectedMessage.date | date:'d/MM/yyyy H:mm'}}</p>
+        <div class="message-content">
+            {{selectedMessage.content}}
+        </div>
+        <div class="modal-actions center" *ngIf="selectedMessage.actionable && selectedMessage.type === 'clan_join_request'">
+            <button class="small-btn accept" (click)="handleClanRequest(selectedMessage, true); closeMessageModal()">Accept</button>
+            <button class="small-btn decline" (click)="handleClanRequest(selectedMessage, false); closeMessageModal()">Decline</button>
+        </div>
+        <button class="buttons center modal-close-btn" (click)="closeMessageModal()">Close</button>
+    </div>
+</div>
 

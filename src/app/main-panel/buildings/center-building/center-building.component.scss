@@ -75,6 +75,10 @@
         background-color: #90EE90;
     }
     
+    &.clan-village {
+        background-color: #87CEEB;
+    }
+    
     &.enemy-village {
         background-color: #FFB6C1;
     }
@@ -125,6 +129,10 @@
     
     &.own {
         background-color: #90EE90;
+    }
+    
+    &.clan {
+        background-color: #87CEEB;
     }
     
     &.enemy {

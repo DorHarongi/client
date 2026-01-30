@@ -134,6 +134,22 @@ export class ClanPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  kickMember(memberUsername: string): void {
+    if (confirm(`Are you sure you want to kick ${memberUsername} from the clan?`)) {
+      this.clanService.kickMember(this.clanName, this.currentUsername, memberUsername)
+        .subscribe({
+          next: () => {
+            this.successMessage = `${memberUsername} has been kicked from the clan`;
+            setTimeout(() => this.successMessage = '', 3000);
+            this.loadClanInfo();
+          },
+          error: (err) => {
+            this.errorMessage = err.error?.message || 'Failed to kick member';
+          }
+        });
+    }
+  }
+
   canJoin(): boolean {
     return !this.isMember && !this.currentUserClan && !this.hasAlreadyRequested;
   }

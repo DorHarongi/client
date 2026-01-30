@@ -91,8 +91,8 @@ $topToolbarMinHeight: 75px;
   }
   
   .pagination p.active {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #5a3d2b;
+    color: #f5deb3;
     border-radius: 5px;
   }
   
@@ -136,4 +136,10 @@ $topToolbarMinHeight: 75px;
 .step{
     opacity: 0.5;
     transition: .25s ease-in-out all;
+}
+
+.loading-text {
+    font-size: 18px;
+    color: #666;
+    padding: 20px;
 }

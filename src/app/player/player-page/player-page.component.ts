@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { VillageOnMap } from 'src/app/world-map/models/mapModels';
 import { environment } from 'src/environments/environment';
 
 const MAX_MESSAGE_LENGTH = 100;
@@ -28,6 +29,9 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   messageSuccess: string = '';
   messageError: string = '';
   maxMessageLength = MAX_MESSAGE_LENGTH;
+
+  // Village interaction
+  selectedVillage: VillageOnMap | null = null;
 
   subscription?: Subscription;
 
@@ -131,5 +135,22 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
         this.messageError = err.error?.message || 'Failed to send message';
       }
     });
+  }
+
+  openVillageInteraction(village: any): void {
+    if (this.isOwnProfile) return;
+    
+    // Convert to VillageOnMap format
+    this.selectedVillage = {
+      x: village.location?.x || 0,
+      y: village.location?.y || 0,
+      ownerUsername: this.playerInfo.username,
+      villageName: village.villageName,
+      clanName: this.playerInfo.clanName
+    };
+  }
+
+  closeVillageInteraction(): void {
+    this.selectedVillage = null;
   }
 }

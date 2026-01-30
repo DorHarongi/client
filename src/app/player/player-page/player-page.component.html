@@ -11,7 +11,7 @@
             
             <div class="profile-info">
                 <p><strong>Joined:</strong> {{formatDate(playerInfo.joinDate)}}</p>
-                <p><strong>Clan:</strong> 
+                <p><strong>Clan:</strong>&nbsp;
                     <span *ngIf="playerInfo.clanName" class="clan-link" (click)="goToClan()">{{playerInfo.clanName}}</span>
                     <span *ngIf="!playerInfo.clanName">No clan</span>
                 </p>
@@ -27,12 +27,15 @@
                         <th>Population</th>
                         <th>Location</th>
                     </tr>
-                    <tr *ngFor="let village of playerInfo.villages">
+                    <tr *ngFor="let village of playerInfo.villages" 
+                        (click)="openVillageInteraction(village)"
+                        [class.clickable-row]="!isOwnProfile">
                         <td>{{village.villageName}}</td>
                         <td>{{village.population}}</td>
                         <td>{{village.location?.x}}, {{village.location?.y}}</td>
                     </tr>
                 </table>
+                <p *ngIf="!isOwnProfile" class="click-hint">Click on a village to interact</p>
             </div>
 
             <div class="actions" *ngIf="!isOwnProfile">
@@ -67,3 +70,10 @@
 
     <button id="back" class="buttons center" (click)="goBack()">Back</button>
 </div>
+
+<app-village-interaction 
+    *ngIf="selectedVillage" 
+    [village]="selectedVillage"
+    [currentUsername]="currentUsername"
+    (closed)="closeVillageInteraction()">
+</app-village-interaction>

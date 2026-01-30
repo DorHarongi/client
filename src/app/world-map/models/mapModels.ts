@@ -3,6 +3,7 @@ export interface VillageOnMap {
     y: number;
     ownerUsername: string;
     villageName: string;
+    clanName?: string;
 }
 
 export interface MapWindowResponse {
