@@ -7,9 +7,16 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
 import { Building } from '../../classes/Building';
 import { WorldMapService } from 'src/app/world-map/services/world-map.service';
 import { User } from '../../models/User';
+import { Village } from '../../models/Village';
 import { environment } from 'src/environments/environment';
 
 const NEW_VILLAGE_REQUIRED_LEVEL = 10;
+
+interface GridCell {
+  x: number;
+  y: number;
+  village?: { ownerUsername: string; villageName: string };
+}
 
 @Component({
   selector: 'app-center-building',
@@ -20,11 +27,13 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
 
   buildingInformation: Building;
   canCreateNewVillage: boolean = false;
+  hasAlreadyCreatedFromThis: boolean = false;
   showNewVillageUI: boolean = false;
-  availableCells: { x: number; y: number }[] = [];
-  selectedCell: { x: number; y: number } | null = null;
+  gridCells: GridCell[][] = [];
+  selectedCell: GridCell | null = null;
   newVillageName: string = '';
   subscription?: Subscription;
+  errorMessage: string = '';
 
   constructor(
     private userInformationService: UserInformationService,
@@ -48,70 +57,97 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
 
   checkNewVillageEligibility(): void {
     const currentLevel = this.userInformationService.currentVillage.buildingsLevels.centerBuildingLevel;
+    const currentVillageIndex = this.userInformationService.currentVillageIndex;
     const totalVillages = this.userInformationService.userInformation.villages.length;
-    const villagesAtLevel10 = this.userInformationService.userInformation.villages.filter(
-      v => v.buildingsLevels.centerBuildingLevel >= NEW_VILLAGE_REQUIRED_LEVEL
-    ).length;
     
-    // Can create new village if current is level 10 and hasn't been used yet
+    // Check how many villages were created before this one that are level 10+
     // Each level 10 village can create one new village
-    this.canCreateNewVillage = currentLevel >= NEW_VILLAGE_REQUIRED_LEVEL && 
-      (totalVillages - 1) < villagesAtLevel10;
+    // Village at index N can create village at index N+1 (if level 10)
+    const isLevel10 = currentLevel >= NEW_VILLAGE_REQUIRED_LEVEL;
+    
+    // This village has already created a new one if there's a village after it in the list
+    // and this village is level 10
+    this.hasAlreadyCreatedFromThis = isLevel10 && currentVillageIndex < totalVillages - 1;
+    
+    this.canCreateNewVillage = isLevel10 && !this.hasAlreadyCreatedFromThis;
   }
 
   openNewVillageUI(): void {
     this.showNewVillageUI = true;
-    this.loadAvailableCells();
+    this.errorMessage = '';
+    this.loadGridData();
   }
 
   closeNewVillageUI(): void {
     this.showNewVillageUI = false;
     this.selectedCell = null;
     this.newVillageName = '';
+    this.errorMessage = '';
   }
 
-  loadAvailableCells(): void {
+  loadGridData(): void {
     const currentLocation = this.userInformationService.currentVillage.location;
-    this.worldMapService.getAvailableCells(currentLocation.x, currentLocation.y, 5)
-      .subscribe(cells => {
-        this.availableCells = cells;
+    // Load map window centered on current village (3x3 = range of 1)
+    this.worldMapService.getMapWindow(currentLocation.x - 1, currentLocation.y - 1)
+      .subscribe(response => {
+        // Build 3x3 grid
+        this.gridCells = [];
+        for (let dy = -1; dy <= 1; dy++) {
+          const row: GridCell[] = [];
+          for (let dx = -1; dx <= 1; dx++) {
+            const x = currentLocation.x + dx;
+            const y = currentLocation.y + dy;
+            const cell: GridCell = { x, y };
+            
+            // Find if there's a village at this location from the response
+            const villageAtCell = response.villages?.find(v => v.x === x && v.y === y);
+            if (villageAtCell) {
+              cell.village = {
+                ownerUsername: villageAtCell.ownerUsername,
+                villageName: villageAtCell.villageName
+              };
+            }
+            row.push(cell);
+          }
+          this.gridCells.push(row);
+        }
       });
   }
 
-  selectCell(cell: { x: number; y: number }): void {
-    this.selectedCell = cell;
-  }
-
-  isCurrentVillage(x: number, y: number): boolean {
-    const loc = this.userInformationService.currentVillage.location;
-    return loc.x === x && loc.y === y;
-  }
-
-  isCellAvailable(x: number, y: number): boolean {
-    return this.availableCells.some(c => c.x === x && c.y === y);
-  }
-
-  isCellSelected(x: number, y: number): boolean {
-    return this.selectedCell?.x === x && this.selectedCell?.y === y;
-  }
-
-  getGridCells(): { x: number; y: number }[][] {
-    const loc = this.userInformationService.currentVillage.location;
-    const grid: { x: number; y: number }[][] = [];
-    
-    for (let dy = -5; dy <= 5; dy++) {
-      const row: { x: number; y: number }[] = [];
-      for (let dx = -5; dx <= 5; dx++) {
-        row.push({ x: loc.x + dx, y: loc.y + dy });
-      }
-      grid.push(row);
+  selectCell(cell: GridCell): void {
+    if (this.isCellAvailable(cell)) {
+      this.selectedCell = cell;
+      this.errorMessage = '';
     }
-    return grid;
+  }
+
+  isCurrentVillage(cell: GridCell): boolean {
+    const loc = this.userInformationService.currentVillage.location;
+    return loc.x === cell.x && loc.y === cell.y;
+  }
+
+  isOwnVillage(cell: GridCell): boolean {
+    if (!cell.village) return false;
+    return cell.village.ownerUsername === this.userInformationService.userInformation.username;
+  }
+
+  isEnemyVillage(cell: GridCell): boolean {
+    if (!cell.village) return false;
+    return cell.village.ownerUsername !== this.userInformationService.userInformation.username;
+  }
+
+  isCellAvailable(cell: GridCell): boolean {
+    // Available if: no village, not current village location
+    return !cell.village && !this.isCurrentVillage(cell);
+  }
+
+  isCellSelected(cell: GridCell): boolean {
+    return this.selectedCell?.x === cell.x && this.selectedCell?.y === cell.y;
   }
 
   createNewVillage(): void {
     if (!this.selectedCell || !this.newVillageName.trim()) {
-      alert('Please select a cell and enter a village name');
+      this.errorMessage = 'Please select a cell and enter a village name';
       return;
     }
 
@@ -130,7 +166,7 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('home');
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to create village');
+        this.errorMessage = err.error?.message || 'Failed to create village';
       }
     });
   }

@@ -2,7 +2,7 @@
    <h4 class="center"> Attack {{defenderName }} </h4>
    <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
    <div id="actions" class="center">
-        <button id = "attack" class="buttons center" (click)="attackVillage()"> Attack </button>
+        <button id = "attack" class="buttons center" (click)="attackVillage()" [disabled]="!hasSelectedTroops()"> Attack </button>
         <button id = "back" class="buttons center" (click)="goBack()"> Back </button>
     </div>  
 </div>

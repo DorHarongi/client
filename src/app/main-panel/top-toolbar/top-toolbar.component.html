@@ -4,7 +4,6 @@
         <img class="icons clickable" src="../../../assets/pie-chart.png" (click)="goToStatistics()" title="Statistics">
         <img class="icons clickable" src="../../../assets/ancient-scroll.png" (click)="goToMessages()" title="Messages">
         <img class="icons clickable" src="../../../assets/map.png" (click)="goToMap()" title="World Map">
-        <img class="icons clickable" src="../../../assets/logout.png" (click)="logout()" title="Logout">
     </div>
     <div class="right-side flex-container">
         <img class="icons" src="../../../assets/energy.png">
@@ -18,5 +17,8 @@
         <h5> {{math.floor(resources.woodAmount)}} / {{maxWoodStorage}}</h5>
         <img class="icons" src="../../../assets/rock.jpg">
         <h5> {{math.floor(resources.stonesAmount)}} / {{maxStonesStorage}}</h5>
+    </div>
+    <div class="logout-container">
+        <img class="icons clickable" src="../../../assets/logout.png" (click)="logout()" title="Logout">
     </div>
 </div>

@@ -1,4 +1,8 @@
 <app-building [building]="buildingInformation">
+    <div extraInformation *ngIf="hasAlreadyCreatedFromThis" class="info-message">
+        <p class="already-created-message">You have already created a village from this Center Building.</p>
+    </div>
+
     <div extraInformation *ngIf="canCreateNewVillage && !showNewVillageUI" class="new-village-section">
         <h4 class="new-village-title">Create New Village</h4>
         <p>Your center building has reached level 10! You can now create a new village.</p>
@@ -7,26 +11,38 @@
 
     <div extraInformation *ngIf="showNewVillageUI" class="new-village-ui">
         <h4 class="new-village-title">Select Location for New Village</h4>
-        <p>Click on an available cell (green) to select it</p>
+        <p>Choose an available cell (beige) adjacent to your current village</p>
         
         <div class="mini-map">
-            <div class="grid-row" *ngFor="let row of getGridCells()">
+            <div class="grid-row" *ngFor="let row of gridCells">
                 <div class="grid-cell" 
                      *ngFor="let cell of row"
-                     [class.current-village]="isCurrentVillage(cell.x, cell.y)"
-                     [class.available]="isCellAvailable(cell.x, cell.y)"
-                     [class.selected]="isCellSelected(cell.x, cell.y)"
-                     [class.unavailable]="!isCellAvailable(cell.x, cell.y) && !isCurrentVillage(cell.x, cell.y)"
-                     (click)="isCellAvailable(cell.x, cell.y) && selectCell(cell)">
+                     [class.current-village]="isCurrentVillage(cell)"
+                     [class.own-village]="isOwnVillage(cell) && !isCurrentVillage(cell)"
+                     [class.enemy-village]="isEnemyVillage(cell)"
+                     [class.available]="isCellAvailable(cell)"
+                     [class.selected]="isCellSelected(cell)"
+                     (click)="selectCell(cell)">
                     <span class="coords">{{cell.x}},{{cell.y}}</span>
+                    <img *ngIf="cell.village" src="assets/village.png" class="village-icon">
                 </div>
             </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><span class="legend-color current"></span> Your current village</div>
+            <div class="legend-item"><span class="legend-color own"></span> Your other villages</div>
+            <div class="legend-item"><span class="legend-color enemy"></span> Enemy villages</div>
+            <div class="legend-item"><span class="legend-color available-legend"></span> Available (click to select)</div>
+            <div class="legend-item"><span class="legend-color selected-legend"></span> Selected</div>
         </div>
 
         <div class="village-name-input" *ngIf="selectedCell">
             <label>Village Name:</label>
             <input type="text" [(ngModel)]="newVillageName" placeholder="Enter village name" maxlength="20">
         </div>
+
+        <p class="error-message" *ngIf="errorMessage">{{errorMessage}}</p>
 
         <div class="new-village-actions">
             <button class="action-btn create-btn" 

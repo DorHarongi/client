@@ -1,3 +1,17 @@
+.info-message {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.already-created-message {
+    color: #8B4513;
+    font-style: italic;
+    padding: 10px;
+    background-color: rgba(139, 69, 19, 0.1);
+    border-radius: 5px;
+    border: 1px solid #8B4513;
+}
+
 .new-village-section {
     margin-top: 30px;
     text-align: center;
@@ -22,6 +36,7 @@
     display: inline-block;
     border: 2px solid black;
     margin: 15px 0;
+    background-color: #8B4513;
 }
 
 .grid-row {
@@ -29,41 +44,100 @@
 }
 
 .grid-cell {
-    width: 35px;
-    height: 35px;
+    width: 60px;
+    height: 60px;
     border: 1px solid #654321;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
-    font-size: 8px;
+    background-color: #DEB887;
     
     &.available {
-        background-color: #90EE90;
         cursor: pointer;
         
         &:hover {
-            background-color: #7CCD7C;
+            background-color: #D2B48C;
+            box-shadow: inset 0 0 10px rgba(0, 128, 0, 0.3);
         }
     }
     
     &.current-village {
         background-color: #4169E1;
-        color: white;
+        
+        .coords {
+            color: white;
+        }
+    }
+    
+    &.own-village {
+        background-color: #90EE90;
+    }
+    
+    &.enemy-village {
+        background-color: #FFB6C1;
     }
     
     &.selected {
         background-color: #FFD700;
-        border: 2px solid #FF8C00;
-    }
-    
-    &.unavailable {
-        background-color: #D3D3D3;
+        border: 3px solid #FF8C00;
+        box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
     }
     
     .coords {
-        font-size: 7px;
-        color: #333;
+        font-size: 8px;
+        color: #666;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+    }
+    
+    .village-icon {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+    font-size: 12px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #654321;
+    
+    &.current {
+        background-color: #4169E1;
+    }
+    
+    &.own {
+        background-color: #90EE90;
+    }
+    
+    &.enemy {
+        background-color: #FFB6C1;
+    }
+    
+    &.available-legend {
+        background-color: #DEB887;
+    }
+    
+    &.selected-legend {
+        background-color: #FFD700;
+        border: 2px solid #FF8C00;
     }
 }
 
@@ -80,6 +154,12 @@
         border-radius: 3px;
         width: 200px;
     }
+}
+
+.error-message {
+    color: #dc3545;
+    margin: 10px 0;
+    font-weight: bold;
 }
 
 .new-village-actions {

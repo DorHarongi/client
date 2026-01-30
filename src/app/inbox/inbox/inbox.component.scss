@@ -28,8 +28,11 @@ $topToolbarMinHeight: 75px;
   cursor: pointer;
   
   &.active {
-    background-color: #4CAF50;
-    color: white;
+    background-image: none;
+    background-color: #5a3d2b;
+    color: #f5deb3;
+    font-weight: bold;
+    border: 2px solid #3d2817;
   }
   
   &:hover:not(.active) {

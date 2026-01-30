@@ -37,6 +37,9 @@ export class AttackComponent implements OnInit, OnDestroy {
 
   attackVillage()
   {
+    if (!this.hasSelectedTroops()) {
+      return;
+    }
     let observable: Observable<any>  = this.http.post<any>(`${environment.apiUrl}/attack`,
     {
       defenderName: this.defenderName,
@@ -49,6 +52,14 @@ export class AttackComponent implements OnInit, OnDestroy {
       this.userInformationService.setUserInformation(user);
       this.router.navigateByUrl('home');
     })
+  }
+
+  hasSelectedTroops(): boolean {
+    if (!this.chosenTroops) return false;
+    const total = this.chosenTroops.spearFighters + this.chosenTroops.swordFighters + 
+      this.chosenTroops.axeFighters + this.chosenTroops.archers + 
+      this.chosenTroops.magicians + this.chosenTroops.horsemen + this.chosenTroops.catapults;
+    return total > 0;
   }
 
   goBack(){

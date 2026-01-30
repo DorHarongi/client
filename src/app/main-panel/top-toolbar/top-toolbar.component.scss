@@ -32,7 +32,13 @@
 
 .right-side {
     justify-content: flex-end;
-    margin-right: 1%;
+}
+
+.logout-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .left-side {

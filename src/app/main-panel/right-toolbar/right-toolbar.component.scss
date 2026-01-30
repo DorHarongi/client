@@ -24,7 +24,8 @@
 }
 
 #troops {
-    height: 350px;
+    height: fit-content;
+    min-height: 200px;
 }
 
 #clanTroops {

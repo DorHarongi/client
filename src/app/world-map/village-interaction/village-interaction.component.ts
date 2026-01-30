@@ -129,6 +129,9 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   attack(): void {
+    if (!this.hasSelectedTroops()) {
+      return;
+    }
     this.subscription = this.http.post<User>(`${environment.apiUrl}/attack`, {
       defenderName: this.village.ownerUsername,
       attackerName: this.currentUsername,
@@ -146,7 +149,18 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     });
   }
 
+  hasSelectedTroops(): boolean {
+    if (!this.chosenTroops) return false;
+    const total = this.chosenTroops.spearFighters + this.chosenTroops.swordFighters + 
+      this.chosenTroops.axeFighters + this.chosenTroops.archers + 
+      this.chosenTroops.magicians + this.chosenTroops.horsemen + this.chosenTroops.catapults;
+    return total > 0;
+  }
+
   sendSupport(): void {
+    if (!this.hasSelectedTroops()) {
+      return;
+    }
     this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/send-support`, {
       senderUsername: this.currentUsername,
       senderVillageIndex: this.userInformationService.currentVillageIndex,
