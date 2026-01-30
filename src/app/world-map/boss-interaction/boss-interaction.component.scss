@@ -1,0 +1,293 @@
+.interactionContainer {
+  background-image: url(../../../assets/top-bg.png);
+  min-width: 450px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 10vh;
+}
+
+.round-square {
+  border: 1px black solid;
+  border-radius: 0.5rem;
+  box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.3);
+}
+
+.center {
+  text-align: center;
+}
+
+.modal-title {
+  margin-bottom: 15px;
+}
+
+.boss-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.boss-image {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.boss-name {
+  margin: 5px 0;
+}
+
+.boss-tier {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+
+  &.tier-common { background-color: #808080; color: white; }
+  &.tier-rare { background-color: #3498db; color: white; }
+  &.tier-epic { background-color: #9b59b6; color: white; }
+  &.tier-legendary { background-color: #f1c40f; color: black; }
+}
+
+.hp-section {
+  margin: 15px 0;
+}
+
+.hp-label {
+  text-align: center;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.hp-bar-container {
+  width: 100%;
+  height: 20px;
+  background-color: #333;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hp-bar {
+  height: 100%;
+  transition: width 0.3s ease;
+
+  &.hp-high { background-color: #27ae60; }
+  &.hp-medium { background-color: #f39c12; }
+  &.hp-low { background-color: #e74c3c; }
+}
+
+.status-section {
+  margin: 15px 0;
+}
+
+.location {
+  color: #666;
+  font-size: 14px;
+}
+
+.time-remaining {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.claim-status {
+  margin: 10px 0;
+
+  .claimed-by-me {
+    color: #27ae60;
+    font-weight: bold;
+  }
+
+  .claimed-by-other {
+    color: #e74c3c;
+  }
+
+  .unclaimed {
+    color: #3498db;
+    font-style: italic;
+  }
+}
+
+.distance-section {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.distance-label {
+  margin-bottom: 5px;
+}
+
+.damage-bonus {
+  font-weight: bold;
+  font-size: 16px;
+
+  &.bonus { color: #27ae60; }
+  &.penalty { color: #e74c3c; }
+  &.neutral { color: #333; }
+}
+
+.rewards-section {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: rgba(241, 196, 15, 0.2);
+  border-radius: 8px;
+
+  h5 {
+    margin-bottom: 5px;
+  }
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+.action-btn {
+  background-image: url(../../../assets/top-bg.png);
+  border: 1px black solid;
+  outline: none;
+  border-radius: 0.25rem;
+  box-shadow: 2px 2px 2px 2px;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.attack-btn {
+    background-color: #e74c3c;
+    color: white;
+  }
+}
+
+.warning {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.attack-panel {
+  margin: 15px 0;
+}
+
+.damage-preview {
+  color: #27ae60;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.panel-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.attack-result {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+
+  h4.victory {
+    color: #27ae60;
+    animation: pulse 1s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.result-details {
+  margin: 10px 0;
+
+  p {
+    margin: 5px 0;
+  }
+}
+
+.troop-losses {
+  margin: 10px 0;
+
+  h5 {
+    color: #e74c3c;
+  }
+
+  .loss-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+
+    span {
+      background-color: rgba(231, 76, 60, 0.2);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  }
+}
+
+.rewards-received {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: rgba(39, 174, 96, 0.2);
+  border-radius: 8px;
+
+  h5 {
+    color: #27ae60;
+    margin-bottom: 10px;
+  }
+
+  .reward-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .resource-icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+.error-message {
+  color: #e74c3c;
+  margin: 10px 0;
+}
+
+.buttons {
+  background-image: url(../../../assets/top-bg.png);
+  border: 1px black solid;
+  outline: none;
+  border-radius: 0.25rem;
+  box-shadow: 2px 2px 2px 2px;
+}
+
+#back {
+  width: 100px;
+  margin-top: 20px;
+  height: 40px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+}

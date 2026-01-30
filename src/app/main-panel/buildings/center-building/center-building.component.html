@@ -21,11 +21,13 @@
                      [class.own-village]="isOwnVillage(cell) && !isCurrentVillage(cell)"
                      [class.clan-village]="isClanMemberVillage(cell)"
                      [class.enemy-village]="isEnemyVillage(cell)"
+                     [class.has-boss]="hasBoss(cell)"
                      [class.available]="isCellAvailable(cell)"
                      [class.selected]="isCellSelected(cell)"
                      (click)="selectCell(cell)">
                     <span class="coords">{{cell.x}},{{cell.y}}</span>
-                    <img *ngIf="cell.village" src="assets/village.png" class="village-icon">
+                    <img *ngIf="cell.village && !cell.hasBoss" src="assets/village.png" class="village-icon">
+                    <span *ngIf="cell.hasBoss" class="boss-indicator" [title]="cell.bossName">BOSS</span>
                 </div>
             </div>
         </div>
@@ -35,6 +37,7 @@
             <div class="legend-item"><span class="legend-color own"></span> Your other villages</div>
             <div class="legend-item"><span class="legend-color clan"></span> Clan member villages</div>
             <div class="legend-item"><span class="legend-color enemy"></span> Enemy villages</div>
+            <div class="legend-item"><span class="legend-color boss"></span> Raid Boss</div>
             <div class="legend-item"><span class="legend-color available-legend"></span> Available (click to select)</div>
             <div class="legend-item"><span class="legend-color selected-legend"></span> Selected</div>
         </div>

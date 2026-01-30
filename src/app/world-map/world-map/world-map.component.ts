@@ -3,10 +3,19 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { WorldMapService } from '../services/world-map.service';
-import { VillageOnMap, MapWindowResponse, MinimapResponse } from '../models/mapModels';
+import { BossService } from '../services/boss.service';
+import { VillageOnMap, BossOnMap, MapWindowResponse, MinimapResponse } from '../models/mapModels';
+import { BossTier, bossMinimapColors, CLAIMED_BOSS_COLOR } from 'utils';
 
 const WINDOW_SIZE = 10;
 const MINIMAP_SCALE = 2; // pixels per tile
+
+interface GridCell {
+  x: number;
+  y: number;
+  village: VillageOnMap | null;
+  boss: BossOnMap | null;
+}
 
 @Component({
   selector: 'app-world-map',
@@ -19,10 +28,13 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   windowStartY: number = 0;
   worldSize: number = 100;
   villages: VillageOnMap[] = [];
+  bosses: BossOnMap[] = [];
   allVillages: VillageOnMap[] = [];
+  allBosses: BossOnMap[] = [];
   selectedVillage: VillageOnMap | null = null;
+  selectedBoss: BossOnMap | null = null;
   
-  gridCells: { x: number; y: number; village: VillageOnMap | null }[][] = [];
+  gridCells: GridCell[][] = [];
   
   subscription1?: Subscription;
   subscription2?: Subscription;
@@ -33,7 +45,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private worldMapService: WorldMapService,
-    private userInformationService: UserInformationService
+    private userInformationService: UserInformationService,
+    public bossService: BossService
   ) {
     this.currentUsername = this.userInformationService.userInformation.username;
     this.currentUserClan = this.userInformationService.userInformation.clanName || '';
@@ -59,6 +72,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.subscription1 = this.worldMapService.getMapWindow(this.windowStartX, this.windowStartY)
       .subscribe((response: MapWindowResponse) => {
         this.villages = response.villages;
+        this.bosses = response.bosses || [];
         this.worldSize = response.worldSize;
         this.buildGrid();
       });
@@ -68,6 +82,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.subscription2 = this.worldMapService.getMinimap()
       .subscribe((response: MinimapResponse) => {
         this.allVillages = response.villages;
+        this.allBosses = response.bosses || [];
         this.worldSize = response.worldSize;
       });
   }
@@ -75,12 +90,13 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   buildGrid(): void {
     this.gridCells = [];
     for (let y = 0; y < WINDOW_SIZE; y++) {
-      const row: { x: number; y: number; village: VillageOnMap | null }[] = [];
+      const row: GridCell[] = [];
       for (let x = 0; x < WINDOW_SIZE; x++) {
         const worldX = this.windowStartX + x;
         const worldY = this.windowStartY + y;
         const village = this.villages.find(v => v.x === worldX && v.y === worldY) || null;
-        row.push({ x: worldX, y: worldY, village });
+        const boss = this.bosses.find(b => b.x === worldX && b.y === worldY) || null;
+        row.push({ x: worldX, y: worldY, village, boss });
       }
       this.gridCells.push(row);
     }
@@ -114,9 +130,13 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCellClick(cell: { x: number; y: number; village: VillageOnMap | null }): void {
-    if (cell.village) {
+  onCellClick(cell: GridCell): void {
+    if (cell.boss) {
+      this.selectedBoss = cell.boss;
+      this.selectedVillage = null;
+    } else if (cell.village) {
       this.selectedVillage = cell.village;
+      this.selectedBoss = null;
     }
   }
 
@@ -134,6 +154,17 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.selectedVillage = null;
   }
 
+  closeBossInteraction(): void {
+    this.selectedBoss = null;
+  }
+
+  onBossDefeated(): void {
+    this.selectedBoss = null;
+    // Reload map to reflect boss removal
+    this.loadMapWindow();
+    this.loadMinimap();
+  }
+
   isOwnVillage(village: VillageOnMap): boolean {
     return village.ownerUsername === this.currentUsername;
   }
@@ -146,6 +177,10 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     return village.clanName === this.currentUserClan;
   }
 
+  isBossClaimedByMyClan(boss: BossOnMap): boolean {
+    return boss.claimedByClanName === this.currentUserClan && !!this.currentUserClan;
+  }
+
   goBack(): void {
     this.router.navigateByUrl('home');
   }
@@ -154,6 +189,16 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     return {
       left: (village.x * MINIMAP_SCALE) + 'px',
       top: (village.y * MINIMAP_SCALE) + 'px'
+    };
+  }
+
+  getMinimapBossStyle(boss: BossOnMap): any {
+    const isClaimedByMyClan = this.isBossClaimedByMyClan(boss);
+    const color = isClaimedByMyClan ? CLAIMED_BOSS_COLOR : bossMinimapColors[boss.tier];
+    return {
+      left: (boss.x * MINIMAP_SCALE) + 'px',
+      top: (boss.y * MINIMAP_SCALE) + 'px',
+      'background-color': color
     };
   }
 
@@ -168,5 +213,15 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   getMinimapSize(): number {
     return this.worldSize * MINIMAP_SCALE;
+  }
+
+  getBossCellClass(boss: BossOnMap): string {
+    const classes = ['has-boss', `boss-${boss.tier}`];
+    if (this.isBossClaimedByMyClan(boss)) {
+      classes.push('boss-claimed-by-me');
+    } else if (boss.claimedByClanName) {
+      classes.push('boss-claimed');
+    }
+    return classes.join(' ');
   }
 }

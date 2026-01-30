@@ -84,6 +84,11 @@ export class UserInformationService {
     })
   }
 
+  // Alias for updateUser - used by components that need explicit refresh
+  refreshUserInformation(): void {
+    this.updateUser();
+  }
+
   private requestVillage(newVillageIndex: number): Observable<Village>
   {
     return this.http.post<Village>(`${environment.apiUrl}/users/village`,

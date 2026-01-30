@@ -1,0 +1,133 @@
+<div class="flexContainer interactionContainer round-square">
+    <h3 class="center modal-title">Raid Boss</h3>
+    
+    <!-- Boss Info -->
+    <div class="boss-header center">
+        <img [src]="getBossImagePath()" class="boss-image">
+        <h4 class="boss-name">{{boss.name}}</h4>
+        <span class="boss-tier tier-{{boss.tier}}">{{boss.tier | uppercase}}</span>
+    </div>
+
+    <!-- HP Bar -->
+    <div class="hp-section">
+        <div class="hp-label">
+            <span>HP: {{formatHp(boss.currentHp)}} / {{formatHp(boss.maxHp)}}</span>
+        </div>
+        <div class="hp-bar-container">
+            <div class="hp-bar" [ngClass]="getHpBarClass()" [style.width.%]="getHpPercentage()"></div>
+        </div>
+    </div>
+
+    <!-- Status Info -->
+    <div class="status-section center" *ngIf="!showAttackPanel && !attackResult">
+        <p class="location">Location: ({{boss.x}}, {{boss.y}})</p>
+        <p class="time-remaining">{{getTimeRemaining()}}</p>
+        
+        <div class="claim-status" *ngIf="boss.claimedByClanName">
+            <p *ngIf="isClaimedByMyClan()" class="claimed-by-me">
+                Claimed by your clan!
+            </p>
+            <p *ngIf="isClaimedByOtherClan()" class="claimed-by-other">
+                Claimed by: {{boss.claimedByClanName}}
+            </p>
+        </div>
+        <div class="claim-status" *ngIf="!boss.claimedByClanName">
+            <p class="unclaimed">Unclaimed - Attack to claim for your clan!</p>
+        </div>
+
+        <!-- Distance Bonus -->
+        <div class="distance-section">
+            <p class="distance-label">Distance from your village: {{distance.toFixed(1)}} cells</p>
+            <p class="damage-bonus" [ngClass]="{
+                'bonus': damageMultiplier > 1,
+                'penalty': damageMultiplier < 1,
+                'neutral': damageMultiplier === 1
+            }">
+                {{distanceBonusText}}
+            </p>
+        </div>
+
+        <!-- Rewards -->
+        <div class="rewards-section">
+            <h5>Rewards on defeat:</h5>
+            <p>{{getRewardText()}} for each clan member!</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="action-btn attack-btn" 
+                    *ngIf="canAttack()" 
+                    (click)="openAttackPanel()"
+                    [disabled]="getEnergy() < 1 || !currentUserClan">
+                Attack Boss
+            </button>
+            <p *ngIf="!currentUserClan" class="warning">You must be in a clan to attack bosses</p>
+            <p *ngIf="isClaimedByOtherClan()" class="warning">This boss is claimed by another clan</p>
+            <p *ngIf="getEnergy() < 1 && canAttack()" class="warning">Not enough energy</p>
+        </div>
+    </div>
+
+    <!-- Attack Panel -->
+    <div *ngIf="showAttackPanel" class="attack-panel">
+        <h5 class="center">Attack {{boss.name}}</h5>
+        <p class="center damage-preview">Your damage: {{distanceBonusText}}</p>
+        <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
+        <div class="panel-actions center">
+            <button class="action-btn" (click)="attack()" [disabled]="loading || !hasSelectedTroops()">
+                {{loading ? 'Attacking...' : 'Attack'}}
+            </button>
+            <button class="action-btn" (click)="showAttackPanel = false" [disabled]="loading">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Attack Result -->
+    <div *ngIf="attackResult" class="attack-result center">
+        <h4 *ngIf="attackResult.bossDefeated" class="victory">VICTORY! Boss Defeated!</h4>
+        <h4 *ngIf="!attackResult.bossDefeated">Attack Complete</h4>
+        
+        <div class="result-details">
+            <p>Damage dealt: {{attackResult.report.actualDamage.toLocaleString()}}</p>
+            <p>Boss HP: {{formatHp(attackResult.report.bossHpBefore)}} → {{formatHp(attackResult.report.bossHpAfter)}}</p>
+            <p>Distance multiplier: {{(attackResult.report.distanceMultiplier * 100).toFixed(0)}}%</p>
+        </div>
+
+        <div class="troop-losses" *ngIf="hasAnyLosses()">
+            <h5>Troops Lost:</h5>
+            <div class="loss-grid">
+                <span *ngIf="attackResult.report.attackerLostTroops.spearFighters">
+                    Spears: {{attackResult.report.attackerLostTroops.spearFighters}}
+                </span>
+                <span *ngIf="attackResult.report.attackerLostTroops.swordFighters">
+                    Swords: {{attackResult.report.attackerLostTroops.swordFighters}}
+                </span>
+                <span *ngIf="attackResult.report.attackerLostTroops.axeFighters">
+                    Axes: {{attackResult.report.attackerLostTroops.axeFighters}}
+                </span>
+                <span *ngIf="attackResult.report.attackerLostTroops.archers">
+                    Archers: {{attackResult.report.attackerLostTroops.archers}}
+                </span>
+                <span *ngIf="attackResult.report.attackerLostTroops.magicians">
+                    Magicians: {{attackResult.report.attackerLostTroops.magicians}}
+                </span>
+                <span *ngIf="attackResult.report.attackerLostTroops.horsemen">
+                    Horsemen: {{attackResult.report.attackerLostTroops.horsemen}}
+                </span>
+                <span *ngIf="attackResult.report.attackerLostTroops.catapults">
+                    Catapults: {{attackResult.report.attackerLostTroops.catapults}}
+                </span>
+            </div>
+        </div>
+
+        <div *ngIf="attackResult.bossDefeated && attackResult.rewards" class="rewards-received">
+            <h5>Rewards Received:</h5>
+            <div class="reward-icons">
+                <span><img src="assets/wood.jpg" class="resource-icon"> {{attackResult.rewards.wood.toLocaleString()}}</span>
+                <span><img src="assets/rock.jpg" class="resource-icon"> {{attackResult.rewards.stone.toLocaleString()}}</span>
+                <span><img src="assets/crop.jpg" class="resource-icon"> {{attackResult.rewards.crop.toLocaleString()}}</span>
+            </div>
+        </div>
+    </div>
+
+    <p class="error-message center" *ngIf="errorMessage">{{errorMessage}}</p>
+    <button id="back" class="buttons center" (click)="close()">Close</button>
+</div>

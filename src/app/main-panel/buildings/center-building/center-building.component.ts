@@ -17,6 +17,8 @@ interface GridCell {
   x: number;
   y: number;
   village?: { ownerUsername: string; villageName: string; clanName?: string };
+  hasBoss?: boolean;
+  bossName?: string;
 }
 
 @Component({
@@ -110,6 +112,14 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
                 clanName: villageAtCell.clanName
               };
             }
+
+            // Find if there's a boss at this location
+            const bossAtCell = response.bosses?.find(b => b.x === x && b.y === y);
+            if (bossAtCell) {
+              cell.hasBoss = true;
+              cell.bossName = bossAtCell.name;
+            }
+
             row.push(cell);
           }
           this.gridCells.push(row);
@@ -150,8 +160,12 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
   }
 
   isCellAvailable(cell: GridCell): boolean {
-    // Available if: no village, not current village location
-    return !cell.village && !this.isCurrentVillage(cell);
+    // Available if: no village, no boss, not current village location
+    return !cell.village && !cell.hasBoss && !this.isCurrentVillage(cell);
+  }
+
+  hasBoss(cell: GridCell): boolean {
+    return !!cell.hasBoss;
   }
 
   isCellSelected(cell: GridCell): boolean {

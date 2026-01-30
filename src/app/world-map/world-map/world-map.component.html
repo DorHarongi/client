@@ -1,4 +1,4 @@
-<div class="flexContainer mapContainer step" [class.show]="!selectedVillage" [class.hide]="selectedVillage">
+<div class="flexContainer mapContainer step" [class.show]="!selectedVillage && !selectedBoss" [class.hide]="selectedVillage || selectedBoss">
     <h2 id="titleText" class="center margin-top">World Map</h2>
     
     <div class="map-content">
@@ -15,10 +15,14 @@
                                  [class.has-village]="cell.village"
                                  [class.own-village]="cell.village && isOwnVillage(cell.village)"
                                  [class.clan-village]="cell.village && isClanMemberVillage(cell.village)"
-                                 [class.other-village]="cell.village && !isOwnVillage(cell.village) && !isClanMemberVillage(cell.village)">
+                                 [class.other-village]="cell.village && !isOwnVillage(cell.village) && !isClanMemberVillage(cell.village)"
+                                 [ngClass]="cell.boss ? getBossCellClass(cell.boss) : ''">
                                 <span class="coords">{{cell.x}},{{cell.y}}</span>
-                                <div *ngIf="cell.village" class="village-marker">
+                                <div *ngIf="cell.village && !cell.boss" class="village-marker">
                                     <img src="assets/village.png" class="village-icon">
+                                </div>
+                                <div *ngIf="cell.boss" class="boss-marker">
+                                    <img [src]="bossService.getBossImagePath(cell.boss.tier)" class="boss-icon">
                                 </div>
                             </div>
                         </div>
@@ -35,13 +39,28 @@
                  [style.width.px]="getMinimapSize()" 
                  [style.height.px]="getMinimapSize()"
                  (click)="onMinimapClick($event)">
+                <!-- Villages -->
                 <div class="minimap-village" 
                      *ngFor="let village of allVillages"
                      [ngStyle]="getMinimapVillageStyle(village)"
                      [class.own]="isOwnVillage(village)"
                      [class.clan]="isClanMemberVillage(village)">
                 </div>
+                <!-- Bosses -->
+                <div class="minimap-boss" 
+                     *ngFor="let boss of allBosses"
+                     [ngStyle]="getMinimapBossStyle(boss)"
+                     [class.claimed-by-me]="isBossClaimedByMyClan(boss)">
+                </div>
                 <div class="minimap-window" [ngStyle]="getMinimapWindowStyle()"></div>
+            </div>
+            <!-- Legend -->
+            <div class="minimap-legend">
+                <div class="legend-item"><span class="legend-dot own"></span> Your village</div>
+                <div class="legend-item"><span class="legend-dot clan"></span> Clan village</div>
+                <div class="legend-item"><span class="legend-dot enemy"></span> Enemy village</div>
+                <div class="legend-item"><span class="legend-dot boss-common"></span> Boss</div>
+                <div class="legend-item"><span class="legend-dot boss-claimed"></span> Your clan's boss</div>
             </div>
         </div>
     </div>
@@ -55,3 +74,12 @@
     [currentUsername]="currentUsername"
     (closed)="closeVillageInteraction()">
 </app-village-interaction>
+
+<app-boss-interaction
+    *ngIf="selectedBoss"
+    [boss]="selectedBoss"
+    [currentUsername]="currentUsername"
+    [currentUserClan]="currentUserClan"
+    (closed)="closeBossInteraction()"
+    (bossDefeated)="onBossDefeated()">
+</app-boss-interaction>

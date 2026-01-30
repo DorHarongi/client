@@ -4,6 +4,12 @@ import { Observable } from 'rxjs';
 import { MapWindowResponse, MinimapResponse, VillageOnMap } from '../models/mapModels';
 import { environment } from 'src/environments/environment';
 
+export interface AvailableCell {
+  x: number;
+  y: number;
+  hasBoss?: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,8 +25,8 @@ export class WorldMapService {
     return this.http.get<MinimapResponse>(`${environment.apiUrl}/world/minimap`);
   }
 
-  getAvailableCells(centerX: number, centerY: number, range: number = 5): Observable<{ x: number; y: number }[]> {
-    return this.http.get<{ x: number; y: number }[]>(
+  getAvailableCells(centerX: number, centerY: number, range: number = 5): Observable<AvailableCell[]> {
+    return this.http.get<AvailableCell[]>(
       `${environment.apiUrl}/world/available-cells?centerX=${centerX}&centerY=${centerY}&range=${range}`
     );
   }

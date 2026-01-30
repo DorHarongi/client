@@ -166,6 +166,51 @@ $topToolbarMinHeight: 75px;
     width: 35px;
     height: 35px;
   }
+
+  // Boss cells
+  &.has-boss {
+    cursor: pointer;
+  }
+
+  &.boss-common {
+    background-color: #A0A0A0; // Gray
+    &:hover { background-color: #909090; }
+  }
+
+  &.boss-rare {
+    background-color: #5DADE2; // Blue
+    &:hover { background-color: #4D9ED2; }
+  }
+
+  &.boss-epic {
+    background-color: #AF7AC5; // Purple
+    &:hover { background-color: #9F6AB5; }
+  }
+
+  &.boss-legendary {
+    background-color: #F4D03F; // Gold
+    &:hover { background-color: #E4C02F; }
+  }
+
+  &.boss-claimed-by-me {
+    box-shadow: 0 0 8px 3px #27ae60;
+  }
+
+  &.boss-claimed {
+    opacity: 0.7;
+  }
+
+  .boss-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .boss-icon {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+  }
 }
 
 .minimap-container {
@@ -200,11 +245,54 @@ $topToolbarMinHeight: 75px;
   }
 }
 
+.minimap-boss {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  border: 1px solid black;
+  
+  &.claimed-by-me {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
 .minimap-window {
   position: absolute;
   border: 2px solid yellow;
   background-color: rgba(255, 255, 0, 0.2);
   pointer-events: none;
+}
+
+.minimap-legend {
+  margin-top: 10px;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  
+  &.own { background-color: green; }
+  &.clan { background-color: #1E90FF; }
+  &.enemy { background-color: red; }
+  &.boss-common { background-color: #808080; border: 1px solid black; }
+  &.boss-claimed { background-color: #27ae60; border: 1px solid black; }
 }
 
 .buttons {
