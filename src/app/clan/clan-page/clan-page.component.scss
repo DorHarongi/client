@@ -161,6 +161,15 @@ $topToolbarMinHeight: 75px;
             background-color: #ee5a5a;
         }
     }
+
+    &.toggle-status {
+        background-color: #87CEEB;
+        margin-left: 10px;
+        
+        &:hover {
+            background-color: #7EC8E3;
+        }
+    }
 }
 
 .clickable {

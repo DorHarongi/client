@@ -216,6 +216,23 @@ export class ClanPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  toggleClanOpen(): void {
+    if (!this.clanInfo) return;
+    
+    const newStatus = !this.clanInfo.isOpen;
+    this.clanService.toggleClanOpen(this.clanName, this.currentUsername, newStatus)
+      .subscribe({
+        next: () => {
+          this.clanInfo!.isOpen = newStatus;
+          this.successMessage = `Clan is now ${newStatus ? 'open' : 'closed'}`;
+          setTimeout(() => this.successMessage = '', 3000);
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to update clan status';
+        }
+      });
+  }
+
   canJoin(): boolean {
     return !this.isMember && !this.currentUserClan && !this.hasAlreadyRequested;
   }

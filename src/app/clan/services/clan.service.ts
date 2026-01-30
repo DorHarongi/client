@@ -89,4 +89,12 @@ export class ClanService {
       leaderUsername
     });
   }
+
+  toggleClanOpen(clanName: string, leaderUsername: string, isOpen: boolean): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/toggle-open`, {
+      clanName,
+      leaderUsername,
+      isOpen
+    });
+  }
 }

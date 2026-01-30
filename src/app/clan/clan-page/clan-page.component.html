@@ -22,7 +22,11 @@
                     <span class="member-link" (click)="goToMember(clanInfo.leaderUsername)">{{clanInfo.leaderUsername}}</span>
                 </p>
                 <p><strong>Members:</strong> {{clanInfo.members.length}}</p>
-                <p><strong>Status:</strong> {{clanInfo.isOpen ? 'Open' : 'Closed'}}</p>
+                <p><strong>Status:</strong> {{clanInfo.isOpen ? 'Open' : 'Closed'}}
+                    <button *ngIf="isLeader" class="small-btn toggle-status" (click)="toggleClanOpen()">
+                        {{clanInfo.isOpen ? 'Make Closed' : 'Make Open'}}
+                    </button>
+                </p>
                 <p><strong>Created:</strong> {{formatDate(clanInfo.createdDate)}}</p>
             </div>
 
