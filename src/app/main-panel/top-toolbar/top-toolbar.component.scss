@@ -7,17 +7,36 @@
     border: 2px black solid;
     position: fixed;
     display: flex;
-    overflow-x: scroll;
+    overflow-x: auto;
     min-height: 75px;
     min-width: fit-content;
+    -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
 }
 
 .clickable{
     cursor: pointer;
 }
 
-#toolbar::-webkit-scrollbar { 
-    display: none;
+// Hide scrollbar on desktop but allow touch scroll on mobile
+@media (min-width: 769px) {
+    #toolbar::-webkit-scrollbar { 
+        display: none;
+    }
+    #toolbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+// Show thin scrollbar on mobile for better UX
+@media (max-width: 768px) {
+    #toolbar::-webkit-scrollbar {
+        height: 4px;
+    }
+    #toolbar::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 2px;
+    }
 }
 
 

@@ -5,9 +5,21 @@ $topToolbarMinHeight: 75px;
     display: flex;
     margin-top: max($topToolbarHeight, $topToolbarMinHeight);
     position: relative;
-    min-height: calc(100vh - max($topToolbarHeight, $topToolbarMinHeight));
+    height: calc(100vh - max($topToolbarHeight, $topToolbarMinHeight));
+    max-height: calc(100vh - max($topToolbarHeight, $topToolbarMinHeight));
     background-color: #8B4513;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+}
+
+// Mobile responsive - allow horizontal scroll with touch
+@media (max-width: 1200px) {
+    #mainPanel {
+        overflow-x: scroll;
+        // Ensure content is scrollable
+        touch-action: pan-x pan-y;
+    }
 }
 
 #buildingsMap{
