@@ -18,6 +18,8 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
   showDetails: boolean = false;
   showCompletionModal: boolean = false;
   completedQuest: QuestCompletionResult | null = null;
+  isClaimable: boolean = false;
+  isClaimingRewards: boolean = false;
 
   // Dragging state
   isDragging: boolean = false;
@@ -35,11 +37,13 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadPosition();
     this.updateCurrentQuest();
+    this.checkIfClaimable();
 
     // Subscribe to village changes to update quest
     this.subscriptions.push(
       this.userInformationService.villageChanged$.subscribe(() => {
         this.updateCurrentQuest();
+        this.checkIfClaimable();
       })
     );
 
@@ -77,10 +81,48 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
     }
   }
 
+  checkIfClaimable(): void {
+    const user = this.userInformationService.userInformation;
+    if (!user) {
+      this.isClaimable = false;
+      return;
+    }
+
+    this.questService.checkQuestStatus(user.username).subscribe({
+      next: (response) => {
+        this.isClaimable = response.isClaimable;
+      },
+      error: () => {
+        this.isClaimable = false;
+      }
+    });
+  }
+
+  claimRewards(): void {
+    const user = this.userInformationService.userInformation;
+    if (!user || this.isClaimingRewards) return;
+
+    this.isClaimingRewards = true;
+    this.questService.claimQuest(user.username).subscribe({
+      next: (response) => {
+        this.isClaimingRewards = false;
+        if (response.questCompleted) {
+          this.userInformationService.userInformation = response.user;
+          this.questService.notifyQuestCompleted(response.questCompleted);
+        }
+        this.isClaimable = false;
+      },
+      error: () => {
+        this.isClaimingRewards = false;
+      }
+    });
+  }
+
   handleQuestCompleted(result: QuestCompletionResult): void {
     this.completedQuest = result;
     this.showCompletionModal = true;
     this.showDetails = false;
+    this.isClaimable = false;
     // Quest will update after modal is closed
   }
 
@@ -88,6 +130,8 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
     this.showCompletionModal = false;
     this.completedQuest = null;
     this.updateCurrentQuest();
+    // Check if new quest is also claimable
+    this.checkIfClaimable();
   }
 
   toggleDetails(): void {

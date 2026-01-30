@@ -4,6 +4,7 @@
      [style.left.px]="position.x"
      [style.top.px]="position.y"
      [class.dragging]="isDragging"
+     [class.claimable]="isClaimable"
      (mousedown)="onMouseDown($event)"
      #widget>
     
@@ -17,9 +18,16 @@
         {{currentQuest.title}}
     </div>
     
-    <div class="widget-hint" *ngIf="!showDetails">
+    <div class="widget-hint" *ngIf="!showDetails && !isClaimable">
         {{currentQuest.hint}}
     </div>
+
+    <button *ngIf="isClaimable && !showDetails" 
+            class="claim-btn"
+            [disabled]="isClaimingRewards"
+            (click)="claimRewards(); $event.stopPropagation()">
+        {{isClaimingRewards ? 'Claiming...' : 'Collect Rewards!'}}
+    </button>
 </div>
 
 <!-- Quest Details Modal -->
@@ -57,7 +65,13 @@
         </div>
         
         <div class="modal-footer">
-            <button class="action-btn" (click)="toggleDetails()">Got it!</button>
+            <button *ngIf="isClaimable" 
+                    class="action-btn claim-action-btn"
+                    [disabled]="isClaimingRewards"
+                    (click)="claimRewards()">
+                {{isClaimingRewards ? 'Claiming...' : 'Collect Rewards!'}}
+            </button>
+            <button *ngIf="!isClaimable" class="action-btn" (click)="toggleDetails()">Got it!</button>
         </div>
     </div>
 </div>

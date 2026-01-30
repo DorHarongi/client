@@ -10,6 +10,32 @@
     user-select: none;
     &:hover { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4); }
     &.dragging { cursor: grabbing; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); }
+    &.claimable {
+        border-color: #2e7d32;
+        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+        animation: glowPulse 2s ease-in-out infinite;
+    }
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4); }
+    50% { box-shadow: 0 4px 20px rgba(46, 125, 50, 0.7); }
+}
+
+.claim-btn {
+    display: block;
+    width: calc(100% - 20px);
+    margin: 0 10px 10px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(46, 125, 50, 0.5); }
+    &:disabled { opacity: 0.7; cursor: not-allowed; }
 }
 
 .widget-header {
@@ -113,7 +139,13 @@
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
-    &:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+    &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+    &:disabled { opacity: 0.7; cursor: not-allowed; }
+}
+
+.claim-action-btn {
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    color: white;
 }
 
 .completion-modal {
