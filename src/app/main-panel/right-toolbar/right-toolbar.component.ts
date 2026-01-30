@@ -33,15 +33,15 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
   horsemen!: number;
   catapults !: number;
 
-  // Clan support troops
-  clanSpearFighters!: number;
-  clanSwordFighters!: number;
-  clanAxeFighters!: number;
-  clanArchers!: number;
-  clanMagicians!: number;
-  clanHorsemen!: number;
-  clanCatapults!: number;
-  hasClanTroops: boolean = false;
+  // Support troops (from clan members)
+  clanSpearFighters: number = 0;
+  clanSwordFighters: number = 0;
+  clanAxeFighters: number = 0;
+  clanArchers: number = 0;
+  clanMagicians: number = 0;
+  clanHorsemen: number = 0;
+  clanCatapults: number = 0;
+  hasClan: boolean = false;
 
   villages: Array<string> = [];
   activeVillage: number = 0;
@@ -96,7 +96,9 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
     this.horsemen = this.userInformationService.currentVillage.troops.horsemen;
     this.catapults = this.userInformationService.currentVillage.troops.catapults;
 
-    // Update clan support troops
+    // Update support troops (from clan members)
+    this.hasClan = !!this.userInformationService.userInformation.clanName;
+    
     const clanTroops = this.userInformationService.currentVillage.clanTroops;
     if (clanTroops) {
       this.clanSpearFighters = clanTroops.spearFighters || 0;
@@ -106,12 +108,14 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
       this.clanMagicians = clanTroops.magicians || 0;
       this.clanHorsemen = clanTroops.horsemen || 0;
       this.clanCatapults = clanTroops.catapults || 0;
-      
-      this.hasClanTroops = this.clanSpearFighters > 0 || this.clanSwordFighters > 0 || 
-        this.clanAxeFighters > 0 || this.clanArchers > 0 || this.clanMagicians > 0 || 
-        this.clanHorsemen > 0 || this.clanCatapults > 0;
     } else {
-      this.hasClanTroops = false;
+      this.clanSpearFighters = 0;
+      this.clanSwordFighters = 0;
+      this.clanAxeFighters = 0;
+      this.clanArchers = 0;
+      this.clanMagicians = 0;
+      this.clanHorsemen = 0;
+      this.clanCatapults = 0;
     }
   }
 

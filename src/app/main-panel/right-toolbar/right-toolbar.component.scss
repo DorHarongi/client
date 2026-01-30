@@ -30,8 +30,8 @@
 
 #clanTroops {
     height: fit-content;
-    min-height: 100px;
-    max-height: 200px;
+    min-height: 200px;
+    overflow-x: hidden;
     overflow-y: auto;
     background-color: rgba(144, 238, 144, 0.3);
 }

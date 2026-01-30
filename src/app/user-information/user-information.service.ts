@@ -58,6 +58,10 @@ export class UserInformationService {
 
   clearUserInformation(): void {
     sessionStorage.removeItem(USER_KEY);
+    // Also clear in-memory user to prevent stale data
+    this.userInformation = null as any;
+    this.currentVillage = null as any;
+    this.currentVillageIndex = 0;
   }
 
   switchVillage(index: number)
