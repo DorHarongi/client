@@ -11,23 +11,31 @@
 
     <div extraInformation *ngIf="showNewVillageUI" class="new-village-ui">
         <h4 class="new-village-title">Select Location for New Village</h4>
-        <p>Choose an available cell (beige) adjacent to your current village</p>
+        <p>Choose an available cell (highlighted) adjacent to your current village</p>
         
-        <div class="mini-map">
-            <div class="grid-row" *ngFor="let row of gridCells">
-                <div class="grid-cell" 
-                     *ngFor="let cell of row"
-                     [class.current-village]="isCurrentVillage(cell)"
-                     [class.own-village]="isOwnVillage(cell) && !isCurrentVillage(cell)"
-                     [class.clan-village]="isClanMemberVillage(cell)"
-                     [class.enemy-village]="isEnemyVillage(cell)"
-                     [class.has-boss]="hasBoss(cell)"
-                     [class.available]="isCellAvailable(cell)"
-                     [class.selected]="isCellSelected(cell)"
-                     (click)="selectCell(cell)">
-                    <span class="coords">{{cell.x}},{{cell.y}}</span>
-                    <img *ngIf="cell.village && !cell.hasBoss" src="assets/village.png" class="village-icon">
-                    <span *ngIf="cell.hasBoss" class="boss-indicator" [title]="cell.bossName">BOSS</span>
+        <div class="map-grid-container">
+            <div class="map-grid">
+                <div class="grid-row" *ngFor="let row of gridCells">
+                    <div class="grid-cell" 
+                         *ngFor="let cell of row"
+                         (click)="selectCell(cell)"
+                         [class.has-village]="cell.village"
+                         [class.current-village]="isCurrentVillage(cell)"
+                         [class.own-village]="cell.village && isOwnVillageCell(cell) && !isCurrentVillage(cell)"
+                         [class.clan-village]="cell.village && isClanMemberVillageCell(cell)"
+                         [class.other-village]="cell.village && !isOwnVillageCell(cell) && !isClanMemberVillageCell(cell)"
+                         [class.available]="isCellAvailable(cell)"
+                         [class.in-available-area]="isInAvailableArea(cell) && !isCurrentVillage(cell)"
+                         [class.selected]="isCellSelected(cell)"
+                         [ngClass]="cell.boss ? getBossCellClass(cell.boss) : ''">
+                        <span class="coords">{{cell.x}},{{cell.y}}</span>
+                        <div *ngIf="cell.village && !cell.boss" class="village-marker">
+                            <img src="assets/village.png" class="village-icon">
+                        </div>
+                        <div *ngIf="cell.boss" class="boss-marker">
+                            <img [src]="bossService.getBossImagePath(cell.boss.tier)" class="boss-icon">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

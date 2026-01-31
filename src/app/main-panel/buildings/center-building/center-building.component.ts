@@ -2,23 +2,25 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { centerBuildingUpgradeMaterialCostByLevels } from 'utils';
+import { centerBuildingUpgradeMaterialCostByLevels, BossTier } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { WorldMapService } from 'src/app/world-map/services/world-map.service';
+import { BossService } from 'src/app/world-map/services/boss.service';
+import { VillageOnMap, BossOnMap, MapWindowResponse } from 'src/app/world-map/models/mapModels';
 import { User } from '../../models/User';
 import { Village } from '../../models/Village';
 import { environment } from 'src/environments/environment';
 
 const NEW_VILLAGE_REQUIRED_LEVEL = 10;
 const MAX_VILLAGE_NAME_LENGTH = 20;
+const WINDOW_SIZE = 10;
 
 interface GridCell {
   x: number;
   y: number;
-  village?: { ownerUsername: string; villageName: string; clanName?: string };
-  hasBoss?: boolean;
-  bossName?: string;
+  village: VillageOnMap | null;
+  boss: BossOnMap | null;
 }
 
 @Component({
@@ -38,16 +40,28 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
   subscription?: Subscription;
   errorMessage: string = '';
   maxVillageNameLength = MAX_VILLAGE_NAME_LENGTH;
+  
+  // For map display
+  villages: VillageOnMap[] = [];
+  bosses: BossOnMap[] = [];
+  windowStartX: number = 0;
+  windowStartY: number = 0;
+  currentUsername: string;
+  currentUserClan: string;
 
   constructor(
     private userInformationService: UserInformationService,
     private worldMapService: WorldMapService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public bossService: BossService
   ) { 
     this.buildingInformation = new Building("centerBuilding", "Center Building", this.userInformationService.currentVillage.buildingsLevels.centerBuildingLevel, 
     "The main building of your village. Level it up to a certain level will make you be able to level up all other buildings to this level. Once your main building reaches level 10, You can create another village.",
     centerBuildingUpgradeMaterialCostByLevels[this.userInformationService.currentVillage.buildingsLevels.centerBuildingLevel + 1]);
+    
+    this.currentUsername = this.userInformationService.userInformation.username;
+    this.currentUserClan = this.userInformationService.userInformation.clanName || '';
     
     this.checkNewVillageEligibility();
   }
@@ -91,40 +105,31 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
 
   loadGridData(): void {
     const currentLocation = this.userInformationService.currentVillage.location;
-    // Load map window centered on current village (3x3 = range of 1)
-    this.worldMapService.getMapWindow(currentLocation.x - 1, currentLocation.y - 1)
-      .subscribe(response => {
-        // Build 3x3 grid
-        this.gridCells = [];
-        for (let dy = -1; dy <= 1; dy++) {
-          const row: GridCell[] = [];
-          for (let dx = -1; dx <= 1; dx++) {
-            const x = currentLocation.x + dx;
-            const y = currentLocation.y + dy;
-            const cell: GridCell = { x, y };
-            
-            // Find if there's a village at this location from the response
-            const villageAtCell = response.villages?.find(v => v.x === x && v.y === y);
-            if (villageAtCell) {
-              cell.village = {
-                ownerUsername: villageAtCell.ownerUsername,
-                villageName: villageAtCell.villageName,
-                clanName: villageAtCell.clanName
-              };
-            }
-
-            // Find if there's a boss at this location
-            const bossAtCell = response.bosses?.find(b => b.x === x && b.y === y);
-            if (bossAtCell) {
-              cell.hasBoss = true;
-              cell.bossName = bossAtCell.name;
-            }
-
-            row.push(cell);
-          }
-          this.gridCells.push(row);
-        }
+    // Center the 10x10 window on current village
+    this.windowStartX = Math.max(0, currentLocation.x - 5);
+    this.windowStartY = Math.max(0, currentLocation.y - 5);
+    
+    this.worldMapService.getMapWindow(this.windowStartX, this.windowStartY)
+      .subscribe((response: MapWindowResponse) => {
+        this.villages = response.villages;
+        this.bosses = response.bosses || [];
+        this.buildGrid();
       });
+  }
+
+  buildGrid(): void {
+    this.gridCells = [];
+    for (let y = 0; y < WINDOW_SIZE; y++) {
+      const row: GridCell[] = [];
+      for (let x = 0; x < WINDOW_SIZE; x++) {
+        const worldX = this.windowStartX + x;
+        const worldY = this.windowStartY + y;
+        const village = this.villages.find(v => v.x === worldX && v.y === worldY) || null;
+        const boss = this.bosses.find(b => b.x === worldX && b.y === worldY) || null;
+        row.push({ x: worldX, y: worldY, village, boss });
+      }
+      this.gridCells.push(row);
+    }
   }
 
   selectCell(cell: GridCell): void {
@@ -139,37 +144,46 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
     return loc.x === cell.x && loc.y === cell.y;
   }
 
-  isOwnVillage(cell: GridCell): boolean {
-    if (!cell.village) return false;
-    return cell.village.ownerUsername === this.userInformationService.userInformation.username;
+  isOwnVillage(village: VillageOnMap): boolean {
+    return village.ownerUsername === this.currentUsername;
   }
 
-  isEnemyVillage(cell: GridCell): boolean {
+  isOwnVillageCell(cell: GridCell): boolean {
     if (!cell.village) return false;
-    // Not enemy if same clan
-    if (this.isClanMemberVillage(cell)) return false;
-    return cell.village.ownerUsername !== this.userInformationService.userInformation.username;
+    return cell.village.ownerUsername === this.currentUsername;
   }
 
-  isClanMemberVillage(cell: GridCell): boolean {
+  isClanMemberVillage(village: VillageOnMap): boolean {
+    if (!this.currentUserClan || this.isOwnVillage(village)) {
+      return false;
+    }
+    return village.clanName === this.currentUserClan;
+  }
+
+  isClanMemberVillageCell(cell: GridCell): boolean {
     if (!cell.village) return false;
-    if (this.isOwnVillage(cell)) return false;
-    const userClan = this.userInformationService.userInformation.clanName;
-    if (!userClan) return false;
-    return cell.village.clanName === userClan;
+    return this.isClanMemberVillage(cell.village);
+  }
+
+  // Check if cell is within the 3x3 area around current village (available for new village)
+  isInAvailableArea(cell: GridCell): boolean {
+    const loc = this.userInformationService.currentVillage.location;
+    const dx = Math.abs(cell.x - loc.x);
+    const dy = Math.abs(cell.y - loc.y);
+    return dx <= 1 && dy <= 1;
   }
 
   isCellAvailable(cell: GridCell): boolean {
-    // Available if: no village, no boss, not current village location
-    return !cell.village && !cell.hasBoss && !this.isCurrentVillage(cell);
-  }
-
-  hasBoss(cell: GridCell): boolean {
-    return !!cell.hasBoss;
+    // Available if: in 3x3 area, no village, no boss, not current village location
+    return this.isInAvailableArea(cell) && !cell.village && !cell.boss && !this.isCurrentVillage(cell);
   }
 
   isCellSelected(cell: GridCell): boolean {
     return this.selectedCell?.x === cell.x && this.selectedCell?.y === cell.y;
+  }
+
+  getBossCellClass(boss: BossOnMap): string {
+    return `has-boss boss-${boss.tier}`;
   }
 
   createNewVillage(): void {

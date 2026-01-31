@@ -32,10 +32,17 @@
     text-align: center;
 }
 
-.mini-map {
-    display: inline-block;
-    border: 2px solid black;
+.map-grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: 15px 0;
+}
+
+.map-grid {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
     background-color: #8B4513;
 }
 
@@ -44,8 +51,8 @@
 }
 
 .grid-cell {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border: 1px solid #654321;
     display: flex;
     flex-direction: column;
@@ -54,70 +61,119 @@
     position: relative;
     background-color: #DEB887;
     
+    &:hover {
+        background-color: #D2B48C;
+    }
+
+    // Highlight the 3x3 area around current village
+    &.in-available-area {
+        box-shadow: inset 0 0 8px rgba(0, 200, 0, 0.4);
+    }
+    
     &.available {
         cursor: pointer;
+        background-color: #C8E6C9; // Light green for available cells
         
         &:hover {
-            background-color: #D2B48C;
-            box-shadow: inset 0 0 10px rgba(0, 128, 0, 0.3);
+            background-color: #A5D6A7;
+            box-shadow: inset 0 0 10px rgba(0, 128, 0, 0.5);
         }
     }
     
     &.current-village {
         background-color: #4169E1;
+        box-shadow: 0 0 10px rgba(65, 105, 225, 0.7);
         
         .coords {
             color: white;
         }
+    }
+
+    &.has-village {
+        cursor: default;
     }
     
     &.own-village {
         background-color: #90EE90;
+        &:hover {
+            background-color: #7CCD7C;
+        }
     }
     
     &.clan-village {
         background-color: #87CEEB;
-    }
-    
-    &.enemy-village {
-        background-color: #FFB6C1;
-    }
-
-    &.has-boss {
-        background-color: #9b59b6;
-        cursor: not-allowed;
-        
-        .coords {
-            color: white;
+        &:hover {
+            background-color: #6CB4D9;
         }
     }
     
+    &.other-village {
+        background-color: #FFB6C1;
+        &:hover {
+            background-color: #FF9AA2;
+        }
+    }
+
+    // Boss cells (same as world map)
+    &.has-boss {
+        cursor: default;
+    }
+
+    &.boss-common {
+        background-color: #A0A0A0;
+        &:hover { background-color: #909090; }
+    }
+
+    &.boss-rare {
+        background-color: #5DADE2;
+        &:hover { background-color: #4D9ED2; }
+    }
+
+    &.boss-epic {
+        background-color: #AF7AC5;
+        &:hover { background-color: #9F6AB5; }
+    }
+
+    &.boss-legendary {
+        background-color: #F4D03F;
+        &:hover { background-color: #E4C02F; }
+    }
+    
     &.selected {
-        background-color: #FFD700;
+        background-color: #FFD700 !important;
         border: 3px solid #FF8C00;
-        box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+        box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
     }
     
     .coords {
-        font-size: 8px;
+        font-size: 7px;
         color: #666;
         position: absolute;
-        top: 2px;
-        left: 2px;
+        top: 1px;
+        left: 1px;
+    }
+
+    .village-marker {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .village-icon {
-        width: 35px;
-        height: 35px;
+        width: 30px;
+        height: 30px;
     }
 
-    .boss-indicator {
-        font-size: 10px;
-        font-weight: bold;
-        color: white;
-        background-color: rgba(0, 0, 0, 0.5);
-        padding: 2px 6px;
-        border-radius: 3px;
+    .boss-marker {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .boss-icon {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
     }
 }
 
