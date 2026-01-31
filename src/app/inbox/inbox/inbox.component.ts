@@ -35,6 +35,7 @@ interface TroopsMetadata {
 }
 
 interface BossRewardMetadata {
+  rewardId?: string; // Unique ID to match with pending reward
   bossName: string;
   rewardAmount: number;
 }
@@ -334,13 +335,12 @@ export class InboxComponent implements OnInit, OnDestroy {
   claimBossReward(): void {
     if (this.claimingReward) return;
     
-    // Find the index of the pending reward based on boss name
-    // We need to match this with the user's pendingBossRewards
+    // Find the index of the pending reward based on unique rewardId
     const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
-    const bossName = this.selectedMessage?.metadata?.bossReward?.bossName;
+    const rewardId = this.selectedMessage?.metadata?.bossReward?.rewardId;
     
-    // Find the reward index (first matching boss name)
-    const rewardIndex = pendingRewards.findIndex(r => r.bossName === bossName);
+    // Find the reward index by unique rewardId
+    const rewardIndex = pendingRewards.findIndex(r => r.rewardId === rewardId);
     
     if (rewardIndex === -1) {
       this.clanRequestError = 'Reward already claimed or not found';
@@ -374,9 +374,10 @@ export class InboxComponent implements OnInit, OnDestroy {
     }
     
     const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
-    const bossName = this.selectedMessage.metadata?.bossReward?.bossName;
+    const rewardId = this.selectedMessage.metadata?.bossReward?.rewardId;
     
-    return pendingRewards.some(r => r.bossName === bossName);
+    // Match by unique rewardId
+    return pendingRewards.some(r => r.rewardId === rewardId);
   }
 
   // Check if a specific message has claimable boss reward (for table display)
@@ -386,16 +387,17 @@ export class InboxComponent implements OnInit, OnDestroy {
     }
     
     const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
-    const bossName = message.metadata?.bossReward?.bossName;
+    const rewardId = message.metadata?.bossReward?.rewardId;
     
-    return pendingRewards.some(r => r.bossName === bossName);
+    // Match by unique rewardId
+    return pendingRewards.some(r => r.rewardId === rewardId);
   }
 
   // Claim boss reward from the table row
   claimBossRewardFromTable(message: Message): void {
     const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
-    const bossName = message.metadata?.bossReward?.bossName;
-    const rewardIndex = pendingRewards.findIndex(r => r.bossName === bossName);
+    const rewardId = message.metadata?.bossReward?.rewardId;
+    const rewardIndex = pendingRewards.findIndex(r => r.rewardId === rewardId);
     
     if (rewardIndex === -1) return;
 

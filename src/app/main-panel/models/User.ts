@@ -1,6 +1,7 @@
 import { Village } from "./Village";
 
 export interface PendingBossReward {
+    rewardId: string; // Unique ID to match with message
     bossName: string;
     defeatedAt: Date;
     rewards: {
