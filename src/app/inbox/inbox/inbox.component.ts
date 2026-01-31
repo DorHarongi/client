@@ -7,6 +7,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { ActiveContent } from '../models/activeContent.enum';
 import { AttackReport } from '../models/attackReport';
 import { ClanService } from 'src/app/clan/services/clan.service';
+import { BossService } from 'src/app/world-map/services/boss.service';
 import { environment } from 'src/environments/environment';
 
 const WINDOW_SIZE = 6;
@@ -33,6 +34,11 @@ interface TroopsMetadata {
   recipientVillageName?: string;
 }
 
+interface BossRewardMetadata {
+  bossName: string;
+  rewardAmount: number;
+}
+
 interface Message {
   id: string;
   senderUsername?: string;
@@ -47,6 +53,7 @@ interface Message {
     requestUsername?: string;
     resources?: ResourcesMetadata;
     troops?: TroopsMetadata;
+    bossReward?: BossRewardMetadata;
   };
 }
 
@@ -62,7 +69,8 @@ export class InboxComponent implements OnInit, OnDestroy {
     private userInformationService: UserInformationService, 
     private http: HttpClient,
     private clanService: ClanService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private bossService: BossService
   ) { 
     this.username = this.userInformationService.userInformation.username;
   }
@@ -86,6 +94,8 @@ export class InboxComponent implements OnInit, OnDestroy {
   subscription3!: Subscription;
   subscription4!: Subscription;
   clanRequestError: string = '';
+  claimingReward: boolean = false;
+  rewardClaimSuccess: boolean = false;
 
   ngOnDestroy(): void {
     this.subscription1 && this.subscription1.unsubscribe();
@@ -298,6 +308,58 @@ export class InboxComponent implements OnInit, OnDestroy {
     return type === 'support_sent' || type === 'support_received';
   }
 
+  isBossDefeatedMessage(type: string): boolean {
+    return type === 'boss_defeated';
+  }
+
+  claimBossReward(): void {
+    if (this.claimingReward) return;
+    
+    // Find the index of the pending reward based on boss name
+    // We need to match this with the user's pendingBossRewards
+    const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
+    const bossName = this.selectedMessage?.metadata?.bossReward?.bossName;
+    
+    // Find the reward index (first matching boss name)
+    const rewardIndex = pendingRewards.findIndex(r => r.bossName === bossName);
+    
+    if (rewardIndex === -1) {
+      this.clanRequestError = 'Reward already claimed or not found';
+      return;
+    }
+
+    this.claimingReward = true;
+    this.bossService.claimBossReward(this.username, rewardIndex).subscribe({
+      next: (result) => {
+        this.claimingReward = false;
+        if (result.success) {
+          this.rewardClaimSuccess = true;
+          // Mark message as non-actionable after claiming
+          if (this.selectedMessage) {
+            this.selectedMessage.actionable = false;
+          }
+          // Refresh user info to update resources
+          this.userInformationService.refreshUserInformation();
+        }
+      },
+      error: (err) => {
+        this.claimingReward = false;
+        this.clanRequestError = err.error?.message || 'Failed to claim reward';
+      }
+    });
+  }
+
+  canClaimBossReward(): boolean {
+    if (!this.selectedMessage || !this.isBossDefeatedMessage(this.selectedMessage.type)) {
+      return false;
+    }
+    
+    const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
+    const bossName = this.selectedMessage.metadata?.bossReward?.bossName;
+    
+    return pendingRewards.some(r => r.bossName === bossName);
+  }
+
   getTotalTroops(troops: TroopsMetadata): number {
     return (troops.spearFighters || 0) + 
            (troops.swordFighters || 0) + 
@@ -321,6 +383,8 @@ export class InboxComponent implements OnInit, OnDestroy {
   closeMessageModal(): void {
     this.messageModalOpened = false;
     this.selectedMessage = null;
+    this.rewardClaimSuccess = false;
+    this.clanRequestError = '';
   }
 
   markMessageAsRead(message: Message): void {

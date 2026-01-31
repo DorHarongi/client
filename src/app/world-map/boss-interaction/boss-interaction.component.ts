@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { BossOnMap } from '../models/mapModels';
 import { BossService, BossAttackResult, TroopsAmounts } from '../services/boss.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
 import { bossImages, bossRewardAmounts, getDistanceBonusText } from 'utils';
 
 @Component({
@@ -97,6 +98,22 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
 
   getRewardAmount(): number {
     return bossRewardAmounts[this.boss.tier];
+  }
+
+  getRewardResources(): ResourcesDisplayAmounts {
+    const amount = bossRewardAmounts[this.boss.tier];
+    return { crop: amount, wood: amount, stone: amount };
+  }
+
+  getReceivedRewards(): ResourcesDisplayAmounts {
+    if (!this.attackResult?.rewards) {
+      return { crop: 0, wood: 0, stone: 0 };
+    }
+    return {
+      crop: this.attackResult.rewards.crop,
+      wood: this.attackResult.rewards.wood,
+      stone: this.attackResult.rewards.stone
+    };
   }
 
   isClaimedByMyClan(): boolean {

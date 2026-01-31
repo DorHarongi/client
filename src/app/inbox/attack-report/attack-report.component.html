@@ -77,15 +77,10 @@
     </ng-template>
     
 
-    <div class="flex"> 
-        <h5> Loot stolen: </h5>
-        <img class="icons resourcelIcons" src="../../../assets/crop.jpg">
-        <h5>{{attackReport.lootedResources.cropAmount.toFixed(0)}}</h5>
-        <img class="icons resourcelIcons" src="../../../assets/wood.jpg">
-        <h5> {{attackReport.lootedResources.woodAmount.toFixed(0)}}</h5>
-        <img class="icons resourcelIcons" src="../../../assets/rock.jpg">
-        <h5>{{attackReport.lootedResources.stonesAmount.toFixed(0)}}</h5>
-    </div>
+    <app-resources-amount 
+        [label]="'Loot stolen:'"
+        [resources]="getLootResources()">
+    </app-resources-amount>
 
     <button id = "back" class="buttons center" (click)="goBack()"> Back </button>
 </div>

@@ -240,26 +240,40 @@
   }
 }
 
-.troop-losses {
-  margin: 10px 0;
+.troop-table-section {
+  margin: 15px 0;
+  overflow-x: auto;
 
   h5 {
-    color: #e74c3c;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+  }
+}
+
+.troop-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+
+  th, td {
+    padding: 5px;
+    text-align: center;
   }
 
-  .loss-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
+  .troop-icon {
+    width: 30px;
+    height: 30px;
+  }
 
-    span {
-      padding: 4px 8px;
-      border: 1px solid #7d5210;
-      border-radius: 4px;
-      font-size: 12px;
-    }
+  .troops-input {
+    width: 45px;
+    text-align: center;
+    border: 1px solid #7d5210;
+    border-radius: 3px;
+    background: transparent;
+  }
+
+  .troops-lost {
+    color: #e74c3c;
   }
 }
 

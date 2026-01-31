@@ -27,6 +27,7 @@
                         {{clanInfo.isOpen ? 'Make Closed' : 'Make Open'}}
                     </button>
                 </p>
+                <p><strong>Raid Bosses Defeated:</strong> {{clanInfo.totalBossesKilled || 0}}</p>
                 <p><strong>Created:</strong> {{formatDate(clanInfo.createdDate)}}</p>
             </div>
 
@@ -36,12 +37,14 @@
                     <tr>
                         <th>Username</th>
                         <th>Role</th>
+                        <th>Weekly Raid Damage</th>
                         <th *ngIf="isLeader">Actions</th>
                     </tr>
                     <tr *ngFor="let member of clanInfo.members" 
                         class="member-row">
                         <td class="clickable" (click)="goToMember(member)">{{member}}</td>
                         <td>{{member === clanInfo.leaderUsername ? 'Leader' : 'Member'}}</td>
+                        <td>{{formatDamage(getMemberRaidDamage(member))}}</td>
                         <td *ngIf="isLeader">
                             <button class="small-btn kick" 
                                     *ngIf="member !== currentUsername"

@@ -11,6 +11,7 @@ export interface ClanDTO {
     isOpen: boolean;
     pendingRequests: { username: string; message: string; requestDate: Date }[];
     createdDate: Date;
+    totalBossesKilled: number;
 }
 
 export interface ClanStatisticDTO {
@@ -20,6 +21,12 @@ export interface ClanStatisticDTO {
     memberCount: number;
     totalPopulation: number;
     isOpen: boolean;
+    totalBossesKilled: number;
+}
+
+export interface ClanMemberRaidStatsDTO {
+    username: string;
+    weeklyRaidDamage: number;
 }
 
 @Injectable({
@@ -96,5 +103,9 @@ export class ClanService {
       leaderUsername,
       isOpen
     });
+  }
+
+  getClanMemberRaidStats(clanName: string): Observable<ClanMemberRaidStatsDTO[]> {
+    return this.http.get<ClanMemberRaidStatsDTO[]>(`${environment.apiUrl}/clans/${clanName}/raid-stats`);
   }
 }

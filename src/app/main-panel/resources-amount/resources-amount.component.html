@@ -1,0 +1,11 @@
+<div class="resources-container">
+    <h5 *ngIf="label" class="label">{{ label }}</h5>
+    <div class="resources-display">
+        <img class="resource-icon" src="../../../assets/crop.jpg">
+        <h5 class="amount">{{ formatNumber(resources.crop) }}</h5>
+        <img class="resource-icon" src="../../../assets/wood.jpg">
+        <h5 class="amount">{{ formatNumber(resources.wood) }}</h5>
+        <img class="resource-icon" src="../../../assets/rock.jpg">
+        <h5 class="amount">{{ formatNumber(resources.stone) }}</h5>
+    </div>
+</div>

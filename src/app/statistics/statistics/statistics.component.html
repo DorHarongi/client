@@ -44,6 +44,7 @@
             <th class="center">Leader</th>
             <th class="center">Members</th>
             <th class="center">Total Population</th>
+            <th class="center">Bosses Killed</th>
             <th class="center">Status</th>
         </tr>
         <tr *ngFor="let clan of clansInPage; let i = index" class="center bordered">
@@ -52,6 +53,7 @@
             <td class="clickable" (click)="goToPlayer(clan.leaderUsername)"> {{clan.leaderUsername}} </td>
             <td> {{clan.memberCount}} </td>
             <td> {{clan.totalPopulation}} </td>
+            <td> {{clan.totalBossesKilled || 0}} </td>
             <td> {{clan.isOpen ? 'Open' : 'Closed'}} </td>
         </tr>
     </table>

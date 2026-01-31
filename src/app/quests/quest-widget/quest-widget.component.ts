@@ -193,14 +193,14 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
       if (saved) {
         this.position = JSON.parse(saved);
       } else {
-        // Default position: bottom-right corner
+        // Default position: top-right area (higher on screen)
         this.position = {
           x: window.innerWidth - 300,
-          y: window.innerHeight - 120
+          y: 100  // Start near the top, below toolbar
         };
       }
     } catch {
-      this.position = { x: window.innerWidth - 300, y: window.innerHeight - 120 };
+      this.position = { x: window.innerWidth - 300, y: 100 };
     }
   }
 

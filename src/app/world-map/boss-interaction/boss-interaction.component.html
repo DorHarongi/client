@@ -50,11 +50,7 @@
         <!-- Rewards -->
         <div class="rewards-section">
             <h5>Rewards on defeat (per clan member):</h5>
-            <div class="rewards-icons">
-                <span class="loot-item"><img src="assets/wood.jpg" class="resource-icon"> {{getRewardAmount().toLocaleString()}}</span>
-                <span class="loot-item"><img src="assets/rock.jpg" class="resource-icon"> {{getRewardAmount().toLocaleString()}}</span>
-                <span class="loot-item"><img src="assets/crop.jpg" class="resource-icon"> {{getRewardAmount().toLocaleString()}}</span>
-            </div>
+            <app-resources-amount [resources]="getRewardResources()"></app-resources-amount>
         </div>
 
         <!-- Actions -->
@@ -90,7 +86,7 @@
     <!-- Attack Result -->
     <div *ngIf="attackResult" class="attack-result center">
         <h4 *ngIf="attackResult.bossDefeated" class="victory">VICTORY! Boss Defeated!</h4>
-        <h4 *ngIf="!attackResult.bossDefeated">Attack Complete</h4>
+        <h4 *ngIf="!attackResult.bossDefeated">Raid Result</h4>
         
         <div class="result-details">
             <p>Damage dealt: {{attackResult.report.actualDamage.toLocaleString()}}</p>
@@ -98,40 +94,45 @@
             <p>Distance multiplier: {{(attackResult.report.distanceMultiplier * 100).toFixed(0)}}%</p>
         </div>
 
-        <div class="troop-losses" *ngIf="hasAnyLosses()">
-            <h5>Troops Lost:</h5>
-            <div class="loss-grid">
-                <span *ngIf="attackResult.report.attackerLostTroops.spearFighters">
-                    Spears: {{attackResult.report.attackerLostTroops.spearFighters}}
-                </span>
-                <span *ngIf="attackResult.report.attackerLostTroops.swordFighters">
-                    Swords: {{attackResult.report.attackerLostTroops.swordFighters}}
-                </span>
-                <span *ngIf="attackResult.report.attackerLostTroops.axeFighters">
-                    Axes: {{attackResult.report.attackerLostTroops.axeFighters}}
-                </span>
-                <span *ngIf="attackResult.report.attackerLostTroops.archers">
-                    Archers: {{attackResult.report.attackerLostTroops.archers}}
-                </span>
-                <span *ngIf="attackResult.report.attackerLostTroops.magicians">
-                    Magicians: {{attackResult.report.attackerLostTroops.magicians}}
-                </span>
-                <span *ngIf="attackResult.report.attackerLostTroops.horsemen">
-                    Horsemen: {{attackResult.report.attackerLostTroops.horsemen}}
-                </span>
-                <span *ngIf="attackResult.report.attackerLostTroops.catapults">
-                    Catapults: {{attackResult.report.attackerLostTroops.catapults}}
-                </span>
-            </div>
+        <!-- Troops Table -->
+        <div class="troop-table-section">
+            <h5>Raid Result:</h5>
+            <table class="troop-table">
+                <tr>
+                    <th><img class="troop-icon" src="assets/spear.png"></th>
+                    <th><img class="troop-icon" src="assets/sword.png"></th>
+                    <th><img class="troop-icon" src="assets/axe.png"></th>
+                    <th><img class="troop-icon" src="assets/bow.png"></th>
+                    <th><img class="troop-icon" src="assets/hat.png"></th>
+                    <th><img class="troop-icon" src="assets/horse.png"></th>
+                    <th><img class="troop-icon" src="assets/trebuchet.png"></th>
+                </tr>
+                <!-- Troops sent -->
+                <tr>
+                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.spearFighters"></td>
+                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.swordFighters"></td>
+                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.axeFighters"></td>
+                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.archers"></td>
+                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.magicians"></td>
+                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.horsemen"></td>
+                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.catapults"></td>
+                </tr>
+                <!-- Troops lost -->
+                <tr>
+                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.spearFighters || 0"></td>
+                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.swordFighters || 0"></td>
+                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.axeFighters || 0"></td>
+                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.archers || 0"></td>
+                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.magicians || 0"></td>
+                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.horsemen || 0"></td>
+                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.catapults || 0"></td>
+                </tr>
+            </table>
         </div>
 
         <div *ngIf="attackResult.bossDefeated && attackResult.rewards" class="rewards-received">
             <h5>Rewards Received:</h5>
-            <div class="loot-display">
-                <span class="loot-item"><img src="assets/wood.jpg" class="resource-icon"> {{attackResult.rewards.wood.toLocaleString()}}</span>
-                <span class="loot-item"><img src="assets/rock.jpg" class="resource-icon"> {{attackResult.rewards.stone.toLocaleString()}}</span>
-                <span class="loot-item"><img src="assets/crop.jpg" class="resource-icon"> {{attackResult.rewards.crop.toLocaleString()}}</span>
-            </div>
+            <app-resources-amount [resources]="getReceivedRewards()"></app-resources-amount>
         </div>
 
         <div class="panel-actions">

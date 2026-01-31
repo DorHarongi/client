@@ -123,6 +123,41 @@
             </table>
         </div>
 
+        <!-- Boss Reward Display -->
+        <div *ngIf="isBossDefeatedMessage(selectedMessage.type) && selectedMessage.metadata?.bossReward" class="transfer-details">
+            <h5 class="center">Your Reward:</h5>
+            <div class="resources-display">
+                <div class="resource-item">
+                    <img src="../../../assets/wood.jpg" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.bossReward?.rewardAmount | number}}</span>
+                </div>
+                <div class="resource-item">
+                    <img src="../../../assets/rock.jpg" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.bossReward?.rewardAmount | number}}</span>
+                </div>
+                <div class="resource-item">
+                    <img src="../../../assets/crop.jpg" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.bossReward?.rewardAmount | number}}</span>
+                </div>
+            </div>
+
+            <div class="boss-reward-actions center" *ngIf="!rewardClaimSuccess">
+                <button class="small-btn accept claim-btn" 
+                        *ngIf="canClaimBossReward()" 
+                        (click)="claimBossReward()"
+                        [disabled]="claimingReward">
+                    {{claimingReward ? 'Claiming...' : 'Claim Rewards'}}
+                </button>
+                <span *ngIf="!canClaimBossReward()">Already claimed</span>
+            </div>
+
+            <div class="reward-claimed center" *ngIf="rewardClaimSuccess">
+                <p class="success-text">Rewards claimed successfully!</p>
+            </div>
+
+            <p class="error-text center" *ngIf="clanRequestError">{{clanRequestError}}</p>
+        </div>
+
         <div class="modal-actions center" *ngIf="selectedMessage.actionable && selectedMessage.type === 'clan_join_request'">
             <button class="small-btn accept" (click)="handleClanRequest(selectedMessage, true); closeMessageModal()">Accept</button>
             <button class="small-btn decline" (click)="handleClanRequest(selectedMessage, false); closeMessageModal()">Decline</button>

@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { MaterialsCostComponent } from './materials-cost/materials-cost.component';
 import { TroopsChoosingComponent } from './troops-choosing/troops-choosing.component';
 import { HireWorkersComponent } from './hire-workers/hire-workers.component';
+import { ResourcesAmountComponent } from './resources-amount/resources-amount.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { HireWorkersComponent } from './hire-workers/hire-workers.component';
     EmbassyComponent,
     MaterialsCostComponent,
     TroopsChoosingComponent,
-    HireWorkersComponent
+    HireWorkersComponent,
+    ResourcesAmountComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +51,8 @@ import { HireWorkersComponent } from './hire-workers/hire-workers.component';
   exports:[
     MainPanelComponent,
     TopToolbarComponent,
-    TroopsChoosingComponent
+    TroopsChoosingComponent,
+    ResourcesAmountComponent
   ]
 })
 export class MainPanelModule { }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ClanService, ClanDTO } from '../services/clan.service';
+import { ClanService, ClanDTO, ClanMemberRaidStatsDTO } from '../services/clan.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 
 @Component({
@@ -31,6 +31,9 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   // Clan name editing
   editingClanName: boolean = false;
   newClanName: string = '';
+
+  // Raid stats
+  memberRaidStats: ClanMemberRaidStatsDTO[] = [];
 
   subscription?: Subscription;
 
@@ -69,11 +72,40 @@ export class ClanPageComponent implements OnInit, OnDestroy {
           this.isLeader = clan.leaderUsername === this.currentUsername;
           this.isMember = clan.members.includes(this.currentUsername);
           this.hasAlreadyRequested = this.userInformationService.userInformation.pendingClanRequests?.includes(this.clanName) || false;
+          
+          // Load raid stats for clan members
+          this.loadMemberRaidStats();
         },
         error: () => {
           this.loading = false;
         }
       });
+  }
+
+  loadMemberRaidStats(): void {
+    this.clanService.getClanMemberRaidStats(this.clanName)
+      .subscribe({
+        next: (stats) => {
+          this.memberRaidStats = stats;
+        },
+        error: () => {
+          this.memberRaidStats = [];
+        }
+      });
+  }
+
+  getMemberRaidDamage(username: string): number {
+    const stat = this.memberRaidStats.find(s => s.username === username);
+    return stat?.weeklyRaidDamage || 0;
+  }
+
+  formatDamage(damage: number): string {
+    if (damage >= 1000000) {
+      return (damage / 1000000).toFixed(1) + 'M';
+    } else if (damage >= 1000) {
+      return (damage / 1000).toFixed(1) + 'K';
+    }
+    return damage.toString();
   }
 
   goToMember(username: string): void {

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { AttackReport } from '../models/attackReport';
@@ -44,6 +45,14 @@ export class AttackReportComponent implements OnInit {
 
   didUserAttackAndLost(): boolean{
     return this.attackReport.attackerName == this.userInformationService.userInformation.username &&!this.attackReport.attackerWon;
+  }
+
+  getLootResources(): ResourcesDisplayAmounts {
+    return {
+      crop: this.attackReport.lootedResources?.cropAmount || 0,
+      wood: this.attackReport.lootedResources?.woodAmount || 0,
+      stone: this.attackReport.lootedResources?.stonesAmount || 0
+    };
   }
 
 }

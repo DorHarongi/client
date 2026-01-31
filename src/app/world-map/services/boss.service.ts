@@ -133,4 +133,19 @@ export class BossService {
         }
         return hp.toString();
     }
+
+    // Get pending boss rewards
+    getPendingRewards(username: string): Observable<{ bossName: string; defeatedAt: Date; rewards: { wood: number; stone: number; crop: number } }[]> {
+        return this.http.get<{ bossName: string; defeatedAt: Date; rewards: { wood: number; stone: number; crop: number } }[]>(
+            `${environment.apiUrl}/bosses/rewards/pending/${username}`
+        );
+    }
+
+    // Claim a boss reward
+    claimBossReward(username: string, rewardIndex: number): Observable<{ success: boolean; rewards?: { wood: number; stone: number; crop: number } }> {
+        return this.http.post<{ success: boolean; rewards?: { wood: number; stone: number; crop: number } }>(
+            `${environment.apiUrl}/bosses/rewards/claim/${username}/${rewardIndex}`,
+            {}
+        );
+    }
 }
