@@ -96,6 +96,10 @@ export class InboxComponent implements OnInit, OnDestroy {
   clanRequestError: string = '';
   claimingReward: boolean = false;
   rewardClaimSuccess: boolean = false;
+  
+  // Unread counts for badges
+  unreadReportsCount: number = 0;
+  unreadMessagesCount: number = 0;
 
   ngOnDestroy(): void {
     this.subscription1 && this.subscription1.unsubscribe();
@@ -106,6 +110,17 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadData();
+    this.loadUnreadCounts();
+  }
+  
+  loadUnreadCounts(): void {
+    // Get unread battle reports count
+    this.http.get<number>(`${environment.apiUrl}/reports/unread/${this.username}`)
+      .subscribe(count => this.unreadReportsCount = count);
+    
+    // Get unread messages count
+    this.http.get<number>(`${environment.apiUrl}/messages/${this.username}/unread`)
+      .subscribe(count => this.unreadMessagesCount = count);
   }
 
   loadData(): void {
@@ -123,6 +138,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     if (this.viewMode !== 'reports') {
       this.viewMode = 'reports';
       this.loadData();
+      this.loadUnreadCounts();
     }
   }
 
@@ -130,6 +146,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     if (this.viewMode !== 'messages') {
       this.viewMode = 'messages';
       this.loadData();
+      this.loadUnreadCounts();
     }
   }
 

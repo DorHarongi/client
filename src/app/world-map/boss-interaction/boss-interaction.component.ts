@@ -203,10 +203,8 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
         this.userInformationService.refreshUserInformation();
 
         if (result.bossDefeated) {
-          // Boss was defeated, show victory and emit event
-          setTimeout(() => {
-            this.bossDefeated.emit();
-          }, 3000);
+          // Boss was defeated - don't auto-close, let user view the results
+          // The bossDefeated event will be emitted when user clicks Close
         } else {
           // Update boss HP locally
           this.boss.currentHp = result.report.bossHpAfter;
@@ -229,6 +227,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   }
 
   close(): void {
+    // If boss was defeated, emit bossDefeated to trigger map reload
+    if (this.attackResult?.bossDefeated) {
+      this.bossDefeated.emit();
+    }
     this.closed.emit();
   }
 }

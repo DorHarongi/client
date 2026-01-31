@@ -26,6 +26,7 @@ $topToolbarMinHeight: 75px;
   box-shadow: 2px 2px 2px 2px;
   padding: 10px 25px;
   cursor: pointer;
+  position: relative;
   
   &.active {
     background-image: none;
@@ -38,6 +39,24 @@ $topToolbarMinHeight: 75px;
   &:hover:not(.active) {
     background-color: #ddd;
   }
+  
+  &.with-badge {
+    padding-right: 35px;
+  }
+}
+
+.tab-badge {
+  position: absolute;
+  top: -8px;
+  right: -5px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 8px;
+  text-align: center;
 }
 
 .clickable-row {
