@@ -141,7 +141,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   }
 
   onMinimapClick(event: MouseEvent): void {
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
+    // Use currentTarget (the minimap div) instead of target (could be a child element)
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / MINIMAP_SCALE);
     const y = Math.floor((event.clientY - rect.top) / MINIMAP_SCALE);
     

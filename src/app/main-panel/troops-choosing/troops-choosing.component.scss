@@ -2,12 +2,14 @@
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px;
 }
 
 #troopsTraining {
     margin-top: 25px;
     margin-left: auto;
     margin-right: auto;
+    min-width: max-content;
 }
 .troopsImages{
     width: 25px;
@@ -22,10 +24,28 @@ input:disabled{
     cursor: not-allowed;
 }
 .troopsInput{
-    width: 90px;
+    width: 70px;
     padding: 2px 3px 2px 0px;
     border: 1px solid #7d5210;
     text-align: center;
+}
+
+@media (max-width: 600px) {
+    .troopsInput {
+        width: 50px;
+        font-size: 12px;
+    }
+    .troopsImages {
+        width: 20px;
+        height: 20px;
+    }
+    .attackDefenceIcons {
+        width: 18px;
+        height: 18px;
+    }
+    #troopsTraining {
+        font-size: 11px;
+    }
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
