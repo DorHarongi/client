@@ -238,6 +238,7 @@ tr, td{
     min-height: 50px;
     white-space: pre-wrap;
     word-wrap: break-word;
+    text-align: left;
 }
 
 .modal-actions {
@@ -314,6 +315,29 @@ tr, td{
     td {
         font-weight: bold;
     }
+}
+
+.boss-reward-actions {
+    margin-top: 20px;
+}
+
+.claim-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+}
+
+.reward-claimed {
+    margin-top: 15px;
+}
+
+.success-text {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.error-text {
+    color: #dc3545;
+    margin-top: 10px;
 }
 
 .troop-icon {

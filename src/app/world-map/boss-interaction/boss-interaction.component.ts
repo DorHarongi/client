@@ -202,12 +202,12 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
         // Update user info from backend
         this.userInformationService.refreshUserInformation();
 
+        // Update boss HP locally (whether defeated or not)
+        this.boss.currentHp = result.report.bossHpAfter;
+        
         if (result.bossDefeated) {
           // Boss was defeated - don't auto-close, let user view the results
           // The bossDefeated event will be emitted when user clicks Close
-        } else {
-          // Update boss HP locally
-          this.boss.currentHp = result.report.bossHpAfter;
         }
       },
       error: (err) => {

@@ -233,6 +233,8 @@ export class InboxComponent implements OnInit, OnDestroy {
       next: () => {
         report.read = true;
         this.notificationService.notifyItemRead();
+        // Immediately update unread counts
+        this.loadUnreadCounts();
       }
     });
   }
@@ -377,6 +379,47 @@ export class InboxComponent implements OnInit, OnDestroy {
     return pendingRewards.some(r => r.bossName === bossName);
   }
 
+  // Check if a specific message has claimable boss reward (for table display)
+  canClaimBossRewardForMessage(message: Message): boolean {
+    if (!message || !this.isBossDefeatedMessage(message.type)) {
+      return false;
+    }
+    
+    const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
+    const bossName = message.metadata?.bossReward?.bossName;
+    
+    return pendingRewards.some(r => r.bossName === bossName);
+  }
+
+  // Claim boss reward from the table row
+  claimBossRewardFromTable(message: Message): void {
+    const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
+    const bossName = message.metadata?.bossReward?.bossName;
+    const rewardIndex = pendingRewards.findIndex(r => r.bossName === bossName);
+    
+    if (rewardIndex === -1) return;
+
+    this.bossService.claimBossReward(this.username, rewardIndex).subscribe({
+      next: (result) => {
+        if (result.success) {
+          message.actionable = false;
+          this.userInformationService.refreshUserInformation();
+          this.loadUnreadCounts();
+        }
+      }
+    });
+  }
+
+  // Check if message has any available actions
+  hasActions(message: Message): boolean {
+    if (!message.actionable) return false;
+    
+    if (message.type === 'clan_join_request') return true;
+    if (this.isBossDefeatedMessage(message.type) && this.canClaimBossRewardForMessage(message)) return true;
+    
+    return false;
+  }
+
   getTotalTroops(troops: TroopsMetadata): number {
     return (troops.spearFighters || 0) + 
            (troops.swordFighters || 0) + 
@@ -412,6 +455,8 @@ export class InboxComponent implements OnInit, OnDestroy {
       next: () => {
         message.read = true;
         this.notificationService.notifyItemRead();
+        // Immediately update unread counts
+        this.loadUnreadCounts();
       }
     });
   }

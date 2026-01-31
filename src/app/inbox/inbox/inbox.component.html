@@ -54,7 +54,10 @@
                     <button class="small-btn accept" (click)="handleClanRequest(message, true)">Accept</button>
                     <button class="small-btn decline" (click)="handleClanRequest(message, false)">Decline</button>
                 </div>
-                <span *ngIf="!message.actionable">-</span>
+                <div *ngIf="message.actionable && isBossDefeatedMessage(message.type) && canClaimBossRewardForMessage(message)" class="message-actions">
+                    <button class="small-btn accept" (click)="claimBossRewardFromTable(message)">Claim</button>
+                </div>
+                <span *ngIf="!hasActions(message)">-</span>
             </td>
         </tr>
         <tr *ngIf="messagesInPage.length === 0">
