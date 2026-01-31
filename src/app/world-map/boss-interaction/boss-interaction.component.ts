@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { BossOnMap } from '../models/mapModels';
 import { BossService, BossAttackResult, TroopsAmounts } from '../services/boss.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
-import { bossImages, bossRewardWarehouseLevel, warehouseStorageByLevel, getDistanceBonusText } from 'utils';
+import { bossImages, bossRewardAmounts, getDistanceBonusText } from 'utils';
 
 @Component({
   selector: 'app-boss-interaction',
@@ -91,14 +91,12 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   }
 
   getRewardText(): string {
-    const level = bossRewardWarehouseLevel[this.boss.tier];
-    const amount = warehouseStorageByLevel[level];
+    const amount = bossRewardAmounts[this.boss.tier];
     return `${amount.toLocaleString()} of each resource`;
   }
 
   getRewardAmount(): number {
-    const level = bossRewardWarehouseLevel[this.boss.tier];
-    return warehouseStorageByLevel[level];
+    return bossRewardAmounts[this.boss.tier];
   }
 
   isClaimedByMyClan(): boolean {
