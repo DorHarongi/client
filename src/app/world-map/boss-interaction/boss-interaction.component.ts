@@ -212,7 +212,13 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error?.message || 'Attack failed';
+        const errorMsg = err.error?.message || 'Attack failed';
+        this.errorMessage = errorMsg;
+        
+        // If boss was defeated by someone else, update HP to 0 and show that
+        if (errorMsg.toLowerCase().includes('already defeated') || errorMsg.toLowerCase().includes('not found')) {
+          this.boss.currentHp = 0;
+        }
       }
     });
   }
