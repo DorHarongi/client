@@ -101,6 +101,19 @@ export class ArsenalComponent implements OnInit, OnDestroy {
     return this.checkIfEnoughWoodToTrain() && this.checkIfEnoughCropToTrain() && this.checkIfEnoughStonesToTrain();
   }
 
+  hasSelectedAnyTroops(): boolean
+  {
+    return this.troops.spearFighters > 0 || this.troops.swordFighters > 0 || 
+           this.troops.axeFighters > 0 || this.troops.archers > 0 || 
+           this.troops.magicians > 0 || this.troops.horsemen > 0 || 
+           this.troops.catapults > 0;
+  }
+
+  canTrain(): boolean
+  {
+    return this.hasSelectedAnyTroops() && this.checkIfEnoughMaterialsToTrain();
+  }
+
   updateTroops(troopsAmounts: TroopsAmounts){
     this.troops = troopsAmounts;
     this.updateMaterialsCost();

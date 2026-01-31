@@ -7,7 +7,7 @@
             <h5 class="center"> Train troops: </h5>
             <app-troops-choosing (onTroopsChange)="updateTroops($event)" [maxPossibleTroops]="maxPossibleTroops"> </app-troops-choosing>
             <app-materials-cost [materialsCost]="totalMaterialsCost"></app-materials-cost>
-            <button id = "train" class ="buttons" (click)="trainTroops()" [disabled]="checkIfEnoughMaterialsToTrain() == false"> Train </button>
+            <button id = "train" class ="buttons" (click)="trainTroops()" [disabled]="!canTrain()"> Train </button>
         </div>
     </div>
 </app-building>
