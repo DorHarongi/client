@@ -96,6 +96,11 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     return `${amount.toLocaleString()} of each resource`;
   }
 
+  getRewardAmount(): number {
+    const level = bossRewardWarehouseLevel[this.boss.tier];
+    return warehouseStorageByLevel[level];
+  }
+
   isClaimedByMyClan(): boolean {
     return this.boss.claimedByClanName === this.currentUserClan && !!this.currentUserClan;
   }

@@ -279,10 +279,12 @@ export class InboxComponent implements OnInit, OnDestroy {
         return 'assets/ancient-scroll.png';
       case 'resources_sent':
       case 'resources_received':
-        return 'assets/wood.png';
+        return 'assets/wood.jpg';
       case 'support_sent':
       case 'support_received':
         return 'assets/spear.png';
+      case 'boss_defeated':
+        return 'assets/boss-common.png';
       default:
         return 'assets/ancient-scroll.png';
     }

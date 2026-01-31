@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
@@ -12,6 +13,7 @@ import { WorldMapModule } from './world-map/world-map.module';
 import { PlayerModule } from './player/player.module';
 import { ClanModule } from './clan/clan.module';
 import { QuestsModule } from './quests/quests.module';
+import { AuthInterceptor } from './login/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { QuestsModule } from './quests/quests.module';
     QuestsModule,
     RouterModule.forRoot(appRoutes),
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

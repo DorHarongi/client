@@ -49,18 +49,15 @@
                 <!-- Bosses -->
                 <div class="minimap-boss" 
                      *ngFor="let boss of allBosses"
-                     [ngStyle]="getMinimapBossStyle(boss)"
-                     [class.claimed-by-me]="isBossClaimedByMyClan(boss)">
-                </div>
+                     [ngStyle]="getMinimapBossStyle(boss)">💀</div>
                 <div class="minimap-window" [ngStyle]="getMinimapWindowStyle()"></div>
             </div>
             <!-- Legend -->
             <div class="minimap-legend">
-                <div class="legend-item"><span class="legend-dot own"></span> Your village</div>
-                <div class="legend-item"><span class="legend-dot clan"></span> Clan village</div>
-                <div class="legend-item"><span class="legend-dot enemy"></span> Enemy village</div>
-                <div class="legend-item"><span class="legend-dot boss-common"></span> Boss</div>
-                <div class="legend-item"><span class="legend-dot boss-claimed"></span> Your clan's boss</div>
+                <div class="legend-item"><span class="legend-square own"></span> Your village</div>
+                <div class="legend-item"><span class="legend-square clan"></span> Clan village</div>
+                <div class="legend-item"><span class="legend-square enemy"></span> Enemy village</div>
+                <div class="legend-item"><span class="legend-skull">💀</span> Raid Boss</div>
             </div>
         </div>
     </div>

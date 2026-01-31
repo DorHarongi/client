@@ -1,10 +1,26 @@
 .interactionContainer {
   background-image: url(../../../assets/top-bg.png);
-  min-width: 450px;
+  min-width: 350px;
   max-width: 500px;
+  width: 90%;
   margin: 0 auto;
   padding: 20px;
-  margin-top: 10vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+@media (max-width: 768px) {
+  .interactionContainer {
+    min-width: unset;
+    width: 95%;
+    padding: 15px;
+    max-height: 85vh;
+  }
 }
 
 .round-square {
@@ -105,7 +121,6 @@
   }
 
   .unclaimed {
-    color: #3498db;
     font-style: italic;
   }
 }
@@ -113,8 +128,8 @@
 .distance-section {
   margin: 15px 0;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  border: 1px solid #7d5210;
+  border-radius: 5px;
 }
 
 .distance-label {
@@ -133,16 +148,33 @@
 .rewards-section {
   margin: 15px 0;
   padding: 10px;
-  background-color: rgba(241, 196, 15, 0.2);
-  border-radius: 8px;
+  border: 1px solid #7d5210;
+  border-radius: 5px;
 
   h5 {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
+}
+
+.rewards-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .actions {
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.main-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .action-btn {
@@ -152,17 +184,11 @@
   border-radius: 0.25rem;
   box-shadow: 2px 2px 2px 2px;
   padding: 10px 20px;
-  margin: 5px;
   cursor: pointer;
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-  }
-
-  &.attack-btn {
-    background-color: #e74c3c;
-    color: white;
   }
 }
 
@@ -174,6 +200,7 @@
 
 .attack-panel {
   margin: 15px 0;
+  overflow-x: auto;
 }
 
 .damage-preview {
@@ -189,11 +216,18 @@
   gap: 10px;
 }
 
+@media (max-width: 768px) {
+  .attack-panel {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 .attack-result {
   margin: 15px 0;
   padding: 15px;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
+  border: 1px solid #7d5210;
+  border-radius: 5px;
 
   h4.victory {
     color: #27ae60;
@@ -219,6 +253,7 @@
 
   h5 {
     color: #e74c3c;
+    margin-bottom: 5px;
   }
 
   .loss-grid {
@@ -228,8 +263,8 @@
     justify-content: center;
 
     span {
-      background-color: rgba(231, 76, 60, 0.2);
       padding: 4px 8px;
+      border: 1px solid #7d5210;
       border-radius: 4px;
       font-size: 12px;
     }
@@ -239,52 +274,36 @@
 .rewards-received {
   margin: 15px 0;
   padding: 10px;
-  background-color: rgba(39, 174, 96, 0.2);
-  border-radius: 8px;
+  border: 1px solid #7d5210;
+  border-radius: 5px;
 
   h5 {
     color: #27ae60;
     margin-bottom: 10px;
   }
+}
 
-  .reward-icons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+.loot-display, .rewards-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
 
-    span {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+.loot-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 
-    .resource-icon {
-      width: 24px;
-      height: 24px;
-    }
-  }
+.resource-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .error-message {
   color: #e74c3c;
   margin: 10px 0;
-}
-
-.buttons {
-  background-image: url(../../../assets/top-bg.png);
-  border: 1px black solid;
-  outline: none;
-  border-radius: 0.25rem;
-  box-shadow: 2px 2px 2px 2px;
-}
-
-#back {
-  width: 100px;
-  margin-top: 20px;
-  height: 40px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .flexContainer {

@@ -5,7 +5,7 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
 import { WorldMapService } from '../services/world-map.service';
 import { BossService } from '../services/boss.service';
 import { VillageOnMap, BossOnMap, MapWindowResponse, MinimapResponse } from '../models/mapModels';
-import { BossTier, bossMinimapColors, CLAIMED_BOSS_COLOR } from 'utils';
+import { BossTier } from 'utils';
 
 const WINDOW_SIZE = 10;
 const MINIMAP_SCALE = 2; // pixels per tile
@@ -193,12 +193,9 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   }
 
   getMinimapBossStyle(boss: BossOnMap): any {
-    const isClaimedByMyClan = this.isBossClaimedByMyClan(boss);
-    const color = isClaimedByMyClan ? CLAIMED_BOSS_COLOR : bossMinimapColors[boss.tier];
     return {
-      left: (boss.x * MINIMAP_SCALE) + 'px',
-      top: (boss.y * MINIMAP_SCALE) + 'px',
-      'background-color': color
+      left: (boss.x * MINIMAP_SCALE - 4) + 'px',
+      top: (boss.y * MINIMAP_SCALE - 4) + 'px'
     };
   }
 
