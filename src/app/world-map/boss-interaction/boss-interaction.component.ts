@@ -205,6 +205,11 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
         // Update boss HP locally (whether defeated or not)
         this.boss.currentHp = result.report.bossHpAfter;
         
+        // Update boss claim status - attacking claims the boss for your clan
+        if (!this.boss.claimedByClanName && this.currentUserClan) {
+          this.boss.claimedByClanName = this.currentUserClan;
+        }
+        
         if (result.bossDefeated) {
           // Boss was defeated - don't auto-close, let user view the results
           // The bossDefeated event will be emitted when user clicks Close
