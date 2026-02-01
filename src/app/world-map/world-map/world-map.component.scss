@@ -343,7 +343,6 @@ $your-color: #90EE90;     // Green - your own villages
     
     // Reset any positioning
     padding: 0 !important;
-    padding-bottom: 80px !important;  // Space for fixed back button
     margin: 0 !important;
     transform: none !important;
     position: relative !important;
@@ -423,12 +422,24 @@ $your-color: #90EE90;     // Green - your own villages
     text-align: center;
   }
 
+  // Fixed footer for back button
   #back {
     position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 60px;
     z-index: 100;
     margin: 0;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Add margin at bottom of map content so it doesn't go under the fixed button
+  .map-content {
+    margin-bottom: 70px;
   }
 }
