@@ -227,4 +227,16 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   getEnergy(): number {
     return this.userInformationService.userInformation.energy;
   }
+
+  hasBeginnerShield(): boolean {
+    return this.playerInfo?.beginnerShieldRemainingHours > 0;
+  }
+
+  formatShieldTime(): string {
+    const hours = this.playerInfo?.beginnerShieldRemainingHours || 0;
+    if (hours < 1) {
+      return `${Math.ceil(hours * 60)} minutes`;
+    }
+    return `${hours.toFixed(1)} hours`;
+  }
 }

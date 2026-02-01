@@ -30,7 +30,12 @@
             <td> {{user.numberOfVillages}} </td>
             <td> 
                 <div class ="center" *ngIf = "user.username != username">
-                    <button class="attack icons" [class.noEnergy]="getEnergy() < 1" (click)="attackPlayer(user.username)" [disabled]="getEnergy() < 1"></button>
+                    <button class="attack icons" 
+                            [class.noEnergy]="getEnergy() < 1" 
+                            [class.hasShield]="hasBeginnerShield(user)"
+                            (click)="attackPlayer(user.username)" 
+                            [disabled]="getEnergy() < 1 || hasBeginnerShield(user)"
+                            [title]="hasBeginnerShield(user) ? 'Beginner protection: ' + formatShieldTime(user) + ' remaining' : ''"></button>
                 </div>
             </td>
         </tr>

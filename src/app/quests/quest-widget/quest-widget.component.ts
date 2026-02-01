@@ -191,16 +191,36 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
     try {
       const saved = localStorage.getItem(POSITION_KEY);
       if (saved) {
-        this.position = JSON.parse(saved);
-      } else {
-        // Default position: top-right area (higher on screen)
+        const savedPos = JSON.parse(saved);
+        // Validate saved position is within current viewport
+        const maxX = window.innerWidth - 280;
+        const maxY = window.innerHeight - 80;
         this.position = {
-          x: window.innerWidth - 300,
-          y: 100  // Start near the top, below toolbar
+          x: Math.max(0, Math.min(savedPos.x, maxX)),
+          y: Math.max(0, Math.min(savedPos.y, maxY))
         };
+      } else {
+        this.setDefaultPosition();
       }
     } catch {
-      this.position = { x: window.innerWidth - 300, y: 100 };
+      this.setDefaultPosition();
+    }
+  }
+
+  private setDefaultPosition(): void {
+    const isMobile = window.innerWidth <= 600;
+    if (isMobile) {
+      // On mobile: position at top-right, just below toolbar (toolbar is ~75px)
+      this.position = {
+        x: window.innerWidth - 230,  // Widget is 220px on mobile
+        y: 80  // Just below toolbar
+      };
+    } else {
+      // On desktop: top-right area
+      this.position = {
+        x: window.innerWidth - 300,
+        y: 100
+      };
     }
   }
 

@@ -168,4 +168,15 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('home');
   }
 
+  hasBeginnerShield(user: any): boolean {
+    return user?.beginnerShieldRemainingHours > 0;
+  }
+
+  formatShieldTime(user: any): string {
+    const hours = user?.beginnerShieldRemainingHours || 0;
+    if (hours < 1) {
+      return `${Math.ceil(hours * 60)} minutes`;
+    }
+    return `${hours.toFixed(1)} hours`;
+  }
 }

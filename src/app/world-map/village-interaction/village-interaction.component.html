@@ -31,9 +31,12 @@
             <button class="action-btn attack-btn" 
                     *ngIf="!isOwnVillage && !isSameClan" 
                     (click)="openAttackPanel()"
-                    [disabled]="getEnergy() < 1">
+                    [disabled]="getEnergy() < 1 || hasBeginnerShield()">
                 Attack Village
             </button>
+            <p *ngIf="hasBeginnerShield() && !isOwnVillage && !isSameClan" class="shield-warning">
+                This player has beginner protection ({{formatShieldTime()}} remaining)
+            </p>
         </div>
     </div>
 

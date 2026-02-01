@@ -193,11 +193,13 @@ $topToolbarMinHeight: 75px;
   }
 
   &.boss-claimed-by-me {
-    box-shadow: 0 0 8px 3px #27ae60;
+    border: 3px solid #27ae60;
+    box-sizing: border-box;
   }
 
   &.boss-claimed {
-    opacity: 0.7;
+    border: 3px solid red;
+    box-sizing: border-box;
   }
 
   .boss-marker {

@@ -123,6 +123,11 @@ $topToolbarMinHeight: 75px;
     cursor: not-allowed;
   }
 
+  .hasShield{
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
+
   tr{
     height: 42px;
   }
