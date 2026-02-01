@@ -1,8 +1,10 @@
 $topToolbarHeight: 7.5vh;
 $topToolbarMinHeight: 75px;
 
-// Shared color for enemy/hostile elements
-$enemy-color: #FFB6C1;
+// Shared colors for map elements
+$enemy-color: #ff0026;    // Red - enemy villages & enemy claimed bosses
+$clan-color: #1e90ff;     // Blue - clan villages & your clan's claimed bosses
+$your-color: #90EE90;     // Green - your own villages
 
 .mapContainer {
   min-width: 100%;
@@ -131,16 +133,16 @@ $enemy-color: #FFB6C1;
   }
 
   &.own-village {
-    background-color: #90EE90;
+    background-color: $your-color;
     &:hover {
-      background-color: #7CCD7C;
+      background-color: darken($your-color, 5%);
     }
   }
 
   &.clan-village {
-    background-color: #87CEEB; // Light blue for clan members
+    background-color: $clan-color;
     &:hover {
-      background-color: #6CB4D9;
+      background-color: darken($clan-color, 5%);
     }
   }
 
@@ -196,12 +198,12 @@ $enemy-color: #FFB6C1;
   }
 
   &.boss-claimed-by-me {
-    border: 3px solid #27ae60;
+    border: 2px solid $clan-color;
     box-sizing: border-box;
   }
 
   &.boss-claimed {
-    border: 3px solid $enemy-color;
+    border: 2px solid $enemy-color;
     box-sizing: border-box;
   }
 
@@ -242,11 +244,11 @@ $enemy-color: #FFB6C1;
   background-color: $enemy-color;
   
   &.own {
-    background-color: green;
+    background-color: $your-color;
   }
 
   &.clan {
-    background-color: #1E90FF; // Dodger blue for clan members
+    background-color: $clan-color;
   }
 }
 
@@ -284,8 +286,8 @@ $enemy-color: #FFB6C1;
   width: 8px;
   height: 8px;
   
-  &.own { background-color: green; }
-  &.clan { background-color: #1E90FF; }
+  &.own { background-color: $your-color; }
+  &.clan { background-color: $clan-color; }
   &.enemy { background-color: $enemy-color; }
 }
 
