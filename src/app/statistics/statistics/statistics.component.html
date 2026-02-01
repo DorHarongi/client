@@ -11,57 +11,60 @@
         Loading...
     </div>
 
-    <!-- Players Table -->
-    <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'players' && !loading">
-        <tr>
-            <th class="center">Rank</th>
-            <th class="center">Name</th>
-            <th class="center">Clan</th>
-            <th class="center">Population</th>
-            <th class="center">Villages</th>
-            <th class="center">Attack</th>
-        </tr>
-        <tr *ngFor="let user of usersInPage; let i = index" class="center bordered" [class.player-himself]="user.username == username">
-            <td> {{(page - 1) * 10 + i + 1 }}</td>
-            <td class="clickable" (click)="goToPlayer(user.username)"> {{user.username}} </td>
-            <td *ngIf="user.clanName != ''" class="clickable" (click)="goToClan(user.clanName)"> {{user.clanName}} </td>
-            <td *ngIf="user.clanName == ''"> No clan </td>
-            <td> {{user.population}} </td>
-            <td> {{user.numberOfVillages}} </td>
-            <td> 
-                <div class ="center" *ngIf = "user.username != username">
-                    <button class="attack icons" 
-                            [class.noEnergy]="getEnergy() < 1" 
-                            [class.hasShield]="hasBeginnerShield(user)"
-                            (click)="attackPlayer(user.username)" 
-                            [disabled]="getEnergy() < 1 || hasBeginnerShield(user)"
-                            [title]="hasBeginnerShield(user) ? 'Beginner protection: ' + formatShieldTime(user) + ' remaining' : ''"></button>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <!-- Scrollable table wrapper for mobile -->
+    <div class="table-scroll-wrapper">
+        <!-- Players Table -->
+        <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'players' && !loading">
+            <tr>
+                <th class="center">Rank</th>
+                <th class="center">Name</th>
+                <th class="center">Clan</th>
+                <th class="center">Population</th>
+                <th class="center">Villages</th>
+                <th class="center">Attack</th>
+            </tr>
+            <tr *ngFor="let user of usersInPage; let i = index" class="center bordered" [class.player-himself]="user.username == username">
+                <td> {{(page - 1) * 10 + i + 1 }}</td>
+                <td class="clickable" (click)="goToPlayer(user.username)"> {{user.username}} </td>
+                <td *ngIf="user.clanName != ''" class="clickable" (click)="goToClan(user.clanName)"> {{user.clanName}} </td>
+                <td *ngIf="user.clanName == ''"> No clan </td>
+                <td> {{user.population}} </td>
+                <td> {{user.numberOfVillages}} </td>
+                <td> 
+                    <div class ="center" *ngIf = "user.username != username">
+                        <button class="attack icons" 
+                                [class.noEnergy]="getEnergy() < 1" 
+                                [class.hasShield]="hasBeginnerShield(user)"
+                                (click)="attackPlayer(user.username)" 
+                                [disabled]="getEnergy() < 1 || hasBeginnerShield(user)"
+                                [title]="hasBeginnerShield(user) ? 'Beginner protection: ' + formatShieldTime(user) + ' remaining' : ''"></button>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-    <!-- Clans Table -->
-    <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'clans' && !loading">
-        <tr>
-            <th class="center">Rank</th>
-            <th class="center">Clan Name</th>
-            <th class="center">Leader</th>
-            <th class="center">Members</th>
-            <th class="center">Total Population</th>
-            <th class="center">Bosses Killed</th>
-            <th class="center">Status</th>
-        </tr>
-        <tr *ngFor="let clan of clansInPage; let i = index" class="center bordered">
-            <td> {{(page - 1) * 10 + i + 1 }}</td>
-            <td class="clickable" (click)="goToClan(clan.clanName)"> {{clan.clanName}} </td>
-            <td class="clickable" (click)="goToPlayer(clan.leaderUsername)"> {{clan.leaderUsername}} </td>
-            <td> {{clan.memberCount}} </td>
-            <td> {{clan.totalPopulation}} </td>
-            <td> {{clan.totalBossesKilled || 0}} </td>
-            <td> {{clan.isOpen ? 'Open' : 'Closed'}} </td>
-        </tr>
-    </table>
+        <!-- Clans Table -->
+        <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'clans' && !loading">
+            <tr>
+                <th class="center">Rank</th>
+                <th class="center">Clan Name</th>
+                <th class="center">Leader</th>
+                <th class="center">Members</th>
+                <th class="center">Total Population</th>
+                <th class="center">Bosses Killed</th>
+                <th class="center">Status</th>
+            </tr>
+            <tr *ngFor="let clan of clansInPage; let i = index" class="center bordered">
+                <td> {{(page - 1) * 10 + i + 1 }}</td>
+                <td class="clickable" (click)="goToClan(clan.clanName)"> {{clan.clanName}} </td>
+                <td class="clickable" (click)="goToPlayer(clan.leaderUsername)"> {{clan.leaderUsername}} </td>
+                <td> {{clan.memberCount}} </td>
+                <td> {{clan.totalPopulation}} </td>
+                <td> {{clan.totalBossesKilled || 0}} </td>
+                <td> {{clan.isOpen ? 'Open' : 'Closed'}} </td>
+            </tr>
+        </table>
+    </div>
 
     <div class="pagination center margin-top">
         <p (click)="moveToPage(1)">&laquo;</p>

@@ -148,3 +148,50 @@ $topToolbarMinHeight: 75px;
     color: #666;
     padding: 20px;
 }
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  // Override global .flexContainer styles
+  .flexContainer.statisticsContainer,
+  .statisticsContainer {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-content: flex-start !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 0 !important;
+    margin-top: max($topToolbarHeight, $topToolbarMinHeight);
+  }
+
+  // Scrollable wrapper for tables
+  .table-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    text-align: center;
+  }
+
+  #table {
+    min-width: 600px;
+    width: auto;
+    display: inline-table;  // So it respects text-align: center
+  }
+
+  .toggle-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #back {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
