@@ -343,6 +343,7 @@ $your-color: #90EE90;     // Green - your own villages
     
     // Reset any positioning
     padding: 0 !important;
+    padding-bottom: 80px !important;  // Space for fixed back button
     margin: 0 !important;
     transform: none !important;
     position: relative !important;
