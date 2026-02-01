@@ -326,20 +326,28 @@ $your-color: #90EE90;     // Green - your own villages
 // Mobile responsiveness
 @media (max-width: 768px) {
   .mapContainer {
-    overflow-x: auto;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
 
   .map-content {
-    flex-direction: column;
+    flex-direction: column-reverse;
+    align-items: center;
     gap: 20px;
     padding: 0 10px;
-    min-width: fit-content;
   }
 
   .map-grid-container {
-    min-width: fit-content;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 10px;
+  }
+
+  .map-grid {
+    margin: 0 auto;
   }
 
   .grid-cell {
@@ -363,6 +371,10 @@ $your-color: #90EE90;     // Green - your own villages
 
   .minimap-container {
     margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   #back {

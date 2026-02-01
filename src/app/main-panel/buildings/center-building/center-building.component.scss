@@ -289,3 +289,63 @@
 .cancel-btn {
     background-color: #FFB6C1;
 }
+
+// Mobile responsiveness for new village map
+@media (max-width: 768px) {
+  .map-grid-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    align-items: flex-start;
+    padding-bottom: 10px;
+  }
+
+  .map-grid {
+    margin: 0 auto;
+  }
+
+  .grid-cell {
+    width: 45px;
+    height: 45px;
+
+    .village-icon {
+      width: 25px;
+      height: 25px;
+    }
+
+    .boss-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .coords {
+      font-size: 6px;
+    }
+  }
+
+  .legend {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .village-name-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    input {
+      width: 180px;
+    }
+  }
+
+  .new-village-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+}
