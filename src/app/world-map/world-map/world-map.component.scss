@@ -198,12 +198,12 @@ $your-color: #90EE90;     // Green - your own villages
   }
 
   &.boss-claimed-by-me {
-    border: 2px solid $clan-color;
+    border: 5px outset $clan-color;
     box-sizing: border-box;
   }
 
   &.boss-claimed {
-    border: 2px solid $enemy-color;
+    border: 5px outset $enemy-color;
     box-sizing: border-box;
   }
 
