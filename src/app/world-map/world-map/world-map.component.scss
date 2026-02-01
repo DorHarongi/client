@@ -326,8 +326,9 @@ $your-color: #90EE90;     // Green - your own villages
 // Mobile responsiveness
 @media (max-width: 768px) {
   .mapContainer {
+    overflow-x: auto;
     overflow-y: auto;
-    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .map-content {
@@ -335,15 +336,13 @@ $your-color: #90EE90;     // Green - your own villages
     align-items: center;
     gap: 20px;
     padding: 0;
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
   }
 
   .map-grid-container {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   // Entire navigation block scrolls together so arrows stay centered on grid
@@ -390,7 +389,7 @@ $your-color: #90EE90;     // Green - your own villages
 
   .minimap-container {
     margin-bottom: 20px;
-    width: 100%;
+    width: 100vw;
     display: flex;
     flex-direction: column;
     align-items: center;
