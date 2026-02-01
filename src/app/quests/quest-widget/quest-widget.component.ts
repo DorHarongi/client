@@ -147,27 +147,58 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Dragging functionality
+  // Dragging functionality - Mouse events
   onMouseDown(event: MouseEvent): void {
     if (event.button !== 0) return; // Only left click
-    
-    this.isDragging = true;
-    const rect = (event.target as HTMLElement).closest('.quest-widget')?.getBoundingClientRect();
-    if (rect) {
-      this.dragOffset = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
-      };
-    }
-    event.preventDefault();
+    this.startDrag(event.clientX, event.clientY, event);
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
     if (!this.isDragging) return;
+    this.updateDragPosition(event.clientX, event.clientY);
+  }
 
-    const newX = event.clientX - this.dragOffset.x;
-    const newY = event.clientY - this.dragOffset.y;
+  @HostListener('document:mouseup')
+  onMouseUp(): void {
+    this.endDrag();
+  }
+
+  // Dragging functionality - Touch events
+  onTouchStart(event: TouchEvent): void {
+    if (event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    this.startDrag(touch.clientX, touch.clientY, event);
+  }
+
+  @HostListener('document:touchmove', ['$event'])
+  onTouchMove(event: TouchEvent): void {
+    if (!this.isDragging || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    this.updateDragPosition(touch.clientX, touch.clientY);
+    event.preventDefault(); // Prevent scrolling while dragging
+  }
+
+  @HostListener('document:touchend')
+  onTouchEnd(): void {
+    this.endDrag();
+  }
+
+  // Shared drag logic
+  private startDrag(clientX: number, clientY: number, event: Event): void {
+    this.isDragging = true;
+    const rect = (event.target as HTMLElement).closest('.quest-widget')?.getBoundingClientRect();
+    if (rect) {
+      this.dragOffset = {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+  }
+
+  private updateDragPosition(clientX: number, clientY: number): void {
+    const newX = clientX - this.dragOffset.x;
+    const newY = clientY - this.dragOffset.y;
 
     // Keep within viewport bounds
     const maxX = window.innerWidth - 280;
@@ -179,8 +210,7 @@ export class QuestWidgetComponent implements OnInit, OnDestroy {
     };
   }
 
-  @HostListener('document:mouseup')
-  onMouseUp(): void {
+  private endDrag(): void {
     if (this.isDragging) {
       this.isDragging = false;
       this.savePosition();

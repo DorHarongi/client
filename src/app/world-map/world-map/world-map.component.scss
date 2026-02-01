@@ -1,6 +1,9 @@
 $topToolbarHeight: 7.5vh;
 $topToolbarMinHeight: 75px;
 
+// Shared color for enemy/hostile elements
+$enemy-color: #FFB6C1;
+
 .mapContainer {
   min-width: 100%;
   margin-top: max($topToolbarHeight, $topToolbarMinHeight);
@@ -142,9 +145,9 @@ $topToolbarMinHeight: 75px;
   }
 
   &.other-village {
-    background-color: #FFB6C1;
+    background-color: $enemy-color;
     &:hover {
-      background-color: #FF9AA2;
+      background-color: darken($enemy-color, 5%);
     }
   }
 
@@ -198,7 +201,7 @@ $topToolbarMinHeight: 75px;
   }
 
   &.boss-claimed {
-    border: 3px solid red;
+    border: 3px solid $enemy-color;
     box-sizing: border-box;
   }
 
@@ -236,7 +239,7 @@ $topToolbarMinHeight: 75px;
   position: absolute;
   width: 4px;
   height: 4px;
-  background-color: red;
+  background-color: $enemy-color;
   
   &.own {
     background-color: green;
@@ -283,7 +286,7 @@ $topToolbarMinHeight: 75px;
   
   &.own { background-color: green; }
   &.clan { background-color: #1E90FF; }
-  &.enemy { background-color: red; }
+  &.enemy { background-color: $enemy-color; }
 }
 
 .legend-skull {
@@ -316,4 +319,52 @@ $topToolbarMinHeight: 75px;
 .step {
   opacity: 0.5;
   transition: .25s ease-in-out all;
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .mapContainer {
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .map-content {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 10px;
+    min-width: fit-content;
+  }
+
+  .map-grid-container {
+    min-width: fit-content;
+  }
+
+  .grid-cell {
+    width: 50px;
+    height: 50px;
+
+    .village-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .boss-icon {
+      width: 38px;
+      height: 38px;
+    }
+
+    .coords {
+      font-size: 7px;
+    }
+  }
+
+  .minimap-container {
+    margin-bottom: 20px;
+  }
+
+  #back {
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
 }

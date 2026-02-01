@@ -6,6 +6,7 @@
      [class.dragging]="isDragging"
      [class.claimable]="isClaimable"
      (mousedown)="onMouseDown($event)"
+     (touchstart)="onTouchStart($event)"
      #widget>
     
     <div class="widget-header" (click)="toggleDetails()">
