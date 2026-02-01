@@ -329,11 +329,14 @@ $your-color: #90EE90;     // Green - your own villages
     overflow-x: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    // Override global flexContainer centering
+    align-content: flex-start !important;
+    flex-wrap: nowrap !important;
   }
 
   .map-content {
     flex-direction: column-reverse;
-    align-items: flex-start;  // Changed from center - prevents left side cutoff
+    align-items: flex-start;
     gap: 20px;
     padding: 0;
     width: max-content;
@@ -342,7 +345,9 @@ $your-color: #90EE90;     // Green - your own villages
 
   .map-grid-container {
     display: flex;
-    justify-content: flex-start;  // Changed from center
+    justify-content: flex-start;
+    margin-left: 0;
+    padding-left: 0;
   }
 
   // Entire navigation block scrolls together so arrows stay centered on grid
