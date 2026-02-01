@@ -326,36 +326,36 @@ $your-color: #90EE90;     // Green - your own villages
 // Mobile responsiveness
 @media (max-width: 768px) {
   .mapContainer {
+    display: block !important;  // Override flex to prevent centering
     overflow-x: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    // Override global flexContainer centering
-    align-content: flex-start !important;
-    flex-wrap: nowrap !important;
+    padding: 0;
+    margin: 0;
   }
 
   .map-content {
+    display: flex;
     flex-direction: column-reverse;
     align-items: flex-start;
     gap: 20px;
     padding: 0;
-    width: max-content;
-    min-width: 100%;
+    margin: 0;
+    width: fit-content;
   }
 
   .map-grid-container {
-    display: flex;
-    justify-content: flex-start;
-    margin-left: 0;
-    padding-left: 0;
+    display: block;
+    margin: 0;
+    padding: 0;
   }
 
-  // Entire navigation block scrolls together so arrows stay centered on grid
   .navigation-arrows {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
   }
 
   .horizontal-arrows {
@@ -394,7 +394,7 @@ $your-color: #90EE90;     // Green - your own villages
 
   .minimap-container {
     margin-bottom: 20px;
-    width: 100vw;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
