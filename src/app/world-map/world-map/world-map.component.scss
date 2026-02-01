@@ -351,10 +351,15 @@ $your-color: #90EE90;     // Green - your own villages
   }
 
   .map-content {
-    display: block !important;
+    display: flex !important;
+    flex-direction: column-reverse !important;  // Minimap on top
+    align-items: flex-start !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
     width: fit-content;
     padding: 0;
     margin: 0;
+    gap: 20px;
   }
 
   .map-grid-container {
