@@ -333,7 +333,7 @@ $your-color: #90EE90;     // Green - your own villages
 
   .map-content {
     flex-direction: column-reverse;
-    align-items: center;
+    align-items: flex-start;  // Changed from center - prevents left side cutoff
     gap: 20px;
     padding: 0;
     width: max-content;
@@ -342,7 +342,7 @@ $your-color: #90EE90;     // Green - your own villages
 
   .map-grid-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;  // Changed from center
   }
 
   // Entire navigation block scrolls together so arrows stay centered on grid
