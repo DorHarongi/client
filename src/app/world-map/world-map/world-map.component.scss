@@ -423,8 +423,11 @@ $your-color: #90EE90;     // Green - your own villages
   }
 
   #back {
-    display: inline-block;  // Makes it part of inline flow so it scrolls with content
-    margin-top: 30px;
-    margin-bottom: 20px;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    margin: 0;
   }
 }
