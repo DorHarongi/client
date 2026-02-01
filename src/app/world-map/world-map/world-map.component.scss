@@ -327,27 +327,46 @@ $your-color: #90EE90;     // Green - your own villages
 @media (max-width: 768px) {
   .mapContainer {
     overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .map-content {
     flex-direction: column-reverse;
     align-items: center;
     gap: 20px;
-    padding: 0 10px;
+    padding: 0;
+    width: 100%;
   }
 
   .map-grid-container {
     width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding-bottom: 10px;
+    align-items: center;
+  }
+
+  .navigation-arrows {
+    width: 100%;
+    align-items: center;
+  }
+
+  .horizontal-arrows {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    padding: 0 5px;
+    box-sizing: border-box;
+  }
+
+  .nav-arrow {
+    flex-shrink: 0;
+    width: 35px;
+    height: 35px;
   }
 
   .map-grid {
-    margin: 0 auto;
+    flex-shrink: 0;
   }
 
   .grid-cell {

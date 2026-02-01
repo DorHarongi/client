@@ -391,9 +391,11 @@
 }
 
 .flexContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-  box-sizing: border-box;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  align-content: stretch !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }

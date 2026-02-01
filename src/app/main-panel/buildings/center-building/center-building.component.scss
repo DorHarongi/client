@@ -298,10 +298,11 @@
     -webkit-overflow-scrolling: touch;
     align-items: flex-start;
     padding-bottom: 10px;
+    box-sizing: border-box;
   }
 
   .map-grid {
-    margin: 0 auto;
+    flex-shrink: 0;
   }
 
   .grid-cell {
