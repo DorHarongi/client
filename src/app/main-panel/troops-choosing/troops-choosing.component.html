@@ -54,25 +54,67 @@
         </tr>
         <tr>
             <td>
-                <h5 id="max" *ngIf="maxPossibleTroops.spearFighters > 0 && canTrainSpearFighters " (click)="maxSpearFighters()"> ({{maxPossibleTroops.spearFighters}}) </h5>
+                <div class="max-wrapper" *ngIf="maxPossibleTroops.spearFighters > 0 && canTrainSpearFighters">
+                    <h5 id="max" (click)="maxSpearFighters()"> ({{maxPossibleTroops.spearFighters}}) </h5>
+                    <div class="stats-tooltip">
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.spearFighters * spearFighterAttackingStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.spearFighters * spearFighterDefenceStat}}</div>
+                    </div>
+                </div>
             </td>
             <td>
-                <h5 id="max" *ngIf="maxPossibleTroops.swordFighters > 0 && canTrainSwordFighters" (click)="maxSwordFighters()"> ({{maxPossibleTroops.swordFighters}}) </h5>
+                <div class="max-wrapper" *ngIf="maxPossibleTroops.swordFighters > 0 && canTrainSwordFighters">
+                    <h5 id="max" (click)="maxSwordFighters()"> ({{maxPossibleTroops.swordFighters}}) </h5>
+                    <div class="stats-tooltip">
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.swordFighters * swordFighterAttackingStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.swordFighters * swordFighterDefenceStat}}</div>
+                    </div>
+                </div>
             </td>
             <td>
-                <h5 id="max" *ngIf="maxPossibleTroops.axeFighters > 0 && canTrainAxeFighters" (click)="maxAxeFighters()"> ({{maxPossibleTroops.axeFighters}}) </h5>
+                <div class="max-wrapper" *ngIf="maxPossibleTroops.axeFighters > 0 && canTrainAxeFighters">
+                    <h5 id="max" (click)="maxAxeFighters()"> ({{maxPossibleTroops.axeFighters}}) </h5>
+                    <div class="stats-tooltip">
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.axeFighters * axeFighterAttackingStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.axeFighters * axeFighterDefenceStat}}</div>
+                    </div>
+                </div>
             </td>
             <td>
-                <h5 id="max" *ngIf="maxPossibleTroops.archers > 0 && canTrainArchers" (click)="maxArchers()"> ({{maxPossibleTroops.archers}}) </h5>
+                <div class="max-wrapper" *ngIf="maxPossibleTroops.archers > 0 && canTrainArchers">
+                    <h5 id="max" (click)="maxArchers()"> ({{maxPossibleTroops.archers}}) </h5>
+                    <div class="stats-tooltip">
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.archers * archerAttackingStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.archers * archerDefenceStat}}</div>
+                    </div>
+                </div>
             </td>
             <td>
-                <h5 id="max" *ngIf="maxPossibleTroops.magicians > 0 && canTrainMagicians " (click)="maxMagicians()"> ({{maxPossibleTroops.magicians}}) </h5>
+                <div class="max-wrapper" *ngIf="maxPossibleTroops.magicians > 0 && canTrainMagicians">
+                    <h5 id="max" (click)="maxMagicians()"> ({{maxPossibleTroops.magicians}}) </h5>
+                    <div class="stats-tooltip">
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.magicians * magicianAttackingStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.magicians * magicianDefenceStat}}</div>
+                    </div>
+                </div>
             </td>
             <td>
-                <h5 id="max" *ngIf="maxPossibleTroops.horsemen > 0 && canTrainHorsemen" (click)="maxHorsemen()"> ({{maxPossibleTroops.horsemen}}) </h5>
+                <div class="max-wrapper" *ngIf="maxPossibleTroops.horsemen > 0 && canTrainHorsemen">
+                    <h5 id="max" (click)="maxHorsemen()"> ({{maxPossibleTroops.horsemen}}) </h5>
+                    <div class="stats-tooltip">
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.horsemen * horsemenAttackingStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.horsemen * horsemenDefenceStat}}</div>
+                    </div>
+                </div>
             </td>
             <td>
-                <h5 id="max" *ngIf="maxPossibleTroops.catapults > 0 && canTrainCatapults" (click)="maxCatapults()"> ({{maxPossibleTroops.catapults}}) </h5>
+                <div class="max-wrapper" *ngIf="maxPossibleTroops.catapults > 0 && canTrainCatapults">
+                    <h5 id="max" (click)="maxCatapults()"> ({{maxPossibleTroops.catapults}}) </h5>
+                    <div class="stats-tooltip">
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.catapults * catapultsAttackingStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.catapults * catapultsDefenceStat}}</div>
+                    </div>
+                </div>
             </td>
         </tr>
         <tr>
