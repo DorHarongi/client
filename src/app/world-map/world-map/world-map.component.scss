@@ -234,7 +234,12 @@ $your-color: #90EE90;     // Green - your own villages
   position: relative;
   border: 2px solid black;
   background-color: #8B4513;
-  cursor: crosshair;
+  cursor: grab;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .minimap-village {
@@ -266,6 +271,13 @@ $your-color: #90EE90;     // Green - your own villages
   border: 2px solid yellow;
   background-color: rgba(255, 255, 0, 0.2);
   pointer-events: none;
+  cursor: grab;
+  transition: box-shadow 0.15s ease;
+
+  &.dragging {
+    cursor: grabbing;
+    box-shadow: 0 0 8px 2px rgba(255, 255, 0, 0.6);
+  }
 }
 
 .minimap-legend {

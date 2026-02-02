@@ -43,6 +43,11 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   currentUsername: string;
   currentUserClan: string;
 
+  // Minimap dragging state
+  isDragging: boolean = false;
+  private boundMouseMove: (event: MouseEvent) => void;
+  private boundMouseUp: (event: MouseEvent) => void;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -52,6 +57,10 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   ) {
     this.currentUsername = this.userInformationService.userInformation.username;
     this.currentUserClan = this.userInformationService.userInformation.clanName || '';
+    
+    // Bind methods for global event listeners
+    this.boundMouseMove = this.onMinimapDrag.bind(this);
+    this.boundMouseUp = this.onMinimapDragEnd.bind(this);
   }
 
   ngOnInit(): void {
@@ -80,6 +89,9 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.subscription1?.unsubscribe();
     this.subscription2?.unsubscribe();
     this.queryParamSub?.unsubscribe();
+    // Clean up drag event listeners
+    document.removeEventListener('mousemove', this.boundMouseMove);
+    document.removeEventListener('mouseup', this.boundMouseUp);
   }
 
   loadMapWindow(): void {
@@ -155,6 +167,9 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   }
 
   onMinimapClick(event: MouseEvent): void {
+    // Only handle click if not dragging (drag end will handle it)
+    if (this.isDragging) return;
+    
     // Use currentTarget (the minimap div) instead of target (could be a child element)
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / MINIMAP_SCALE);
@@ -163,6 +178,53 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.windowStartX = Math.max(0, Math.min(x - 5, this.worldSize - WINDOW_SIZE));
     this.windowStartY = Math.max(0, Math.min(y - 5, this.worldSize - WINDOW_SIZE));
     this.loadMapWindow();
+  }
+
+  private minimapElement: HTMLElement | null = null;
+
+  onMinimapDragStart(event: MouseEvent): void {
+    event.preventDefault();
+    this.isDragging = true;
+    this.minimapElement = event.currentTarget as HTMLElement;
+    
+    // Add global listeners for drag and release
+    document.addEventListener('mousemove', this.boundMouseMove);
+    document.addEventListener('mouseup', this.boundMouseUp);
+    
+    // Move to initial position
+    this.updateMinimapPosition(event);
+  }
+
+  private onMinimapDrag(event: MouseEvent): void {
+    if (!this.isDragging || !this.minimapElement) return;
+    event.preventDefault();
+    this.updateMinimapPosition(event);
+  }
+
+  private onMinimapDragEnd(event: MouseEvent): void {
+    if (!this.isDragging) return;
+    
+    // Remove global listeners
+    document.removeEventListener('mousemove', this.boundMouseMove);
+    document.removeEventListener('mouseup', this.boundMouseUp);
+    
+    this.isDragging = false;
+    this.minimapElement = null;
+    
+    // Load the map window at the final position
+    this.loadMapWindow();
+  }
+
+  private updateMinimapPosition(event: MouseEvent): void {
+    if (!this.minimapElement) return;
+    
+    const rect = this.minimapElement.getBoundingClientRect();
+    const x = Math.floor((event.clientX - rect.left) / MINIMAP_SCALE);
+    const y = Math.floor((event.clientY - rect.top) / MINIMAP_SCALE);
+    
+    // Center the window on the cursor position
+    this.windowStartX = Math.max(0, Math.min(x - 5, this.worldSize - WINDOW_SIZE));
+    this.windowStartY = Math.max(0, Math.min(y - 5, this.worldSize - WINDOW_SIZE));
   }
 
   closeVillageInteraction(): void {

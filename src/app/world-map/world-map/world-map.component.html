@@ -40,6 +40,7 @@
                 <div class="minimap" 
                      [style.width.px]="getMinimapSize()" 
                      [style.height.px]="getMinimapSize()"
+                     (mousedown)="onMinimapDragStart($event)"
                      (click)="onMinimapClick($event)">
                     <!-- Villages -->
                     <div class="minimap-village" 
@@ -52,7 +53,9 @@
                     <div class="minimap-boss" 
                          *ngFor="let boss of allBosses"
                          [ngStyle]="getMinimapBossStyle(boss)">💀</div>
-                    <div class="minimap-window" [ngStyle]="getMinimapWindowStyle()"></div>
+                    <div class="minimap-window" 
+                         [ngStyle]="getMinimapWindowStyle()"
+                         [class.dragging]="isDragging"></div>
                 </div>
                 <!-- Legend -->
                 <div class="minimap-legend">
