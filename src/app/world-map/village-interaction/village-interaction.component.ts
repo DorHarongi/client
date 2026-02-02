@@ -160,6 +160,17 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     return total > 0;
   }
 
+  hasSelectedResources(): boolean {
+    return this.resourcesWood > 0 || this.resourcesStones > 0 || this.resourcesCrop > 0;
+  }
+
+  cancelPanel(): void {
+    this.showAttackPanel = false;
+    this.showSupportPanel = false;
+    this.showResourcesPanel = false;
+    this.errorMessage = '';
+  }
+
   sendSupport(): void {
     if (!this.hasSelectedTroops()) {
       return;
