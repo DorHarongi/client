@@ -9,6 +9,7 @@ import { AttackReport } from '../models/attackReport';
 import { ClanService } from 'src/app/clan/services/clan.service';
 import { BossService } from 'src/app/world-map/services/boss.service';
 import { environment } from 'src/environments/environment';
+import { getBossImageByName } from 'utils';
 
 const WINDOW_SIZE = 6;
 
@@ -315,24 +316,9 @@ export class InboxComponent implements OnInit, OnDestroy {
       case 'support_withdrawn':
         return 'assets/spear.png';
       case 'boss_defeated':
-        return this.getBossIconByName(message.metadata?.bossReward?.bossName);
+        return 'assets/' + getBossImageByName(message.metadata?.bossReward?.bossName);
       default:
         return 'assets/ancient-scroll.png';
-    }
-  }
-
-  getBossIconByName(bossName: string | undefined): string {
-    switch(bossName) {
-      case 'Goblin Horde':
-        return 'assets/boss-common.png';
-      case 'Werewolf Pack':
-        return 'assets/boss-rare.png';
-      case 'Spectral Wraith':
-        return 'assets/boss-epic.png';
-      case 'Ancient Dragon':
-        return 'assets/boss-legendary.png';
-      default:
-        return 'assets/boss-common.png';
     }
   }
 
