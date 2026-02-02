@@ -182,15 +182,21 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   sendResources(): void {
+    // Validate non-negative amounts
+    if (this.resourcesWood < 0 || this.resourcesStones < 0 || this.resourcesCrop < 0) {
+      this.errorMessage = 'Resource amounts cannot be negative';
+      return;
+    }
+
     this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/send-resources`, {
       senderUsername: this.currentUsername,
       senderVillageIndex: this.userInformationService.currentVillageIndex,
       recipientUsername: this.village.ownerUsername,
       recipientVillageName: this.village.villageName,
       resources: {
-        woodAmount: this.resourcesWood,
-        stonesAmount: this.resourcesStones,
-        cropAmount: this.resourcesCrop
+        woodAmount: Math.max(0, this.resourcesWood),
+        stonesAmount: Math.max(0, this.resourcesStones),
+        cropAmount: Math.max(0, this.resourcesCrop)
       }
     }).subscribe({
       next: (user: User) => {

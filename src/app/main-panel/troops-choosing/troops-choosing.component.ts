@@ -16,6 +16,7 @@ export class TroopsChoosingComponent implements OnInit {
 
   @Output() onTroopsChange = new EventEmitter<TroopsAmounts>();
   @Input() maxPossibleTroops!: TroopsAmounts;
+  @Input() initialTroops?: TroopsAmounts; // For disable logic - if not provided, uses maxPossibleTroops snapshot
 
   constructor(private userInformationService: UserInformationService) { 
     this.canTrainSpearFighters = this.userInformationService.currentVillage.buildingsLevels.arsenalLevel >= spearFighterMinimumArsenalLevel;
@@ -54,8 +55,44 @@ export class TroopsChoosingComponent implements OnInit {
   canTrainHorsemen: boolean;
   canTrainCatapults: boolean;
 
+  // Snapshot of initial troops for disable logic
+  private _initialTroopsSnapshot?: TroopsAmounts;
 
   ngOnInit(): void {
+    // Capture initial troops if not explicitly provided
+    if (!this.initialTroops && this.maxPossibleTroops) {
+      this._initialTroopsSnapshot = new TroopsAmounts(
+        this.maxPossibleTroops.spearFighters,
+        this.maxPossibleTroops.swordFighters,
+        this.maxPossibleTroops.axeFighters,
+        this.maxPossibleTroops.archers,
+        this.maxPossibleTroops.magicians,
+        this.maxPossibleTroops.horsemen,
+        this.maxPossibleTroops.catapults
+      );
+    }
+  }
+
+  // Get initial troops for disable check (village's original troops)
+  getInitialTroops(): TroopsAmounts | undefined {
+    return this.initialTroops || this._initialTroopsSnapshot;
+  }
+
+  // Check if troop type should be disabled (has 0 in village initially)
+  isDisabled(troopType: string): boolean {
+    const initial = this.getInitialTroops();
+    if (!initial) return false;
+    
+    switch(troopType) {
+      case 'spearFighters': return !this.canTrainSpearFighters || initial.spearFighters <= 0;
+      case 'swordFighters': return !this.canTrainSwordFighters || initial.swordFighters <= 0;
+      case 'axeFighters': return !this.canTrainAxeFighters || initial.axeFighters <= 0;
+      case 'archers': return !this.canTrainArchers || initial.archers <= 0;
+      case 'magicians': return !this.canTrainMagicians || initial.magicians <= 0;
+      case 'horsemen': return !this.canTrainHorsemen || initial.horsemen <= 0;
+      case 'catapults': return !this.canTrainCatapults || initial.catapults <= 0;
+      default: return false;
+    }
   }
 
   spearFightersInputChange(value: any)

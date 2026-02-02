@@ -2,53 +2,53 @@
     <table id="troopsTraining">
         <tr>
             <th>
-                <img class = "troopsImages" [class.disabledTroopsImages] = "!canTrainSpearFighters || (maxPossibleTroops?.spearFighters ?? 0) <= 0" src="../../../../assets//spear.png">
+                <img class = "troopsImages" [class.disabledTroopsImages] = "isDisabled('spearFighters')" src="../../../../assets//spear.png">
             </th>
             <th>
-                <img class = "troopsImages" [class.disabledTroopsImages] = "!canTrainSwordFighters || (maxPossibleTroops?.swordFighters ?? 0) <= 0" src="../../../../assets//sword.png">
+                <img class = "troopsImages" [class.disabledTroopsImages] = "isDisabled('swordFighters')" src="../../../../assets//sword.png">
             </th>
             <th>
-                <img class = "troopsImages" [class.disabledTroopsImages] = "!canTrainAxeFighters || (maxPossibleTroops?.axeFighters ?? 0) <= 0" src="../../../../assets//axe.png">
+                <img class = "troopsImages" [class.disabledTroopsImages] = "isDisabled('axeFighters')" src="../../../../assets//axe.png">
             </th>
             <th>
-                <img class = "troopsImages" [class.disabledTroopsImages] = "!canTrainArchers || (maxPossibleTroops?.archers ?? 0) <= 0" src="../../../../assets//bow.png">
+                <img class = "troopsImages" [class.disabledTroopsImages] = "isDisabled('archers')" src="../../../../assets//bow.png">
             </th>
             <th>
-                <img class = "troopsImages" [class.disabledTroopsImages] = "!canTrainMagicians || (maxPossibleTroops?.magicians ?? 0) <= 0" src="../../../../assets//hat.png">
+                <img class = "troopsImages" [class.disabledTroopsImages] = "isDisabled('magicians')" src="../../../../assets//hat.png">
             </th>
             <th>
-                <img class = "troopsImages" [class.disabledTroopsImages] = "!canTrainHorsemen || (maxPossibleTroops?.horsemen ?? 0) <= 0" src="../../../../assets//horse.png">
+                <img class = "troopsImages" [class.disabledTroopsImages] = "isDisabled('horsemen')" src="../../../../assets//horse.png">
             </th>
             <th>
-                <img class = "troopsImages" [class.disabledTroopsImages] = "!canTrainCatapults || (maxPossibleTroops?.catapults ?? 0) <= 0" src="../../../../assets//trebuchet.png">
+                <img class = "troopsImages" [class.disabledTroopsImages] = "isDisabled('catapults')" src="../../../../assets//trebuchet.png">
             </th>
         </tr>
         <tr>
             <td>
-                <input [disabled]="!canTrainSpearFighters || (maxPossibleTroops?.spearFighters ?? 0) <= 0" class = "troopsInput" type="number" name="spearFighters" [ngModel]="troops.spearFighters"
+                <input [disabled]="isDisabled('spearFighters')" class = "troopsInput" type="number" name="spearFighters" [ngModel]="troops.spearFighters"
                  (ngModelChange)="spearFightersInputChange($event)" oninput="validity.valid||(value='');">
             <td>
-                <input [disabled]="!canTrainSwordFighters || (maxPossibleTroops?.swordFighters ?? 0) <= 0" class = "troopsInput" type="number" name="swordFighters" [ngModel]="troops.swordFighters"
+                <input [disabled]="isDisabled('swordFighters')" class = "troopsInput" type="number" name="swordFighters" [ngModel]="troops.swordFighters"
                 (ngModelChange)="swordFightersInputChange($event)" oninput="validity.valid||(value='');">
             </td>
             <td>
-                <input [disabled]="!canTrainAxeFighters || (maxPossibleTroops?.axeFighters ?? 0) <= 0" class = "troopsInput" type="number" name="axeFighters" [ngModel]="troops.axeFighters"
+                <input [disabled]="isDisabled('axeFighters')" class = "troopsInput" type="number" name="axeFighters" [ngModel]="troops.axeFighters"
                 (ngModelChange)="axeFightersInputChange($event)" oninput="validity.valid||(value='');">
             </td>
             <td>
-                <input [disabled]="!canTrainArchers || (maxPossibleTroops?.archers ?? 0) <= 0" class = "troopsInput" type="number" name="archers" [ngModel]="troops.archers"
+                <input [disabled]="isDisabled('archers')" class = "troopsInput" type="number" name="archers" [ngModel]="troops.archers"
                 (ngModelChange)="archersInputChange($event)" oninput="validity.valid||(value='');">
             </td>
             <td>
-                <input [disabled]="!canTrainMagicians || (maxPossibleTroops?.magicians ?? 0) <= 0" class = "troopsInput" type="number" name="magicians" [ngModel]="troops.magicians"
+                <input [disabled]="isDisabled('magicians')" class = "troopsInput" type="number" name="magicians" [ngModel]="troops.magicians"
                 (ngModelChange)="magiciansInputChange($event)" oninput="validity.valid||(value='');">
             </td>
             <td>
-                <input [disabled]="!canTrainHorsemen || (maxPossibleTroops?.horsemen ?? 0) <= 0" class = "troopsInput" type="number" name="horsemen" [ngModel]="troops.horsemen"
+                <input [disabled]="isDisabled('horsemen')" class = "troopsInput" type="number" name="horsemen" [ngModel]="troops.horsemen"
                 (ngModelChange)="horsemenInputChange($event)" oninput="validity.valid||(value='');">
             </td>
             <td>
-                <input [disabled]="!canTrainCatapults || (maxPossibleTroops?.catapults ?? 0) <= 0" class = "troopsInput" type="number" name="catapults" [ngModel]="troops.catapults"
+                <input [disabled]="isDisabled('catapults')" class = "troopsInput" type="number" name="catapults" [ngModel]="troops.catapults"
                 (ngModelChange)="catapultsInputChange($event)" oninput="validity.valid||(value='');">
             </td>
         </tr>

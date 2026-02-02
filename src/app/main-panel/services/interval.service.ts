@@ -53,14 +53,20 @@ export class IntervalService {
     this.resourceGatheringInterval = setInterval(()=>{
       let currentVillage: Village = this.userInformationService.currentVillage;
       let userInformation: User = this.userInformationService.userInformation;
-      let maxWoodStorage: number = warehouseStorageByLevel[currentVillage.buildingsLevels.woodWarehouseLevel];
-      let maxStonesStorage: number = warehouseStorageByLevel[currentVillage.buildingsLevels.stoneWarehouseLevel];
-      let maxCropStorage: number = warehouseStorageByLevel[currentVillage.buildingsLevels.cropWarehouseLevel];
+
+      // Guard against null/undefined data
+      if (!currentVillage?.buildingsLevels || !currentVillage?.resourcesAmounts || !userInformation) {
+        return;
+      }
+
+      let maxWoodStorage: number = warehouseStorageByLevel[currentVillage.buildingsLevels.woodWarehouseLevel] || 0;
+      let maxStonesStorage: number = warehouseStorageByLevel[currentVillage.buildingsLevels.stoneWarehouseLevel] || 0;
+      let maxCropStorage: number = warehouseStorageByLevel[currentVillage.buildingsLevels.cropWarehouseLevel] || 0;
 
 
-      currentVillage.resourcesAmounts.woodAmount += currentVillage.woodProductionPerSecond;
-      currentVillage.resourcesAmounts.stonesAmount += currentVillage.stoneProductionPerSecond;
-      currentVillage.resourcesAmounts.cropAmount += currentVillage.cropProductionPerSecond;
+      currentVillage.resourcesAmounts.woodAmount += currentVillage.woodProductionPerSecond || 0;
+      currentVillage.resourcesAmounts.stonesAmount += currentVillage.stoneProductionPerSecond || 0;
+      currentVillage.resourcesAmounts.cropAmount += currentVillage.cropProductionPerSecond || 0;
       // Guard against undefined energy to prevent NaN
       if (typeof userInformation.energy === 'number' && !isNaN(userInformation.energy)) {
         userInformation.energy += energyProductionSpeedPerSecond;
