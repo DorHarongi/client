@@ -70,10 +70,10 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (user) => {
           this.playerInfo = user;
-          this.loading = false;
-          // Check if same clan
+          // Check if same clan BEFORE setting loading to false
           const currentClan = this.userInformationService.userInformation.clanName;
           this.isSameClan = !!(currentClan && user.clanName && currentClan === user.clanName);
+          this.loading = false;
         },
         error: () => {
           this.loading = false;
