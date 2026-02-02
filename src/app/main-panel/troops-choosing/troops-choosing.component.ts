@@ -84,7 +84,7 @@ export class TroopsChoosingComponent implements OnInit {
 
   magiciansInputChange(value: any)
   {
-    this.troops.magicians = this.fixInputValue(value, this.troops.magicians, this.maxPossibleTroops.archers);
+    this.troops.magicians = this.fixInputValue(value, this.troops.magicians, this.maxPossibleTroops.magicians);
     this.onTroopsChange.emit(this.troops);
   }
 
