@@ -7,6 +7,14 @@
             <h5 class="center"> Train troops: </h5>
             <app-troops-choosing (onTroopsChange)="updateTroops($event)" [maxPossibleTroops]="maxPossibleTroops"> </app-troops-choosing>
             <app-materials-cost [materialsCost]="totalMaterialsCost"></app-materials-cost>
+            <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
+                <div class="stat-row">
+                    <img src="../../../assets/swords.png" class="stat-icon"> {{totalAttack}}
+                </div>
+                <div class="stat-row">
+                    <img src="../../../assets/shield.png" class="stat-icon"> {{totalDefense}}
+                </div>
+            </div>
             <button id = "train" class ="buttons" (click)="trainTroops()" [disabled]="!canTrain()"> Train </button>
         </div>
     </div>

@@ -25,3 +25,23 @@
     box-shadow: 2px 2px 2px 2px;
     padding: 25px 50px 25px 50px;
 }
+
+.total-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 15px 0;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stat-icon {
+    width: 20px;
+    height: 20px;
+}
