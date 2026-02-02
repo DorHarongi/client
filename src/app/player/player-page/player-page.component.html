@@ -66,20 +66,29 @@
                         <th>Name</th>
                         <th>Population</th>
                         <th>Location</th>
+                        <th *ngIf="!isOwnProfile && !isSameClan">Attack</th>
                     </tr>
-                    <tr *ngFor="let village of playerInfo.villages" 
+                    <tr *ngFor="let village of playerInfo.villages; let i = index" 
                         (click)="openVillageInteraction(village)"
                         [class.clickable-row]="!isOwnProfile">
                         <td>{{village.villageName}}</td>
                         <td>{{village.population}}</td>
                         <td>{{village.location?.x}}, {{village.location?.y}}</td>
+                        <td *ngIf="!isOwnProfile && !isSameClan" (click)="$event.stopPropagation()">
+                            <button class="attack-icon" 
+                                    [class.noEnergy]="getEnergy() < 1" 
+                                    [class.hasShield]="hasBeginnerShield()"
+                                    (click)="attackVillage(i)" 
+                                    [disabled]="getEnergy() < 1 || hasBeginnerShield()"
+                                    [title]="hasBeginnerShield() ? 'Beginner protection: ' + formatShieldTime() + ' remaining' : 'Attack this village'">
+                            </button>
+                        </td>
                     </tr>
                 </table>
                 <p *ngIf="!isOwnProfile" class="click-hint">Click on a village to interact</p>
             </div>
 
             <div class="actions" *ngIf="!isOwnProfile">
-                <button class="action-btn" (click)="goToMap()">Find on Map</button>
                 <button class="action-btn message-btn" (click)="toggleMessageForm()">
                     {{showMessageForm ? 'Cancel' : 'Send Message'}}
                 </button>
@@ -118,3 +127,10 @@
     [hideProfileButton]="true"
     (closed)="closeVillageInteraction()">
 </app-village-interaction>
+
+<app-attack 
+    *ngIf="showAttackPopup" 
+    [defenderName]="playerInfo.username" 
+    [defenderVillageIndex]="attackVillageIndex"
+    (closed)="closeAttackPopup()">
+</app-attack>

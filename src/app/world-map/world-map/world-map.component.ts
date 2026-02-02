@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { WorldMapService } from '../services/world-map.service';
@@ -38,34 +38,48 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   
   subscription1?: Subscription;
   subscription2?: Subscription;
+  queryParamSub?: Subscription;
   
   currentUsername: string;
   currentUserClan: string;
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private worldMapService: WorldMapService,
     private userInformationService: UserInformationService,
     public bossService: BossService
   ) {
     this.currentUsername = this.userInformationService.userInformation.username;
     this.currentUserClan = this.userInformationService.userInformation.clanName || '';
-    // Center map on user's first village
-    const firstVillage = this.userInformationService.currentVillage;
-    if (firstVillage?.location) {
-      this.windowStartX = Math.max(0, firstVillage.location.x - 5);
-      this.windowStartY = Math.max(0, firstVillage.location.y - 5);
-    }
   }
 
   ngOnInit(): void {
-    this.loadMapWindow();
+    // Check for query params to center on specific coordinates
+    this.queryParamSub = this.route.queryParams.subscribe(params => {
+      if (params['x'] !== undefined && params['y'] !== undefined) {
+        const x = parseInt(params['x'], 10);
+        const y = parseInt(params['y'], 10);
+        // Center the window on the specified coordinates
+        this.windowStartX = Math.max(0, x - 5);
+        this.windowStartY = Math.max(0, y - 5);
+      } else {
+        // Default: center on user's first village
+        const firstVillage = this.userInformationService.currentVillage;
+        if (firstVillage?.location) {
+          this.windowStartX = Math.max(0, firstVillage.location.x - 5);
+          this.windowStartY = Math.max(0, firstVillage.location.y - 5);
+        }
+      }
+      this.loadMapWindow();
+    });
     this.loadMinimap();
   }
 
   ngOnDestroy(): void {
     this.subscription1?.unsubscribe();
     this.subscription2?.unsubscribe();
+    this.queryParamSub?.unsubscribe();
   }
 
   loadMapWindow(): void {

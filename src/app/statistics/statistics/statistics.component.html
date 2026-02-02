@@ -1,4 +1,4 @@
-<div class = "flexContainer statisticsContainer step" [class.show]="!openAttackPopup" [class.hide]="openAttackPopup">
+<div class = "flexContainer statisticsContainer">
     <h2 id = "titleText" class="center margin-top">Statistics</h2>
     
     <div class="toggle-container center">
@@ -21,7 +21,6 @@
                 <th class="center">Clan</th>
                 <th class="center">Population</th>
                 <th class="center">Villages</th>
-                <th class="center">Attack</th>
             </tr>
             <tr *ngFor="let user of usersInPage; let i = index" class="center bordered" [class.player-himself]="user.username == username">
                 <td> {{(page - 1) * 10 + i + 1 }}</td>
@@ -30,16 +29,6 @@
                 <td *ngIf="user.clanName == ''"> No clan </td>
                 <td> {{user.population}} </td>
                 <td> {{user.numberOfVillages}} </td>
-                <td> 
-                    <div class ="center" *ngIf = "user.username != username">
-                        <button class="attack icons" 
-                                [class.noEnergy]="getEnergy() < 1" 
-                                [class.hasShield]="hasBeginnerShield(user)"
-                                (click)="attackPlayer(user.username)" 
-                                [disabled]="getEnergy() < 1 || hasBeginnerShield(user)"
-                                [title]="hasBeginnerShield(user) ? 'Beginner protection: ' + formatShieldTime(user) + ' remaining' : ''"></button>
-                    </div>
-                </td>
             </tr>
         </table>
 
@@ -76,5 +65,3 @@
     
     <button id = "back" class="buttons center" (click)="goBack()"> Back </button>
 </div>
-
-<app-attack *ngIf="openAttackPopup" [defenderName]="userToAttack" (closed)="attackPopupClosed()"></app-attack>

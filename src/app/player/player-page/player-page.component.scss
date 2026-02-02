@@ -262,3 +262,32 @@ $topToolbarMinHeight: 75px;
     border: 1px solid #27ae60;
     margin-top: 10px !important;
 }
+
+// Attack icon in villages table
+.attack-icon {
+    background-image: url("../../../assets/swords.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+.noEnergy {
+    cursor: not-allowed;
+}
+
+.hasShield {
+    cursor: not-allowed;
+    opacity: 0.3;
+}

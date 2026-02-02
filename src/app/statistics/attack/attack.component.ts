@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 export class AttackComponent implements OnInit, OnDestroy {
 
   @Input() defenderName!: string;
+  @Input() defenderVillageIndex: number = 0;
   @Output() closed: EventEmitter<any> = new EventEmitter<any>();
 
   maxPossibleTroops: TroopsAmounts;
@@ -45,7 +46,7 @@ export class AttackComponent implements OnInit, OnDestroy {
       defenderName: this.defenderName,
       attackerName: this.userInformationService.userInformation.username,
       attackerVillageIndex: this.userInformationService.currentVillageIndex,
-      defenderVillageIndex: 0,
+      defenderVillageIndex: this.defenderVillageIndex,
       attackingTroops: this.chosenTroops
     });
     this.subscription = observable.subscribe((user: User)=>{

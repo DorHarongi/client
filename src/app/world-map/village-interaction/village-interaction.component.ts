@@ -97,6 +97,12 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     }
   }
 
+  findOnMap(): void {
+    this.router.navigate(['Map'], { 
+      queryParams: { x: this.village.x, y: this.village.y } 
+    });
+  }
+
   openAttackPanel(): void {
     this.showAttackPanel = true;
     this.showSupportPanel = false;

@@ -17,6 +17,7 @@
         <div class="actions center">
             <button class="action-btn" *ngIf="!hideProfileButton" (click)="viewPlayerProfile()">View Player Profile</button>
             <button class="action-btn" *ngIf="playerInfo?.clanName" (click)="viewPlayerClan()">View Clan</button>
+            <button class="action-btn" (click)="findOnMap()">Find on Map</button>
             
             <div class="clan-actions" *ngIf="!isOwnVillage && isSameClan">
                 <button class="action-btn support-btn" (click)="openSupportPanel()">

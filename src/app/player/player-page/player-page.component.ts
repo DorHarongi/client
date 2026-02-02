@@ -42,6 +42,10 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   // Village interaction
   selectedVillage: VillageOnMap | null = null;
 
+  // Attack popup
+  showAttackPopup: boolean = false;
+  attackVillageIndex: number = 0;
+
   subscription?: Subscription;
 
   constructor(
@@ -93,10 +97,6 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
     if (this.playerInfo?.clanName) {
       this.router.navigate(['clan', this.playerInfo.clanName]);
     }
-  }
-
-  goToMap(): void {
-    this.router.navigateByUrl('Map');
   }
 
   goBack(): void {
@@ -186,6 +186,20 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
 
   closeVillageInteraction(): void {
     this.selectedVillage = null;
+  }
+
+  // Attack
+  attackVillage(villageIndex: number): void {
+    this.attackVillageIndex = villageIndex;
+    this.showAttackPopup = true;
+  }
+
+  closeAttackPopup(): void {
+    this.showAttackPopup = false;
+  }
+
+  getEnergy(): number {
+    return this.userInformationService.userInformation.energy;
   }
 
   // Intro editing
