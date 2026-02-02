@@ -151,4 +151,55 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     return +dateWhenNextEnergy - +currentDate;
   }
 
+  // Calculate time until max for resources/energy
+  getTimeUntilMaxEnergy(): string | null {
+    const current = this.getEnergy();
+    if (current >= this.maxEnergy) return null;
+    
+    const remaining = this.maxEnergy - current;
+    const secondsUntilMax = remaining / energyProductionSpeedPerSecond;
+    return this.formatTimeUntilMax(secondsUntilMax);
+  }
+
+  getTimeUntilMaxWood(): string | null {
+    const village = this.userInformationService.currentVillage;
+    if (village.resourcesAmounts.woodAmount >= this.maxWoodStorage) return null;
+    if (village.woodProductionPerSecond <= 0) return null;
+    
+    const remaining = this.maxWoodStorage - village.resourcesAmounts.woodAmount;
+    const secondsUntilMax = remaining / village.woodProductionPerSecond;
+    return this.formatTimeUntilMax(secondsUntilMax);
+  }
+
+  getTimeUntilMaxStone(): string | null {
+    const village = this.userInformationService.currentVillage;
+    if (village.resourcesAmounts.stonesAmount >= this.maxStonesStorage) return null;
+    if (village.stoneProductionPerSecond <= 0) return null;
+    
+    const remaining = this.maxStonesStorage - village.resourcesAmounts.stonesAmount;
+    const secondsUntilMax = remaining / village.stoneProductionPerSecond;
+    return this.formatTimeUntilMax(secondsUntilMax);
+  }
+
+  getTimeUntilMaxCrop(): string | null {
+    const village = this.userInformationService.currentVillage;
+    if (village.resourcesAmounts.cropAmount >= this.maxCropStorage) return null;
+    if (village.cropProductionPerSecond <= 0) return null;
+    
+    const remaining = this.maxCropStorage - village.resourcesAmounts.cropAmount;
+    const secondsUntilMax = remaining / village.cropProductionPerSecond;
+    return this.formatTimeUntilMax(secondsUntilMax);
+  }
+
+  formatTimeUntilMax(totalSeconds: number): string {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    
+    if (hours > 0) {
+      return `Max in ${hours}h ${minutes}m`;
+    } else {
+      return `Max in ${minutes}m`;
+    }
+  }
+
 }

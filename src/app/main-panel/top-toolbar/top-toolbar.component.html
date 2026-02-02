@@ -9,17 +9,25 @@
         <img class="icons clickable" src="../../../assets/map.png" (click)="goToMap()" title="World Map">
     </div>
     <div class="right-side flex-container">
-        <img class="icons" src="../../../assets/energy.png">
-        <h5> {{math.floor(getEnergy())}} / {{maxEnergy}}</h5>
+        <span class="resource-item" [title]="getTimeUntilMaxEnergy()">
+            <img class="icons" src="../../../assets/energy.png">
+            <h5> {{math.floor(getEnergy())}} / {{maxEnergy}}</h5>
+        </span>
         <h5 *ngIf = "getEnergy() != maxEnergy" id="timeTillNextEnergy"> ( {{getTimeTillNextEnergy() | date:'mm:ss'}} )</h5>
         <img class="icons" src="../../../assets/population.png">
         <h5> {{usedPopulation}} / {{maximumPopulation}}</h5>
-        <img class="icons" src="../../../assets/crop.jpg">
-        <h5> {{math.floor(resources.cropAmount)}} / {{maxCropStorage}}</h5>
-        <img class="icons" src="../../../assets/wood.jpg">
-        <h5> {{math.floor(resources.woodAmount)}} / {{maxWoodStorage}}</h5>
-        <img class="icons" src="../../../assets/rock.jpg">
-        <h5> {{math.floor(resources.stonesAmount)}} / {{maxStonesStorage}}</h5>
+        <span class="resource-item" [title]="getTimeUntilMaxCrop()">
+            <img class="icons" src="../../../assets/crop.jpg">
+            <h5> {{math.floor(resources.cropAmount)}} / {{maxCropStorage}}</h5>
+        </span>
+        <span class="resource-item" [title]="getTimeUntilMaxWood()">
+            <img class="icons" src="../../../assets/wood.jpg">
+            <h5> {{math.floor(resources.woodAmount)}} / {{maxWoodStorage}}</h5>
+        </span>
+        <span class="resource-item" [title]="getTimeUntilMaxStone()">
+            <img class="icons" src="../../../assets/rock.jpg">
+            <h5> {{math.floor(resources.stonesAmount)}} / {{maxStonesStorage}}</h5>
+        </span>
     </div>
     <div class="logout-container">
         <img class="icons clickable" src="../../../assets/logout.png" (click)="logout()" title="Logout">

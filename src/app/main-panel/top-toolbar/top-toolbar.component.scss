@@ -103,3 +103,9 @@ h5 {
     min-width: 8px;
     text-align: center;
 }
+
+.resource-item {
+    display: flex;
+    align-items: center;
+    cursor: default;
+}
