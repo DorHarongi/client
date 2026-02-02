@@ -84,9 +84,7 @@
         <h4 class="center">{{selectedMessage.subject}}</h4>
         <p class="message-from" *ngIf="selectedMessage.senderUsername">From: <strong>{{selectedMessage.senderUsername}}</strong></p>
         <p class="message-date">{{selectedMessage.date | date:'d/MM/yyyy H:mm'}}</p>
-        <div class="message-content">
-            {{selectedMessage.content}}
-        </div>
+        <div class="message-content">{{selectedMessage.content}}</div>
 
         <!-- Resources Display for resource transfer messages -->
         <div *ngIf="isResourceMessage(selectedMessage.type) && selectedMessage.metadata?.resources" class="transfer-details">
