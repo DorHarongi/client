@@ -16,7 +16,8 @@ import { AttackComponent } from './attack/attack.component';
     CommonModule
   ],
   exports: [
-    StatisticsComponent
+    StatisticsComponent,
+    AttackComponent
   ]
 })
 export class StatisticsModule { }

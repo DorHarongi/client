@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlayerPageComponent } from './player-page/player-page.component';
 import { WorldMapModule } from '../world-map/world-map.module';
+import { StatisticsModule } from '../statistics/statistics.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { WorldMapModule } from '../world-map/world-map.module';
   imports: [
     CommonModule,
     FormsModule,
-    WorldMapModule
+    WorldMapModule,
+    StatisticsModule
   ],
   exports: [
     PlayerPageComponent
