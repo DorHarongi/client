@@ -56,7 +56,7 @@
         <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
         <div class="panel-actions center">
             <button class="action-btn" (click)="sendSupport()" [disabled]="!hasSelectedTroops()">Send Support</button>
-            <button class="action-btn" (click)="cancelPanel()">Cancel</button>
+            <button class="action-btn" (click)="cancelPanel()">Back</button>
         </div>
     </div>
 
@@ -82,7 +82,7 @@
         </div>
         <div class="panel-actions center">
             <button class="action-btn" (click)="sendResources()" [disabled]="!hasSelectedResources()">Send Resources</button>
-            <button class="action-btn" (click)="cancelPanel()">Cancel</button>
+            <button class="action-btn" (click)="cancelPanel()">Back</button>
         </div>
     </div>
 
