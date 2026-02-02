@@ -44,7 +44,7 @@
         </tr>
         <tr *ngFor="let message of messagesInPage" class="bordered clickable-row" [class.unread]="!isMessageRead(message)" (click)="openMessageModal(message)">
             <td class="title">
-                <img [src]="getMessageIcon(message.type)" class="icons">
+                <img [src]="getMessageIcon(message)" class="icons">
                 {{getDisplaySubject(message)}}
             </td>
             <td>{{message.senderUsername || 'System'}}</td>

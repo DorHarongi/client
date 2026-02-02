@@ -297,8 +297,8 @@ export class InboxComponent implements OnInit, OnDestroy {
     });
   }
 
-  getMessageIcon(type: string): string {
-    switch(type) {
+  getMessageIcon(message: Message): string {
+    switch(message.type) {
       case 'clan_join_request':
         return 'assets/population.png';
       case 'clan_request_accepted':
@@ -312,11 +312,27 @@ export class InboxComponent implements OnInit, OnDestroy {
         return 'assets/wood.jpg';
       case 'support_sent':
       case 'support_received':
+      case 'support_withdrawn':
         return 'assets/spear.png';
       case 'boss_defeated':
-        return 'assets/boss-common.png';
+        return this.getBossIconByName(message.metadata?.bossReward?.bossName);
       default:
         return 'assets/ancient-scroll.png';
+    }
+  }
+
+  getBossIconByName(bossName: string | undefined): string {
+    switch(bossName) {
+      case 'Goblin Horde':
+        return 'assets/boss-common.png';
+      case 'Werewolf Pack':
+        return 'assets/boss-rare.png';
+      case 'Spectral Wraith':
+        return 'assets/boss-epic.png';
+      case 'Ancient Dragon':
+        return 'assets/boss-legendary.png';
+      default:
+        return 'assets/boss-common.png';
     }
   }
 
