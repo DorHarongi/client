@@ -174,8 +174,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   }
 
   onBossDefeated(): void {
-    this.selectedBoss = null;
-    // Reload map to reflect boss removal
+    // Don't close modal - let user see the results
+    // Just reload map to remove boss from display
     this.loadMapWindow();
     this.loadMinimap();
   }

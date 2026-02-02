@@ -4,7 +4,11 @@ import { BossOnMap } from '../models/mapModels';
 import { BossService, BossAttackResult, TroopsAmounts } from '../services/boss.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
-import { bossImages, bossRewardAmounts, getDistanceBonusText } from 'utils';
+import { bossImages, bossRewardAmounts, getDistanceBonusText,
+         spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat,
+         axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
+         magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
+         catapultsAttackingStat, catapultsDefenceStat } from 'utils';
 
 @Component({
   selector: 'app-boss-interaction',
@@ -32,6 +36,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   
   // Attack result
   attackResult: BossAttackResult | null = null;
+
+  // Troop stats
+  totalAttack: number = 0;
+  totalDefense: number = 0;
 
   subscription?: Subscription;
 
@@ -151,6 +159,32 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   troopsChanged(troops: TroopsAmounts): void {
     this.chosenTroops = troops;
     this.updateMaximumPossibleTroops();
+    this.updateTotalStats();
+  }
+
+  updateTotalStats(): void {
+    if (!this.chosenTroops) {
+      this.totalAttack = 0;
+      this.totalDefense = 0;
+      return;
+    }
+    this.totalAttack = 
+      (this.chosenTroops.spearFighters || 0) * spearFighterAttackingStat +
+      (this.chosenTroops.swordFighters || 0) * swordFighterAttackingStat +
+      (this.chosenTroops.axeFighters || 0) * axeFighterAttackingStat +
+      (this.chosenTroops.archers || 0) * archerAttackingStat +
+      (this.chosenTroops.magicians || 0) * magicianAttackingStat +
+      (this.chosenTroops.horsemen || 0) * horsemenAttackingStat +
+      (this.chosenTroops.catapults || 0) * catapultsAttackingStat;
+
+    this.totalDefense = 
+      (this.chosenTroops.spearFighters || 0) * spearFighterDefenceStat +
+      (this.chosenTroops.swordFighters || 0) * swordFighterDefenceStat +
+      (this.chosenTroops.axeFighters || 0) * axeFighterDefenceStat +
+      (this.chosenTroops.archers || 0) * archerDefenceStat +
+      (this.chosenTroops.magicians || 0) * magicianDefenceStat +
+      (this.chosenTroops.horsemen || 0) * horsemenDefenceStat +
+      (this.chosenTroops.catapults || 0) * catapultsDefenceStat;
   }
 
   updateMaximumPossibleTroops(): void {

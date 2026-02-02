@@ -278,6 +278,25 @@
   overflow-x: auto;
 }
 
+.total-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
+.stat-icon {
+  width: 20px;
+  height: 20px;
+}
+
 .damage-preview {
   color: #27ae60;
   font-weight: bold;

@@ -75,6 +75,14 @@
         <h5 class="center">Attack {{boss.name}}</h5>
         <p class="center damage-preview">Your damage: {{distanceBonusText}}</p>
         <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
+        <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
+            <div class="stat-row">
+                <img src="assets/swords.png" class="stat-icon"> {{totalAttack}}
+            </div>
+            <div class="stat-row">
+                <img src="assets/shield.png" class="stat-icon"> {{totalDefense}}
+            </div>
+        </div>
         <div class="panel-actions center">
             <button class="action-btn" (click)="attack()" [disabled]="loading || !hasSelectedTroops()">
                 {{loading ? 'Attacking...' : 'Attack'}}

@@ -107,6 +107,25 @@ h5 {
     margin-top: 20px;
 }
 
+.total-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 0;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+
+.stat-icon {
+    width: 20px;
+    height: 20px;
+}
+
 .resources-inputs {
     display: flex;
     flex-direction: column;

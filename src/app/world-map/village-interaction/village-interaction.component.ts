@@ -8,6 +8,10 @@ import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { ResourcesAmounts } from 'src/app/main-panel/models/resourcesAmounts';
 import { User } from 'src/app/main-panel/models/User';
 import { environment } from 'src/environments/environment';
+import { spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat,
+         axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
+         magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
+         catapultsAttackingStat, catapultsDefenceStat } from 'utils';
 
 @Component({
   selector: 'app-village-interaction',
@@ -38,6 +42,10 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   resourcesCrop: number = 0;
 
   errorMessage: string = '';
+
+  // Troop stats
+  totalAttack: number = 0;
+  totalDefense: number = 0;
 
   subscription?: Subscription;
 
@@ -124,6 +132,32 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   troopsChanged(troops: TroopsAmounts): void {
     this.chosenTroops = troops;
     this.updateMaximumPossibleTroops();
+    this.updateTotalStats();
+  }
+
+  updateTotalStats(): void {
+    if (!this.chosenTroops) {
+      this.totalAttack = 0;
+      this.totalDefense = 0;
+      return;
+    }
+    this.totalAttack = 
+      this.chosenTroops.spearFighters * spearFighterAttackingStat +
+      this.chosenTroops.swordFighters * swordFighterAttackingStat +
+      this.chosenTroops.axeFighters * axeFighterAttackingStat +
+      this.chosenTroops.archers * archerAttackingStat +
+      this.chosenTroops.magicians * magicianAttackingStat +
+      this.chosenTroops.horsemen * horsemenAttackingStat +
+      this.chosenTroops.catapults * catapultsAttackingStat;
+
+    this.totalDefense = 
+      this.chosenTroops.spearFighters * spearFighterDefenceStat +
+      this.chosenTroops.swordFighters * swordFighterDefenceStat +
+      this.chosenTroops.axeFighters * axeFighterDefenceStat +
+      this.chosenTroops.archers * archerDefenceStat +
+      this.chosenTroops.magicians * magicianDefenceStat +
+      this.chosenTroops.horsemen * horsemenDefenceStat +
+      this.chosenTroops.catapults * catapultsDefenceStat;
   }
 
   updateMaximumPossibleTroops(): void {
