@@ -211,8 +211,8 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
         }
         
         if (result.bossDefeated) {
-          // Boss was defeated - don't auto-close, let user view the results
-          // The bossDefeated event will be emitted when user clicks Close
+          // Boss was defeated - emit event immediately to update map/minimap
+          this.bossDefeated.emit();
         }
       },
       error: (err) => {
@@ -238,10 +238,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   }
 
   close(): void {
-    // If boss was defeated, emit bossDefeated to trigger map reload
-    if (this.attackResult?.bossDefeated) {
-      this.bossDefeated.emit();
-    }
+    // bossDefeated is already emitted immediately after attack succeeds
     this.closed.emit();
   }
 }

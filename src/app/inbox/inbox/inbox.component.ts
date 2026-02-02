@@ -405,6 +405,10 @@ export class InboxComponent implements OnInit, OnDestroy {
       next: (result) => {
         if (result.success) {
           message.actionable = false;
+          // Mark message as read when claiming without opening modal
+          if (!message.read) {
+            this.markMessageAsRead(message);
+          }
           this.userInformationService.refreshUserInformation();
           this.loadUnreadCounts();
         }
