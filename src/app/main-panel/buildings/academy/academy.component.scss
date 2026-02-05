@@ -67,6 +67,7 @@ $game-text: #3d2914;
     align-items: center;
     justify-content: center;
     box-shadow: 2px 2px 2px 2px;
+    margin-bottom: 40px; // Move arrows up to align with side traits
 
     .arrow-left, .arrow-right {
         width: 0;
