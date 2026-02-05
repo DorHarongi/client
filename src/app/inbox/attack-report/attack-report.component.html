@@ -4,11 +4,13 @@
         <div *ngIf = "troopTypeKeyValue.key == 'attacker'" >
             <h5> Attacker: {{attackReport.attackerName}} </h5>
             <h5> Village: {{attackReport.attackerVillageName}} </h5>
+            <h5 class="trait-info" *ngIf="attackReport.attackerTrait"> Trait: {{formatTraitDisplay(attackReport.attackerTrait, attackReport.attackerAcademyLevel)}} </h5>
             <h5> Attacker total attack: {{attackReport.attackerTotalAttack}} </h5>
         </div>
         <div *ngIf = "troopTypeKeyValue.key == 'defender'" >
             <h5> Defender: {{attackReport.defenderName}}</h5>
             <h5> Village: {{attackReport.defenderVillageName}}</h5>
+            <h5 class="trait-info" *ngIf="attackReport.defenderTrait"> Trait: {{formatTraitDisplay(attackReport.defenderTrait, attackReport.defenderAcademyLevel)}} </h5>
             <h5 *ngIf ="!userAttackedAndLost"> Defender army defence: {{attackReport.defenderTotalArmyDefence}}</h5>
         </div>
         <div *ngIf = "troopTypeKeyValue.key == 'support' && !userAttackedAndLost" >
@@ -73,6 +75,7 @@
     <ng-template #noneOfYourArmyReturned>
         <h5> Defender: {{attackReport.defenderName}}</h5>
         <h5> Village: {{attackReport.defenderVillageName}}</h5>
+        <h5 class="trait-info" *ngIf="attackReport.defenderTrait"> Trait: {{formatTraitDisplay(attackReport.defenderTrait, attackReport.defenderAcademyLevel)}} </h5>
         <h5>None of your soldiers returned.</h5>
     </ng-template>
     

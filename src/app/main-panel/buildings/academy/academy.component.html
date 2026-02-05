@@ -8,7 +8,7 @@
             <!-- Current Trait Display -->
             <div class="current-trait-info" *ngIf="currentTrait">
                 <span class="current-label">Current Trait:</span>
-                <span class="current-trait-name" [style.color]="selectedTrait.color">
+                <span class="current-trait-name" [style.color]="getCurrentTraitColor()">
                     {{getCurrentTraitName()}}
                 </span>
                 <span class="current-bonus">({{currentBonusPercent}} bonus)</span>
@@ -20,7 +20,7 @@
             <!-- 3D Carousel Trait Selector -->
             <div class="carousel-container">
                 <button class="carousel-btn left" (click)="spinLeft()" [disabled]="isSpinning">
-                    <span>&#9664;</span>
+                    <div class="arrow-left"></div>
                 </button>
                 
                 <div class="carousel-track">
@@ -39,7 +39,7 @@
                 </div>
                 
                 <button class="carousel-btn right" (click)="spinRight()" [disabled]="isSpinning">
-                    <span>&#9654;</span>
+                    <div class="arrow-right"></div>
                 </button>
             </div>
 
@@ -54,21 +54,21 @@
                 </div>
             </div>
 
-            <!-- Switch Cost & Button -->
-            <div class="switch-section" *ngIf="isSelectedTraitDifferent">
-                <div class="switch-cost" *ngIf="!isFirstTraitSelection">
-                    <h5 class="cost-title">Switching Cost:</h5>
-                    <app-materials-cost [materialsCost]="switchCost"></app-materials-cost>
+            <!-- Learn Cost & Button -->
+            <div class="learn-section" *ngIf="isSelectedTraitDifferent">
+                <div class="learn-cost" *ngIf="!isFirstTraitSelection">
+                    <h5 class="cost-title">Learning Cost:</h5>
+                    <app-materials-cost [materialsCost]="learnCost"></app-materials-cost>
                 </div>
-                <div class="free-switch" *ngIf="isFirstTraitSelection">
+                <div class="free-learn" *ngIf="isFirstTraitSelection">
                     <span class="free-badge">FREE</span>
                     <span>First trait selection is free!</span>
                 </div>
-                <button class="switch-btn" 
+                <button class="learn-btn" 
                         (click)="openConfirmDialog()"
-                        [disabled]="!canAffordSwitch"
-                        [class.affordable]="canAffordSwitch">
-                    {{isFirstTraitSelection ? 'Select Trait' : 'Switch Trait'}}
+                        [disabled]="!canAffordLearn"
+                        [class.affordable]="canAffordLearn">
+                    {{isFirstTraitSelection ? 'Learn Trait' : 'Learn Trait'}}
                 </button>
             </div>
 
@@ -81,35 +81,35 @@
         <!-- Locked Message -->
         <div class="trait-locked" *ngIf="!canSelectTrait">
             <div class="lock-icon">🔒</div>
-            <h4>Trait Selection Locked</h4>
-            <p>Upgrade your Academy to level {{traitUnlockLevel}} to unlock trait selection.</p>
+            <h4>Trait Learning Locked</h4>
+            <p>Upgrade your Academy to level {{traitUnlockLevel}} to unlock trait learning.</p>
             <p class="hint">Current Level: {{academyLevel}} / {{traitUnlockLevel}}</p>
         </div>
 
         <!-- Confirmation Dialog -->
         <div class="confirm-overlay" *ngIf="showConfirmDialog" (click)="closeConfirmDialog()">
             <div class="confirm-dialog" (click)="$event.stopPropagation()">
-                <h4>Confirm Trait {{isFirstTraitSelection ? 'Selection' : 'Switch'}}</h4>
+                <h4>Confirm Trait Learning</h4>
                 <div class="confirm-content">
                     <p *ngIf="!isFirstTraitSelection">
-                        Switching from <strong>{{getCurrentTraitName()}}</strong> to 
-                        <strong [style.color]="selectedTrait.color">{{selectedTrait.name}}</strong>
+                        Learn <strong [style.color]="selectedTrait.color">{{selectedTrait.name}}</strong> 
+                        instead of <strong>{{getCurrentTraitName()}}</strong>?
                     </p>
                     <p *ngIf="isFirstTraitSelection">
-                        Select <strong [style.color]="selectedTrait.color">{{selectedTrait.name}}</strong> as your trait?
+                        Learn <strong [style.color]="selectedTrait.color">{{selectedTrait.name}}</strong> as your trait?
                     </p>
                     <div class="cost-reminder" *ngIf="!isFirstTraitSelection">
                         <p>This will cost:</p>
-                        <app-materials-cost [materialsCost]="switchCost"></app-materials-cost>
+                        <app-materials-cost [materialsCost]="learnCost"></app-materials-cost>
                     </div>
                     <p class="warning" *ngIf="!isFirstTraitSelection">
-                        ⚠️ This action cannot be undone without paying again!
+                        ⚠️ Changing trait later will require a significant resource investment!
                     </p>
                 </div>
                 <div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
                 <div class="confirm-actions">
                     <button class="cancel-btn" (click)="closeConfirmDialog()" [disabled]="loading">Cancel</button>
-                    <button class="confirm-btn" (click)="confirmTraitSwitch()" [disabled]="loading">
+                    <button class="confirm-btn" (click)="confirmTraitLearn()" [disabled]="loading">
                         {{loading ? 'Processing...' : 'Confirm'}}
                     </button>
                 </div>

@@ -28,4 +28,10 @@ export interface AttackReport
     supportTotalLostTroops: TroopsAmounts;
     
     read: boolean;
+
+    // Trait info
+    attackerTrait?: string;
+    attackerAcademyLevel?: number;
+    defenderTrait?: string;
+    defenderAcademyLevel?: number;
 }

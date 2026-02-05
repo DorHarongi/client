@@ -55,4 +55,10 @@ export class AttackReportComponent implements OnInit {
     };
   }
 
+  formatTraitDisplay(trait?: string, level?: number): string {
+    if (!trait) return 'None';
+    const traitName = trait.charAt(0).toUpperCase() + trait.slice(1);
+    return level ? `${traitName} ${level}` : traitName;
+  }
+
 }

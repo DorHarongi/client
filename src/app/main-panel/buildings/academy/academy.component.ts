@@ -41,8 +41,8 @@ export class AcademyComponent implements OnInit, OnDestroy {
     canSelectTrait: boolean = false;
     traitUnlockLevel = ACADEMY_TRAIT_UNLOCK_LEVEL;
     
-    // Switching costs
-    switchCost: { wood: number; crop: number; stones: number } = { wood: 0, crop: 0, stones: 0 };
+    // Learning costs
+    learnCost: { wood: number; crop: number; stones: number } = { wood: 0, crop: 0, stones: 0 };
     isFirstTraitSelection: boolean = false;
     
     // UI state
@@ -63,7 +63,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
             "academy", 
             "Academy", 
             academyLevel,
-            "The Academy is where your village chooses its specialization. At level 3, you can select one of three powerful traits that shape your village's destiny. Choose wisely - the first selection is free, but changing later will cost all resources equal to your warehouse capacity!",
+            "The Academy is where your village chooses its specialization. At level 3, you can learn one of three powerful traits that shape your village's destiny. Choose wisely - the first trait is free, but changing later will require a significant resource investment!",
             academyUpgradeMaterialCostByLevels[academyLevel + 1]
         );
         
@@ -84,7 +84,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
             if (this.currentTraitIndex === -1) this.currentTraitIndex = 0;
         }
         
-        this.calculateSwitchCost();
+        this.calculateLearnCost();
     }
 
     ngOnInit(): void {}
@@ -113,20 +113,20 @@ export class AcademyComponent implements OnInit, OnDestroy {
         return this.selectedTrait.trait !== this.currentTrait;
     }
 
-    get canAffordSwitch(): boolean {
+    get canAffordLearn(): boolean {
         if (this.isFirstTraitSelection) return true;
         const village = this.userInformationService.currentVillage;
-        return village.resourcesAmounts.woodAmount >= this.switchCost.wood &&
-               village.resourcesAmounts.cropAmount >= this.switchCost.crop &&
-               village.resourcesAmounts.stonesAmount >= this.switchCost.stones;
+        return village.resourcesAmounts.woodAmount >= this.learnCost.wood &&
+               village.resourcesAmounts.cropAmount >= this.learnCost.crop &&
+               village.resourcesAmounts.stonesAmount >= this.learnCost.stones;
     }
 
-    calculateSwitchCost(): void {
+    calculateLearnCost(): void {
         if (this.isFirstTraitSelection) {
-            this.switchCost = { wood: 0, crop: 0, stones: 0 };
+            this.learnCost = { wood: 0, crop: 0, stones: 0 };
         } else {
             const storage = warehouseStorageByLevel[this.academyLevel] || 0;
-            this.switchCost = { wood: storage, crop: storage, stones: storage };
+            this.learnCost = { wood: storage, crop: storage, stones: storage };
         }
     }
 
@@ -165,7 +165,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
         return trait === this.currentTrait;
     }
 
-    // Trait switching
+    // Trait learning
     openConfirmDialog(): void {
         if (!this.canSelectTrait || !this.isSelectedTraitDifferent) return;
         this.showConfirmDialog = true;
@@ -176,13 +176,13 @@ export class AcademyComponent implements OnInit, OnDestroy {
         this.showConfirmDialog = false;
     }
 
-    confirmTraitSwitch(): void {
+    confirmTraitLearn(): void {
         if (this.loading) return;
         
         this.loading = true;
         this.errorMessage = '';
         
-        this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/switch-trait`, {
+        this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/learn-trait`, {
             username: this.userInformationService.userInformation.username,
             villageIndex: this.userInformationService.currentVillageIndex,
             newTrait: this.selectedTrait.trait
@@ -191,12 +191,12 @@ export class AcademyComponent implements OnInit, OnDestroy {
                 this.userInformationService.setUserInformation(user);
                 this.currentTrait = this.selectedTrait.trait;
                 this.isFirstTraitSelection = false;
-                this.calculateSwitchCost();
+                this.calculateLearnCost();
                 this.showConfirmDialog = false;
                 this.loading = false;
             },
             error: (err) => {
-                this.errorMessage = err.error?.message || 'Failed to switch trait';
+                this.errorMessage = err.error?.message || 'Failed to learn trait';
                 this.loading = false;
             }
         });
@@ -221,5 +221,10 @@ export class AcademyComponent implements OnInit, OnDestroy {
     getCurrentTraitName(): string {
         if (!this.currentTrait) return 'None';
         return traitDescriptions[this.currentTrait]?.name || 'Unknown';
+    }
+
+    getCurrentTraitColor(): string {
+        if (!this.currentTrait) return '#666';
+        return traitDescriptions[this.currentTrait]?.color || '#666';
     }
 }
