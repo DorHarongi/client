@@ -4,6 +4,7 @@ import { InboxComponent } from './inbox/inbox/inbox.component';
 import { AuthGuardService } from './login/auth-guard.service';
 import { LoginComponent } from './login/login/login.component';
 import { RegisterComponent } from './login/register/register.component';
+import { AcademyComponent } from './main-panel/buildings/academy/academy.component';
 import { ArsenalComponent } from './main-panel/buildings/arsenal/arsenal.component';
 import { CenterBuildingComponent } from './main-panel/buildings/center-building/center-building.component';
 import { CropFarmComponent } from './main-panel/buildings/crop-farm/crop-farm.component';
@@ -40,6 +41,7 @@ export const appRoutes: Routes = [
   { path: 'Quarters', component: QuartersComponent, canActivate : [AuthGuardService] },
   { path: 'Wall', component: WallComponent, canActivate : [AuthGuardService] },
   { path: 'Embassy', component: EmbassyComponent, canActivate : [AuthGuardService] },
+  { path: 'Academy', component: AcademyComponent, canActivate : [AuthGuardService] },
   { path: 'Statistics', component: StatisticsComponent, canActivate : [AuthGuardService] },
   { path: 'Map', component: WorldMapComponent, canActivate : [AuthGuardService] },
   { path: 'player/:username', component: PlayerPageComponent, canActivate : [AuthGuardService] },

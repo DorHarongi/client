@@ -4,6 +4,8 @@ import { ResourcesAmounts } from "./resourcesAmounts";
 import { ResourcesWorkers } from "./resourcesWorkers";
 import { SupportSentEntry } from "./SupportSent";
 import { TroopsAmounts } from "./troopsAmounts";
+import { VillageTrait } from 'utils';
+
 export class Village
 {
     villageName!: string;
@@ -18,4 +20,5 @@ export class Village
     woodProductionPerSecond!: number;
     stoneProductionPerSecond!: number; 
     cropProductionPerSecond!: number;
+    trait?: VillageTrait;
 }

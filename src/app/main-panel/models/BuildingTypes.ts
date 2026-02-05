@@ -9,5 +9,6 @@ export enum BuildingTypes{
     Arsenal,
     Quarters,
     Wall,
-    Embassy
+    Embassy,
+    Academy
 }

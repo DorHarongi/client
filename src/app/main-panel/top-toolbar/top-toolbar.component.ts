@@ -144,7 +144,9 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   getTimeTillNextEnergy(): number{
     let currentEnergy: number = this.getEnergy(); 
     let energyLeftTillNext: number = 1 - currentEnergy % 1;
-    let secondsLeft: number = energyLeftTillNext / energyProductionSpeedPerSecond;
+    // Apply Vanguard energy production multiplier if available
+    const energyMultiplier = this.userInformationService.userInformation.energyProductionMultiplier || 1;
+    let secondsLeft: number = energyLeftTillNext / (energyProductionSpeedPerSecond * energyMultiplier);
     let currentDate: Date = new Date();
     let dateWhenNextEnergy: Date = new Date();
     dateWhenNextEnergy.setSeconds(dateWhenNextEnergy.getSeconds() + secondsLeft);
@@ -157,7 +159,10 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     if (current >= this.maxEnergy) return null;
     
     const remaining = this.maxEnergy - current;
-    const secondsUntilMax = remaining / energyProductionSpeedPerSecond;
+    // Apply Vanguard energy production multiplier if available
+    const energyMultiplier = this.userInformationService.userInformation.energyProductionMultiplier || 1;
+    const effectiveEnergySpeed = energyProductionSpeedPerSecond * energyMultiplier;
+    const secondsUntilMax = remaining / effectiveEnergySpeed;
     return this.formatTimeUntilMax(secondsUntilMax);
   }
 

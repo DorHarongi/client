@@ -21,4 +21,5 @@ export class User
     pendingClanRequests!: string[];
     currentQuestIndex!: number;
     pendingBossRewards!: PendingBossReward[];
+    energyProductionMultiplier!: number;
 }

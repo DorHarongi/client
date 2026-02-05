@@ -1,0 +1,120 @@
+<app-building [building]="buildingInformation">
+    <div extraInformation class="academy-content">
+        
+        <!-- Trait Selection Section -->
+        <div class="trait-section" *ngIf="canSelectTrait">
+            <h4 class="section-title">Village Trait</h4>
+            
+            <!-- Current Trait Display -->
+            <div class="current-trait-info" *ngIf="currentTrait">
+                <span class="current-label">Current Trait:</span>
+                <span class="current-trait-name" [style.color]="selectedTrait.color">
+                    {{getCurrentTraitName()}}
+                </span>
+                <span class="current-bonus">({{currentBonusPercent}} bonus)</span>
+            </div>
+            <div class="current-trait-info" *ngIf="!currentTrait">
+                <span class="no-trait-warning">No trait selected yet - choose your first trait for free!</span>
+            </div>
+
+            <!-- 3D Carousel Trait Selector -->
+            <div class="carousel-container">
+                <button class="carousel-btn left" (click)="spinLeft()" [disabled]="isSpinning">
+                    <span>&#9664;</span>
+                </button>
+                
+                <div class="carousel-track">
+                    <div *ngFor="let trait of traits; let i = index"
+                         class="trait-card"
+                         [class.active]="i === currentTraitIndex"
+                         [class.current]="isCurrentTrait(trait.trait)"
+                         [ngStyle]="getTraitPosition(i)"
+                         (click)="currentTraitIndex = i">
+                        <div class="trait-icon-wrapper" [style.borderColor]="trait.color">
+                            <img [src]="trait.icon" [alt]="trait.name" class="trait-icon">
+                        </div>
+                        <div class="trait-name" [style.color]="trait.color">{{trait.name}}</div>
+                        <div class="current-badge" *ngIf="isCurrentTrait(trait.trait)">ACTIVE</div>
+                    </div>
+                </div>
+                
+                <button class="carousel-btn right" (click)="spinRight()" [disabled]="isSpinning">
+                    <span>&#9654;</span>
+                </button>
+            </div>
+
+            <!-- Selected Trait Info -->
+            <div class="selected-trait-info" [style.borderColor]="selectedTrait.color">
+                <h5 class="trait-title" [style.color]="selectedTrait.color">{{selectedTrait.name}}</h5>
+                <p class="trait-short-desc">{{selectedTrait.shortDesc}}</p>
+                <p class="trait-full-desc">{{selectedTrait.fullDesc}}</p>
+                <div class="trait-bonus-preview">
+                    <strong>At your current Academy level:</strong>
+                    <div class="bonus-text">{{getTraitBonusDescription()}}</div>
+                </div>
+            </div>
+
+            <!-- Switch Cost & Button -->
+            <div class="switch-section" *ngIf="isSelectedTraitDifferent">
+                <div class="switch-cost" *ngIf="!isFirstTraitSelection">
+                    <h5 class="cost-title">Switching Cost:</h5>
+                    <app-materials-cost [materialsCost]="switchCost"></app-materials-cost>
+                </div>
+                <div class="free-switch" *ngIf="isFirstTraitSelection">
+                    <span class="free-badge">FREE</span>
+                    <span>First trait selection is free!</span>
+                </div>
+                <button class="switch-btn" 
+                        (click)="openConfirmDialog()"
+                        [disabled]="!canAffordSwitch"
+                        [class.affordable]="canAffordSwitch">
+                    {{isFirstTraitSelection ? 'Select Trait' : 'Switch Trait'}}
+                </button>
+            </div>
+
+            <!-- Same Trait Selected -->
+            <div class="same-trait-notice" *ngIf="!isSelectedTraitDifferent && currentTrait">
+                <span>This is your current trait</span>
+            </div>
+        </div>
+
+        <!-- Locked Message -->
+        <div class="trait-locked" *ngIf="!canSelectTrait">
+            <div class="lock-icon">🔒</div>
+            <h4>Trait Selection Locked</h4>
+            <p>Upgrade your Academy to level {{traitUnlockLevel}} to unlock trait selection.</p>
+            <p class="hint">Current Level: {{academyLevel}} / {{traitUnlockLevel}}</p>
+        </div>
+
+        <!-- Confirmation Dialog -->
+        <div class="confirm-overlay" *ngIf="showConfirmDialog" (click)="closeConfirmDialog()">
+            <div class="confirm-dialog" (click)="$event.stopPropagation()">
+                <h4>Confirm Trait {{isFirstTraitSelection ? 'Selection' : 'Switch'}}</h4>
+                <div class="confirm-content">
+                    <p *ngIf="!isFirstTraitSelection">
+                        Switching from <strong>{{getCurrentTraitName()}}</strong> to 
+                        <strong [style.color]="selectedTrait.color">{{selectedTrait.name}}</strong>
+                    </p>
+                    <p *ngIf="isFirstTraitSelection">
+                        Select <strong [style.color]="selectedTrait.color">{{selectedTrait.name}}</strong> as your trait?
+                    </p>
+                    <div class="cost-reminder" *ngIf="!isFirstTraitSelection">
+                        <p>This will cost:</p>
+                        <app-materials-cost [materialsCost]="switchCost"></app-materials-cost>
+                    </div>
+                    <p class="warning" *ngIf="!isFirstTraitSelection">
+                        ⚠️ This action cannot be undone without paying again!
+                    </p>
+                </div>
+                <div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
+                <div class="confirm-actions">
+                    <button class="cancel-btn" (click)="closeConfirmDialog()" [disabled]="loading">Cancel</button>
+                    <button class="confirm-btn" (click)="confirmTraitSwitch()" [disabled]="loading">
+                        {{loading ? 'Processing...' : 'Confirm'}}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</app-building>

@@ -69,7 +69,9 @@ export class IntervalService {
       currentVillage.resourcesAmounts.cropAmount += currentVillage.cropProductionPerSecond || 0;
       // Guard against undefined energy to prevent NaN
       if (typeof userInformation.energy === 'number' && !isNaN(userInformation.energy)) {
-        userInformation.energy += energyProductionSpeedPerSecond;
+        // Apply Vanguard energy production multiplier (default to 1 if not set)
+        const energyMultiplier = userInformation.energyProductionMultiplier || 1;
+        userInformation.energy += energyProductionSpeedPerSecond * energyMultiplier;
       } else {
         userInformation.energy = maxEnergy; // Reset to max if corrupted
       }

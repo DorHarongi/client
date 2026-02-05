@@ -1,0 +1,415 @@
+.academy-content {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    color: #2c3e50;
+}
+
+// Current Trait Info
+.current-trait-info {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+
+    .current-label {
+        color: #666;
+        margin-right: 8px;
+    }
+
+    .current-trait-name {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    .current-bonus {
+        color: #27ae60;
+        margin-left: 8px;
+    }
+
+    .no-trait-warning {
+        color: #e67e22;
+        font-weight: 500;
+    }
+}
+
+// 3D Carousel
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 30px 0;
+    perspective: 1000px;
+}
+
+.carousel-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #3498db;
+    background: white;
+    color: #3498db;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+        background: #3498db;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.carousel-track {
+    position: relative;
+    width: 300px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.trait-card {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 10px;
+
+    &.active {
+        .trait-icon-wrapper {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    &.current {
+        .trait-icon-wrapper {
+            &::after {
+                content: '✓';
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                width: 24px;
+                height: 24px;
+                background: #27ae60;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.trait-icon-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+    border: 4px solid;
+    overflow: hidden;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.trait-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.trait-name {
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 1em;
+    text-align: center;
+}
+
+.current-badge {
+    background: #27ae60;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7em;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+// Selected Trait Info Box
+.selected-trait-info {
+    background: white;
+    border: 3px solid;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    .trait-title {
+        text-align: center;
+        margin: 0 0 10px 0;
+        font-size: 1.3em;
+    }
+
+    .trait-short-desc {
+        text-align: center;
+        font-style: italic;
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .trait-full-desc {
+        text-align: justify;
+        line-height: 1.5;
+        color: #444;
+        margin-bottom: 15px;
+    }
+
+    .trait-bonus-preview {
+        background: rgba(0, 0, 0, 0.05);
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+
+        strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .bonus-text {
+            color: #27ae60;
+            font-weight: 500;
+        }
+    }
+}
+
+// Switch Section
+.switch-section {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 10px;
+
+    .cost-title {
+        margin-bottom: 10px;
+        color: #e74c3c;
+    }
+}
+
+.free-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #27ae60;
+    font-weight: 500;
+
+    .free-badge {
+        background: #27ae60;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-weight: bold;
+    }
+}
+
+.switch-btn {
+    padding: 12px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #95a5a6;
+    color: white;
+    transition: all 0.2s ease;
+    margin-top: 15px;
+
+    &.affordable {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+.same-trait-notice {
+    text-align: center;
+    padding: 15px;
+    color: #666;
+    font-style: italic;
+}
+
+// Locked State
+.trait-locked {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 15px;
+    margin: 20px 0;
+
+    .lock-icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+    }
+
+    h4 {
+        color: #7f8c8d;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #95a5a6;
+    }
+
+    .hint {
+        margin-top: 15px;
+        font-weight: bold;
+        color: #3498db;
+    }
+}
+
+// Confirmation Dialog
+.confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.confirm-dialog {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+    h4 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+
+    .confirm-content {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .cost-reminder {
+        margin: 15px 0;
+        padding: 10px;
+        background: rgba(231, 76, 60, 0.1);
+        border-radius: 8px;
+    }
+
+    .warning {
+        color: #e74c3c;
+        font-weight: 500;
+        font-size: 0.9em;
+    }
+
+    .error-message {
+        color: #e74c3c;
+        text-align: center;
+        padding: 10px;
+        margin-bottom: 15px;
+        background: rgba(231, 76, 60, 0.1);
+        border-radius: 5px;
+    }
+
+    .confirm-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+
+        button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+
+        .cancel-btn {
+            background: #95a5a6;
+            color: white;
+
+            &:hover:not(:disabled) {
+                background: #7f8c8d;
+            }
+        }
+
+        .confirm-btn {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+            color: white;
+
+            &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+            }
+        }
+    }
+}
+
+// Responsive
+@media (max-width: 600px) {
+    .carousel-track {
+        width: 250px;
+        height: 160px;
+    }
+
+    .trait-icon-wrapper {
+        width: 80px;
+        height: 80px;
+    }
+
+    .carousel-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+}

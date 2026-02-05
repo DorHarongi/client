@@ -15,6 +15,7 @@ import { ArsenalComponent } from './buildings/arsenal/arsenal.component';
 import { QuartersComponent } from './buildings/quarters/quarters.component';
 import { WallComponent } from './buildings/wall/wall.component';
 import { EmbassyComponent } from './buildings/embassy/embassy.component';
+import { AcademyComponent } from './buildings/academy/academy.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialsCostComponent } from './materials-cost/materials-cost.component';
 import { TroopsChoosingComponent } from './troops-choosing/troops-choosing.component';
@@ -39,6 +40,7 @@ import { ResourcesAmountComponent } from './resources-amount/resources-amount.co
     QuartersComponent,
     WallComponent,
     EmbassyComponent,
+    AcademyComponent,
     MaterialsCostComponent,
     TroopsChoosingComponent,
     HireWorkersComponent,
