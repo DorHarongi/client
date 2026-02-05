@@ -56,9 +56,9 @@ $game-text: #3d2914;
 
 // Smaller arrow buttons matching world map style
 .carousel-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
+    width: 26px;
+    height: 26px;
+    border-radius: 5px;
     border: 1px solid black;
     background-image: url(../../../../assets/top-bg.png);
     cursor: pointer;
@@ -66,7 +66,7 @@ $game-text: #3d2914;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 2px 2px 2px 2px;
+    box-shadow: 1px 1px 2px 1px;
     margin-bottom: 25px; // Move arrows up to align with side traits
 
     .arrow-left, .arrow-right {
@@ -76,13 +76,13 @@ $game-text: #3d2914;
     }
 
     .arrow-left {
-        border-width: 6px 9px 6px 0;
+        border-width: 5px 7px 5px 0;
         border-color: transparent black transparent transparent;
         margin-left: -2px;
     }
 
     .arrow-right {
-        border-width: 6px 0 6px 9px;
+        border-width: 5px 0 5px 7px;
         border-color: transparent transparent transparent black;
         margin-right: -2px;
     }
