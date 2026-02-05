@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { woodFactoryUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond } from 'utils';
+import { woodFactoryUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, VillageTrait, getTraitBonus } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { ResourcesWorkers } from '../../models/resourcesWorkers';
@@ -30,16 +30,24 @@ export class WoodFactoryComponent implements OnInit, OnDestroy {
     private router: Router,
     private questService: QuestService
   ) {
+    const village = this.userInformationService.currentVillage;
+    
+    // Calculate Vanguard multiplier if applicable
+    let vanguardMultiplier = 1;
+    if (village.trait === VillageTrait.VANGUARD) {
+      const academyLevel = village.buildingsLevels.academyLevel || 1;
+      vanguardMultiplier = 1 + getTraitBonus(academyLevel);
+    }
      
-    this.buildingInformation = new Building("woodFactory", "Wood Factory", userInformationService.currentVillage.buildingsLevels.woodFactoryLevel, 
+    this.buildingInformation = new Building("woodFactory", "Wood Factory", village.buildingsLevels.woodFactoryLevel, 
     "The wood factory produces the wood of your village. The higher its level and the more wood workers you employ there, the faster the production is.",
-    woodFactoryUpgradeMaterialCostByLevels[this.userInformationService.currentVillage.buildingsLevels.woodFactoryLevel + 1]);
+    woodFactoryUpgradeMaterialCostByLevels[village.buildingsLevels.woodFactoryLevel + 1]);
 
-    this.currentProductionPerHour = factoriesProductionSpeedByLevel[this.userInformationService.currentVillage.buildingsLevels.woodFactoryLevel] * 3600;
-    this.nextLevelProductionPerHour = factoriesProductionSpeedByLevel[this.userInformationService.currentVillage.buildingsLevels.woodFactoryLevel + 1] * 3600;
-    this.singleWorkerProductionPerHour = singleWorkerProductionSpeedPerSecond * 3600;
+    this.currentProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.woodFactoryLevel] * 3600 * vanguardMultiplier;
+    this.nextLevelProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.woodFactoryLevel + 1] * 3600 * vanguardMultiplier;
+    this.singleWorkerProductionPerHour = singleWorkerProductionSpeedPerSecond * 3600 * vanguardMultiplier;
 
-    this.woodWorkers = this.userInformationService.currentVillage.resourcesWorkers.woodWorkers;
+    this.woodWorkers = village.resourcesWorkers.woodWorkers;
   }
   ngOnDestroy(): void {
     if(this.subscription)

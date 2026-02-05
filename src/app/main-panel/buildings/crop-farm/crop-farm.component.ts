@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { cropFarmUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond} from 'utils';
+import { cropFarmUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, VillageTrait, getTraitBonus } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { HttpClient } from '@angular/common/http';
@@ -30,14 +30,22 @@ export class CropFarmComponent implements OnInit, OnDestroy {
     private router: Router,
     private questService: QuestService
   ) {
+    const village = this.userInformationService.currentVillage;
+    
+    // Calculate Vanguard multiplier if applicable
+    let vanguardMultiplier = 1;
+    if (village.trait === VillageTrait.VANGUARD) {
+      const academyLevel = village.buildingsLevels.academyLevel || 1;
+      vanguardMultiplier = 1 + getTraitBonus(academyLevel);
+    }
 
-    this.buildingInformation = new Building("cropFarm", "Crop Farm", this.userInformationService.currentVillage.buildingsLevels.cropFarmLevel, 
+    this.buildingInformation = new Building("cropFarm", "Crop Farm", village.buildingsLevels.cropFarmLevel, 
     "The crop farm produces the crop of your village. The higher its level and the more crop workers you employ there, the faster the production is.",
-    cropFarmUpgradeMaterialCostByLevels[this.userInformationService.currentVillage.buildingsLevels.cropFarmLevel + 1]);
+    cropFarmUpgradeMaterialCostByLevels[village.buildingsLevels.cropFarmLevel + 1]);
 
-    this.currentProductionPerHour = factoriesProductionSpeedByLevel[this.userInformationService.currentVillage.buildingsLevels.cropFarmLevel] * 3600;
-    this.nextLevelProductionPerHour = factoriesProductionSpeedByLevel[this.userInformationService.currentVillage.buildingsLevels.cropFarmLevel + 1] * 3600;
-    this.singleWorkerProductionPerHour = singleWorkerProductionSpeedPerSecond * 3600;
+    this.currentProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.cropFarmLevel] * 3600 * vanguardMultiplier;
+    this.nextLevelProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.cropFarmLevel + 1] * 3600 * vanguardMultiplier;
+    this.singleWorkerProductionPerHour = singleWorkerProductionSpeedPerSecond * 3600 * vanguardMultiplier;
 
     this.cropWorkers = this.userInformationService.currentVillage.resourcesWorkers.cropWorkers;
   }
