@@ -16,7 +16,6 @@ $game-text: #3d2914;
     text-align: center;
     margin-bottom: 15px;
     font-size: 1.3em;
-    color: $game-text;
 }
 
 // Current Trait Info
@@ -24,12 +23,8 @@ $game-text: #3d2914;
     text-align: center;
     margin-bottom: 20px;
     padding: 15px;
-    background: linear-gradient(135deg, $game-bg 0%, $game-bg-dark 100%);
-    border-radius: 8px;
-    border: 2px solid $game-brown;
 
     .current-label {
-        color: $game-text;
         margin-right: 8px;
     }
 
@@ -59,19 +54,19 @@ $game-text: #3d2914;
     perspective: 1000px;
 }
 
-// Arrow buttons matching world map style
+// Smaller arrow buttons matching world map style
 .carousel-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    border: 2px solid $game-brown;
-    background: linear-gradient(135deg, $game-bg 0%, $game-bg-dark 100%);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid black;
+    background-image: url(../../../../assets/top-bg.png);
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 2px 2px;
 
     .arrow-left, .arrow-right {
         width: 0;
@@ -80,27 +75,19 @@ $game-text: #3d2914;
     }
 
     .arrow-left {
-        border-width: 10px 14px 10px 0;
-        border-color: transparent $game-brown transparent transparent;
+        border-width: 6px 9px 6px 0;
+        border-color: transparent black transparent transparent;
         margin-left: -2px;
     }
 
     .arrow-right {
-        border-width: 10px 0 10px 14px;
-        border-color: transparent transparent transparent $game-brown;
+        border-width: 6px 0 6px 9px;
+        border-color: transparent transparent transparent black;
         margin-right: -2px;
     }
 
     &:hover:not(:disabled) {
-        background: linear-gradient(135deg, $game-brown 0%, $game-brown-dark 100%);
         transform: scale(1.05);
-
-        .arrow-left {
-            border-color: transparent $game-bg transparent transparent;
-        }
-        .arrow-right {
-            border-color: transparent transparent transparent $game-bg;
-        }
     }
 
     &:disabled {
@@ -190,9 +177,8 @@ $game-text: #3d2914;
     margin-top: 4px;
 }
 
-// Selected Trait Info Box - Game styled
+// Selected Trait Info Box
 .selected-trait-info {
-    background: linear-gradient(135deg, $game-bg 0%, $game-bg-dark 100%);
     border: 3px solid;
     border-radius: 12px;
     padding: 20px;
@@ -208,28 +194,24 @@ $game-text: #3d2914;
     .trait-short-desc {
         text-align: center;
         font-style: italic;
-        color: $game-text;
         margin-bottom: 15px;
     }
 
     .trait-full-desc {
         text-align: justify;
         line-height: 1.5;
-        color: $game-text;
         margin-bottom: 15px;
     }
 
     .trait-bonus-preview {
-        background: rgba(255, 255, 255, 0.5);
         padding: 12px;
         border-radius: 8px;
         text-align: center;
-        border: 1px solid $game-brown;
+        border: 1px solid black;
 
         strong {
             display: block;
             margin-bottom: 5px;
-            color: $game-text;
         }
 
         .bonus-text {
@@ -239,19 +221,13 @@ $game-text: #3d2914;
     }
 }
 
-// Learn Section - Game styled
+// Learn Section - No extra container
 .learn-section {
     text-align: center;
     margin-top: 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, $game-bg 0%, $game-bg-dark 100%);
-    border-radius: 10px;
-    border: 2px solid $game-brown;
 
     .cost-title {
         margin-bottom: 10px;
-        color: #c0392b;
-        font-weight: bold;
     }
 }
 
@@ -265,66 +241,50 @@ $game-text: #3d2914;
     font-weight: 500;
 
     .free-badge {
-        background: linear-gradient(135deg, #27ae60, #219a52);
+        background: #27ae60;
         color: white;
         padding: 4px 12px;
         border-radius: 15px;
         font-weight: bold;
-        border: 2px solid #1e8449;
     }
 }
 
-// Game-style button
+// Game-style button matching .buttons class
+.buttons {
+    background-image: url(../../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+}
+
 .learn-btn {
+    @extend .buttons;
     padding: 12px 30px;
     font-size: 1.1em;
-    font-weight: bold;
-    border: 2px solid $game-brown-dark;
-    border-radius: 8px;
     cursor: pointer;
-    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-    color: white;
     transition: all 0.2s ease;
     margin-top: 15px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-
-    &.affordable {
-        background: linear-gradient(135deg, $game-brown 0%, $game-brown-dark 100%);
-        border-color: $game-brown-dark;
-        
-        &:hover {
-            transform: translateY(-2px);
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
-            background: linear-gradient(135deg, lighten($game-brown, 5%) 0%, $game-brown 100%);
-        }
-    }
 
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
-        transform: none;
     }
 }
 
 .same-trait-notice {
     text-align: center;
     padding: 15px;
-    color: $game-text;
     font-style: italic;
-    background: linear-gradient(135deg, $game-bg 0%, $game-bg-dark 100%);
-    border-radius: 8px;
-    border: 1px solid $game-brown;
     margin-top: 15px;
 }
 
-// Locked State - Game styled
+// Locked State
 .trait-locked {
     text-align: center;
     padding: 40px 20px;
-    background: linear-gradient(135deg, $game-bg 0%, $game-bg-dark 100%);
     border-radius: 15px;
     margin: 20px 0;
-    border: 2px solid $game-brown;
 
     .lock-icon {
         font-size: 3em;
@@ -332,22 +292,16 @@ $game-text: #3d2914;
     }
 
     h4 {
-        color: $game-text;
         margin-bottom: 10px;
-    }
-
-    p {
-        color: $game-text;
     }
 
     .hint {
         margin-top: 15px;
         font-weight: bold;
-        color: $game-brown;
     }
 }
 
-// Confirmation Dialog - Game styled
+// Confirmation Dialog
 .confirm-overlay {
     position: fixed;
     top: 0;
@@ -362,33 +316,28 @@ $game-text: #3d2914;
 }
 
 .confirm-dialog {
-    background: linear-gradient(135deg, $game-bg 0%, $game-bg-dark 100%);
+    background-image: url(../../../../assets/top-bg.png);
     border-radius: 15px;
     padding: 25px;
     max-width: 400px;
     width: 90%;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    border: 3px solid $game-brown;
+    border: 3px solid black;
 
     h4 {
         text-align: center;
         margin-bottom: 20px;
-        color: $game-text;
         font-size: 1.3em;
     }
 
     .confirm-content {
         text-align: center;
         margin-bottom: 20px;
-        color: $game-text;
     }
 
     .cost-reminder {
         margin: 15px 0;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 8px;
-        border: 1px solid $game-brown;
+        text-align: center;
     }
 
     .warning {
@@ -402,7 +351,6 @@ $game-text: #3d2914;
         text-align: center;
         padding: 10px;
         margin-bottom: 15px;
-        background: rgba(192, 57, 43, 0.1);
         border-radius: 5px;
         border: 1px solid #c0392b;
     }
@@ -413,36 +361,14 @@ $game-text: #3d2914;
         justify-content: center;
 
         button {
+            @extend .buttons;
             padding: 10px 25px;
-            border: 2px solid $game-brown-dark;
-            border-radius: 8px;
-            font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 
             &:disabled {
                 opacity: 0.5;
                 cursor: not-allowed;
-            }
-        }
-
-        .cancel-btn {
-            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-            color: white;
-
-            &:hover:not(:disabled) {
-                background: linear-gradient(135deg, #7f8c8d, #6c7a7d);
-            }
-        }
-
-        .confirm-btn {
-            background: linear-gradient(135deg, $game-brown 0%, $game-brown-dark 100%);
-            color: white;
-
-            &:hover:not(:disabled) {
-                transform: translateY(-2px);
-                box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
             }
         }
     }
@@ -461,7 +387,7 @@ $game-text: #3d2914;
     }
 
     .carousel-btn {
-        width: 38px;
-        height: 38px;
+        width: 28px;
+        height: 28px;
     }
 }
