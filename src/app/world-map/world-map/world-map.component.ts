@@ -237,9 +237,16 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   onBossDefeated(): void {
     // Don't close modal - let user see the results
-    // Just reload map to remove boss from display
-    this.loadMapWindow();
-    this.loadMinimap();
+    // Remove the defeated boss from local arrays immediately
+    if (this.selectedBoss) {
+      const bossId = this.selectedBoss.id;
+      // Remove from main map bosses
+      this.bosses = this.bosses.filter(b => b.id !== bossId);
+      // Remove from minimap bosses
+      this.allBosses = this.allBosses.filter(b => b.id !== bossId);
+      // Rebuild grid to reflect the change
+      this.buildGrid();
+    }
   }
 
   isOwnVillage(village: VillageOnMap): boolean {
