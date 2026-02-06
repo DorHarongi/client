@@ -27,6 +27,11 @@
     margin-bottom: 15px;
 }
 
+// Colors matching world map
+$enemy-color: #ff0026;    // Red - enemy villages
+$clan-color: #1e90ff;     // Blue - clan villages
+$your-color: #90EE90;     // Green - your own villages
+
 .new-village-ui {
     margin-top: 20px;
     text-align: center;
@@ -81,12 +86,9 @@
     }
     
     &.current-village {
-        background-color: #4169E1;
-        box-shadow: 0 0 10px rgba(65, 105, 225, 0.7);
-        
-        .coords {
-            color: white;
-        }
+        background-color: $your-color;
+        box-shadow: 0 0 10px rgba(144, 238, 144, 0.7);
+        border: 2px solid darken($your-color, 20%);
     }
 
     &.has-village {
@@ -94,23 +96,23 @@
     }
     
     &.own-village {
-        background-color: #90EE90;
+        background-color: $your-color;
         &:hover {
-            background-color: #7CCD7C;
+            background-color: darken($your-color, 5%);
         }
     }
     
     &.clan-village {
-        background-color: #87CEEB;
+        background-color: $clan-color;
         &:hover {
-            background-color: #6CB4D9;
+            background-color: darken($clan-color, 5%);
         }
     }
     
     &.other-village {
-        background-color: #FFB6C1;
+        background-color: $enemy-color;
         &:hover {
-            background-color: #FF9AA2;
+            background-color: darken($enemy-color, 5%);
         }
     }
 
@@ -174,56 +176,6 @@
         width: 35px;
         height: 35px;
         object-fit: contain;
-    }
-}
-
-.legend {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin: 15px 0;
-    font-size: 12px;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.legend-color {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #654321;
-    
-    &.current {
-        background-color: #4169E1;
-    }
-    
-    &.own {
-        background-color: #90EE90;
-    }
-    
-    &.clan {
-        background-color: #87CEEB;
-    }
-    
-    &.enemy {
-        background-color: #FFB6C1;
-    }
-
-    &.boss {
-        background-color: #9b59b6;
-    }
-    
-    &.available-legend {
-        background-color: #DEB887;
-    }
-    
-    &.selected-legend {
-        background-color: #FFD700;
-        border: 2px solid #FF8C00;
     }
 }
 
@@ -322,12 +274,6 @@
     .coords {
       font-size: 6px;
     }
-  }
-
-  .legend {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
   }
 
   .village-name-input {
