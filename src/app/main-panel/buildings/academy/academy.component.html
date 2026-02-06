@@ -102,9 +102,6 @@
                         <p>This will cost:</p>
                         <app-materials-cost [materialsCost]="learnCost"></app-materials-cost>
                     </div>
-                    <p class="warning" *ngIf="!isFirstTraitSelection">
-                        ⚠️ Changing trait later will require a significant resource investment!
-                    </p>
                 </div>
                 <div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
                 <div class="confirm-actions">
