@@ -6,7 +6,7 @@
         <!-- Weather Effects Overlay -->
         <div class="weather-overlay" *ngIf="isRaining || isSnowing">
             <!-- Rain Effect -->
-            <div class="rain-container" *ngIf="isRaining">
+            <div class="rain-container" [class.fading]="isRainFading" *ngIf="isRaining">
                 <div *ngFor="let drop of rainDrops" 
                      class="rain-drop"
                      [style.left.%]="getRandomLeft(drop)"
@@ -16,7 +16,7 @@
             </div>
             
             <!-- Snow Effect -->
-            <div class="snow-container" *ngIf="isSnowing">
+            <div class="snow-container" [class.fading]="isSnowFading" *ngIf="isSnowing">
                 <div *ngFor="let flake of snowFlakes"
                      class="snow-flake"
                      [style.left.%]="getRandomLeft(flake)"

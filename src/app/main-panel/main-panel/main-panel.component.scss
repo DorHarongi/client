@@ -209,6 +209,11 @@ area {
     }
 }
 
+// When fading, let current drops finish but don't start new cycles
+.rain-container.fading .rain-drop {
+    animation-iteration-count: 1;
+}
+
 // ========== SNOW EFFECT ==========
 .snow-container {
     position: absolute;
@@ -291,5 +296,10 @@ area {
         transform: translateY(1000px) translateX(-5px) rotate(360deg);
         opacity: 0;
     }
+}
+
+// When fading, let current flakes finish but don't start new cycles
+.snow-container.fading .snow-flake {
+    animation-iteration-count: 1;
 }
 

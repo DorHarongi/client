@@ -21,10 +21,13 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   // Weather system
   isRaining: boolean = false;
   isSnowing: boolean = false;
+  isRainFading: boolean = false;  // Stops new drops but lets existing ones fall
+  isSnowFading: boolean = false;  // Stops new flakes but lets existing ones fall
   rainDrops: number[] = [];
   snowFlakes: number[] = [];
   private weatherCheckInterval: any;
   private weatherTimeout: any;
+  private weatherFadeTimeout: any;
   
   constructor(
     private userInformationService: UserInformationService, 
@@ -48,6 +51,8 @@ export class MainPanelComponent implements OnInit, OnDestroy {
       clearInterval(this.weatherCheckInterval);
     if(this.weatherTimeout)
       clearTimeout(this.weatherTimeout);
+    if(this.weatherFadeTimeout)
+      clearTimeout(this.weatherFadeTimeout);
   }
 
   ngOnInit(): void
@@ -122,15 +127,29 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   
   private startRain(): void {
     this.isRaining = true;
+    this.isRainFading = false;
     this.weatherTimeout = setTimeout(() => {
-      this.isRaining = false;
+      // Stop generating new drops, but let existing ones finish falling
+      this.isRainFading = true;
+      // Remove container after drops have time to fall (max ~1.5s animation)
+      this.weatherFadeTimeout = setTimeout(() => {
+        this.isRaining = false;
+        this.isRainFading = false;
+      }, 2000);
     }, 20000); // 20 seconds
   }
   
   private startSnow(): void {
     this.isSnowing = true;
+    this.isSnowFading = false;
     this.weatherTimeout = setTimeout(() => {
-      this.isSnowing = false;
+      // Stop generating new flakes, but let existing ones finish falling
+      this.isSnowFading = true;
+      // Remove container after flakes have time to fall (max ~6s animation)
+      this.weatherFadeTimeout = setTimeout(() => {
+        this.isSnowing = false;
+        this.isSnowFading = false;
+      }, 7000);
     }, 20000); // 20 seconds
   }
   
