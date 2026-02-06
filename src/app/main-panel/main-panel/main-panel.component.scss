@@ -127,5 +127,169 @@ area {
     top: 460px;
 }
 
+// Game container for weather positioning
+.game-container {
+    position: relative;
+    display: inline-block;
+}
 
+// Weather overlay - positioned exactly over the game background
+.weather-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none; // Allow clicks through to buildings
+    overflow: hidden;
+    z-index: 10;
+}
+
+// ========== RAIN EFFECT ==========
+.rain-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.rain-drop {
+    position: absolute;
+    top: -50px;
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(
+        to bottom,
+        rgba(174, 194, 224, 0) 0%,
+        rgba(174, 194, 224, 0.7) 50%,
+        rgba(174, 194, 224, 1) 100%
+    );
+    border-radius: 0 0 5px 5px;
+    animation: rainFall linear infinite;
+    opacity: 0.6;
+    
+    // Add slight blur for realism
+    filter: blur(0.5px);
+    
+    // Randomize appearance
+    &:nth-child(odd) {
+        width: 1px;
+        height: 15px;
+        opacity: 0.4;
+    }
+    
+    &:nth-child(3n) {
+        width: 3px;
+        height: 25px;
+        opacity: 0.7;
+    }
+    
+    &:nth-child(5n) {
+        height: 30px;
+        opacity: 0.5;
+    }
+}
+
+@keyframes rainFall {
+    0% {
+        transform: translateY(-50px) rotate(15deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(1000px) rotate(15deg);
+        opacity: 0;
+    }
+}
+
+// ========== SNOW EFFECT ==========
+.snow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.snow-flake {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(
+        circle at 30% 30%,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.9) 20%,
+        rgba(240, 248, 255, 0.8) 40%,
+        rgba(220, 240, 255, 0.6) 60%,
+        rgba(200, 230, 255, 0.3) 80%,
+        transparent 100%
+    );
+    border-radius: 50%;
+    animation: snowFall linear infinite;
+    opacity: 0.9;
+    
+    // Soft glow effect
+    box-shadow: 
+        0 0 5px rgba(255, 255, 255, 0.5),
+        0 0 10px rgba(255, 255, 255, 0.3);
+    
+    // Vary snowflake sizes
+    &:nth-child(odd) {
+        width: 6px;
+        height: 6px;
+        opacity: 0.7;
+    }
+    
+    &:nth-child(3n) {
+        width: 12px;
+        height: 12px;
+        opacity: 0.85;
+    }
+    
+    &:nth-child(5n) {
+        width: 8px;
+        height: 8px;
+    }
+    
+    &:nth-child(7n) {
+        width: 14px;
+        height: 14px;
+        opacity: 0.95;
+    }
+}
+
+@keyframes snowFall {
+    0% {
+        transform: translateY(-20px) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    5% {
+        opacity: 0.9;
+    }
+    25% {
+        transform: translateY(250px) translateX(15px) rotate(90deg);
+    }
+    50% {
+        transform: translateY(500px) translateX(-10px) rotate(180deg);
+    }
+    75% {
+        transform: translateY(750px) translateX(20px) rotate(270deg);
+    }
+    95% {
+        opacity: 0.9;
+    }
+    100% {
+        transform: translateY(1000px) translateX(-5px) rotate(360deg);
+        opacity: 0;
+    }
+}
 

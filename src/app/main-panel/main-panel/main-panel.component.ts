@@ -17,6 +17,15 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   village!: Village;
   subscription!: Subscription;
   routeSubscription!: Subscription;
+  
+  // Weather system
+  isRaining: boolean = false;
+  isSnowing: boolean = false;
+  rainDrops: number[] = [];
+  snowFlakes: number[] = [];
+  private weatherCheckInterval: any;
+  private weatherTimeout: any;
+  
   constructor(
     private userInformationService: UserInformationService, 
     private router: Router,
@@ -25,6 +34,9 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   )
   { 
     this.intervalService.startIntervals();
+    // Generate arrays for rain drops and snowflakes
+    this.rainDrops = Array.from({ length: 150 }, (_, i) => i);
+    this.snowFlakes = Array.from({ length: 100 }, (_, i) => i);
   }
 
   ngOnDestroy(): void {
@@ -32,11 +44,19 @@ export class MainPanelComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     if(this.routeSubscription)
       this.routeSubscription.unsubscribe();
+    if(this.weatherCheckInterval)
+      clearInterval(this.weatherCheckInterval);
+    if(this.weatherTimeout)
+      clearTimeout(this.weatherTimeout);
   }
 
   ngOnInit(): void
   {
     this.village = this.userInformationService.currentVillage;
+    
+    // Start weather check system
+    this.checkWeather();
+    this.weatherCheckInterval = setInterval(() => this.checkWeather(), 1000);
     
     // Handle village name from route parameter
     this.routeSubscription = this.route.params.subscribe(params => {
@@ -76,6 +96,60 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   print(event: any) // for building polygons around buiildings
   {
     // console.log(event.clientX + "," + event.clientY);
+  }
+
+  // Weather system methods
+  private checkWeather(): void {
+    const now = new Date();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    
+    // Only trigger at the start of the minute (seconds 0-1)
+    if (seconds > 1) return;
+    
+    // Already showing weather, don't restart
+    if (this.isRaining || this.isSnowing) return;
+    
+    // Snow: divisible by 15 (0, 15, 30, 45)
+    if (minutes % 15 === 0) {
+      this.startSnow();
+    }
+    // Rain: divisible by 5 but NOT by 15 (5, 10, 20, 25, 35, 40, 50, 55)
+    else if (minutes % 5 === 0) {
+      this.startRain();
+    }
+  }
+  
+  private startRain(): void {
+    this.isRaining = true;
+    this.weatherTimeout = setTimeout(() => {
+      this.isRaining = false;
+    }, 20000); // 20 seconds
+  }
+  
+  private startSnow(): void {
+    this.isSnowing = true;
+    this.weatherTimeout = setTimeout(() => {
+      this.isSnowing = false;
+    }, 20000); // 20 seconds
+  }
+  
+  // Random position/delay generators for weather effects
+  getRandomLeft(index: number): number {
+    // Use index as seed for consistent but varied positions
+    return (index * 17 + index * index) % 100;
+  }
+  
+  getRandomDelay(index: number): number {
+    return ((index * 13) % 20) / 10; // 0 to 2 seconds
+  }
+  
+  getRandomDuration(index: number, base: number): number {
+    return base + ((index * 7) % 10) / 10; // base to base+1 seconds
+  }
+  
+  getRandomSize(index: number): number {
+    return 0.5 + ((index * 11) % 10) / 20; // 0.5 to 1
   }
 
 }
