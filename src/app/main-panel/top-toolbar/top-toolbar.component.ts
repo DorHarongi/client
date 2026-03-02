@@ -122,6 +122,24 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     this.loginService.logout();
   }
 
+  currentTheme(): string {
+    return this.userInformationService.userInformation?.theme || 'default';
+  }
+
+  changeTheme(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const theme = select.value || 'default';
+    this.http.post(`${environment.apiUrl}/users/theme`, { theme }).subscribe({
+      next: () => {
+        (this.userInformationService.userInformation as any).theme = theme;
+        if (typeof document !== 'undefined' && document.body) {
+          document.body.setAttribute('data-theme', theme);
+        }
+        sessionStorage.setItem('user_info', JSON.stringify(this.userInformationService.userInformation));
+      }
+    });
+  }
+
   updateVillage()
   {
     let village: Village = this.userInformationService.currentVillage;

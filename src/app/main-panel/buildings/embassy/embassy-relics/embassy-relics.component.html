@@ -1,0 +1,31 @@
+<div class="embassy-relics" *ngIf="clanName">
+  <h4>Divine Relics</h4>
+  <div class="relic-list">
+    <div *ngFor="let r of relics" class="relic-row">
+      <span class="relic-name">{{ relicName(r.relicId) }}</span>
+      <span *ngIf="r.holderUsername" class="holder">Held by {{ r.holderUsername }} ({{ r.holderVillageName }})</span>
+      <span *ngIf="!r.holderUsername" class="holder">Unclaimed</span>
+      <span *ngIf="cooldownActive(r)" class="cooldown">Cooldown until {{ r.transferCooldownUntil | date:'short' }}</span>
+      <button *ngIf="canTransfer(r)" class="small-btn" (click)="openTransfer(r.relicId)">Transfer</button>
+      <div *ngIf="isHeldByMe(r)" class="holder-notice">You hold this relic. If you leave the clan, it leaves with you.</div>
+    </div>
+  </div>
+
+  <div class="transfer-modal" *ngIf="showTransferModal && transferRelicId">
+    <h5>Transfer {{ relicName(transferRelicId) }}</h5>
+    <p class="warning">This relic cannot be moved again for 7 days. Choose carefully.</p>
+    <p class="warning">The player receiving this relic can leave the clan and take it with them.</p>
+    <label>Player:</label>
+    <select [(ngModel)]="targetUsername" (ngModelChange)="targetVillageName = ''">
+      <option value="">-- Select --</option>
+      <option *ngFor="let m of clanMembers" [value]="m.username">{{ m.username }}</option>
+    </select>
+    <label *ngIf="targetUsername">Village name:</label>
+    <input *ngIf="targetUsername" type="text" [(ngModel)]="targetVillageName" placeholder="Exact village name" />
+    <p class="error" *ngIf="transferError">{{ transferError }}</p>
+    <div>
+      <button class="action-btn" (click)="confirmTransfer()">Confirm</button>
+      <button class="action-btn cancel-btn" (click)="closeTransfer()">Cancel</button>
+    </div>
+  </div>
+</div>

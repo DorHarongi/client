@@ -1,0 +1,46 @@
+.relic-medallion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.relic-slots {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  max-width: 120px;
+  justify-content: center;
+}
+
+.relic-slot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.held {
+    background: radial-gradient(circle, #f1c40f 0%, #b7950b 100%);
+    border-color: #f1c40f;
+    box-shadow: 0 0 6px rgba(241, 196, 15, 0.6);
+  }
+
+  &.empty {
+    background: #2c2c2c;
+    border-color: #444;
+  }
+}
+
+.relic-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.relic-slot.held .relic-dot {
+  background: rgba(255, 255, 255, 0.9);
+}

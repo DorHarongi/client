@@ -41,6 +41,11 @@ export class UserInformationService {
   setUserInformation(user: User)
   {
     this.userInformation = user;
+    // Apply theme
+    const theme = (user as any).theme || 'default';
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.setAttribute('data-theme', theme);
+    }
     // Store in session for refresh persistence
     sessionStorage.setItem(USER_KEY, JSON.stringify(user));
 

@@ -57,6 +57,11 @@
                 </table>
             </div>
 
+            <app-clan-chat
+                [clanName]="clanName"
+                [currentUsername]="currentUsername">
+            </app-clan-chat>
+
             <!-- Pending Requests (only visible to leader) -->
             <div class="requests-section" *ngIf="isLeader && clanInfo.pendingRequests && clanInfo.pendingRequests.length > 0">
                 <h4>Pending Join Requests</h4>

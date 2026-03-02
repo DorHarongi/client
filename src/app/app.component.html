@@ -1,3 +1,6 @@
+<div class="server-ended-banner" *ngIf="serverEnded && winningClanName">
+  Clan <strong>{{ winningClanName }}</strong> has won this server.
+</div>
 <app-top-toolbar *ngIf="isLoggedIn()"></app-top-toolbar>
 <router-outlet></router-outlet>
 <app-quest-widget *ngIf="isLoggedIn()"></app-quest-widget>

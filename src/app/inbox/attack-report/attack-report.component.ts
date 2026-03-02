@@ -16,8 +16,6 @@ export class AttackReportComponent implements OnInit {
   troopDictionariesByType: {[troopsType: string]: TroopsAmounts[]} = {};
   userAttackedAndLost!: boolean;
 
-
-
   constructor(private userInformationService: UserInformationService) { }
 
   ngOnInit(): void {
@@ -35,16 +33,14 @@ export class AttackReportComponent implements OnInit {
       this.troopDictionariesByType["support"][0] = this.attackReport.supportTotalTroops;
       this.troopDictionariesByType["support"][1] = this.attackReport.supportTotalLostTroops;
     }
-        
   }
-
 
   goBack(){
     this.closed.emit();
   }
 
   didUserAttackAndLost(): boolean{
-    return this.attackReport.attackerName == this.userInformationService.userInformation.username &&!this.attackReport.attackerWon;
+    return this.attackReport.attackerName == this.userInformationService.userInformation.username && !this.attackReport.attackerWon;
   }
 
   getLootResources(): ResourcesDisplayAmounts {
@@ -54,11 +50,4 @@ export class AttackReportComponent implements OnInit {
       stone: this.attackReport.lootedResources?.stonesAmount || 0
     };
   }
-
-  formatTraitDisplay(trait?: string, level?: number): string {
-    if (!trait) return 'None';
-    const traitName = trait.charAt(0).toUpperCase() + trait.slice(1);
-    return level ? `${traitName} ${level}` : traitName;
-  }
-
 }

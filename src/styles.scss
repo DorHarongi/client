@@ -1,3 +1,46 @@
+/* Theme variables - apply via data-theme on body */
+[data-theme="default"] {
+  --bg-primary: #7d5210;
+  --bg-secondary: #5c3d0a;
+  --accent: #b7950b;
+  --text-primary: #f5e6c8;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --accent: #0f3460;
+  --text-primary: #e8e8e8;
+}
+
+[data-theme="ocean"] {
+  --bg-primary: #0a2647;
+  --bg-secondary: #144272;
+  --accent: #205295;
+  --text-primary: #e8f4fc;
+}
+
+[data-theme="forest"] {
+  --bg-primary: #1b4332;
+  --bg-secondary: #2d6a4f;
+  --accent: #40916c;
+  --text-primary: #d8f3dc;
+}
+
+[data-theme="blood"] {
+  --bg-primary: #3d0a0a;
+  --bg-secondary: #6b1111;
+  --accent: #9d0208;
+  --text-primary: #fce8e8;
+}
+
+[data-theme="royal"] {
+  --bg-primary: #240046;
+  --bg-secondary: #3c096c;
+  --accent: #5a189a;
+  --text-primary: #e0aaff;
+}
+
 html, body {
     margin: 0;
     padding: 0;

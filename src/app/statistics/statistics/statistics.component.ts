@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 
 const WINDOW_SIZE = 6;
 
-type ViewMode = 'players' | 'clans';
+type ViewMode = 'players' | 'clans' | 'leaderboards';
 
 @Component({
   selector: 'app-statistics',
@@ -41,12 +41,16 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   displayedPages: number[] = [];
   usersInPage: Array<any> = [];
   clansInPage: Array<ClanStatisticDTO> = [];
+  playerLeaderboard: any[] = [];
+  clanLeaderboard: any[] = [];
   loading: boolean = true;
   subscription1!: Subscription;
   subscription2!: Subscription;
   subscription3!: Subscription;
   subscription4!: Subscription;
   username: string;
+
+  leaderboardCategory: 'bossDamage' | 'resourcesStolen' | 'successfulDefenses' = 'bossDamage';
 
   ngOnInit(): void {
     this.loadData();
@@ -58,9 +62,11 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     if (this.viewMode === 'players') {
       this.getNumberOfUserStatisticsPages();
       this.getUserStatistics();
-    } else {
+    } else if (this.viewMode === 'clans') {
       this.getNumberOfClanStatisticsPages();
       this.getClanStatistics();
+    } else {
+      this.loadLeaderboards();
     }
   }
 
@@ -78,12 +84,19 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     }
   }
 
+  switchToLeaderboards(): void {
+    if (this.viewMode !== 'leaderboards') {
+      this.viewMode = 'leaderboards';
+      this.loadData();
+    }
+  }
+
   moveToPage(page: number): void {
     if (page < 1 || page > this.numberOfPages) return; 
     this.page = page;
     if (this.viewMode === 'players') {
       this.getUserStatistics();
-    } else {
+    } else if (this.viewMode === 'clans') {
       this.getClanStatistics();
     }
     this.updateDisplayedPages();
@@ -150,5 +163,32 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   goBack()
   {
     this.router.navigateByUrl('home');
+  }
+
+  changeLeaderboardCategory(category: 'bossDamage' | 'resourcesStolen' | 'successfulDefenses'): void {
+    if (this.leaderboardCategory !== category) {
+      this.leaderboardCategory = category;
+      this.loadLeaderboards();
+    }
+  }
+
+  loadLeaderboards(): void {
+    this.loading = true;
+    const category = this.leaderboardCategory;
+
+    // Players
+    this.http
+      .get<any[]>(`${environment.apiUrl}/users/leaderboard/${category}`)
+      .subscribe((players) => {
+        this.playerLeaderboard = players;
+        this.loading = false;
+      });
+
+    // Clans
+    this.http
+      .get<any[]>(`${environment.apiUrl}/users/clans/leaderboard/${category}`)
+      .subscribe((clans) => {
+        this.clanLeaderboard = clans;
+      });
   }
 }

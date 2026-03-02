@@ -4,11 +4,14 @@ import { BossOnMap } from '../models/mapModels';
 import { BossService, BossAttackResult, TroopsAmounts } from '../services/boss.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
-import { bossImages, bossRewardAmounts, getDistanceBonusText,
-         spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat,
-         axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
-         magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
-         catapultsAttackingStat, catapultsDefenceStat } from 'utils';
+import {
+  bossImages, bossRewardAmounts, getDistanceBonusText,
+  spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat,
+  axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
+  magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
+  catapultsAttackingStat, catapultsDefenceStat,
+  getArmySpeed, calculateDistance, calculateTravelTimeMs
+} from 'utils';
 
 @Component({
   selector: 'app-boss-interaction',
@@ -40,6 +43,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   // Troop stats
   totalAttack: number = 0;
   totalDefense: number = 0;
+
+  // Travel stats
+  armySpeed: number = 0;
+  travelTimeMs: number = 0;
 
   subscription?: Subscription;
 
@@ -160,6 +167,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     this.chosenTroops = troops;
     this.updateMaximumPossibleTroops();
     this.updateTotalStats();
+    this.updateTravelStats();
   }
 
   updateTotalStats(): void {
@@ -185,6 +193,54 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       (this.chosenTroops.magicians || 0) * magicianDefenceStat +
       (this.chosenTroops.horsemen || 0) * horsemenDefenceStat +
       (this.chosenTroops.catapults || 0) * catapultsDefenceStat;
+  }
+
+  updateTravelStats(): void {
+    if (!this.chosenTroops) {
+      this.armySpeed = 0;
+      this.travelTimeMs = 0;
+      return;
+    }
+
+    const village = this.userInformationService.currentVillage;
+    if (!village?.location) {
+      this.armySpeed = 0;
+      this.travelTimeMs = 0;
+      return;
+    }
+
+    this.armySpeed = getArmySpeed(this.chosenTroops as any);
+    if (this.armySpeed <= 0) {
+      this.travelTimeMs = 0;
+      return;
+    }
+
+    const distance = calculateDistance(
+      village.location.x,
+      village.location.y,
+      this.boss.x,
+      this.boss.y
+    );
+    const quickStepBonus = 0; // Skill integration will apply later
+    this.travelTimeMs = calculateTravelTimeMs(distance, this.armySpeed, quickStepBonus);
+  }
+
+  getFormattedTravelTime(): string {
+    if (!this.travelTimeMs || this.travelTimeMs <= 0) {
+      return '—';
+    }
+    const totalSeconds = Math.floor(this.travelTimeMs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m ${seconds}s`;
+    }
+    return `${seconds}s`;
   }
 
   updateMaximumPossibleTroops(): void {

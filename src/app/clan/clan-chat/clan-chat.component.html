@@ -1,0 +1,19 @@
+<div class="clan-chat">
+    <h4>Clan Chat</h4>
+    <div class="messages">
+        <div *ngFor="let m of messages" class="message-row">
+            <span class="sender" [class.leader]="isLeader(m)">{{m.senderUsername}}:</span>
+            <span class="content">{{m.content}}</span>
+        </div>
+    </div>
+    <div class="input-row">
+        <input
+            type="text"
+            [(ngModel)]="newMessage"
+            placeholder="Type a message..."
+            (keyup.enter)="send()"
+        />
+        <button (click)="send()" [disabled]="sending || !newMessage.trim()">Send</button>
+    </div>
+</div>
+

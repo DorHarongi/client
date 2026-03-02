@@ -1,0 +1,60 @@
+.movements-container {
+    position: absolute;
+    top: 10px;
+    right: 260px;
+    max-width: 260px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.movements-section + .movements-section {
+    margin-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 4px;
+}
+
+.movements-section h4 {
+    margin: 0 0 4px 0;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.movement-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.movement-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.movement-label {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.movement-from,
+.movement-to {
+    font-size: 11px;
+}
+
+.movement-countdown {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    .movements-container {
+        position: static;
+        margin: 8px auto;
+        max-width: 95%;
+    }
+}
+

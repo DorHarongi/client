@@ -4,8 +4,10 @@ import { TroopsAmounts } from '../models/troopsAmounts';
 import { spearFighterMinimumArsenalLevel, swordFighterMinimumArsenalLevel, axeFighterMinimumArsenalLevel,
   archerMinimumArsenalLevel, magicianMinimumArsenalLevel, horsemenMinimumArsenalLevel, catapultsMinimumArsenalLevel,
   spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat, axeFighterAttackingStat, axeFighterDefenceStat,
-  archerAttackingStat, archerDefenceStat, magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat, catapultsAttackingStat, 
-  catapultsDefenceStat } from 'utils'
+  archerAttackingStat, archerDefenceStat, magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat, catapultsAttackingStat,
+  catapultsDefenceStat,
+  spearFighterMovementSpeed, swordFighterMovementSpeed, axeFighterMovementSpeed,
+  archerMovementSpeed, magicianMovementSpeed, horsemenMovementSpeed, catapultsMovementSpeed } from 'utils'
 
 @Component({
   selector: 'app-troops-choosing',
@@ -45,6 +47,14 @@ export class TroopsChoosingComponent implements OnInit {
   horsemenDefenceStat: number = horsemenDefenceStat;
   catapultsAttackingStat: number = catapultsAttackingStat;
   catapultsDefenceStat: number = catapultsDefenceStat;
+
+  spearFighterMovementSpeed: number = spearFighterMovementSpeed;
+  swordFighterMovementSpeed: number = swordFighterMovementSpeed;
+  axeFighterMovementSpeed: number = axeFighterMovementSpeed;
+  archerMovementSpeed: number = archerMovementSpeed;
+  magicianMovementSpeed: number = magicianMovementSpeed;
+  horsemenMovementSpeed: number = horsemenMovementSpeed;
+  catapultsMovementSpeed: number = catapultsMovementSpeed;
 
 
   canTrainSpearFighters: boolean;

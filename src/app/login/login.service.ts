@@ -35,7 +35,9 @@ export class LoginService {
     if (token && expiry) {
       const expiryTime = parseInt(expiry);
       if (Date.now() < expiryTime) {
-        // Token still valid, try to restore session
+        if (!sessionStorage.getItem('serverId')) {
+          sessionStorage.setItem('serverId', '1');
+        }
         this.isloggedIn = true;
         this.startTokenRefresh(expiryTime - Date.now());
         // User info will be restored by UserInformationService
@@ -50,6 +52,9 @@ export class LoginService {
     const expiryTime = Date.now() + (ttlMinutes * 60 * 1000);
     sessionStorage.setItem(TOKEN_KEY, token);
     sessionStorage.setItem(TOKEN_EXPIRY_KEY, expiryTime.toString());
+    if (!sessionStorage.getItem('serverId')) {
+      sessionStorage.setItem('serverId', '1');
+    }
     this.startTokenRefresh(ttlMinutes * 60 * 1000);
   }
 

@@ -4,21 +4,22 @@ import { ResourcesAmounts } from "./resourcesAmounts";
 import { ResourcesWorkers } from "./resourcesWorkers";
 import { SupportSentEntry } from "./SupportSent";
 import { TroopsAmounts } from "./troopsAmounts";
-import { VillageTrait } from 'utils';
+import { Skills } from 'utils';
 
-export class Village
-{
+export class Village {
     villageName!: string;
     resourcesAmounts!: ResourcesAmounts;
     buildingsLevels!: BuildingsLevels;
     population!: number;
     resourcesWorkers!: ResourcesWorkers;
-    troops!: TroopsAmounts; 
+    troops!: TroopsAmounts;
     clanTroops!: TroopsAmounts;
     location!: Location;
     supportSent!: SupportSentEntry[];
     woodProductionPerSecond!: number;
-    stoneProductionPerSecond!: number; 
+    stoneProductionPerSecond!: number;
     cropProductionPerSecond!: number;
-    trait?: VillageTrait;
-}
+    skills!: Skills;
+    aliveSpies!: number;
+    spyDeathTimestamps!: Date[];
+} 

@@ -22,4 +22,5 @@ export class User
     currentQuestIndex!: number;
     pendingBossRewards!: PendingBossReward[];
     energyProductionMultiplier!: number;
+    theme?: string;
 }

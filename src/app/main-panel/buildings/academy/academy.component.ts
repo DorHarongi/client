@@ -1,230 +1,178 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { 
-    academyUpgradeMaterialCostByLevels, 
-    VillageTrait, 
-    traitDescriptions, 
-    traitBonusByLevel,
-    ACADEMY_TRAIT_UNLOCK_LEVEL,
-    canSelectTrait,
-    getTraitBonus,
-    warehouseStorageByLevel
+import {
+  academyUpgradeMaterialCostByLevels,
+  Skills,
+  SKILL_METADATA,
+  getSkillPointsByAcademyLevel,
+  getUsedSkillPoints,
+  SkillCategory,
+  SkillTier,
 } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { environment } from 'src/environments/environment';
 import { User } from '../../models/User';
 
-interface TraitOption {
-    trait: VillageTrait;
-    name: string;
-    shortDesc: string;
-    fullDesc: string;
-    icon: string;
-    color: string;
+interface SkillCell {
+  category: SkillCategory;
+  tier: SkillTier;
+  name: string;
+  bonusPercent: number;
 }
 
 @Component({
-    selector: 'app-academy',
-    templateUrl: './academy.component.html',
-    styleUrls: ['./academy.component.scss']
+  selector: 'app-academy',
+  templateUrl: './academy.component.html',
+  styleUrls: ['./academy.component.scss']
 })
 export class AcademyComponent implements OnInit, OnDestroy {
 
-    buildingInformation: Building;
-    
-    // Trait system
-    traits: TraitOption[] = [];
-    currentTraitIndex: number = 0;
-    currentTrait: VillageTrait | undefined;
-    canSelectTrait: boolean = false;
-    traitUnlockLevel = ACADEMY_TRAIT_UNLOCK_LEVEL;
-    
-    // Learning costs
-    learnCost: { wood: number; crop: number; stones: number } = { wood: 0, crop: 0, stones: 0 };
-    isFirstTraitSelection: boolean = false;
-    
-    // UI state
-    isSpinning: boolean = false;
-    showConfirmDialog: boolean = false;
-    loading: boolean = false;
-    errorMessage: string = '';
-    
-    subscription?: Subscription;
+  buildingInformation: Building;
 
-    constructor(
-        private userInformationService: UserInformationService,
-        private http: HttpClient
-    ) {
-        const academyLevel = this.userInformationService.currentVillage.buildingsLevels.academyLevel;
-        
-        this.buildingInformation = new Building(
-            "academy", 
-            "Academy", 
-            academyLevel,
-            "The Academy is where your village chooses its specialization. At level 3, you can learn one of three powerful traits that shape your village's destiny. Choose wisely - the first trait is free, but changing later will require a significant resource investment!",
-            academyUpgradeMaterialCostByLevels[academyLevel + 1]
-        );
-        
-        this.currentTrait = this.userInformationService.currentVillage.trait;
-        this.canSelectTrait = canSelectTrait(academyLevel);
-        this.isFirstTraitSelection = this.currentTrait === undefined && this.canSelectTrait;
-        
-        // Initialize traits
-        this.traits = [
-            { trait: VillageTrait.WARLORD, ...traitDescriptions[VillageTrait.WARLORD] },
-            { trait: VillageTrait.GUARDIAN, ...traitDescriptions[VillageTrait.GUARDIAN] },
-            { trait: VillageTrait.VANGUARD, ...traitDescriptions[VillageTrait.VANGUARD] }
-        ];
-        
-        // Set initial carousel position to current trait or first trait
-        if (this.currentTrait) {
-            this.currentTraitIndex = this.traits.findIndex(t => t.trait === this.currentTrait);
-            if (this.currentTraitIndex === -1) this.currentTraitIndex = 0;
-        }
-        
-        this.calculateLearnCost();
+  skills!: Skills;
+  availablePoints: number = 0;
+  totalPoints: number = 0;
+
+  grid: SkillCell[][] = [];
+
+  loading: boolean = false;
+  errorMessage: string = '';
+
+  subscription?: Subscription;
+
+  constructor(
+    private userInformationService: UserInformationService,
+    private http: HttpClient
+  ) {
+    const academyLevel = this.userInformationService.currentVillage.buildingsLevels.academyLevel;
+
+    this.buildingInformation = new Building(
+      "academy",
+      "Academy",
+      academyLevel,
+      "The Academy grants Skill Points which you can invest in powerful skills. Each level gives +2 points. Choose your build wisely!",
+      academyUpgradeMaterialCostByLevels[academyLevel + 1]
+    );
+
+    this.skills = this.userInformationService.currentVillage.skills;
+    this.recalculatePoints();
+    this.buildGrid();
+  }
+
+  ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
+  get academyLevel(): number {
+    return this.userInformationService.currentVillage.buildingsLevels.academyLevel;
+  }
+
+  private recalculatePoints(): void {
+    this.totalPoints = getSkillPointsByAcademyLevel(this.academyLevel);
+    const used = getUsedSkillPoints(this.skills);
+    this.availablePoints = this.totalPoints - used;
+  }
+
+  private buildGrid(): void {
+    const byCategory: { [key in SkillCategory]: SkillCell[] } = {} as any;
+    for (const meta of SKILL_METADATA) {
+      const cells: SkillCell[] = [
+        { category: meta.category, tier: SkillTier.I, name: meta.name, bonusPercent: Math.round(meta.tierBonuses[SkillTier.I] * 100) },
+        { category: meta.category, tier: SkillTier.II, name: meta.name, bonusPercent: Math.round(meta.tierBonuses[SkillTier.II] * 100) },
+        { category: meta.category, tier: SkillTier.III, name: meta.name, bonusPercent: Math.round(meta.tierBonuses[SkillTier.III] * 100) },
+      ];
+      byCategory[meta.category] = cells;
     }
 
-    ngOnInit(): void {}
+    this.grid = [[], [], []];
+    const categories = Object.keys(byCategory) as SkillCategory[];
+    for (const category of categories) {
+      const cells = byCategory[category];
+      this.grid[0].push(cells[0]);
+      this.grid[1].push(cells[1]);
+      this.grid[2].push(cells[2]);
+    }
+  }
 
-    ngOnDestroy(): void {
-        this.subscription?.unsubscribe();
+  getSkillState(cell: SkillCell): 'unlocked' | 'available' | 'locked' {
+    const currentTier = this.skills[cell.category];
+    if (currentTier === cell.tier) return 'unlocked';
+
+    // determine if this tier is available to learn
+    const tierOrder: SkillTier[] = [SkillTier.I, SkillTier.II, SkillTier.III];
+    const idx = tierOrder.indexOf(cell.tier);
+    const prevTier = idx > 0 ? tierOrder[idx - 1] : undefined;
+
+    // already learned higher tier? then unlocked is the highest only
+    if (currentTier && tierOrder.indexOf(currentTier) > idx) {
+      return 'locked';
     }
 
-    get academyLevel(): number {
-        return this.userInformationService.currentVillage.buildingsLevels.academyLevel;
+    // tier I: available if not learned yet and has points
+    if (cell.tier === 'I') {
+      return this.availablePoints > 0 && !currentTier ? 'available' : currentTier === 'I' ? 'unlocked' : 'locked';
     }
 
-    get currentBonus(): number {
-        return getTraitBonus(this.academyLevel);
+    // tier II/III: require previous tier learned
+    if (prevTier && currentTier === prevTier && this.availablePoints > 0) {
+      return 'available';
     }
 
-    get currentBonusPercent(): string {
-        return Math.round(this.currentBonus * 100) + '%';
+    return 'locked';
+  }
+
+  canLearn(cell: SkillCell): boolean {
+    return this.getSkillState(cell) === 'available';
+  }
+
+  learnSkill(cell: SkillCell): void {
+    if (!this.canLearn(cell) || this.loading) {
+      return;
     }
 
-    get selectedTrait(): TraitOption {
-        return this.traits[this.currentTraitIndex];
-    }
+    this.loading = true;
+    this.errorMessage = '';
 
-    get isSelectedTraitDifferent(): boolean {
-        return this.selectedTrait.trait !== this.currentTrait;
-    }
+    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/learn-skill`, {
+      villageIndex: this.userInformationService.currentVillageIndex,
+      category: cell.category,
+      tier: cell.tier,
+    }).subscribe({
+      next: (user: User) => {
+        this.userInformationService.setUserInformation(user);
+        this.skills = this.userInformationService.currentVillage.skills;
+        this.recalculatePoints();
+        this.loading = false;
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Failed to learn skill';
+        this.loading = false;
+      }
+    });
+  }
 
-    get canAffordLearn(): boolean {
-        if (this.isFirstTraitSelection) return true;
-        const village = this.userInformationService.currentVillage;
-        return village.resourcesAmounts.woodAmount >= this.learnCost.wood &&
-               village.resourcesAmounts.cropAmount >= this.learnCost.crop &&
-               village.resourcesAmounts.stonesAmount >= this.learnCost.stones;
-    }
+  resetSkills(): void {
+    if (this.loading) return;
+    this.loading = true;
+    this.errorMessage = '';
 
-    calculateLearnCost(): void {
-        if (this.isFirstTraitSelection) {
-            this.learnCost = { wood: 0, crop: 0, stones: 0 };
-        } else {
-            const storage = warehouseStorageByLevel[this.academyLevel] || 0;
-            this.learnCost = { wood: storage, crop: storage, stones: storage };
-        }
-    }
-
-    // Carousel controls
-    spinLeft(): void {
-        if (this.isSpinning) return;
-        this.isSpinning = true;
-        this.currentTraitIndex = (this.currentTraitIndex - 1 + this.traits.length) % this.traits.length;
-        setTimeout(() => this.isSpinning = false, 300);
-    }
-
-    spinRight(): void {
-        if (this.isSpinning) return;
-        this.isSpinning = true;
-        this.currentTraitIndex = (this.currentTraitIndex + 1) % this.traits.length;
-        setTimeout(() => this.isSpinning = false, 300);
-    }
-
-    getTraitPosition(index: number): { transform: string; opacity: number; zIndex: number } {
-        const diff = index - this.currentTraitIndex;
-        const normalizedDiff = ((diff + this.traits.length + 1) % this.traits.length) - 1;
-        
-        if (normalizedDiff === 0) {
-            // Center (selected)
-            return { transform: 'translateX(0) scale(1)', opacity: 1, zIndex: 3 };
-        } else if (normalizedDiff === 1 || normalizedDiff === -2) {
-            // Right
-            return { transform: 'translateX(120px) scale(0.7)', opacity: 0.6, zIndex: 1 };
-        } else {
-            // Left
-            return { transform: 'translateX(-120px) scale(0.7)', opacity: 0.6, zIndex: 1 };
-        }
-    }
-
-    isCurrentTrait(trait: VillageTrait): boolean {
-        return trait === this.currentTrait;
-    }
-
-    // Trait learning
-    openConfirmDialog(): void {
-        if (!this.canSelectTrait || !this.isSelectedTraitDifferent) return;
-        this.showConfirmDialog = true;
-        this.errorMessage = '';
-    }
-
-    closeConfirmDialog(): void {
-        this.showConfirmDialog = false;
-    }
-
-    confirmTraitLearn(): void {
-        if (this.loading) return;
-        
-        this.loading = true;
-        this.errorMessage = '';
-        
-        this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/learn-trait`, {
-            username: this.userInformationService.userInformation.username,
-            villageIndex: this.userInformationService.currentVillageIndex,
-            newTrait: this.selectedTrait.trait
-        }).subscribe({
-            next: (user: User) => {
-                this.userInformationService.setUserInformation(user);
-                this.currentTrait = this.selectedTrait.trait;
-                this.isFirstTraitSelection = false;
-                this.calculateLearnCost();
-                this.showConfirmDialog = false;
-                this.loading = false;
-            },
-            error: (err) => {
-                this.errorMessage = err.error?.message || 'Failed to learn trait';
-                this.loading = false;
-            }
-        });
-    }
-
-    getTraitBonusDescription(): string {
-        const bonus = this.currentBonusPercent;
-        const trait = this.selectedTrait.trait;
-        
-        switch (trait) {
-            case VillageTrait.WARLORD:
-                return `+${bonus} attack power in PvP and PvE battles`;
-            case VillageTrait.GUARDIAN:
-                return `+${bonus} defense power, -${bonus} troop losses when attacking`;
-            case VillageTrait.VANGUARD:
-                return `+${bonus} resource & energy gathering speed, +${bonus} troop movement speed`;
-            default:
-                return '';
-        }
-    }
-
-    getCurrentTraitName(): string {
-        if (!this.currentTrait) return 'None';
-        return traitDescriptions[this.currentTrait]?.name || 'Unknown';
-    }
-
-    getCurrentTraitColor(): string {
-        if (!this.currentTrait) return '#666';
-        return traitDescriptions[this.currentTrait]?.color || '#666';
-    }
+    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/reset-skills`, {
+      villageIndex: this.userInformationService.currentVillageIndex,
+    }).subscribe({
+      next: (user: User) => {
+        this.userInformationService.setUserInformation(user);
+        this.skills = this.userInformationService.currentVillage.skills;
+        this.recalculatePoints();
+        this.loading = false;
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Failed to reset skills';
+        this.loading = false;
+      }
+    });
+  }
 }

@@ -1,8 +1,9 @@
 import { ResourcesAmounts } from "src/app/main-panel/models/resourcesAmounts";
 import { TroopsAmounts } from "src/app/main-panel/models/troopsAmounts";
 
-export interface AttackReport 
-{
+export type BossReportType = 'pvp' | 'boss' | 'spy';
+
+export interface AttackReport {
     id: string;
     attackerName: string;
     attackerVillageName: string;
@@ -11,27 +12,29 @@ export interface AttackReport
     defenderVillageName: string;
 
     date: Date;
-    attackerWon: boolean; 
+    attackerWon: boolean;
     lootedResources: ResourcesAmounts;
 
     attackerTotalAttack: number;
-    defenderTotalDefence: number; // defenderTotalArmyDefence + defenderTotalSupportArmyDefence + wallDefence 
+    defenderTotalDefence: number; // defenderTotalArmyDefence + defenderTotalSupportArmyDefence + wallDefence
     defenderTotalArmyDefence: number;
     defenderTotalSupportArmyDefence: number;
     wallDefence: number;
 
     attackerTroops: TroopsAmounts;
     attackerLostTroops: TroopsAmounts;
-    defenderTotalTroops:TroopsAmounts;
+    defenderTotalTroops: TroopsAmounts;
     defenderTotalLostTroops: TroopsAmounts;
     supportTotalTroops: TroopsAmounts;
     supportTotalLostTroops: TroopsAmounts;
-    
+
     read: boolean;
 
-    // Trait info
-    attackerTrait?: string;
-    attackerAcademyLevel?: number;
-    defenderTrait?: string;
-    defenderAcademyLevel?: number;
-}
+    reportType: BossReportType;
+    bossName?: string;
+    bossTier?: string;
+    bossHpBefore?: number;
+    bossHpAfter?: number;
+    bossDamageDealt?: number;
+    bossReward?: ResourcesAmounts;
+} 

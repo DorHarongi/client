@@ -1,0 +1,30 @@
+<div class="movements-container">
+    <div class="movements-section" *ngIf="incoming.length > 0">
+        <h4>Incoming Attacks</h4>
+        <div class="movement-row" *ngFor="let m of incoming">
+            <div class="movement-main">
+                <span class="movement-label">{{getLabel(m)}}</span>
+                <span class="movement-from">from {{m.senderVillageName}}</span>
+                <span class="movement-to">→ {{m.targetVillageName}}</span>
+            </div>
+            <div class="movement-countdown">
+                Arrives in {{getCountdown(m)}}
+            </div>
+        </div>
+    </div>
+
+    <div class="movements-section" *ngIf="outgoing.length > 0">
+        <h4>Your Movements</h4>
+        <div class="movement-row" *ngFor="let m of outgoing">
+            <div class="movement-main">
+                <span class="movement-label">{{getLabel(m)}}</span>
+                <span class="movement-from">from {{m.senderVillageName}}</span>
+                <span class="movement-to">→ {{m.targetVillageName}}</span>
+            </div>
+            <div class="movement-countdown">
+                Arrives in {{getCountdown(m)}}
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { MainPanelModule } from '../main-panel/main-panel.module';
 import { AttackComponent } from './attack/attack.component';
-
-
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +12,8 @@ import { AttackComponent } from './attack/attack.component';
   ],
   imports: [
     MainPanelModule,
-    CommonModule
+    CommonModule,
+    SharedModule
   ],
   exports: [
     StatisticsComponent,

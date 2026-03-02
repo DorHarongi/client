@@ -29,6 +29,16 @@
             <h5> {{math.floor(resources.stonesAmount)}} / {{maxStonesStorage}}</h5>
         </span>
     </div>
+    <div class="theme-container">
+        <select [value]="currentTheme()" (change)="changeTheme($event)" title="Theme">
+            <option value="default">Default</option>
+            <option value="dark">Dark</option>
+            <option value="ocean">Ocean</option>
+            <option value="forest">Forest</option>
+            <option value="blood">Blood</option>
+            <option value="royal">Royal</option>
+        </select>
+    </div>
     <div class="logout-container">
         <img class="icons clickable" src="../../../assets/logout.png" (click)="logout()" title="Logout">
     </div>

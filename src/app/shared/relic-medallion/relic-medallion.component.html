@@ -1,0 +1,7 @@
+<div class="relic-medallion">
+  <div class="relic-slots">
+    <div *ngFor="let id of relicIds" class="relic-slot" [class.held]="isHeld(id)" [class.empty]="!isHeld(id)">
+      <span class="relic-dot"></span>
+    </div>
+  </div>
+</div>

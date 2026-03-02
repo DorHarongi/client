@@ -1,0 +1,49 @@
+.clan-chat {
+    margin-top: 16px;
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 6px;
+    color: #fff;
+    max-height: 260px;
+    display: flex;
+    flex-direction: column;
+}
+
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 8px;
+    max-height: 180px;
+}
+
+.message-row {
+    margin-bottom: 4px;
+}
+
+.sender {
+    font-weight: bold;
+}
+
+.sender.leader {
+    color: #00aaff;
+    font-weight: bold;
+}
+
+.content {
+    margin-left: 4px;
+}
+
+.input-row {
+    display: flex;
+    gap: 4px;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 4px 6px;
+}
+
+.input-row button {
+    padding: 4px 10px;
+}
+

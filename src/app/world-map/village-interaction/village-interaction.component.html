@@ -52,6 +52,12 @@
             <div class="stat-row">
                 <img src="assets/shield.png" class="stat-icon"> {{totalDefense}}
             </div>
+            <div class="stat-row" *ngIf="armySpeed > 0">
+                <img src="assets/crop.png" class="stat-icon"> {{armySpeed}} tiles/min
+            </div>
+            <div class="stat-row" *ngIf="armySpeed > 0">
+                ETA: {{getFormattedTravelTime()}}
+            </div>
         </div>
         <div class="panel-actions center">
             <button class="action-btn" (click)="attack()" [disabled]="!hasSelectedTroops()">Attack</button>

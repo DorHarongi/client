@@ -4,6 +4,7 @@
     <div class="toggle-container center">
         <button class="toggle-btn" [class.active]="viewMode === 'players'" (click)="switchToPlayers()">Players</button>
         <button class="toggle-btn" [class.active]="viewMode === 'clans'" (click)="switchToClans()">Clans</button>
+        <button class="toggle-btn" [class.active]="viewMode === 'leaderboards'" (click)="switchToLeaderboards()">Leaderboards</button>
     </div>
 
     <!-- Loading State -->
@@ -41,6 +42,7 @@
                 <th class="center">Members</th>
                 <th class="center">Total Population</th>
                 <th class="center">Bosses Killed</th>
+                <th class="center">Divine Relics</th>
                 <th class="center">Status</th>
             </tr>
             <tr *ngFor="let clan of clansInPage; let i = index" class="center bordered">
@@ -50,12 +52,59 @@
                 <td> {{clan.memberCount}} </td>
                 <td> {{clan.totalPopulation}} </td>
                 <td> {{clan.totalBossesKilled || 0}} </td>
+                <td><app-relic-medallion [heldRelicIds]="clan.heldRelicIds || []"></app-relic-medallion></td>
                 <td> {{clan.isOpen ? 'Open' : 'Closed'}} </td>
             </tr>
         </table>
+
+        <!-- Leaderboards -->
+        <div *ngIf="viewMode === 'leaderboards' && !loading" class="leaderboards-container">
+            <div class="leaderboard-tabs center">
+                <button class="small-btn" [class.active]="leaderboardCategory === 'bossDamage'" (click)="changeLeaderboardCategory('bossDamage')">
+                    Boss Damage
+                </button>
+                <button class="small-btn" [class.active]="leaderboardCategory === 'resourcesStolen'" (click)="changeLeaderboardCategory('resourcesStolen')">
+                    Resources Raided
+                </button>
+                <button class="small-btn" [class.active]="leaderboardCategory === 'successfulDefenses'" (click)="changeLeaderboardCategory('successfulDefenses')">
+                    Best Defenders
+                </button>
+            </div>
+
+            <div class="leaderboards-tables">
+                <table id="table" class="center bordered margin-top">
+                    <tr>
+                        <th class="center">Rank</th>
+                        <th class="center">Player</th>
+                        <th class="center">Clan</th>
+                        <th class="center">Value</th>
+                    </tr>
+                    <tr *ngFor="let p of playerLeaderboard; let i = index" class="center bordered">
+                        <td>{{i + 1}}</td>
+                        <td class="clickable" (click)="goToPlayer(p.username)">{{p.username}}</td>
+                        <td class="clickable" *ngIf="p.clanName" (click)="goToClan(p.clanName)">{{p.clanName}}</td>
+                        <td *ngIf="!p.clanName">No clan</td>
+                        <td>{{p.stat}}</td>
+                    </tr>
+                </table>
+
+                <table id="table" class="center bordered margin-top">
+                    <tr>
+                        <th class="center">Rank</th>
+                        <th class="center">Clan</th>
+                        <th class="center">Value</th>
+                    </tr>
+                    <tr *ngFor="let c of clanLeaderboard; let i = index" class="center bordered">
+                        <td>{{i + 1}}</td>
+                        <td class="clickable" (click)="goToClan(c._id)">{{c._id}}</td>
+                        <td>{{c.totalStat}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="pagination center margin-top">
+    <div class="pagination center margin-top" *ngIf="viewMode !== 'leaderboards'">
         <p (click)="moveToPage(1)">&laquo;</p>
         <p *ngFor="let p of displayedPages" (click)="moveToPage(p)" [class.active]="page == p">
             {{ p }}

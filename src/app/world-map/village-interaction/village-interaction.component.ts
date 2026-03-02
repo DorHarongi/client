@@ -8,10 +8,13 @@ import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { ResourcesAmounts } from 'src/app/main-panel/models/resourcesAmounts';
 import { User } from 'src/app/main-panel/models/User';
 import { environment } from 'src/environments/environment';
-import { spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat,
-         axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
-         magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
-         catapultsAttackingStat, catapultsDefenceStat } from 'utils';
+import {
+  spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat,
+  axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
+  magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
+  catapultsAttackingStat, catapultsDefenceStat,
+  calculateDistance, getArmySpeed, calculateTravelTimeMs
+} from 'utils';
 
 @Component({
   selector: 'app-village-interaction',
@@ -46,6 +49,10 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   // Troop stats
   totalAttack: number = 0;
   totalDefense: number = 0;
+
+  // Travel stats
+  armySpeed: number = 0;
+  travelTimeMs: number = 0;
 
   subscription?: Subscription;
 
@@ -133,6 +140,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     this.chosenTroops = troops;
     this.updateMaximumPossibleTroops();
     this.updateTotalStats();
+    this.updateTravelStats();
   }
 
   updateTotalStats(): void {
@@ -158,6 +166,55 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       this.chosenTroops.magicians * magicianDefenceStat +
       this.chosenTroops.horsemen * horsemenDefenceStat +
       this.chosenTroops.catapults * catapultsDefenceStat;
+  }
+
+  updateTravelStats(): void {
+    if (!this.chosenTroops) {
+      this.armySpeed = 0;
+      this.travelTimeMs = 0;
+      return;
+    }
+
+    const currentVillage = this.userInformationService.currentVillage;
+    if (!currentVillage?.location) {
+      this.armySpeed = 0;
+      this.travelTimeMs = 0;
+      return;
+    }
+
+    this.armySpeed = getArmySpeed(this.chosenTroops as any);
+    if (this.armySpeed <= 0) {
+      this.travelTimeMs = 0;
+      return;
+    }
+
+    const distance = calculateDistance(
+      currentVillage.location.x,
+      currentVillage.location.y,
+      this.village.x,
+      this.village.y
+    );
+
+    const quickStepBonus = 0; // Skill bonus integration will be handled with Skill Tree
+    this.travelTimeMs = calculateTravelTimeMs(distance, this.armySpeed, quickStepBonus);
+  }
+
+  getFormattedTravelTime(): string {
+    if (!this.travelTimeMs || this.travelTimeMs <= 0) {
+      return '—';
+    }
+    const totalSeconds = Math.floor(this.travelTimeMs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m ${seconds}s`;
+    }
+    return `${seconds}s`;
   }
 
   updateMaximumPossibleTroops(): void {

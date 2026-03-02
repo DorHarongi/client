@@ -7,7 +7,10 @@
 
     <div *ngIf="!loading && playerInfo" class="profile-content">
         <div class="profile-card center">
-            <h3>{{playerInfo.username}}</h3>
+            <h3>
+                {{playerInfo.username}}
+                <span *ngIf="playerInfo.selectedTitle" class="player-title">[{{playerInfo.selectedTitle}}]</span>
+            </h3>
             
             <div class="profile-info">
                 <p><strong>Joined:</strong> {{formatDate(playerInfo.joinDate)}}</p>
@@ -17,6 +20,17 @@
                 </p>
                 <p><strong>Total Population:</strong> {{getTotalPopulation()}}</p>
                 <p><strong>Villages:</strong> {{playerInfo.villages?.length || 0}}</p>
+                <p *ngIf="isOwnProfile">
+                    <strong>Title:</strong>
+                    <select [(ngModel)]="selectedTitleControl">
+                        <option value="">None</option>
+                        <option *ngFor="let t of availableTitles" [value]="t">{{t}}</option>
+                    </select>
+                    <button class="small-btn" (click)="saveTitle()" [disabled]="titleSaving">Save</button>
+                </p>
+                <p *ngIf="!isOwnProfile && playerInfo.selectedTitle">
+                    <strong>Title:</strong> {{playerInfo.selectedTitle}}
+                </p>
                 <p *ngIf="hasBeginnerShield()" class="beginner-shield">
                     <strong>Beginner Protection:</strong> {{formatShieldTime()}} remaining
                 </p>

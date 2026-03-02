@@ -39,6 +39,13 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   introError: string = '';
   maxIntroLength = MAX_INTRO_LENGTH;
 
+  // Titles
+  availableTitles: string[] = ['Boss Slayer', 'Raider', 'Iron Wall', 'Warlord'];
+  selectedTitleControl: string = '';
+  titleSaving: boolean = false;
+  titleError: string = '';
+  titleSuccess: string = '';
+
   // Village interaction
   selectedVillage: VillageOnMap | null = null;
 
@@ -81,6 +88,7 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
           this.loading = false;
           const currentClan = this.userInformationService.userInformation.clanName;
           this.isSameClan = !!(currentClan && user.clanName && currentClan === user.clanName);
+          this.selectedTitleControl = this.playerInfo.selectedTitle || '';
         },
         error: () => {
           this.loading = false;
@@ -242,6 +250,30 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.introSaving = false;
         this.introError = err.error?.message || 'Failed to update intro';
+      }
+    });
+  }
+
+  saveTitle(): void {
+    if (!this.isOwnProfile) {
+      return;
+    }
+    this.titleSaving = true;
+    this.titleError = '';
+
+    this.http.post(`${environment.apiUrl}/users/title`, {
+      username: this.currentUsername,
+      title: this.selectedTitleControl || null
+    }).subscribe({
+      next: () => {
+        this.titleSaving = false;
+        this.playerInfo.selectedTitle = this.selectedTitleControl || null;
+        this.titleSuccess = 'Title updated!';
+        setTimeout(() => this.titleSuccess = '', 1500);
+      },
+      error: (err) => {
+        this.titleSaving = false;
+        this.titleError = err.error?.message || 'Failed to update title';
       }
     });
   }
