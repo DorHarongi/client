@@ -77,6 +77,10 @@
         {{village.buildingsLevels.academyLevel}}
     </div>
 
+    <div id = "stableLevel" class = "buildingLevels" [ngClass] = "hoveredBuildingIndex == 12 ? 'selectedBuildingLevel' : 'unselectedBuildingLevel'">
+        {{village.buildingsLevels.stableLevel || 0}}
+    </div>
+
 
 
 
@@ -125,9 +129,13 @@
         <area shape="poly" coords="174,198,180,229,191,258,205,266,206,282,199,300,195,332,197,374,204,380,209,460,208,486,130,492,95,487,90,446,96,435,103,444,110,427,104,377,98,362,103,355,111,346,115,297,123,323,136,357,133,389,155,382,151,346,157,312,144,293,138,274,149,271,159,251"
         tabindex="0" (click)="handleClickedBuilding(10)" (mouseenter)="handleHoveredBuilding($event, 10)" (mouseleave)="handleMouseLeave()">
 
-        <!-- Academy (index 11) - NEW BUILDING -->
+        <!-- Academy (index 11) -->
         <area shape="poly" coords="267,554,265,476,258,466,261,455,244,443,261,420,293,368,315,363,316,330,308,330,326,303,353,301,368,326,364,349,373,349,383,371,408,400,422,412,410,423,414,527,350,569"
         tabindex="0" (click)="handleClickedBuilding(11)" (mouseenter)="handleHoveredBuilding($event, 11)" (mouseleave)="handleMouseLeave()">
+
+        <!-- Stable (index 12) - NOT YET IMPLEMENTED -->
+        <area shape="poly" coords="275,669,486,631,548,688,531,698,539,738,577,736,597,759,588,791,539,784,476,796,431,805,393,819,434,828,432,854,374,865,314,862,277,845,248,830,222,814,219,767,252,756,255,718,238,713"
+        tabindex="0" (click)="handleClickedBuilding(12)" (mouseenter)="handleHoveredBuilding($event, 12)" (mouseleave)="handleMouseLeave()">
     </map>
 
     <app-right-toolbar></app-right-toolbar>
