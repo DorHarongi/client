@@ -158,6 +158,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   }
 
   getTimeRemaining(): string {
+    if (this.isMythicBoss()) return '';
     if (!this.boss.expiresAt) return '';
     const now = new Date();
     const expires = new Date(this.boss.expiresAt);
