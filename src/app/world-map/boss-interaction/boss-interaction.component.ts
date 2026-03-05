@@ -1,25 +1,46 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
+import { UserInformationService } from 'src/app/user-information/user-information.service';
+import {
+  archerAttackingStat,
+  archerDefenceStat,
+  axeFighterAttackingStat,
+  axeFighterDefenceStat,
+  bossImages,
+  bossRewardAmounts,
+  calculateDistance,
+  calculateTravelTimeMs,
+  catapultsAttackingStat,
+  catapultsDefenceStat,
+  getArmySpeed,
+  getDistanceBonusText,
+  horsemenAttackingStat,
+  horsemenDefenceStat,
+  magicianAttackingStat,
+  magicianDefenceStat,
+  RELIC_NAMES,
+  spearFighterAttackingStat,
+  spearFighterDefenceStat,
+  swordFighterAttackingStat,
+  swordFighterDefenceStat,
+} from 'utils';
 import { BossOnMap } from '../models/mapModels';
 import { BossService, TroopsAmounts } from '../services/boss.service';
-import { UserInformationService } from 'src/app/user-information/user-information.service';
-import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
-import {
-  bossImages, bossRewardAmounts, getDistanceBonusText, RELIC_NAMES,
-  spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat,
-  axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
-  magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
-  catapultsAttackingStat, catapultsDefenceStat,
-  getArmySpeed, calculateDistance, calculateTravelTimeMs
-} from 'utils';
 
 @Component({
   selector: 'app-boss-interaction',
   templateUrl: './boss-interaction.component.html',
-  styleUrls: ['./boss-interaction.component.scss']
+  styleUrls: ['./boss-interaction.component.scss'],
 })
 export class BossInteractionComponent implements OnInit, OnDestroy {
-
   @Input() boss!: BossOnMap;
   @Input() currentUsername!: string;
   @Input() currentUserClan!: string;
@@ -29,21 +50,25 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   showAttackPanel: boolean = false;
   maxPossibleTroops!: TroopsAmounts;
   chosenTroops!: TroopsAmounts;
-  
+
   distance: number = 0;
   damageMultiplier: number = 1;
   distanceBonusText: string = '';
-  
+
   errorMessage: string = '';
   loading: boolean = false;
-  
+
   // Attack result
   attackSent: boolean = false;
   attackTravelTimeMs: number = 0;
 
   // Damage leaderboard
   showLeaderboard: boolean = false;
-  damageLeaderboard: { clanName: string; totalDamage: number; players: { username: string; damage: number }[] }[] = [];
+  damageLeaderboard: {
+    clanName: string;
+    totalDamage: number;
+    players: { username: string; damage: number }[];
+  }[] = [];
 
   // Troop stats
   totalAttack: number = 0;
@@ -58,7 +83,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   constructor(
     private bossService: BossService,
     private userInformationService: UserInformationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.initMaxTroops();
@@ -78,17 +103,21 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       archers: userTroops.archers,
       magicians: userTroops.magicians,
       horsemen: userTroops.horsemen,
-      catapults: userTroops.catapults
+      catapults: userTroops.catapults,
     };
   }
 
   calculateDistance(): void {
     const village = this.userInformationService.currentVillage;
     this.distance = this.bossService.calculateDistance(
-      village.location.x, village.location.y,
-      this.boss.x, this.boss.y
+      village.location.x,
+      village.location.y,
+      this.boss.x,
+      this.boss.y
     );
-    this.damageMultiplier = this.bossService.getDistanceMultiplier(this.distance);
+    this.damageMultiplier = this.bossService.getDistanceMultiplier(
+      this.distance
+    );
     this.distanceBonusText = getDistanceBonusText(this.distance);
   }
 
@@ -141,7 +170,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   }
 
   isClaimedByMyClan(): boolean {
-    return this.boss.claimedByClanName === this.currentUserClan && !!this.currentUserClan;
+    return (
+      this.boss.claimedByClanName === this.currentUserClan &&
+      !!this.currentUserClan
+    );
   }
 
   isClaimedByOtherClan(): boolean {
@@ -164,7 +196,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     const expires = new Date(this.boss.expiresAt);
     const diff = expires.getTime() - now.getTime();
     if (diff <= 0) return 'Expired';
-    
+
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours}h ${minutes}m remaining`;
@@ -188,7 +220,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       this.totalDefense = 0;
       return;
     }
-    this.totalAttack = 
+    this.totalAttack =
       (this.chosenTroops.spearFighters || 0) * spearFighterAttackingStat +
       (this.chosenTroops.swordFighters || 0) * swordFighterAttackingStat +
       (this.chosenTroops.axeFighters || 0) * axeFighterAttackingStat +
@@ -197,7 +229,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       (this.chosenTroops.horsemen || 0) * horsemenAttackingStat +
       (this.chosenTroops.catapults || 0) * catapultsAttackingStat;
 
-    this.totalDefense = 
+    this.totalDefense =
       (this.chosenTroops.spearFighters || 0) * spearFighterDefenceStat +
       (this.chosenTroops.swordFighters || 0) * swordFighterDefenceStat +
       (this.chosenTroops.axeFighters || 0) * axeFighterDefenceStat +
@@ -234,7 +266,11 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       this.boss.y
     );
     const quickStepBonus = 0; // Skill integration will apply later
-    this.travelTimeMs = calculateTravelTimeMs(distance, this.armySpeed, quickStepBonus);
+    this.travelTimeMs = calculateTravelTimeMs(
+      distance,
+      this.armySpeed,
+      quickStepBonus
+    );
   }
 
   getFormattedTravelTime(): string {
@@ -258,21 +294,27 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   updateMaximumPossibleTroops(): void {
     const current = this.userInformationService.currentVillage.troops;
     this.maxPossibleTroops = {
-      spearFighters: current.spearFighters - (this.chosenTroops?.spearFighters || 0),
-      swordFighters: current.swordFighters - (this.chosenTroops?.swordFighters || 0),
+      spearFighters:
+        current.spearFighters - (this.chosenTroops?.spearFighters || 0),
+      swordFighters:
+        current.swordFighters - (this.chosenTroops?.swordFighters || 0),
       axeFighters: current.axeFighters - (this.chosenTroops?.axeFighters || 0),
       archers: current.archers - (this.chosenTroops?.archers || 0),
       magicians: current.magicians - (this.chosenTroops?.magicians || 0),
       horsemen: current.horsemen - (this.chosenTroops?.horsemen || 0),
-      catapults: current.catapults - (this.chosenTroops?.catapults || 0)
+      catapults: current.catapults - (this.chosenTroops?.catapults || 0),
     };
   }
 
   hasSelectedTroops(): boolean {
     if (!this.chosenTroops) return false;
-    const total = (this.chosenTroops.spearFighters || 0) + (this.chosenTroops.swordFighters || 0) + 
-      (this.chosenTroops.axeFighters || 0) + (this.chosenTroops.archers || 0) + 
-      (this.chosenTroops.magicians || 0) + (this.chosenTroops.horsemen || 0) + 
+    const total =
+      (this.chosenTroops.spearFighters || 0) +
+      (this.chosenTroops.swordFighters || 0) +
+      (this.chosenTroops.axeFighters || 0) +
+      (this.chosenTroops.archers || 0) +
+      (this.chosenTroops.magicians || 0) +
+      (this.chosenTroops.horsemen || 0) +
       (this.chosenTroops.catapults || 0);
     return total > 0;
   }
@@ -291,37 +333,47 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.errorMessage = '';
 
-    this.subscription = this.bossService.attackBoss(this.currentUsername, {
-      bossId: this.boss.id,
-      villageName: this.userInformationService.currentVillage.villageName,
-      troops: this.chosenTroops
-    }).subscribe({
-      next: (result) => {
-        this.loading = false;
-        this.attackSent = true;
-        this.attackTravelTimeMs = result.travelTimeMs;
-        this.showAttackPanel = false;
+    this.subscription = this.bossService
+      .attackBoss(this.currentUsername, {
+        bossId: this.boss.id,
+        villageName: this.userInformationService.currentVillage.villageName,
+        troops: this.chosenTroops,
+      })
+      .subscribe({
+        next: (result) => {
+          this.loading = false;
+          this.attackSent = true;
+          this.attackTravelTimeMs = result.travelTimeMs;
+          this.showAttackPanel = false;
 
-        this.userInformationService.refreshUserInformation();
+          this.userInformationService.refreshUserInformation();
 
-        if (!this.boss.claimedByClanName && this.currentUserClan && this.boss.tier !== 'mythic') {
-          this.boss.claimedByClanName = this.currentUserClan;
-        }
-      },
-      error: (err) => {
-        this.loading = false;
-        const errorMsg = err.error?.message || 'Attack failed';
-        this.errorMessage = errorMsg;
+          if (
+            !this.boss.claimedByClanName &&
+            this.currentUserClan &&
+            this.boss.tier !== 'mythic'
+          ) {
+            this.boss.claimedByClanName = this.currentUserClan;
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          const errorMsg = err.error?.message || 'Attack failed';
+          this.errorMessage = errorMsg;
 
-        if (errorMsg.toLowerCase().includes('already defeated') || errorMsg.toLowerCase().includes('not found')) {
-          this.boss.currentHp = 0;
-        }
-      }
-    });
+          if (
+            errorMsg.toLowerCase().includes('already defeated') ||
+            errorMsg.toLowerCase().includes('not found')
+          ) {
+            this.boss.currentHp = 0;
+          }
+        },
+      });
   }
 
   getFormattedAttackEta(): string {
-    if (!this.attackTravelTimeMs || this.attackTravelTimeMs <= 0) return 'Arriving soon';
+    if (!this.attackTravelTimeMs || this.attackTravelTimeMs <= 0)
+      return 'Arriving soon';
     const totalSeconds = Math.floor(this.attackTravelTimeMs / 1000);
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);

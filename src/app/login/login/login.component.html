@@ -1,57 +1,101 @@
-<div class = "flexContainer loginContainer">
-    <h2 id = "loginText">Login</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && form['username'].errors }" />
-            <div *ngIf="submitted && form['username'].errors" class="invalid-feedback">
-                <div *ngIf="form['username'].errors['required']">Username is required</div>
-            </div>
+<div class="flexContainer loginContainer">
+  <h2 id="loginText">Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        formControlName="username"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && form['username'].errors }"
+      />
+      <div
+        *ngIf="submitted && form['username'].errors"
+        class="invalid-feedback"
+      >
+        <div *ngIf="form['username'].errors['required']">
+          Username is required
         </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && form['password'].errors }" />
-            <div *ngIf="submitted && form['password'].errors" class="invalid-feedback">
-                <div *ngIf="form['password'].errors['required']">Password is required</div>
-            </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        formControlName="password"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && form['password'].errors }"
+      />
+      <div
+        *ngIf="submitted && form['password'].errors"
+        class="invalid-feedback"
+      >
+        <div *ngIf="form['password'].errors['required']">
+          Password is required
         </div>
-        <div class="server-select-section">
-            <label class="server-label">Server</label>
-            <div *ngIf="serverLoading" class="server-loading">Loading servers...</div>
-            <div *ngIf="serverError" class="server-error">{{ serverError }}</div>
+      </div>
+    </div>
+    <div class="server-select-section">
+      <label class="server-label">Server</label>
+      <div *ngIf="serverLoading" class="server-loading">Loading servers...</div>
+      <div *ngIf="serverError" class="server-error">{{ serverError }}</div>
 
-            <div *ngIf="!serverLoading && !serverError" class="server-dropdown" (click)="dropdownOpen = !dropdownOpen" [class.open]="dropdownOpen">
-                <div class="server-selected">
-                    <span *ngIf="selectedServerId != null">{{ getSelectedServerName() }}</span>
-                    <span *ngIf="selectedServerId == null" class="placeholder">Choose a server</span>
-                    <span class="dropdown-arrow">&#9662;</span>
-                </div>
-                <div class="server-options" *ngIf="dropdownOpen">
-                    <div
-                        *ngFor="let server of servers"
-                        class="server-option"
-                        [class.active]="selectedServerId === server.serverId"
-                        (click)="selectServer(server); $event.stopPropagation()">
-                        <span class="option-name">{{ server.name }}</span>
-                        <span class="option-status" [class.ended]="server.status === 'ended'" [class.closed]="server.isClosed">
-                            {{ server.isClosed ? 'Closed' : server.status }}
-                        </span>
-                        <span class="option-players" *ngIf="server.playerCount != null">{{ server.playerCount }} players</span>
-                    </div>
-                </div>
-            </div>
+      <div
+        *ngIf="!serverLoading && !serverError"
+        class="server-dropdown"
+        (click)="dropdownOpen = !dropdownOpen"
+        [class.open]="dropdownOpen"
+      >
+        <div class="server-selected">
+          <span *ngIf="selectedServerId != null">{{
+            getSelectedServerName()
+          }}</span>
+          <span *ngIf="selectedServerId == null" class="placeholder"
+            >Choose a server</span
+          >
+          <span class="dropdown-arrow">&#9662;</span>
         </div>
+        <div class="server-options" *ngIf="dropdownOpen">
+          <div
+            *ngFor="let server of servers"
+            class="server-option"
+            [class.active]="selectedServerId === server.serverId"
+            (click)="selectServer(server); $event.stopPropagation()"
+          >
+            <span class="option-name">{{ server.name }}</span>
+            <span
+              class="option-status"
+              [class.ended]="server.status === 'ended'"
+              [class.closed]="server.isClosed"
+            >
+              {{ server.isClosed ? "Closed" : server.status }}
+            </span>
+            <span class="option-players" *ngIf="server.playerCount != null"
+              >{{ server.playerCount }} players</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
-        </div>
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
 
-        <div class="form-group buttons-container">
-            <button [disabled]="loading || selectedServerId == null" class="btn btn-primary">
-                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                Login
-            </button>
-            <button type="button" routerLink="/register" class="btn btn-primary">Register</button>
-        </div>
-    </form>
+    <div class="form-group buttons-container">
+      <button
+        [disabled]="loading || selectedServerId == null"
+        class="btn btn-primary"
+      >
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        Login
+      </button>
+      <button type="button" routerLink="/register" class="btn btn-primary">
+        Register
+      </button>
+    </div>
+  </form>
 </div>
