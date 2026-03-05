@@ -54,7 +54,7 @@
         </div>
         <div class="rewards-section" *ngIf="boss.tier === 'mythic'">
             <h5>Reward on defeat:</h5>
-            <p class="relic-reward">Divine Relic</p>
+            <p class="relic-reward">{{getMythicRewardName() || 'Divine Relic'}}</p>
         </div>
 
         <!-- Actions -->
