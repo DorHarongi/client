@@ -1,15 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Village } from '../models/Village';
-import { quartersPopulationByLevel} from 'utils';
-
 @Component({
   selector: 'app-hire-workers',
   templateUrl: './hire-workers.component.html',
-  styleUrls: ['./hire-workers.component.scss']
+  styleUrls: ['./hire-workers.component.scss'],
 })
 export class HireWorkersComponent implements OnInit {
-
   @Input()
   workers!: number;
 
@@ -18,60 +15,35 @@ export class HireWorkersComponent implements OnInit {
   maxPossibleWorkers: number = 0;
   workersBeforeAnyChanges: number = 0;
 
-
-  constructor(private userInformationService: UserInformationService) { 
-  }
+  constructor(private userInformationService: UserInformationService) {}
 
   ngOnInit(): void {
     this.workersBeforeAnyChanges = this.workers;
     this.maxPossibleWorkers = this.checkFreePopulation();
   }
 
-  checkFreePopulation(): number
-  {
+  checkFreePopulation(): number {
     let village: Village = this.userInformationService.currentVillage;
-    let maximumPopulation: number = quartersPopulationByLevel[village.buildingsLevels.quartersLevel];
-    let usedPopulation: number = this.calculateTotalTroops(village) + this.calculateTotalWorkers(village);
-    let freePopulation = maximumPopulation - usedPopulation;
-    freePopulation += this.workersBeforeAnyChanges;
-    return freePopulation;
+    return Village.getFreePopulation(village) + this.workersBeforeAnyChanges;
   }
 
-  calculateTotalWorkers(village: Village): number
-  {
-    return village.resourcesWorkers.stoneWorkers + village.resourcesWorkers.woodWorkers + village.resourcesWorkers.cropWorkers;
-  }
-
-  calculateTotalTroops(village: Village): number
-  {
-    return village.troops.archers + village.troops.axeFighters + village.troops.catapults + village.troops.horsemen + village.troops.magicians + village.troops.spearFighters 
-    + village.troops.swordFighters;
-  }
-
-  workersInputChange(value: number)
-  {
+  workersInputChange(value: number) {
     this.workers = this.fixInputValue(value, this.maxPossibleWorkers);
     this.maxPossibleWorkers = this.checkFreePopulation();
     this.onWorkersChange.emit(this.workers);
-
   }
 
-  fixInputValue(value: number, maxValue: number): number
-  {
+  fixInputValue(value: number, maxValue: number): number {
     let freePoulation: number = maxValue;
-    if(value > freePoulation || value < 0)
-    {
+    if (value > freePoulation || value < 0) {
       return 0;
     }
     return value;
   }
 
-  maxWorkers()
-  {
+  maxWorkers() {
     this.workers = this.maxPossibleWorkers;
     this.maxPossibleWorkers = 0;
     this.onWorkersChange.emit(this.workers);
   }
-  
-
 }

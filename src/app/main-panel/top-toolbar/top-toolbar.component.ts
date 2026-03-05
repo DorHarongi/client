@@ -1,29 +1,35 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { warehouseStorageByLevel, quartersPopulationByLevel, maxEnergy, energyProductionSpeedPerSecond, getMaxSpies, SPY_REGEN_TIME_MS } from 'utils';
-import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { forkJoin, interval, Subscription, timer } from 'rxjs';
 import { LoginService } from 'src/app/login/login.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { environment } from 'src/environments/environment';
+import {
+  energyProductionSpeedPerSecond,
+  getMaxSpies,
+  maxEnergy,
+  quartersPopulationByLevel,
+  SPY_REGEN_TIME_MS,
+  warehouseStorageByLevel,
+} from 'utils';
 import { ResourcesAmounts } from '../models/resourcesAmounts';
 import { Village } from '../models/Village';
-import { Router } from '@angular/router';
-import { Subscription, forkJoin, interval, timer } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-top-toolbar',
   templateUrl: './top-toolbar.component.html',
-  styleUrls: ['./top-toolbar.component.scss']
+  styleUrls: ['./top-toolbar.component.scss'],
 })
 export class TopToolbarComponent implements OnInit, OnDestroy {
-
   resources!: ResourcesAmounts;
 
   maxWoodStorage: number = 0;
   maxStonesStorage: number = 0;
   maxCropStorage: number = 0;
   maxEnergy: number = 0;
-  
+
   maximumPopulation: number = 0;
   usedPopulation: number = 0;
   math = Math;
@@ -42,28 +48,29 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   spyCountdownSubscription?: Subscription;
 
   constructor(
-    private userInformationService: UserInformationService, 
+    private userInformationService: UserInformationService,
     private router: Router,
     private loginService: LoginService,
     private http: HttpClient,
     private notificationService: NotificationService
-  ) { 
+  ) {
     this.updateVillage();
   }
-  
+
   ngOnDestroy(): void {
-    if(this.subscription)
-      this.subscription.unsubscribe();
+    if (this.subscription) this.subscription.unsubscribe();
     this.unreadSubscription?.unsubscribe();
     this.notificationSubscription?.unsubscribe();
     this.spyCountdownSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.subscription = this.userInformationService.villageChanged$.subscribe(()=>{
-      this.updateVillage();
-    });
-    
+    this.subscription = this.userInformationService.villageChanged$.subscribe(
+      () => {
+        this.updateVillage();
+      }
+    );
+
     // Load unread count initially and refresh every 30 seconds
     this.loadUnreadCount();
     this.unreadSubscription = timer(30000, 30000).subscribe(() => {
@@ -71,15 +78,18 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     });
 
     // Immediately decrement count when an item is marked as read
-    this.notificationSubscription = this.notificationService.onItemRead$.subscribe(() => {
-      if (this.unreadCount > 0) {
-        this.unreadCount--;
-      }
-    });
+    this.notificationSubscription =
+      this.notificationService.onItemRead$.subscribe(() => {
+        if (this.unreadCount > 0) {
+          this.unreadCount--;
+        }
+      });
 
     // Real-time spy regen countdown (same tick as energy timer - every second)
     this.updateSpyTooltip();
-    this.spyCountdownSubscription = interval(1000).subscribe(() => this.updateSpyTooltip());
+    this.spyCountdownSubscription = interval(1000).subscribe(() =>
+      this.updateSpyTooltip()
+    );
   }
 
   private updateSpyTooltip(): void {
@@ -89,7 +99,11 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
 
   getSpyRegenCountdownVisible(): string {
     if (this.stableLevel <= 0 || this.aliveSpies >= this.maxSpies) return '';
-    const timestamps = this.spyDeathTimestamps.map((t) => (typeof t === 'string' ? new Date(t).getTime() : (t as Date).getTime())).sort((a, b) => a - b);
+    const timestamps = this.spyDeathTimestamps
+      .map((t) =>
+        typeof t === 'string' ? new Date(t).getTime() : (t as Date).getTime()
+      )
+      .sort((a, b) => a - b);
     if (timestamps.length === 0) return '';
     const now = Date.now();
     const nextRegenAt = timestamps[0] + SPY_REGEN_TIME_MS;
@@ -98,58 +112,47 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     const h = Math.floor(msLeft / 3600000);
     const m = Math.floor((msLeft % 3600000) / 60000);
     const s = Math.floor((msLeft % 60000) / 1000);
-    return `Next in: ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    return `Next in: ${h.toString().padStart(2, '0')}:${m
+      .toString()
+      .padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   }
 
   loadUnreadCount(): void {
     const username = this.userInformationService.userInformation.username;
     forkJoin({
-      messages: this.http.get<number>(`${environment.apiUrl}/messages/${username}/unread`),
-      reports: this.http.get<number>(`${environment.apiUrl}/reports/unread/${username}`)
+      messages: this.http.get<number>(
+        `${environment.apiUrl}/messages/${username}/unread`
+      ),
+      reports: this.http.get<number>(
+        `${environment.apiUrl}/reports/unread/${username}`
+      ),
     }).subscribe({
       next: (result) => {
         this.unreadCount = result.messages + result.reports;
       },
       error: () => {
         this.unreadCount = 0;
-      }
+      },
     });
   }
 
-
-  calculateTotalWorkers(village: Village)
-  {
-    return village.resourcesWorkers.cropWorkers + village.resourcesWorkers.stoneWorkers + village.resourcesWorkers.woodWorkers;
-  }
-
-  calculateTotalTroops(village: Village)
-  {
-    return village.troops.archers + village.troops.axeFighters + village.troops.catapults + village.troops.horsemen + village.troops.magicians + village.troops.spearFighters 
-    + village.troops.swordFighters;
-  }
-
-  goToStatistics()
-  {
+  goToStatistics() {
     this.router.navigate(['Statistics']);
   }
 
-  goToMessages()
-  {
+  goToMessages() {
     this.router.navigate(['Inbox']);
   }
 
-  goToHome()
-  {
+  goToHome() {
     this.router.navigate(['home']);
   }
 
-  goToMap()
-  {
+  goToMap() {
     this.router.navigate(['Map']);
   }
 
-  logout()
-  {
+  logout() {
     this.loginService.logout();
   }
 
@@ -166,24 +169,33 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
         if (typeof document !== 'undefined' && document.body) {
           document.body.setAttribute('data-theme', theme);
         }
-        sessionStorage.setItem('user_info', JSON.stringify(this.userInformationService.userInformation));
-      }
+        sessionStorage.setItem(
+          'user_info',
+          JSON.stringify(this.userInformationService.userInformation)
+        );
+      },
     });
   }
 
-  updateVillage()
-  {
+  updateVillage() {
     let village: Village = this.userInformationService.currentVillage;
 
-    this.resources = village.resourcesAmounts
+    this.resources = village.resourcesAmounts;
 
-    this.maxWoodStorage = warehouseStorageByLevel[village.buildingsLevels.woodWarehouseLevel];
-    this.maxStonesStorage = warehouseStorageByLevel[village.buildingsLevels.stoneWarehouseLevel];
-    this.maxCropStorage = warehouseStorageByLevel[village.buildingsLevels.cropWarehouseLevel];
+    this.maxWoodStorage =
+      warehouseStorageByLevel[village.buildingsLevels.woodWarehouseLevel];
+    this.maxStonesStorage =
+      warehouseStorageByLevel[village.buildingsLevels.stoneWarehouseLevel];
+    this.maxCropStorage =
+      warehouseStorageByLevel[village.buildingsLevels.cropWarehouseLevel];
     this.maxEnergy = maxEnergy;
 
-    this.maximumPopulation = quartersPopulationByLevel[village.buildingsLevels.quartersLevel];
-    this.usedPopulation = this.calculateTotalTroops(village) + this.calculateTotalWorkers(village);
+    this.maximumPopulation =
+      quartersPopulationByLevel[village.buildingsLevels.quartersLevel];
+    this.usedPopulation =
+      Village.getTotalTroops(village) +
+      Village.getTotalWorkers(village) +
+      Village.getTotalSupportSent(village);
 
     this.stableLevel = village.buildingsLevels?.stableLevel ?? 0;
     this.maxSpies = this.stableLevel > 0 ? getMaxSpies(this.stableLevel) : 0;
@@ -198,34 +210,46 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     if (this.stableLevel <= 0 || this.aliveSpies >= this.maxSpies) {
       return 'Spy capacity';
     }
-    const timestamps = this.spyDeathTimestamps.map((t) => (typeof t === 'string' ? new Date(t).getTime() : (t as Date).getTime())).sort((a, b) => a - b);
+    const timestamps = this.spyDeathTimestamps
+      .map((t) =>
+        typeof t === 'string' ? new Date(t).getTime() : (t as Date).getTime()
+      )
+      .sort((a, b) => a - b);
     if (timestamps.length === 0) {
       return 'Spies on mission. They will return once the mission is complete.';
     }
     const now = Date.now();
     const nextRegenAt = timestamps[0] + SPY_REGEN_TIME_MS;
-    const deadCount = timestamps.filter((ts) => ts + SPY_REGEN_TIME_MS > now).length;
+    const deadCount = timestamps.filter(
+      (ts) => ts + SPY_REGEN_TIME_MS > now
+    ).length;
     if (deadCount === 0) return 'Spy capacity';
     const msLeft = Math.max(0, nextRegenAt - now);
     const h = Math.floor(msLeft / 3600000);
     const m = Math.floor((msLeft % 3600000) / 60000);
-    const timeStr = h > 0 ? `${h} hour${h > 1 ? 's' : ''} ${m} min` : `${m} min`;
+    const timeStr =
+      h > 0 ? `${h} hour${h > 1 ? 's' : ''} ${m} min` : `${m} min`;
     return `Your next spy will be available in ${timeStr}`;
   }
 
-  getEnergy(): number{
+  getEnergy(): number {
     return this.userInformationService.userInformation.energy;
   }
 
-  getTimeTillNextEnergy(): number{
-    let currentEnergy: number = this.getEnergy(); 
-    let energyLeftTillNext: number = 1 - currentEnergy % 1;
+  getTimeTillNextEnergy(): number {
+    let currentEnergy: number = this.getEnergy();
+    let energyLeftTillNext: number = 1 - (currentEnergy % 1);
     // Apply Vanguard energy production multiplier if available
-    const energyMultiplier = this.userInformationService.userInformation.energyProductionMultiplier || 1;
-    let secondsLeft: number = energyLeftTillNext / (energyProductionSpeedPerSecond * energyMultiplier);
+    const energyMultiplier =
+      this.userInformationService.userInformation.energyProductionMultiplier ||
+      1;
+    let secondsLeft: number =
+      energyLeftTillNext / (energyProductionSpeedPerSecond * energyMultiplier);
     let currentDate: Date = new Date();
     let dateWhenNextEnergy: Date = new Date();
-    dateWhenNextEnergy.setSeconds(dateWhenNextEnergy.getSeconds() + secondsLeft);
+    dateWhenNextEnergy.setSeconds(
+      dateWhenNextEnergy.getSeconds() + secondsLeft
+    );
     return +dateWhenNextEnergy - +currentDate;
   }
 
@@ -233,11 +257,14 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   getTimeUntilMaxEnergy(): string | null {
     const current = this.getEnergy();
     if (current >= this.maxEnergy) return null;
-    
+
     const remaining = this.maxEnergy - current;
     // Apply Vanguard energy production multiplier if available
-    const energyMultiplier = this.userInformationService.userInformation.energyProductionMultiplier || 1;
-    const effectiveEnergySpeed = energyProductionSpeedPerSecond * energyMultiplier;
+    const energyMultiplier =
+      this.userInformationService.userInformation.energyProductionMultiplier ||
+      1;
+    const effectiveEnergySpeed =
+      energyProductionSpeedPerSecond * energyMultiplier;
     const secondsUntilMax = remaining / effectiveEnergySpeed;
     return this.formatTimeUntilMax(secondsUntilMax);
   }
@@ -246,7 +273,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     const village = this.userInformationService.currentVillage;
     if (village.resourcesAmounts.woodAmount >= this.maxWoodStorage) return null;
     if (village.woodProductionPerSecond <= 0) return null;
-    
+
     const remaining = this.maxWoodStorage - village.resourcesAmounts.woodAmount;
     const secondsUntilMax = remaining / village.woodProductionPerSecond;
     return this.formatTimeUntilMax(secondsUntilMax);
@@ -254,10 +281,12 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
 
   getTimeUntilMaxStone(): string | null {
     const village = this.userInformationService.currentVillage;
-    if (village.resourcesAmounts.stonesAmount >= this.maxStonesStorage) return null;
+    if (village.resourcesAmounts.stonesAmount >= this.maxStonesStorage)
+      return null;
     if (village.stoneProductionPerSecond <= 0) return null;
-    
-    const remaining = this.maxStonesStorage - village.resourcesAmounts.stonesAmount;
+
+    const remaining =
+      this.maxStonesStorage - village.resourcesAmounts.stonesAmount;
     const secondsUntilMax = remaining / village.stoneProductionPerSecond;
     return this.formatTimeUntilMax(secondsUntilMax);
   }
@@ -266,7 +295,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     const village = this.userInformationService.currentVillage;
     if (village.resourcesAmounts.cropAmount >= this.maxCropStorage) return null;
     if (village.cropProductionPerSecond <= 0) return null;
-    
+
     const remaining = this.maxCropStorage - village.resourcesAmounts.cropAmount;
     const secondsUntilMax = remaining / village.cropProductionPerSecond;
     return this.formatTimeUntilMax(secondsUntilMax);
@@ -275,12 +304,11 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   formatTimeUntilMax(totalSeconds: number): string {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
-    
+
     if (hours > 0) {
       return `Max in ${hours}h ${minutes}m`;
     } else {
       return `Max in ${minutes}m`;
     }
   }
-
 }
