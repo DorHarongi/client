@@ -96,7 +96,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
             return 'assets/spy.png';
         }
         if (movement.type === 'support') {
-            return 'assets/horse.png';
+            return 'assets/shield.png';
         }
         if (movement.type === 'resources') {
             return 'assets/wood.jpg';
