@@ -9,7 +9,7 @@ import { AttackReport } from '../models/attackReport';
 import { ClanService } from 'src/app/clan/services/clan.service';
 import { BossService } from 'src/app/world-map/services/boss.service';
 import { environment } from 'src/environments/environment';
-import { getBossImageByName } from 'utils';
+import { getBossImageByName, warehouseStorageByLevel } from 'utils';
 
 const WINDOW_SIZE = 6;
 
@@ -352,29 +352,21 @@ export class InboxComponent implements OnInit, OnDestroy {
   claimBossReward(): void {
     if (this.claimingReward) return;
     
-    // Find the index of the pending reward based on unique rewardId
-    const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
     const rewardId = this.selectedMessage?.metadata?.bossReward?.rewardId;
-    
-    // Find the reward index by unique rewardId
-    const rewardIndex = pendingRewards.findIndex(r => r.rewardId === rewardId);
-    
-    if (rewardIndex === -1) {
+    if (!rewardId || !this.canClaimBossReward()) {
       this.clanRequestError = 'Reward already claimed or not found';
       return;
     }
 
     this.claimingReward = true;
-    this.bossService.claimBossReward(this.username, rewardIndex).subscribe({
+    this.bossService.claimBossReward(this.username, rewardId).subscribe({
       next: (result) => {
         this.claimingReward = false;
         if (result.success) {
           this.rewardClaimSuccess = true;
-          // Mark message as non-actionable after claiming
           if (this.selectedMessage) {
             this.selectedMessage.actionable = false;
           }
-          // Refresh user info to update resources
           this.userInformationService.refreshUserInformation();
         }
       },
@@ -385,50 +377,60 @@ export class InboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  areAllWarehousesFull(): boolean {
+    const village = this.userInformationService.currentVillage;
+    if (!village) return false;
+    const maxWood = warehouseStorageByLevel[village.buildingsLevels.woodWarehouseLevel];
+    const maxStone = warehouseStorageByLevel[village.buildingsLevels.stoneWarehouseLevel];
+    const maxCrop = warehouseStorageByLevel[village.buildingsLevels.cropWarehouseLevel];
+    return village.resourcesAmounts.woodAmount >= maxWood
+        && village.resourcesAmounts.stonesAmount >= maxStone
+        && village.resourcesAmounts.cropAmount >= maxCrop;
+  }
+
   canClaimBossReward(): boolean {
     if (!this.selectedMessage || !this.isBossDefeatedMessage(this.selectedMessage.type)) {
       return false;
     }
+    if (this.areAllWarehousesFull()) return false;
     
     const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
     const rewardId = this.selectedMessage.metadata?.bossReward?.rewardId;
-    
-    // Match by unique rewardId
     return pendingRewards.some(r => r.rewardId === rewardId);
   }
 
-  // Check if a specific message has claimable boss reward (for table display)
   canClaimBossRewardForMessage(message: Message): boolean {
     if (!message || !this.isBossDefeatedMessage(message.type)) {
       return false;
     }
+    if (this.areAllWarehousesFull()) return false;
     
     const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
     const rewardId = message.metadata?.bossReward?.rewardId;
-    
-    // Match by unique rewardId
     return pendingRewards.some(r => r.rewardId === rewardId);
   }
 
-  // Claim boss reward from the table row
   claimBossRewardFromTable(message: Message): void {
-    const pendingRewards = this.userInformationService.userInformation.pendingBossRewards || [];
-    const rewardId = message.metadata?.bossReward?.rewardId;
-    const rewardIndex = pendingRewards.findIndex(r => r.rewardId === rewardId);
+    if (this.claimingReward) return;
     
-    if (rewardIndex === -1) return;
+    const rewardId = message.metadata?.bossReward?.rewardId;
+    if (!rewardId) return;
 
-    this.bossService.claimBossReward(this.username, rewardIndex).subscribe({
+    this.claimingReward = true;
+    this.bossService.claimBossReward(this.username, rewardId).subscribe({
       next: (result) => {
+        this.claimingReward = false;
         if (result.success) {
           message.actionable = false;
-          // Mark message as read when claiming without opening modal
           if (!message.read) {
             this.markMessageAsRead(message);
           }
           this.userInformationService.refreshUserInformation();
           this.loadUnreadCounts();
         }
+      },
+      error: () => {
+        this.claimingReward = false;
       }
     });
   }

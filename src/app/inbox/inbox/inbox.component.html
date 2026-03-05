@@ -157,7 +157,8 @@
                         [disabled]="claimingReward">
                     {{claimingReward ? 'Claiming...' : 'Claim Rewards'}}
                 </button>
-                <span *ngIf="!canClaimBossReward()">Already claimed</span>
+                <span *ngIf="areAllWarehousesFull()">Warehouses are full</span>
+                <span *ngIf="!canClaimBossReward() && !areAllWarehousesFull()">Already claimed</span>
             </div>
 
             <div class="reward-claimed center" *ngIf="rewardClaimSuccess">

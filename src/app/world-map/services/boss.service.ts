@@ -144,9 +144,9 @@ export class BossService {
     }
 
     // Claim a boss reward
-    claimBossReward(username: string, rewardIndex: number): Observable<{ success: boolean; rewards?: { wood: number; stone: number; crop: number } }> {
+    claimBossReward(username: string, rewardId: string): Observable<{ success: boolean; rewards?: { wood: number; stone: number; crop: number } }> {
         return this.http.post<{ success: boolean; rewards?: { wood: number; stone: number; crop: number } }>(
-            `${environment.apiUrl}/bosses/rewards/claim/${username}/${rewardIndex}`,
+            `${environment.apiUrl}/bosses/rewards/claim/${username}/${rewardId}`,
             {}
         );
     }
