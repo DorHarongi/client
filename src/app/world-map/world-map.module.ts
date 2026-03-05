@@ -1,26 +1,23 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WorldMapComponent } from './world-map/world-map.component';
-import { VillageInteractionComponent } from './village-interaction/village-interaction.component';
-import { BossInteractionComponent } from './boss-interaction/boss-interaction.component';
-import { MainPanelModule } from '../main-panel/main-panel.module';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MainPanelModule } from '../main-panel/main-panel.module';
+import { SharedModule } from '../shared/shared.module';
+import { BossInteractionComponent } from './boss-interaction/boss-interaction.component';
+import { VillageInteractionComponent } from './village-interaction/village-interaction.component';
+import { WorldMapComponent } from './world-map/world-map.component';
 
 @NgModule({
   declarations: [
     WorldMapComponent,
     VillageInteractionComponent,
-    BossInteractionComponent
+    BossInteractionComponent,
   ],
-  imports: [
-    CommonModule,
-    MainPanelModule,
-    FormsModule
-  ],
+  imports: [CommonModule, MainPanelModule, FormsModule, SharedModule],
   exports: [
     WorldMapComponent,
     VillageInteractionComponent,
-    BossInteractionComponent
-  ]
+    BossInteractionComponent,
+  ],
 })
-export class WorldMapModule { }
+export class WorldMapModule {}

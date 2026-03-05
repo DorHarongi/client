@@ -1,0 +1,161 @@
+$enemy-color: #ad001a;
+$clan-color: #1e90ff;
+$your-color: #90EE90;
+
+:host {
+  --cell-size: 60px;
+  --cell-cursor: pointer;
+  --village-tier1-size: 45px;
+  --village-tier2-size: 50px;
+  --village-tier3-size: 60px;
+  --boss-size: 38px;
+  --boss-mythic-size: 60px;
+  --coords-font-size: 8px;
+  --coords-top: 2px;
+  --coords-left: 2px;
+}
+
+.map-grid {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black;
+  background-color: #8B4513;
+  flex-shrink: 0;
+}
+
+.grid-row {
+  display: flex;
+}
+
+.grid-cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 1px solid #654321;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: var(--cell-cursor);
+  background-color: #DEB887;
+
+  &:hover {
+    background-color: #D2B48C;
+  }
+
+  // --- Village ownership ---
+  &.own-village {
+    background-color: $your-color;
+    &:hover { background-color: darken($your-color, 5%); }
+  }
+
+  &.clan-village {
+    background-color: $clan-color;
+    &:hover { background-color: darken($clan-color, 5%); }
+  }
+
+  &.other-village {
+    background-color: $enemy-color;
+    &:hover { background-color: darken($enemy-color, 5%); }
+  }
+
+  // --- Center-building cell states ---
+  &.current-village {
+    background-color: $your-color;
+    box-shadow: 0 0 10px rgba(144, 238, 144, 0.7);
+    border: 2px solid darken($your-color, 20%);
+  }
+
+  &.in-available-area {
+    box-shadow: inset 0 0 8px rgba(0, 200, 0, 0.4);
+  }
+
+  &.available {
+    cursor: pointer;
+    background-color: #C8E6C9;
+    &:hover {
+      background-color: #A5D6A7;
+      box-shadow: inset 0 0 10px rgba(0, 128, 0, 0.5);
+    }
+  }
+
+  &.selected {
+    background-color: #FFD700 !important;
+    border: 3px solid #FF8C00;
+    box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
+  }
+
+  // --- Boss tier cell colors ---
+  &.boss-common {
+    background-color: #A0A0A0;
+    &:hover { background-color: #909090; }
+  }
+
+  &.boss-rare {
+    background-color: #5DADE2;
+    &:hover { background-color: #4D9ED2; }
+  }
+
+  &.boss-epic {
+    background-color: #AF7AC5;
+    &:hover { background-color: #9F6AB5; }
+  }
+
+  &.boss-legendary {
+    background-color: #F4D03F;
+    &:hover { background-color: #E4C02F; }
+  }
+
+  &.boss-mythic {
+    background-color: #FF8C00;
+    &:hover { background-color: #E07B00; }
+  }
+
+  &.boss-claimed-by-me {
+    border: 5px outset $clan-color;
+    box-sizing: border-box;
+  }
+
+  &.boss-claimed {
+    border: 5px outset $enemy-color;
+    box-sizing: border-box;
+  }
+
+  // --- Inner elements ---
+  .coords {
+    font-size: var(--coords-font-size);
+    color: #666;
+    position: absolute;
+    top: var(--coords-top);
+    left: var(--coords-left);
+  }
+
+  .village-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .village-icon {
+    &.village-icon-tier1 { width: var(--village-tier1-size); height: var(--village-tier1-size); }
+    &.village-icon-tier2 { width: var(--village-tier2-size); height: var(--village-tier2-size); }
+    &.village-icon-tier3 { width: var(--village-tier3-size); height: var(--village-tier3-size); }
+  }
+
+  .boss-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .boss-icon {
+    width: var(--boss-size);
+    height: var(--boss-size);
+    object-fit: contain;
+
+    &.boss-icon-mythic {
+      width: var(--boss-mythic-size);
+      height: var(--boss-mythic-size);
+    }
+  }
+}

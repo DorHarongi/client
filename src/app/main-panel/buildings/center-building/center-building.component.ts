@@ -1,35 +1,30 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { centerBuildingUpgradeMaterialCostByLevels, BossTier } from 'utils';
+import { GridCell } from 'src/app/shared/map-grid/map-grid.component';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
-import { Building } from '../../classes/Building';
+import {
+  BossOnMap,
+  MapWindowResponse,
+  VillageOnMap,
+} from 'src/app/world-map/models/mapModels';
 import { WorldMapService } from 'src/app/world-map/services/world-map.service';
-import { BossService } from 'src/app/world-map/services/boss.service';
-import { VillageOnMap, BossOnMap, MapWindowResponse } from 'src/app/world-map/models/mapModels';
-import { User } from '../../models/User';
-import { Village } from '../../models/Village';
 import { environment } from 'src/environments/environment';
+import { centerBuildingUpgradeMaterialCostByLevels } from 'utils';
+import { Building } from '../../classes/Building';
+import { User } from '../../models/User';
 
 const NEW_VILLAGE_REQUIRED_LEVEL = 10;
 const MAX_VILLAGE_NAME_LENGTH = 20;
 const WINDOW_SIZE = 10;
 
-interface GridCell {
-  x: number;
-  y: number;
-  village: VillageOnMap | null;
-  boss: BossOnMap | null;
-}
-
 @Component({
   selector: 'app-center-building',
   templateUrl: './center-building.component.html',
-  styleUrls: ['./center-building.component.scss']
+  styleUrls: ['./center-building.component.scss'],
 })
 export class CenterBuildingComponent implements OnInit, OnDestroy {
-
   buildingInformation: Building;
   canCreateNewVillage: boolean = false;
   hasAlreadyCreatedFromThis: boolean = false;
@@ -40,7 +35,7 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
   subscription?: Subscription;
   errorMessage: string = '';
   maxVillageNameLength = MAX_VILLAGE_NAME_LENGTH;
-  
+
   // For map display
   villages: VillageOnMap[] = [];
   bosses: BossOnMap[] = [];
@@ -53,40 +48,50 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
     private userInformationService: UserInformationService,
     private worldMapService: WorldMapService,
     private http: HttpClient,
-    private router: Router,
-    public bossService: BossService
-  ) { 
-    this.buildingInformation = new Building("centerBuilding", "Center Building", this.userInformationService.currentVillage.buildingsLevels.centerBuildingLevel, 
-    "The main building of your village. Level it up to a certain level will make you be able to level up all other buildings to this level. Once your main building reaches level 10, You can create another village.",
-    centerBuildingUpgradeMaterialCostByLevels[this.userInformationService.currentVillage.buildingsLevels.centerBuildingLevel + 1]);
-    
+    private router: Router
+  ) {
+    this.buildingInformation = new Building(
+      'centerBuilding',
+      'Center Building',
+      this.userInformationService.currentVillage.buildingsLevels.centerBuildingLevel,
+      'The main building of your village. Level it up to a certain level will make you be able to level up all other buildings to this level. Once your main building reaches level 10, You can create another village.',
+      centerBuildingUpgradeMaterialCostByLevels[
+        this.userInformationService.currentVillage.buildingsLevels
+          .centerBuildingLevel + 1
+      ]
+    );
+
     this.currentUsername = this.userInformationService.userInformation.username;
-    this.currentUserClan = this.userInformationService.userInformation.clanName || '';
-    
+    this.currentUserClan =
+      this.userInformationService.userInformation.clanName || '';
+
     this.checkNewVillageEligibility();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 
   checkNewVillageEligibility(): void {
-    const currentLevel = this.userInformationService.currentVillage.buildingsLevels.centerBuildingLevel;
+    const currentLevel =
+      this.userInformationService.currentVillage.buildingsLevels
+        .centerBuildingLevel;
     const currentVillageIndex = this.userInformationService.currentVillageIndex;
-    const totalVillages = this.userInformationService.userInformation.villages.length;
-    
+    const totalVillages =
+      this.userInformationService.userInformation.villages.length;
+
     // Check how many villages were created before this one that are level 10+
     // Each level 10 village can create one new village
     // Village at index N can create village at index N+1 (if level 10)
     const isLevel10 = currentLevel >= NEW_VILLAGE_REQUIRED_LEVEL;
-    
+
     // This village has already created a new one if there's a village after it in the list
     // and this village is level 10
-    this.hasAlreadyCreatedFromThis = isLevel10 && currentVillageIndex < totalVillages - 1;
-    
+    this.hasAlreadyCreatedFromThis =
+      isLevel10 && currentVillageIndex < totalVillages - 1;
+
     this.canCreateNewVillage = isLevel10 && !this.hasAlreadyCreatedFromThis;
   }
 
@@ -108,8 +113,9 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
     // Center the 10x10 window on current village
     this.windowStartX = Math.max(0, currentLocation.x - 5);
     this.windowStartY = Math.max(0, currentLocation.y - 5);
-    
-    this.worldMapService.getMapWindow(this.windowStartX, this.windowStartY)
+
+    this.worldMapService
+      .getMapWindow(this.windowStartX, this.windowStartY)
       .subscribe((response: MapWindowResponse) => {
         this.villages = response.villages;
         this.bosses = response.bosses || [];
@@ -124,8 +130,10 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
       for (let x = 0; x < WINDOW_SIZE; x++) {
         const worldX = this.windowStartX + x;
         const worldY = this.windowStartY + y;
-        const village = this.villages.find(v => v.x === worldX && v.y === worldY) || null;
-        const boss = this.bosses.find(b => b.x === worldX && b.y === worldY) || null;
+        const village =
+          this.villages.find((v) => v.x === worldX && v.y === worldY) || null;
+        const boss =
+          this.bosses.find((b) => b.x === worldX && b.y === worldY) || null;
         row.push({ x: worldX, y: worldY, village, boss });
       }
       this.gridCells.push(row);
@@ -144,28 +152,6 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
     return loc.x === cell.x && loc.y === cell.y;
   }
 
-  isOwnVillage(village: VillageOnMap): boolean {
-    return village.ownerUsername === this.currentUsername;
-  }
-
-  isOwnVillageCell(cell: GridCell): boolean {
-    if (!cell.village) return false;
-    return cell.village.ownerUsername === this.currentUsername;
-  }
-
-  isClanMemberVillage(village: VillageOnMap): boolean {
-    if (!this.currentUserClan || this.isOwnVillage(village)) {
-      return false;
-    }
-    return village.clanName === this.currentUserClan;
-  }
-
-  isClanMemberVillageCell(cell: GridCell): boolean {
-    if (!cell.village) return false;
-    return this.isClanMemberVillage(cell.village);
-  }
-
-  // Check if cell is within the 3x3 area around current village (available for new village)
   isInAvailableArea(cell: GridCell): boolean {
     const loc = this.userInformationService.currentVillage.location;
     const dx = Math.abs(cell.x - loc.x);
@@ -174,25 +160,27 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
   }
 
   isCellAvailable(cell: GridCell): boolean {
-    // Available if: in 3x3 area, no village, no boss, not current village location
-    return this.isInAvailableArea(cell) && !cell.village && !cell.boss && !this.isCurrentVillage(cell);
+    return (
+      this.isInAvailableArea(cell) &&
+      !cell.village &&
+      !cell.boss &&
+      !this.isCurrentVillage(cell)
+    );
   }
 
   isCellSelected(cell: GridCell): boolean {
     return this.selectedCell?.x === cell.x && this.selectedCell?.y === cell.y;
   }
 
-  getBossCellClass(boss: BossOnMap): string {
-    return `has-boss boss-${boss.tier}`;
-  }
-
-  /** Quarters 1-3: tier1, 4-7: tier2, 8-10: tier3 */
-  getVillageTierIcon(village: VillageOnMap): string {
-    const q = village.quartersLevel ?? 1;
-    if (q <= 3) return 'assets/tier1-village.png';
-    if (q <= 7) return 'assets/tier2-village.png';
-    return 'assets/tier3-village.png';
-  }
+  extraCellClassFn = (cell: GridCell): Record<string, boolean> => {
+    return {
+      'current-village': this.isCurrentVillage(cell),
+      available: this.isCellAvailable(cell),
+      'in-available-area':
+        this.isInAvailableArea(cell) && !this.isCurrentVillage(cell),
+      selected: this.isCellSelected(cell),
+    };
+  };
 
   createNewVillage(): void {
     if (!this.selectedCell || !this.newVillageName.trim()) {
@@ -205,23 +193,25 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/create-village`, {
-      username: this.userInformationService.userInformation.username,
-      sourceVillageIndex: this.userInformationService.currentVillageIndex,
-      newVillageName: this.newVillageName.trim(),
-      x: this.selectedCell.x,
-      y: this.selectedCell.y
-    }).subscribe({
-      next: (user: User) => {
-        this.userInformationService.setUserInformation(user);
-        // Switch to the new village
-        const newVillageIndex = user.villages.length - 1;
-        this.userInformationService.switchVillage(newVillageIndex);
-        this.router.navigateByUrl('home');
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to create village';
-      }
-    });
+    this.subscription = this.http
+      .post<User>(`${environment.apiUrl}/interactions/create-village`, {
+        username: this.userInformationService.userInformation.username,
+        sourceVillageIndex: this.userInformationService.currentVillageIndex,
+        newVillageName: this.newVillageName.trim(),
+        x: this.selectedCell.x,
+        y: this.selectedCell.y,
+      })
+      .subscribe({
+        next: (user: User) => {
+          this.userInformationService.setUserInformation(user);
+          // Switch to the new village
+          const newVillageIndex = user.villages.length - 1;
+          this.userInformationService.switchVillage(newVillageIndex);
+          this.router.navigateByUrl('home');
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to create village';
+        },
+      });
   }
 }

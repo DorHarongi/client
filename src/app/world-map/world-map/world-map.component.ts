@@ -1,29 +1,25 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { GridCell } from 'src/app/shared/map-grid/map-grid.component';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import {
+  BossOnMap,
+  MapWindowResponse,
+  MinimapResponse,
+  VillageOnMap,
+} from '../models/mapModels';
 import { WorldMapService } from '../services/world-map.service';
-import { BossService } from '../services/boss.service';
-import { VillageOnMap, BossOnMap, MapWindowResponse, MinimapResponse } from '../models/mapModels';
-import { BossTier } from 'utils';
 
 const WINDOW_SIZE = 10;
 const MINIMAP_SCALE = 2; // pixels per tile
 
-interface GridCell {
-  x: number;
-  y: number;
-  village: VillageOnMap | null;
-  boss: BossOnMap | null;
-}
-
 @Component({
   selector: 'app-world-map',
   templateUrl: './world-map.component.html',
-  styleUrls: ['./world-map.component.scss']
+  styleUrls: ['./world-map.component.scss'],
 })
 export class WorldMapComponent implements OnInit, OnDestroy {
-
   windowStartX: number = 0;
   windowStartY: number = 0;
   worldSize: number = 100;
@@ -33,13 +29,13 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   allBosses: BossOnMap[] = [];
   selectedVillage: VillageOnMap | null = null;
   selectedBoss: BossOnMap | null = null;
-  
+
   gridCells: GridCell[][] = [];
-  
+
   subscription1?: Subscription;
   subscription2?: Subscription;
   queryParamSub?: Subscription;
-  
+
   currentUsername: string;
   currentUserClan: string;
 
@@ -52,12 +48,12 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private worldMapService: WorldMapService,
-    private userInformationService: UserInformationService,
-    public bossService: BossService
+    private userInformationService: UserInformationService
   ) {
     this.currentUsername = this.userInformationService.userInformation.username;
-    this.currentUserClan = this.userInformationService.userInformation.clanName || '';
-    
+    this.currentUserClan =
+      this.userInformationService.userInformation.clanName || '';
+
     // Bind methods for global event listeners
     this.boundMouseMove = this.onMinimapDrag.bind(this);
     this.boundMouseUp = this.onMinimapDragEnd.bind(this);
@@ -65,7 +61,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Check for query params to center on specific coordinates
-    this.queryParamSub = this.route.queryParams.subscribe(params => {
+    this.queryParamSub = this.route.queryParams.subscribe((params) => {
       if (params['x'] !== undefined && params['y'] !== undefined) {
         const x = parseInt(params['x'], 10);
         const y = parseInt(params['y'], 10);
@@ -95,7 +91,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   }
 
   loadMapWindow(): void {
-    this.subscription1 = this.worldMapService.getMapWindow(this.windowStartX, this.windowStartY)
+    this.subscription1 = this.worldMapService
+      .getMapWindow(this.windowStartX, this.windowStartY)
       .subscribe((response: MapWindowResponse) => {
         this.villages = response.villages;
         this.bosses = response.bosses || [];
@@ -105,7 +102,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   }
 
   loadMinimap(): void {
-    this.subscription2 = this.worldMapService.getMinimap()
+    this.subscription2 = this.worldMapService
+      .getMinimap()
       .subscribe((response: MinimapResponse) => {
         this.allVillages = response.villages;
         this.allBosses = response.bosses || [];
@@ -120,8 +118,10 @@ export class WorldMapComponent implements OnInit, OnDestroy {
       for (let x = 0; x < WINDOW_SIZE; x++) {
         const worldX = this.windowStartX + x;
         const worldY = this.windowStartY + y;
-        const village = this.villages.find(v => v.x === worldX && v.y === worldY) || null;
-        const boss = this.bosses.find(b => b.x === worldX && b.y === worldY) || null;
+        const village =
+          this.villages.find((v) => v.x === worldX && v.y === worldY) || null;
+        const boss =
+          this.bosses.find((b) => b.x === worldX && b.y === worldY) || null;
         row.push({ x: worldX, y: worldY, village, boss });
       }
       this.gridCells.push(row);
@@ -169,14 +169,20 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   onMinimapClick(event: MouseEvent): void {
     // Only handle click if not dragging (drag end will handle it)
     if (this.isDragging) return;
-    
+
     // Use currentTarget (the minimap div) instead of target (could be a child element)
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / MINIMAP_SCALE);
     const y = Math.floor((event.clientY - rect.top) / MINIMAP_SCALE);
-    
-    this.windowStartX = Math.max(0, Math.min(x - 5, this.worldSize - WINDOW_SIZE));
-    this.windowStartY = Math.max(0, Math.min(y - 5, this.worldSize - WINDOW_SIZE));
+
+    this.windowStartX = Math.max(
+      0,
+      Math.min(x - 5, this.worldSize - WINDOW_SIZE)
+    );
+    this.windowStartY = Math.max(
+      0,
+      Math.min(y - 5, this.worldSize - WINDOW_SIZE)
+    );
     this.loadMapWindow();
   }
 
@@ -186,11 +192,11 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     event.preventDefault();
     this.isDragging = true;
     this.minimapElement = event.currentTarget as HTMLElement;
-    
+
     // Add global listeners for drag and release
     document.addEventListener('mousemove', this.boundMouseMove);
     document.addEventListener('mouseup', this.boundMouseUp);
-    
+
     // Move to initial position
     this.updateMinimapPosition(event);
   }
@@ -203,28 +209,34 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   private onMinimapDragEnd(event: MouseEvent): void {
     if (!this.isDragging) return;
-    
+
     // Remove global listeners
     document.removeEventListener('mousemove', this.boundMouseMove);
     document.removeEventListener('mouseup', this.boundMouseUp);
-    
+
     this.isDragging = false;
     this.minimapElement = null;
-    
+
     // Load the map window at the final position
     this.loadMapWindow();
   }
 
   private updateMinimapPosition(event: MouseEvent): void {
     if (!this.minimapElement) return;
-    
+
     const rect = this.minimapElement.getBoundingClientRect();
     const x = Math.floor((event.clientX - rect.left) / MINIMAP_SCALE);
     const y = Math.floor((event.clientY - rect.top) / MINIMAP_SCALE);
-    
+
     // Center the window on the cursor position
-    this.windowStartX = Math.max(0, Math.min(x - 5, this.worldSize - WINDOW_SIZE));
-    this.windowStartY = Math.max(0, Math.min(y - 5, this.worldSize - WINDOW_SIZE));
+    this.windowStartX = Math.max(
+      0,
+      Math.min(x - 5, this.worldSize - WINDOW_SIZE)
+    );
+    this.windowStartY = Math.max(
+      0,
+      Math.min(y - 5, this.worldSize - WINDOW_SIZE)
+    );
   }
 
   closeVillageInteraction(): void {
@@ -241,9 +253,9 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     if (this.selectedBoss) {
       const bossId = this.selectedBoss.id;
       // Remove from main map bosses
-      this.bosses = this.bosses.filter(b => b.id !== bossId);
+      this.bosses = this.bosses.filter((b) => b.id !== bossId);
       // Remove from minimap bosses
-      this.allBosses = this.allBosses.filter(b => b.id !== bossId);
+      this.allBosses = this.allBosses.filter((b) => b.id !== bossId);
       // Rebuild grid to reflect the change
       this.buildGrid();
     }
@@ -262,7 +274,9 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   }
 
   isBossClaimedByMyClan(boss: BossOnMap): boolean {
-    return boss.claimedByClanName === this.currentUserClan && !!this.currentUserClan;
+    return (
+      boss.claimedByClanName === this.currentUserClan && !!this.currentUserClan
+    );
   }
 
   goBack(): void {
@@ -271,24 +285,24 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   getMinimapVillageStyle(village: VillageOnMap): any {
     return {
-      left: (village.x * MINIMAP_SCALE) + 'px',
-      top: (village.y * MINIMAP_SCALE) + 'px'
+      left: village.x * MINIMAP_SCALE + 'px',
+      top: village.y * MINIMAP_SCALE + 'px',
     };
   }
 
   getMinimapBossStyle(boss: BossOnMap): any {
     return {
-      left: (boss.x * MINIMAP_SCALE - 4) + 'px',
-      top: (boss.y * MINIMAP_SCALE - 4) + 'px'
+      left: boss.x * MINIMAP_SCALE - 4 + 'px',
+      top: boss.y * MINIMAP_SCALE - 4 + 'px',
     };
   }
 
   getMinimapWindowStyle(): any {
     return {
-      left: (this.windowStartX * MINIMAP_SCALE) + 'px',
-      top: (this.windowStartY * MINIMAP_SCALE) + 'px',
-      width: (WINDOW_SIZE * MINIMAP_SCALE) + 'px',
-      height: (WINDOW_SIZE * MINIMAP_SCALE) + 'px'
+      left: this.windowStartX * MINIMAP_SCALE + 'px',
+      top: this.windowStartY * MINIMAP_SCALE + 'px',
+      width: WINDOW_SIZE * MINIMAP_SCALE + 'px',
+      height: WINDOW_SIZE * MINIMAP_SCALE + 'px',
     };
   }
 
@@ -296,23 +310,15 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     return this.worldSize * MINIMAP_SCALE;
   }
 
-  getBossCellClass(boss: BossOnMap): string {
-    const classes = ['has-boss', `boss-${boss.tier}`];
-    if (boss.tier !== 'mythic') {
-      if (this.isBossClaimedByMyClan(boss)) {
-        classes.push('boss-claimed-by-me');
-      } else if (boss.claimedByClanName) {
-        classes.push('boss-claimed');
-      }
+  extraCellClassFn = (cell: GridCell): Record<string, boolean> => {
+    if (cell.boss && cell.boss.tier !== ('mythic' as any)) {
+      return {
+        'boss-claimed-by-me': this.isBossClaimedByMyClan(cell.boss),
+        'boss-claimed':
+          !this.isBossClaimedByMyClan(cell.boss) &&
+          !!cell.boss.claimedByClanName,
+      };
     }
-    return classes.join(' ');
-  }
-
-  /** Quarters 1-3: tier1, 4-7: tier2, 8-10: tier3 */
-  getVillageTierIcon(village: VillageOnMap): string {
-    const q = village.quartersLevel ?? 1;
-    if (q <= 3) return 'assets/tier1-village.png';
-    if (q <= 7) return 'assets/tier2-village.png';
-    return 'assets/tier3-village.png';
-  }
+    return {};
+  };
 }

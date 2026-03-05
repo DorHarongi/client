@@ -102,130 +102,6 @@ $your-color: #90EE90;     // Green - your own villages
   margin-right: -2px;
 }
 
-.map-grid {
-  display: flex;
-  flex-direction: column;
-  border: 2px solid black;
-  background-color: #8B4513;
-}
-
-.grid-row {
-  display: flex;
-}
-
-.grid-cell {
-  width: 60px;
-  height: 60px;
-  border: 1px solid #654321;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  cursor: pointer;
-  background-color: #DEB887;
-  
-  &:hover {
-    background-color: #D2B48C;
-  }
-
-  &.has-village {
-    cursor: pointer;
-  }
-
-  &.own-village {
-    background-color: $your-color;
-    &:hover {
-      background-color: darken($your-color, 5%);
-    }
-  }
-
-  &.clan-village {
-    background-color: $clan-color;
-    &:hover {
-      background-color: darken($clan-color, 5%);
-    }
-  }
-
-  &.other-village {
-    background-color: $enemy-color;
-    &:hover {
-      background-color: darken($enemy-color, 5%);
-    }
-  }
-
-  .coords {
-    font-size: 8px;
-    color: #666;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-  }
-
-  .village-marker {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .village-icon {
-    width: 60px;
-    height: 60px;
-  }
-
-  // Boss cells
-  &.has-boss {
-    cursor: pointer;
-  }
-
-  &.boss-common {
-    background-color: #A0A0A0; // Gray
-    &:hover { background-color: #909090; }
-  }
-
-  &.boss-rare {
-    background-color: #5DADE2; // Blue
-    &:hover { background-color: #4D9ED2; }
-  }
-
-  &.boss-epic {
-    background-color: #AF7AC5; // Purple
-    &:hover { background-color: #9F6AB5; }
-  }
-
-  &.boss-legendary {
-    background-color: #F4D03F; // Gold
-    &:hover { background-color: #E4C02F; }
-  }
-
-  &.boss-mythic {
-    background-color: #FF8C00; // Orange
-    &:hover { background-color: #E07B00; }
-  }
-
-  &.boss-claimed-by-me {
-    border: 5px outset $clan-color;
-    box-sizing: border-box;
-  }
-
-  &.boss-claimed {
-    border: 5px outset $enemy-color;
-    box-sizing: border-box;
-  }
-
-  .boss-marker {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .boss-icon {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-  }
-}
-
 .minimap-container {
   display: flex;
   flex-direction: column;
@@ -412,27 +288,14 @@ $your-color: #90EE90;     // Green - your own villages
     height: 35px;
   }
 
-  .map-grid {
-    flex-shrink: 0;
-  }
-
-  .grid-cell {
-    width: 50px;
-    height: 50px;
-
-    .village-icon {
-      width: 30px;
-      height: 30px;
-    }
-
-    .boss-icon {
-      width: 50px;
-      height: 50px;
-    }
-
-    .coords {
-      font-size: 7px;
-    }
+  app-map-grid {
+    --cell-size: 50px;
+    --village-tier1-size: 25px;
+    --village-tier2-size: 28px;
+    --village-tier3-size: 30px;
+    --boss-size: 32px;
+    --boss-mythic-size: 50px;
+    --coords-font-size: 7px;
   }
 
   .minimap-container {

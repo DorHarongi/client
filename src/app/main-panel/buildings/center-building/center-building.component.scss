@@ -27,11 +27,6 @@
     margin-bottom: 15px;
 }
 
-// Colors matching world map
-$enemy-color: #ad001a;   // Red - enemy villages
-$clan-color: #1e90ff;     // Blue - clan villages
-$your-color: #90EE90;     // Green - your own villages
-
 .new-village-ui {
     margin-top: 20px;
     text-align: center;
@@ -44,139 +39,17 @@ $your-color: #90EE90;     // Green - your own villages
     margin: 15px 0;
 }
 
-.map-grid {
-    display: flex;
-    flex-direction: column;
-    border: 2px solid black;
-    background-color: #8B4513;
-}
-
-.grid-row {
-    display: flex;
-}
-
-.grid-cell {
-    width: 50px;
-    height: 50px;
-    border: 1px solid #654321;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    background-color: #DEB887;
-    
-    &:hover {
-        background-color: #D2B48C;
-    }
-
-    // Highlight the 3x3 area around current village
-    &.in-available-area {
-        box-shadow: inset 0 0 8px rgba(0, 200, 0, 0.4);
-    }
-    
-    &.available {
-        cursor: pointer;
-        background-color: #C8E6C9; // Light green for available cells
-        
-        &:hover {
-            background-color: #A5D6A7;
-            box-shadow: inset 0 0 10px rgba(0, 128, 0, 0.5);
-        }
-    }
-    
-    &.current-village {
-        background-color: $your-color;
-        box-shadow: 0 0 10px rgba(144, 238, 144, 0.7);
-        border: 2px solid darken($your-color, 20%);
-    }
-
-    &.has-village {
-        cursor: default;
-    }
-    
-    &.own-village {
-        background-color: $your-color;
-        &:hover {
-            background-color: darken($your-color, 5%);
-        }
-    }
-    
-    &.clan-village {
-        background-color: $clan-color;
-        &:hover {
-            background-color: darken($clan-color, 5%);
-        }
-    }
-    
-    &.other-village {
-        background-color: $enemy-color;
-        &:hover {
-            background-color: darken($enemy-color, 5%);
-        }
-    }
-
-    // Boss cells (same as world map)
-    &.has-boss {
-        cursor: default;
-    }
-
-    &.boss-common {
-        background-color: #A0A0A0;
-        &:hover { background-color: #909090; }
-    }
-
-    &.boss-rare {
-        background-color: #5DADE2;
-        &:hover { background-color: #4D9ED2; }
-    }
-
-    &.boss-epic {
-        background-color: #AF7AC5;
-        &:hover { background-color: #9F6AB5; }
-    }
-
-    &.boss-legendary {
-        background-color: #F4D03F;
-        &:hover { background-color: #E4C02F; }
-    }
-    
-    &.selected {
-        background-color: #FFD700 !important;
-        border: 3px solid #FF8C00;
-        box-shadow: 0 0 10px rgba(255, 140, 0, 0.7);
-    }
-    
-    .coords {
-        font-size: 7px;
-        color: #666;
-        position: absolute;
-        top: 1px;
-        left: 1px;
-    }
-
-    .village-marker {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .village-icon {
-        width: 30px;
-        height: 30px;
-    }
-
-    .boss-marker {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .boss-icon {
-        width: 44px;
-        height: 44px;
-        object-fit: contain;
-    }
+app-map-grid {
+    --cell-size: 50px;
+    --cell-cursor: default;
+    --village-tier1-size: 25px;
+    --village-tier2-size: 28px;
+    --village-tier3-size: 30px;
+    --boss-size: 32px;
+    --boss-mythic-size: 50px;
+    --coords-font-size: 7px;
+    --coords-top: 1px;
+    --coords-left: 1px;
 }
 
 .village-name-input {
@@ -253,27 +126,14 @@ $your-color: #90EE90;     // Green - your own villages
     box-sizing: border-box;
   }
 
-  .map-grid {
-    flex-shrink: 0;
-  }
-
-  .grid-cell {
-    width: 45px;
-    height: 45px;
-
-    .village-icon {
-      width: 25px;
-      height: 25px;
-    }
-
-    .boss-icon {
-      width: 38px;
-      height: 38px;
-    }
-
-    .coords {
-      font-size: 6px;
-    }
+  app-map-grid {
+    --cell-size: 45px;
+    --village-tier1-size: 20px;
+    --village-tier2-size: 22px;
+    --village-tier3-size: 25px;
+    --boss-size: 28px;
+    --boss-mythic-size: 42px;
+    --coords-font-size: 6px;
   }
 
   .village-name-input {

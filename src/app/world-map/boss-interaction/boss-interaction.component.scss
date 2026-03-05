@@ -144,7 +144,7 @@
   &.tier-rare { background-color: #3498db; color: white; }
   &.tier-epic { background-color: #9b59b6; color: white; }
   &.tier-legendary { background-color: #f1c40f; color: black; }
-  &.tier-mythic { color: orange; }
+  &.tier-mythic { background-color: orange; color: #fff; }
 }
 
 .hp-section {

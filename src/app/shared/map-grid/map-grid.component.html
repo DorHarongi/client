@@ -1,0 +1,26 @@
+<div class="map-grid">
+  <div class="grid-row" *ngFor="let row of gridCells">
+    <div
+      class="grid-cell"
+      *ngFor="let cell of row"
+      (click)="cellClick.emit(cell)"
+      [ngClass]="getCellClasses(cell)"
+    >
+      <span class="coords">{{ cell.x }},{{ cell.y }}</span>
+      <div *ngIf="cell.village && !cell.boss" class="village-marker">
+        <img
+          [src]="getVillageTierIcon(cell.village)"
+          class="village-icon"
+          [ngClass]="getVillageTierClass(cell.village)"
+        />
+      </div>
+      <div *ngIf="cell.boss" class="boss-marker">
+        <img
+          [src]="bossService.getBossImagePath(cell.boss.tier)"
+          class="boss-icon"
+          [class.boss-icon-mythic]="isMythicBoss(cell.boss)"
+        />
+      </div>
+    </div>
+  </div>
+</div>

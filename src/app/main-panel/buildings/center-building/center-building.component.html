@@ -1,62 +1,71 @@
 <app-building [building]="buildingInformation">
-    <div extraInformation *ngIf="hasAlreadyCreatedFromThis" class="info-message">
-        <p class="already-created-message">You have already created a village from this Center Building.</p>
+  <div extraInformation *ngIf="hasAlreadyCreatedFromThis" class="info-message">
+    <p class="already-created-message">
+      You have already created a village from this Center Building.
+    </p>
+  </div>
+
+  <div
+    extraInformation
+    *ngIf="canCreateNewVillage && !showNewVillageUI"
+    class="new-village-section"
+  >
+    <h4 class="new-village-title">Create New Village</h4>
+    <p>
+      Your center building has reached level 10! You can now create a new
+      village.
+    </p>
+    <button class="action-btn" (click)="openNewVillageUI()">
+      Create New Village
+    </button>
+  </div>
+
+  <div extraInformation *ngIf="showNewVillageUI" class="new-village-ui">
+    <h4 class="new-village-title">Select Location for New Village</h4>
+    <p>
+      Choose an available cell (highlighted) adjacent to your current village
+    </p>
+
+    <div class="map-grid-container">
+      <app-map-grid
+        [gridCells]="gridCells"
+        [currentUsername]="currentUsername"
+        [currentUserClan]="currentUserClan"
+        [extraCellClassFn]="extraCellClassFn"
+        (cellClick)="selectCell($event)"
+      >
+      </app-map-grid>
     </div>
 
-    <div extraInformation *ngIf="canCreateNewVillage && !showNewVillageUI" class="new-village-section">
-        <h4 class="new-village-title">Create New Village</h4>
-        <p>Your center building has reached level 10! You can now create a new village.</p>
-        <button class="action-btn" (click)="openNewVillageUI()">Create New Village</button>
+    <div class="village-name-input" *ngIf="selectedCell">
+      <label>Village Name:</label>
+      <input
+        type="text"
+        [(ngModel)]="newVillageName"
+        placeholder="Enter village name"
+        [maxlength]="maxVillageNameLength"
+      />
+      <div
+        class="char-counter"
+        [class.limit-reached]="newVillageName.length >= maxVillageNameLength"
+      >
+        {{ newVillageName.length }}/{{ maxVillageNameLength }}
+      </div>
     </div>
 
-    <div extraInformation *ngIf="showNewVillageUI" class="new-village-ui">
-        <h4 class="new-village-title">Select Location for New Village</h4>
-        <p>Choose an available cell (highlighted) adjacent to your current village</p>
-        
-        <div class="map-grid-container">
-            <div class="map-grid">
-                <div class="grid-row" *ngFor="let row of gridCells">
-                    <div class="grid-cell" 
-                         *ngFor="let cell of row"
-                         (click)="selectCell(cell)"
-                         [class.has-village]="cell.village"
-                         [class.current-village]="isCurrentVillage(cell)"
-                         [class.own-village]="cell.village && isOwnVillageCell(cell) && !isCurrentVillage(cell)"
-                         [class.clan-village]="cell.village && isClanMemberVillageCell(cell)"
-                         [class.other-village]="cell.village && !isOwnVillageCell(cell) && !isClanMemberVillageCell(cell)"
-                         [class.available]="isCellAvailable(cell)"
-                         [class.in-available-area]="isInAvailableArea(cell) && !isCurrentVillage(cell)"
-                         [class.selected]="isCellSelected(cell)"
-                         [ngClass]="cell.boss ? getBossCellClass(cell.boss) : ''">
-                        <span class="coords">{{cell.x}},{{cell.y}}</span>
-                        <div *ngIf="cell.village && !cell.boss" class="village-marker">
-                            <img [src]="getVillageTierIcon(cell.village)" class="village-icon">
-                        </div>
-                        <div *ngIf="cell.boss" class="boss-marker">
-                            <img [src]="bossService.getBossImagePath(cell.boss.tier)" class="boss-icon">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-        <div class="village-name-input" *ngIf="selectedCell">
-            <label>Village Name:</label>
-            <input type="text" [(ngModel)]="newVillageName" placeholder="Enter village name" [maxlength]="maxVillageNameLength">
-            <div class="char-counter" [class.limit-reached]="newVillageName.length >= maxVillageNameLength">
-                {{newVillageName.length}}/{{maxVillageNameLength}}
-            </div>
-        </div>
-
-        <p class="error-message" *ngIf="errorMessage">{{errorMessage}}</p>
-
-        <div class="new-village-actions">
-            <button class="action-btn create-btn" 
-                    (click)="createNewVillage()" 
-                    [disabled]="!selectedCell || !newVillageName.trim()">
-                Create Village
-            </button>
-            <button class="action-btn cancel-btn" (click)="closeNewVillageUI()">Cancel</button>
-        </div>
+    <div class="new-village-actions">
+      <button
+        class="action-btn create-btn"
+        (click)="createNewVillage()"
+        [disabled]="!selectedCell || !newVillageName.trim()"
+      >
+        Create Village
+      </button>
+      <button class="action-btn cancel-btn" (click)="closeNewVillageUI()">
+        Cancel
+      </button>
     </div>
+  </div>
 </app-building>

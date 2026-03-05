@@ -1,88 +1,123 @@
-<div class="flexContainer mapContainer step" [class.show]="!selectedVillage && !selectedBoss" [class.hide]="selectedVillage || selectedBoss">
-    <h2 id="titleText" class="center margin-top">World Map</h2>
-    
-    <!-- Scrollable wrapper for mobile -->
-    <div class="scroll-wrapper">
-        <div class="map-content">
-            <div class="map-grid-container">
-                <div class="navigation-arrows">
-                    <button class="nav-arrow up" (click)="moveUp()" [disabled]="windowStartY < 10"><span class="arrow-up"></span></button>
-                    <div class="horizontal-arrows">
-                        <button class="nav-arrow left" (click)="moveLeft()" [disabled]="windowStartX < 10"><span class="arrow-left"></span></button>
-                        <div class="map-grid">
-                            <div class="grid-row" *ngFor="let row of gridCells">
-                                <div class="grid-cell" 
-                                     *ngFor="let cell of row" 
-                                     (click)="onCellClick(cell)"
-                                     [class.has-village]="cell.village"
-                                     [class.own-village]="cell.village && isOwnVillage(cell.village)"
-                                     [class.clan-village]="cell.village && isClanMemberVillage(cell.village)"
-                                     [class.other-village]="cell.village && !isOwnVillage(cell.village) && !isClanMemberVillage(cell.village)"
-                                     [ngClass]="cell.boss ? getBossCellClass(cell.boss) : ''">
-                                    <span class="coords">{{cell.x}},{{cell.y}}</span>
-                                    <div *ngIf="cell.village && !cell.boss" class="village-marker">
-                                        <img [src]="getVillageTierIcon(cell.village)" class="village-icon">
-                                    </div>
-                                    <div *ngIf="cell.boss" class="boss-marker">
-                                        <img [src]="bossService.getBossImagePath(cell.boss.tier)" class="boss-icon">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="nav-arrow right" (click)="moveRight()" [disabled]="windowStartX + 10 >= worldSize"><span class="arrow-right"></span></button>
-                    </div>
-                    <button class="nav-arrow down" (click)="moveDown()" [disabled]="windowStartY + 10 >= worldSize"><span class="arrow-down"></span></button>
-                </div>
-            </div>
+<div
+  class="flexContainer mapContainer step"
+  [class.show]="!selectedVillage && !selectedBoss"
+  [class.hide]="selectedVillage || selectedBoss"
+>
+  <h2 id="titleText" class="center margin-top">World Map</h2>
 
-            <div class="minimap-container">
-                <h4>Minimap</h4>
-                <div class="minimap" 
-                     [style.width.px]="getMinimapSize()" 
-                     [style.height.px]="getMinimapSize()"
-                     (mousedown)="onMinimapDragStart($event)"
-                     (click)="onMinimapClick($event)">
-                    <!-- Villages -->
-                    <div class="minimap-village" 
-                         *ngFor="let village of allVillages"
-                         [ngStyle]="getMinimapVillageStyle(village)"
-                         [class.own]="isOwnVillage(village)"
-                         [class.clan]="isClanMemberVillage(village)">
-                    </div>
-                    <!-- Bosses -->
-                    <div class="minimap-boss" 
-                         *ngFor="let boss of allBosses"
-                         [ngStyle]="getMinimapBossStyle(boss)">💀</div>
-                    <div class="minimap-window" 
-                         [ngStyle]="getMinimapWindowStyle()"
-                         [class.dragging]="isDragging"></div>
-                </div>
-                <!-- Legend -->
-                <div class="minimap-legend">
-                    <div class="legend-item"><span class="legend-square own"></span> Your village</div>
-                    <div class="legend-item"><span class="legend-square clan"></span> Clan village</div>
-                    <div class="legend-item"><span class="legend-square enemy"></span> Enemy village</div>
-                    <div class="legend-item"><span class="legend-skull">💀</span> Raid Boss</div>
-                </div>
-            </div>
+  <!-- Scrollable wrapper for mobile -->
+  <div class="scroll-wrapper">
+    <div class="map-content">
+      <div class="map-grid-container">
+        <div class="navigation-arrows">
+          <button
+            class="nav-arrow up"
+            (click)="moveUp()"
+            [disabled]="windowStartY < 10"
+          >
+            <span class="arrow-up"></span>
+          </button>
+          <div class="horizontal-arrows">
+            <button
+              class="nav-arrow left"
+              (click)="moveLeft()"
+              [disabled]="windowStartX < 10"
+            >
+              <span class="arrow-left"></span>
+            </button>
+            <app-map-grid
+              [gridCells]="gridCells"
+              [currentUsername]="currentUsername"
+              [currentUserClan]="currentUserClan"
+              [extraCellClassFn]="extraCellClassFn"
+              (cellClick)="onCellClick($event)"
+            >
+            </app-map-grid>
+            <button
+              class="nav-arrow right"
+              (click)="moveRight()"
+              [disabled]="windowStartX + 10 >= worldSize"
+            >
+              <span class="arrow-right"></span>
+            </button>
+          </div>
+          <button
+            class="nav-arrow down"
+            (click)="moveDown()"
+            [disabled]="windowStartY + 10 >= worldSize"
+          >
+            <span class="arrow-down"></span>
+          </button>
         </div>
+      </div>
+
+      <div class="minimap-container">
+        <h4>Minimap</h4>
+        <div
+          class="minimap"
+          [style.width.px]="getMinimapSize()"
+          [style.height.px]="getMinimapSize()"
+          (mousedown)="onMinimapDragStart($event)"
+          (click)="onMinimapClick($event)"
+        >
+          <!-- Villages -->
+          <div
+            class="minimap-village"
+            *ngFor="let village of allVillages"
+            [ngStyle]="getMinimapVillageStyle(village)"
+            [class.own]="isOwnVillage(village)"
+            [class.clan]="isClanMemberVillage(village)"
+          ></div>
+          <!-- Bosses -->
+          <div
+            class="minimap-boss"
+            *ngFor="let boss of allBosses"
+            [ngStyle]="getMinimapBossStyle(boss)"
+          >
+            💀
+          </div>
+          <div
+            class="minimap-window"
+            [ngStyle]="getMinimapWindowStyle()"
+            [class.dragging]="isDragging"
+          ></div>
+        </div>
+        <!-- Legend -->
+        <div class="minimap-legend">
+          <div class="legend-item">
+            <span class="legend-square own"></span> Your village
+          </div>
+          <div class="legend-item">
+            <span class="legend-square clan"></span> Clan village
+          </div>
+          <div class="legend-item">
+            <span class="legend-square enemy"></span> Enemy village
+          </div>
+          <div class="legend-item">
+            <span class="legend-skull">💀</span> Raid Boss
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <button id="back" class="buttons center" (click)="goBack()">Back</button>
+  </div>
+
+  <button id="back" class="buttons center" (click)="goBack()">Back</button>
 </div>
 
-<app-village-interaction 
-    *ngIf="selectedVillage" 
-    [village]="selectedVillage"
-    [currentUsername]="currentUsername"
-    (closed)="closeVillageInteraction()">
+<app-village-interaction
+  *ngIf="selectedVillage"
+  [village]="selectedVillage"
+  [currentUsername]="currentUsername"
+  (closed)="closeVillageInteraction()"
+>
 </app-village-interaction>
 
 <app-boss-interaction
-    *ngIf="selectedBoss"
-    [boss]="selectedBoss"
-    [currentUsername]="currentUsername"
-    [currentUserClan]="currentUserClan"
-    (closed)="closeBossInteraction()"
-    (bossDefeated)="onBossDefeated()">
+  *ngIf="selectedBoss"
+  [boss]="selectedBoss"
+  [currentUsername]="currentUsername"
+  [currentUserClan]="currentUserClan"
+  (closed)="closeBossInteraction()"
+  (bossDefeated)="onBossDefeated()"
+>
 </app-boss-interaction>
