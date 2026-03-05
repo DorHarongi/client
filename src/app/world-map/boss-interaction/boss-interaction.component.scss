@@ -210,6 +210,7 @@
   margin-bottom: 5px;
 }
 
+.relic-reward { font-weight: bold; color: #b7950b; margin: 0.25rem 0; }
 .damage-bonus {
   font-weight: bold;
   font-size: 16px;
@@ -407,6 +408,45 @@
 .error-message {
   color: #e74c3c;
   margin: 10px 0;
+}
+
+.hint-text {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 8px;
+}
+
+.boss-leaderboard {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid #8B4513;
+  border-radius: 6px;
+
+  h5 {
+    margin: 0 0 8px 0;
+  }
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid black;
+
+  th, td {
+    border: 1px solid #8B4513;
+    padding: 6px 10px;
+    text-align: center;
+  }
+
+  th {
+    background: rgba(139, 69, 19, 0.15);
+    font-weight: 700;
+  }
+
+  tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.03);
+  }
 }
 
 .flexContainer {

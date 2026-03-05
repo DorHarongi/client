@@ -11,3 +11,14 @@
   font-size: 1.1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
+.server-ended-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9998;
+  pointer-events: auto;
+  cursor: not-allowed;
+}

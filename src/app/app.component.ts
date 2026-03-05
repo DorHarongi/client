@@ -19,8 +19,9 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.serverService.getStatus().subscribe({
       next: (s) => {
-        this.serverEnded = s.status === 'ended';
-        this.winningClanName = s.winningClanName || null;
+        this.serverService.setServerStatus(s);
+        this.serverEnded = this.serverService.serverEnded;
+        this.winningClanName = this.serverService.winningClanName;
       },
       error: () => {}
     });

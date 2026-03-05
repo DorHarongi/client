@@ -1,0 +1,7 @@
+<app-building [building]="buildingInformation">
+  <div extraInformation class="center">
+    <h5 *ngIf="buildingInformation.level > 0">Spy capacity: {{ maxSpies }}</h5>
+    <h5 *ngIf="buildingInformation.level > 0">Detection reduction: {{ currentReduction }}%</h5>
+    <h5 *ngIf="nextLevelInfo" class="next-spy-message">{{ nextLevelInfo }}</h5>
+  </div>
+</app-building>

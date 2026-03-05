@@ -1,6 +1,0 @@
-<div class="announcements-banner" *ngIf="announcements.length > 0">
-  <div class="announcements-title">Announcements</div>
-  <div class="announcements-list">
-    <div *ngFor="let a of announcements.slice(0, 5)" class="announcement-item" [innerHTML]="formattedContent(a.content)"></div>
-  </div>
-</div>

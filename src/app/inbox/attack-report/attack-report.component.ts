@@ -3,6 +3,7 @@ import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/res
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { AttackReport } from '../models/attackReport';
+import { getBossImageByName } from 'utils';
 
 @Component({
   selector: 'app-attack-report',
@@ -24,15 +25,29 @@ export class AttackReportComponent implements OnInit {
     this.troopDictionariesByType["attacker"] = [];
     this.troopDictionariesByType["attacker"][0] = this.attackReport.attackerTroops;
     this.troopDictionariesByType["attacker"][1] = this.attackReport.attackerLostTroops;
-    if(!this.userAttackedAndLost)
-    {
+    if (!this.userAttackedAndLost && this.attackReport.reportType !== 'boss') {
+      const empty = { spearFighters: 0, swordFighters: 0, axeFighters: 0, archers: 0, magicians: 0, horsemen: 0, catapults: 0 };
       this.troopDictionariesByType["defender"] = [];
       this.troopDictionariesByType["support"] = [];
-      this.troopDictionariesByType["defender"][0] = this.attackReport.defenderTotalTroops;
-      this.troopDictionariesByType["defender"][1] = this.attackReport.defenderTotalLostTroops;
-      this.troopDictionariesByType["support"][0] = this.attackReport.supportTotalTroops;
-      this.troopDictionariesByType["support"][1] = this.attackReport.supportTotalLostTroops;
+      this.troopDictionariesByType["defender"][0] = this.attackReport.defenderTotalTroops || empty;
+      this.troopDictionariesByType["defender"][1] = this.attackReport.defenderTotalLostTroops || empty;
+      this.troopDictionariesByType["support"][0] = this.attackReport.supportTotalTroops || empty;
+      this.troopDictionariesByType["support"][1] = this.attackReport.supportTotalLostTroops || empty;
     }
+  }
+
+  get isBossReport(): boolean {
+    return this.attackReport.reportType === 'boss';
+  }
+
+  getBossImageSrc(): string {
+    return 'assets/' + getBossImageByName(this.attackReport.bossName);
+  }
+
+  getBossHpPercent(): number {
+    if (this.attackReport.bossHpBefore == null || this.attackReport.bossHpBefore <= 0) return 0;
+    const after = this.attackReport.bossHpAfter ?? 0;
+    return Math.max(0, (after / this.attackReport.bossHpBefore) * 100);
   }
 
   goBack(){

@@ -12,7 +12,7 @@
     <div class="widget-header" (click)="toggleDetails()">
         <span class="quest-icon">📜</span>
         <span class="quest-progress">Quest {{questProgress}}</span>
-        <span class="expand-icon">{{showDetails ? '▼' : '▶'}}</span>
+        <span class="expand-icon" [class.expanded]="showDetails"></span>
     </div>
     
     <div class="widget-title" (click)="toggleDetails()">

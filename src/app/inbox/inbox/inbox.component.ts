@@ -243,8 +243,18 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   makeAttackReportTitle(attackReport: AttackReport): string
   {
-    let title = "";
+    if (attackReport.reportType === 'spy') {
+      const isAttacker = attackReport.attackerName === this.username;
+      if (isAttacker) {
+        if (attackReport.attackerWon) {
+          return `You scouted ${attackReport.defenderName} [${attackReport.defenderVillageName}]`;
+        }
+        return `Your scout to ${attackReport.defenderName} [${attackReport.defenderVillageName}] has been caught`;
+      }
+      return `${attackReport.attackerName} [${attackReport.attackerVillageName}] tried to scout you`;
+    }
 
+    let title = "";
     if(attackReport.attackerName == this.username)
       title += "You";
     else
@@ -264,6 +274,11 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   getAttackResult(attackReport: AttackReport): string
   {
+    if (attackReport.reportType === 'spy') {
+      if (attackReport.attackerWon) return 'Success';
+      const isAttacker = attackReport.attackerName === this.username;
+      return isAttacker ? 'Caught' : 'Intercepted';
+    }
     if(attackReport.attackerName == this.username)
     {
       if(attackReport.attackerWon)

@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import { InboxComponent } from './inbox/inbox/inbox.component';
 import { AuthGuardService } from './login/auth-guard.service';
@@ -14,6 +13,7 @@ import { QuartersComponent } from './main-panel/buildings/quarters/quarters.comp
 import { StoneMineComponent } from './main-panel/buildings/stone-mine/stone-mine.component';
 import { StoneWarehouseComponent } from './main-panel/buildings/stone-warehouse/stone-warehouse.component';
 import { WallComponent } from './main-panel/buildings/wall/wall.component';
+import { StableComponent } from './main-panel/buildings/stable/stable.component';
 import { WoodFactoryComponent } from './main-panel/buildings/wood-factory/wood-factory.component';
 import { WoodWarehouseComponent } from './main-panel/buildings/wood-warehouse/wood-warehouse.component';
  
@@ -29,6 +29,7 @@ export const appRoutes: Routes = [
   { path: 'home/:villageName', component: MainPanelComponent, canActivate : [AuthGuardService] },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
+  { path: 'server-select', redirectTo: 'home', pathMatch: 'full' },
   { path: 'Inbox', component: InboxComponent, canActivate : [AuthGuardService] },
   { path: 'CenterBuilding', component: CenterBuildingComponent, canActivate : [AuthGuardService] },
   { path: 'WoodWarehouse', component: WoodWarehouseComponent, canActivate : [AuthGuardService] },
@@ -42,6 +43,7 @@ export const appRoutes: Routes = [
   { path: 'Wall', component: WallComponent, canActivate : [AuthGuardService] },
   { path: 'Embassy', component: EmbassyComponent, canActivate : [AuthGuardService] },
   { path: 'Academy', component: AcademyComponent, canActivate : [AuthGuardService] },
+  { path: 'Stable', component: StableComponent, canActivate : [AuthGuardService] },
   { path: 'Statistics', component: StatisticsComponent, canActivate : [AuthGuardService] },
   { path: 'Map', component: WorldMapComponent, canActivate : [AuthGuardService] },
   { path: 'player/:username', component: PlayerPageComponent, canActivate : [AuthGuardService] },

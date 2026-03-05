@@ -66,6 +66,10 @@ input::-webkit-inner-spin-button {
 .attackDefence{
   display: flex;  
   justify-content: center;
+
+  &.speed-stat {
+    margin-top: 7.5px;
+  }
 }
 
 #max{
@@ -97,6 +101,13 @@ input::-webkit-inner-spin-button {
     white-space: nowrap;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     margin-bottom: 5px;
+}
+
+/* Last column tooltip: align right to prevent horizontal scrollbar */
+td:last-child .max-wrapper .stats-tooltip {
+    left: auto;
+    right: 0;
+    transform: none;
 }
 
 .stats-tooltip::after {

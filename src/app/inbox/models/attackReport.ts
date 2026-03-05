@@ -37,4 +37,6 @@ export interface AttackReport {
     bossHpAfter?: number;
     bossDamageDealt?: number;
     bossReward?: ResourcesAmounts;
+    bossRelicId?: string;
+    bossRelicName?: string;
 } 

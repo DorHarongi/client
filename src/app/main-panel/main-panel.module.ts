@@ -17,13 +17,13 @@ import { WallComponent } from './buildings/wall/wall.component';
 import { EmbassyComponent } from './buildings/embassy/embassy.component';
 import { EmbassyRelicsComponent } from './buildings/embassy/embassy-relics/embassy-relics.component';
 import { AcademyComponent } from './buildings/academy/academy.component';
+import { StableComponent } from './buildings/stable/stable.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialsCostComponent } from './materials-cost/materials-cost.component';
 import { TroopsChoosingComponent } from './troops-choosing/troops-choosing.component';
 import { HireWorkersComponent } from './hire-workers/hire-workers.component';
 import { ResourcesAmountComponent } from './resources-amount/resources-amount.component';
 import { MovementsComponent } from './movements/movements.component';
-import { AnnouncementsComponent } from './announcements/announcements.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -45,12 +45,12 @@ import { SharedModule } from '../shared/shared.module';
     EmbassyComponent,
     EmbassyRelicsComponent,
     AcademyComponent,
+    StableComponent,
     MaterialsCostComponent,
     TroopsChoosingComponent,
     HireWorkersComponent,
     ResourcesAmountComponent,
-    MovementsComponent,
-    AnnouncementsComponent
+    MovementsComponent
   ],
   imports: [
     CommonModule,

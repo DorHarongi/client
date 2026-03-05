@@ -7,13 +7,13 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from './login.service';
 import { AuthGuardService } from './auth-guard.service';
-
-
+import { ServerSelectComponent } from '../server-select/server-select.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ServerSelectComponent
   ],
   imports: [
     CommonModule,

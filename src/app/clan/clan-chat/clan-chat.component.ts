@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
@@ -16,13 +16,15 @@ interface ChatMessage {
     templateUrl: './clan-chat.component.html',
     styleUrls: ['./clan-chat.component.scss'],
 })
-export class ClanChatComponent implements OnInit, OnDestroy {
+export class ClanChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     @Input() clanName!: string;
     @Input() currentUsername!: string;
+    @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
     messages: ChatMessage[] = [];
     newMessage: string = '';
     sending: boolean = false;
+    private shouldScroll: boolean = false;
 
     private socket?: Socket;
 
@@ -33,11 +35,11 @@ export class ClanChatComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // Load history
         this.http
             .get<ChatMessage[]>(`${environment.apiUrl}/chat/${this.clanName}/history`)
             .subscribe((msgs) => {
                 this.messages = msgs || [];
+                this.shouldScroll = true;
             });
 
         const token = sessionStorage.getItem('auth_token') || '';
@@ -54,7 +56,15 @@ export class ClanChatComponent implements OnInit, OnDestroy {
                 return;
             }
             this.messages = [...this.messages, msg];
+            this.shouldScroll = true;
         });
+    }
+
+    ngAfterViewChecked(): void {
+        if (this.shouldScroll) {
+            this.scrollToBottom();
+            this.shouldScroll = false;
+        }
     }
 
     ngOnDestroy(): void {
@@ -74,6 +84,15 @@ export class ClanChatComponent implements OnInit, OnDestroy {
 
     isLeader(msg: ChatMessage): boolean {
         return msg.senderRole === 'leader';
+    }
+
+    private scrollToBottom(): void {
+        try {
+            const el = this.messagesContainer?.nativeElement;
+            if (el) {
+                el.scrollTop = el.scrollHeight;
+            }
+        } catch (_) {}
     }
 }
 

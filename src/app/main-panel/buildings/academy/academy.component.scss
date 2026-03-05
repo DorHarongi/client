@@ -8,7 +8,7 @@ $game-text: #3d2914;
 
 .academy-content {
     padding: 20px;
-    max-width: 600px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -16,6 +16,227 @@ $game-text: #3d2914;
     text-align: center;
     margin-bottom: 15px;
     font-size: 1.3em;
+}
+
+// Skill points bar
+.skill-points {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 24px;
+    padding: 12px 16px;
+    background: $game-bg-dark;
+    border: 2px solid $game-brown;
+    border-radius: 8px;
+    font-weight: 600;
+    color: $game-text;
+
+    span {
+        white-space: nowrap;
+    }
+
+    .used-points {
+        color: #2e7d32;
+    }
+}
+
+// Skill grid: 3 rows (Tier I, II, III), multiple columns (categories)
+.skill-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.skill-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.skill-cell {
+    width: 140px;
+    min-height: 100px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 3px solid $game-brown;
+    background: $game-bg;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+
+    .skill-name {
+        font-weight: 700;
+        font-size: 0.95em;
+        color: $game-text;
+        margin-bottom: 4px;
+        line-height: 1.2;
+    }
+
+    .skill-tier {
+        font-size: 0.8em;
+        color: $game-brown-dark;
+        margin-bottom: 6px;
+    }
+
+    .skill-bonus {
+        font-size: 0.9em;
+        font-weight: 600;
+        color: #2e7d32;
+    }
+
+    .skill-cost {
+        margin-top: 4px;
+        font-size: 0.8em;
+        color: $game-brown-dark;
+
+        .skill-cost-value {
+            color: #39e75f;
+            font-weight: 700;
+        }
+    }
+
+    .skill-tooltip {
+        position: absolute;
+        left: 50%;
+        bottom: 110%;
+        transform: translateX(-50%);
+        min-width: 220px;
+        max-width: 260px;
+        padding: 8px 10px;
+        background-image: url(../../../../assets/top-bg.png);
+        border: 2px solid $game-brown-dark;
+        border-radius: 8px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        text-align: left;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+        z-index: 20;
+
+        .tooltip-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: $game-text;
+        }
+
+        .tooltip-line {
+            font-size: 0.8em;
+            margin-bottom: 2px;
+            color: $game-text;
+        }
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    // Available to learn
+    &.available {
+        border-color: #2e7d32;
+        background: rgba(46, 125, 50, 0.12);
+        cursor: pointer;
+
+        .skill-bonus {
+            color: #1b5e20;
+        }
+    }
+
+    // Already learned
+    &.unlocked {
+        border-color: $game-gold;
+        background: rgba(212, 168, 75, 0.2);
+        cursor: default;
+
+        .skill-bonus {
+            color: #5d4037;
+        }
+    }
+
+    // Locked (cannot learn yet - need previous tier or more points)
+    &.locked {
+        border-color: #9e9e9e;
+        background: rgba(0, 0, 0, 0.06);
+        cursor: default;
+        opacity: 0.85;
+
+        .skill-name,
+        .skill-tier,
+        .skill-bonus,
+        .skill-cost {
+            color: #757575;
+        }
+
+        &:hover {
+            transform: none;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    &:hover .skill-tooltip {
+        opacity: 1;
+    }
+}
+
+.skill-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.reset-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.reset-cost {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.reset-label {
+    font-weight: 600;
+}
+
+.reset-btn {
+    padding: 10px 24px;
+    font-size: 1em;
+    border: 2px solid $game-brown;
+    border-radius: 6px;
+    background: $game-bg;
+    color: $game-text;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+
+    &:hover:not(:disabled) {
+        background: $game-bg-dark;
+        transform: scale(1.02);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.academy-content .error-message {
+    text-align: center;
+    color: #c0392b;
+    margin-top: 12px;
+    font-weight: 600;
 }
 
 // Current Trait Info
@@ -318,33 +539,54 @@ $game-text: #3d2914;
 
 .confirm-dialog {
     background-image: url(../../../../assets/top-bg.png);
+    background-size: cover;
     border-radius: 15px;
     padding: 25px;
     max-width: 400px;
     width: 90%;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    border: 3px solid black;
+    border: 3px solid $game-brown-dark;
 
     h4 {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         font-size: 1.3em;
+        color: $game-text;
     }
 
     .confirm-content {
         text-align: center;
         margin-bottom: 20px;
+        color: $game-text;
+
+        p {
+            margin: 6px 0;
+        }
+    }
+
+    .confirm-detail {
+        color: #2e7d32;
+        font-weight: 600;
+    }
+
+    .confirm-cost {
+        margin-top: 8px;
+        font-size: 0.95em;
     }
 
     .cost-reminder {
-        margin: 15px 0;
-        text-align: center;
+        margin: 12px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
     }
 
     .warning {
         color: #c0392b;
         font-weight: 500;
         font-size: 0.9em;
+        margin-top: 8px;
     }
 
     .error-message {
@@ -366,10 +608,19 @@ $game-text: #3d2914;
             padding: 10px 25px;
             cursor: pointer;
             transition: all 0.2s ease;
+            font-weight: 600;
+
+            &:hover:not(:disabled) {
+                transform: scale(1.03);
+            }
 
             &:disabled {
                 opacity: 0.5;
                 cursor: not-allowed;
+            }
+
+            &.cancel-btn {
+                opacity: 0.8;
             }
         }
     }

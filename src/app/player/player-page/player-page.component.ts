@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { VillageOnMap } from 'src/app/world-map/models/mapModels';
 import { environment } from 'src/environments/environment';
+import { ACHIEVEMENTS } from 'utils';
 
 const MAX_MESSAGE_LENGTH = 100;
 const MAX_INTRO_LENGTH = 200;
@@ -39,12 +40,13 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   introError: string = '';
   maxIntroLength = MAX_INTRO_LENGTH;
 
-  // Titles
-  availableTitles: string[] = ['Boss Slayer', 'Raider', 'Iron Wall', 'Warlord'];
+  // Titles (achievement ids; display names from ACHIEVEMENTS)
+  achievements = ACHIEVEMENTS;
   selectedTitleControl: string = '';
   titleSaving: boolean = false;
   titleError: string = '';
   titleSuccess: string = '';
+  titleDropdownOpen: boolean = false;
 
   // Village interaction
   selectedVillage: VillageOnMap | null = null;
@@ -125,6 +127,19 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
       return `${Math.ceil(hours * 60)} minutes`;
     }
     return `${hours.toFixed(1)} hours`;
+  }
+
+  changeTheme(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const theme = select.value || 'default';
+    this.http.post(`${environment.apiUrl}/users/theme`, { theme }).subscribe({
+      next: () => {
+        this.playerInfo.theme = theme;
+        if (this.username === this.currentUsername && typeof document !== 'undefined' && document.body) {
+          document.body.setAttribute('data-theme', theme);
+        }
+      }
+    });
   }
 
   toggleMessageForm(): void {
@@ -252,6 +267,16 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
         this.introError = err.error?.message || 'Failed to update intro';
       }
     });
+  }
+
+  getUnlockedAchievements(): { id: string; name: string; description: string }[] {
+    const unlocked = (this.playerInfo?.unlockedAchievements || []) as string[];
+    return this.achievements.filter((a) => unlocked.includes(a.id));
+  }
+
+  getAchievementName(achievementId: string): string {
+    const a = this.achievements.find((x) => x.id === achievementId);
+    return a ? a.name : achievementId;
   }
 
   saveTitle(): void {

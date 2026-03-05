@@ -291,3 +291,111 @@ $topToolbarMinHeight: 75px;
     cursor: not-allowed;
     opacity: 0.3;
 }
+
+// Title dropdown
+.title-section {
+    margin: 10px 0;
+    text-align: left;
+}
+
+.no-titles-message {
+    margin-top: 6px;
+    color: #888;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+.title-dropdown-wrapper {
+    position: relative;
+    margin-top: 6px;
+}
+
+.title-dropdown-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-image: url(../../../assets/top-bg.png);
+    background-size: cover;
+    border: 2px solid #8B4513;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+        border-color: #5a3d2b;
+    }
+}
+
+.title-selected-text {
+    font-weight: 600;
+}
+
+.title-dropdown-arrow {
+    font-size: 0.75em;
+    color: #5a3d2b;
+}
+
+.title-dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-image: url(../../../assets/top-bg.png);
+    background-size: cover;
+    border: 2px solid #8B4513;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.title-dropdown-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.15);
+    display: flex;
+    flex-direction: column;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background-color: rgba(139, 69, 19, 0.15);
+    }
+
+    &.active {
+        background-color: rgba(212, 168, 75, 0.25);
+        font-weight: 700;
+    }
+}
+
+.title-desc {
+    font-size: 0.8em;
+    color: #666;
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+.save-title-btn {
+    margin-top: 8px;
+    padding: 6px 16px;
+}
+
+.small-btn {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.player-title {
+    color: #d4a84b;
+    font-weight: 700;
+}

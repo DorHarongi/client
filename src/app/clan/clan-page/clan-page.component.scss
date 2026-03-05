@@ -139,36 +139,31 @@ $topToolbarMinHeight: 75px;
 }
 
 .small-btn {
-    padding: 5px 10px;
-    margin: 0 3px;
+    background-image: url(../../../assets/top-bg.png);
+    background-size: cover;
+    padding: 6px 14px;
+    margin: 0 5px;
     cursor: pointer;
     border: 1px solid black;
-    border-radius: 3px;
+    border-radius: 0.25rem;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+    font-size: 0.85rem;
 
     &.accept {
-        background-color: #90EE90;
+        &:hover { filter: brightness(1.1); }
     }
 
     &.decline {
-        background-color: #FFB6C1;
+        &:hover { filter: brightness(0.95); }
     }
 
     &.kick {
-        background-color: #ff6b6b;
-        color: white;
-        
-        &:hover {
-            background-color: #ee5a5a;
-        }
+        &:hover { filter: brightness(0.95); }
     }
 
     &.toggle-status {
-        background-color: #87CEEB;
         margin-left: 10px;
-        
-        &:hover {
-            background-color: #7EC8E3;
-        }
+        &:hover { filter: brightness(1.1); }
     }
 }
 
@@ -255,11 +250,189 @@ $topToolbarMinHeight: 75px;
     display: inline-flex;
     align-items: center;
     gap: 10px;
+
+    .small-btn {
+        font-size: 0.85rem;
+        padding: 5px 12px;
+    }
 }
 
 .clan-name-input {
     padding: 5px 10px;
     border: 1px solid #7d5210;
     border-radius: 3px;
-    font-size: 16px;
+    font-size: 14px;
+}
+
+.description-edit {
+    margin: 10px 0;
+    text-align: left;
+}
+
+.description-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #7d5210;
+    border-radius: 3px;
+    resize: none;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin-top: 6px;
+}
+
+.description-edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+// Relics section
+.relics-section {
+    margin-top: 20px;
+    padding: 16px;
+    border: 2px solid #8B4513;
+    border-radius: 10px;
+    background: rgba(139, 69, 19, 0.08);
+
+    h4 {
+        text-align: center;
+        margin: 0 0 12px 0;
+    }
+}
+
+.relic-image-container {
+    margin-bottom: 16px;
+}
+
+.relic-canvas {
+    max-width: 280px;
+    max-height: 280px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.relic-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.relic-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.03);
+
+    &.held {
+        border-color: #d4a84b;
+        background: rgba(212, 168, 75, 0.15);
+    }
+
+    &.clickable {
+        cursor: pointer;
+        &:hover {
+            background: rgba(212, 168, 75, 0.25);
+        }
+    }
+}
+
+.relic-name {
+    font-weight: 700;
+}
+
+.relic-holder {
+    font-size: 0.85em;
+    color: #5a3d2b;
+}
+
+.relic-empty {
+    font-size: 0.85em;
+    color: #999;
+}
+
+.relic-transfer-modal {
+    margin-top: 16px;
+    padding: 14px;
+    border: 2px solid #8B4513;
+    border-radius: 8px;
+    background-image: url(../../../assets/top-bg.png);
+
+    h5 {
+        margin: 0 0 8px 0;
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        margin-top: 8px;
+        font-weight: 600;
+    }
+
+    select, input {
+        width: 100%;
+        padding: 6px 10px;
+        margin-top: 4px;
+        border: 1px solid #8B4513;
+        border-radius: 4px;
+    }
+}
+
+.relic-warning {
+    color: #c0392b;
+    font-size: 0.85em;
+    text-align: center;
+}
+
+.relic-transfer-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.loading-villages {
+    text-align: center;
+    padding: 8px;
+    color: #666;
+    font-style: italic;
+}
+
+.village-select-section {
+    margin-top: 10px;
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+}
+
+.village-select-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 6px 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    tr {
+        cursor: pointer;
+        &:hover {
+            background-color: rgba(139, 69, 19, 0.15);
+        }
+    }
+
+    tr.selected-village {
+        background-color: rgba(212, 168, 75, 0.3);
+        font-weight: bold;
+    }
 }

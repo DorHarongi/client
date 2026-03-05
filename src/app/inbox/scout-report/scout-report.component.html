@@ -1,0 +1,71 @@
+<div class="flexContainer scout-report-container round-square">
+  <h4>Scout Report</h4>
+
+  <!-- Successful spy - attacker view (only attacker sees this) -->
+  <div *ngIf="wasSuccessful && isAttacker">
+    <h5>Your spy successfully scouted {{ report.defenderVillageName }}</h5>
+    <h5>Defender: {{ report.defenderName }}</h5>
+
+    <div class="troops-section">
+      <h5>Village Troops</h5>
+      <table>
+        <tr>
+          <th><img class="icons" src="../../../../assets/spear.png" alt="Spear"></th>
+          <th><img class="icons" src="../../../../assets/sword.png" alt="Sword"></th>
+          <th><img class="icons" src="../../../../assets/axe.png" alt="Axe"></th>
+          <th><img class="icons" src="../../../../assets/bow.png" alt="Bow"></th>
+          <th><img class="icons" src="../../../../assets/hat.png" alt="Magician"></th>
+          <th><img class="icons" src="../../../../assets/horse.png" alt="Horse"></th>
+          <th><img class="icons" src="../../../../assets/trebuchet.png" alt="Catapult"></th>
+        </tr>
+        <tr>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.spearFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.swordFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.axeFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.archers ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.magicians ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.horsemen ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.catapults ?? 0"></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="troops-section" *ngIf="hasSupportTroops()">
+      <h5>Support Troops</h5>
+      <table>
+        <tr>
+          <th><img class="icons" src="../../../../assets/spear.png" alt="Spear"></th>
+          <th><img class="icons" src="../../../../assets/sword.png" alt="Sword"></th>
+          <th><img class="icons" src="../../../../assets/axe.png" alt="Axe"></th>
+          <th><img class="icons" src="../../../../assets/bow.png" alt="Bow"></th>
+          <th><img class="icons" src="../../../../assets/hat.png" alt="Magician"></th>
+          <th><img class="icons" src="../../../../assets/horse.png" alt="Horse"></th>
+          <th><img class="icons" src="../../../../assets/trebuchet.png" alt="Catapult"></th>
+        </tr>
+        <tr>
+          <td><input disabled class="troopsInput" [value]="report.supportTotalTroops?.spearFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.supportTotalTroops?.swordFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.supportTotalTroops?.axeFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.supportTotalTroops?.archers ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.supportTotalTroops?.magicians ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.supportTotalTroops?.horsemen ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.supportTotalTroops?.catapults ?? 0"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Caught spy - attacker view -->
+  <div *ngIf="!wasSuccessful && isAttacker" class="caught-section">
+    <h5>Your scout to {{ report.defenderVillageName }} of {{ report.defenderName }} has been caught.</h5>
+    <p>Your spy was detected and eliminated. No intelligence was gathered.</p>
+  </div>
+
+  <!-- Caught spy - defender view -->
+  <div *ngIf="!wasSuccessful && !isAttacker" class="caught-section">
+    <h5>{{ report.attackerName }} from {{ report.attackerVillageName }} tried to scout you.</h5>
+    <p>An enemy spy was intercepted at {{ report.defenderVillageName }}. The spy has been eliminated.</p>
+  </div>
+
+  <button id="back" class="buttons center" (click)="goBack()"> Back </button>
+</div>

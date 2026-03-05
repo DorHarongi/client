@@ -5,6 +5,7 @@
     <div class="skill-points">
       <span>Academy Level: {{ academyLevel }}</span>
       <span>Skill Points: {{ totalPoints }} (Available: {{ availablePoints }})</span>
+      <span *ngIf="usedPoints > 0" class="used-points">Used: {{ usedPoints }}</span>
     </div>
 
     <div class="skill-grid">
@@ -13,23 +14,73 @@
           class="skill-cell"
           *ngFor="let cell of row"
           [ngClass]="getSkillState(cell)"
-          (click)="learnSkill(cell)"
+          (click)="onSkillClick(cell)"
         >
           <div class="skill-name">{{ cell.name }}</div>
           <div class="skill-tier">Tier {{ cell.tier }}</div>
           <div class="skill-bonus">
             +{{ cell.bonusPercent }}%
           </div>
+          <div class="skill-cost">
+            Cost: <span class="skill-cost-value">{{ cell.cost }} SP</span>
+          </div>
+          <div class="skill-tooltip">
+            <div class="tooltip-title">{{ cell.name }} (Tier {{ cell.tier }})</div>
+            <div class="tooltip-line">{{ cell.description }}</div>
+            <div class="tooltip-line">Bonus: +{{ cell.bonusPercent }}%</div>
+            <div class="tooltip-line">Cost: {{ cell.cost }} Skill Point{{ cell.cost === 1 ? '' : 's' }}</div>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="skill-actions">
-      <button class="reset-btn" (click)="resetSkills()" [disabled]="loading">
-        {{ loading ? 'Processing...' : 'Reset Skills' }}
-      </button>
+      <div class="reset-row">
+        <button class="reset-btn" (click)="onResetClick()" [disabled]="loading || usedPoints <= 0">
+          {{ loading ? 'Processing...' : 'Reset Skills' }}
+        </button>
+        <div class="reset-cost" *ngIf="usedPoints > 0">
+          <span class="reset-label">Cost:</span>
+          <app-materials-cost [materialsCost]="resetCost"></app-materials-cost>
+        </div>
+      </div>
     </div>
 
     <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
   </div>
 </app-building>
+
+<!-- Learn Skill Confirmation -->
+<div class="confirm-overlay" *ngIf="showLearnConfirm && pendingLearnCell" (click)="cancelLearnConfirm()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <h4>Learn Skill</h4>
+    <div class="confirm-content">
+      <p>Learn <strong>{{ pendingLearnCell.name }}</strong> (Tier {{ pendingLearnCell.tier }})?</p>
+      <p class="confirm-detail">+{{ pendingLearnCell.bonusPercent }}% bonus</p>
+      <p class="confirm-cost">This will cost <strong>{{ pendingLearnCell.cost }}</strong> Skill Point{{ pendingLearnCell.cost === 1 ? '' : 's' }}</p>
+    </div>
+    <div class="confirm-actions">
+      <button (click)="confirmLearnSkill()" [disabled]="loading">Learn</button>
+      <button class="cancel-btn" (click)="cancelLearnConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reset Skills Confirmation -->
+<div class="confirm-overlay" *ngIf="showResetConfirm" (click)="cancelResetConfirm()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <h4>Reset All Skills</h4>
+    <div class="confirm-content">
+      <p>Are you sure you want to reset all learned skills?</p>
+      <div class="cost-reminder">
+        <span class="reset-label">Cost:</span>
+        <app-materials-cost [materialsCost]="resetCost"></app-materials-cost>
+      </div>
+      <p class="warning">All skill points will be refunded.</p>
+    </div>
+    <div class="confirm-actions">
+      <button (click)="confirmResetSkills()" [disabled]="loading">Reset</button>
+      <button class="cancel-btn" (click)="cancelResetConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>

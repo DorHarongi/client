@@ -19,11 +19,11 @@
     </div>
 
     <!-- Status Info -->
-    <div class="status-section center" *ngIf="!showAttackPanel && !attackResult">
+    <div class="status-section center" *ngIf="!showAttackPanel && !attackSent">
         <p class="location">Location: ({{boss.x}}, {{boss.y}})</p>
         <p class="time-remaining">{{getTimeRemaining()}}</p>
         
-        <div class="claim-status" *ngIf="boss.claimedByClanName">
+        <div class="claim-status" *ngIf="boss.tier !== 'mythic' && boss.claimedByClanName">
             <p *ngIf="isClaimedByMyClan()" class="claimed-by-me">
                 Claimed by your clan!
             </p>
@@ -31,7 +31,7 @@
                 Claimed by: {{boss.claimedByClanName}}
             </p>
         </div>
-        <div class="claim-status" *ngIf="!boss.claimedByClanName">
+        <div class="claim-status" *ngIf="boss.tier !== 'mythic' && !boss.claimedByClanName">
             <p class="unclaimed">Unclaimed - Attack to claim for your clan!</p>
         </div>
 
@@ -48,9 +48,13 @@
         </div>
 
         <!-- Rewards -->
-        <div class="rewards-section">
-            <h5>Rewards on defeat (per clan member):</h5>
+        <div class="rewards-section" *ngIf="boss.tier !== 'mythic'">
+            <h5>Reward on defeat:</h5>
             <app-resources-amount [resources]="getRewardResources()"></app-resources-amount>
+        </div>
+        <div class="rewards-section" *ngIf="boss.tier === 'mythic'">
+            <h5>Reward on defeat:</h5>
+            <p class="relic-reward">Divine Relic</p>
         </div>
 
         <!-- Actions -->
@@ -62,10 +66,31 @@
                         [disabled]="getEnergy() < 1 || !currentUserClan">
                     Attack Boss
                 </button>
+                <button class="action-btn" (click)="toggleLeaderboard()">
+                    {{showLeaderboard ? 'Hide Leaderboard' : 'Damage Leaderboard'}}
+                </button>
                 <button class="action-btn" (click)="close()">Close</button>
             </div>
+
+            <!-- Damage Leaderboard -->
+            <div *ngIf="showLeaderboard" class="boss-leaderboard">
+                <h5 class="center">Damage Leaderboard</h5>
+                <div *ngIf="damageLeaderboard.length === 0" class="center">No attacks yet.</div>
+                <table class="leaderboard-table" *ngIf="damageLeaderboard.length > 0">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Clan</th>
+                        <th>Total Damage</th>
+                    </tr>
+                    <tr *ngFor="let entry of damageLeaderboard; let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{entry.clanName}}</td>
+                        <td>{{entry.totalDamage | number}}</td>
+                    </tr>
+                </table>
+            </div>
             <p *ngIf="!currentUserClan" class="warning">You must be in a clan to attack bosses</p>
-            <p *ngIf="isClaimedByOtherClan()" class="warning">This boss is claimed by another clan</p>
+            <p *ngIf="boss.tier !== 'mythic' && isClaimedByOtherClan()" class="warning">This boss is claimed by another clan</p>
             <p *ngIf="getEnergy() < 1 && canAttack()" class="warning">Not enough energy</p>
         </div>
     </div>
@@ -83,7 +108,7 @@
                 <img src="assets/shield.png" class="stat-icon"> {{totalDefense}}
             </div>
             <div class="stat-row" *ngIf="armySpeed > 0">
-                <img src="assets/crop.png" class="stat-icon"> {{armySpeed}} tiles/min
+                <img src="assets/speed.png" class="stat-icon"> {{armySpeed}} tiles/min
             </div>
             <div class="stat-row" *ngIf="armySpeed > 0">
                 ETA: {{getFormattedTravelTime()}}
@@ -97,58 +122,14 @@
         </div>
     </div>
 
-    <!-- Attack Result -->
-    <div *ngIf="attackResult" class="attack-result center">
-        <h4 *ngIf="attackResult.bossDefeated" class="victory">VICTORY! Boss Defeated!</h4>
-        <h4 *ngIf="!attackResult.bossDefeated">Raid Result</h4>
-        
+    <!-- Attack Sent Confirmation -->
+    <div *ngIf="attackSent" class="attack-result center">
+        <h4>Troops Marching!</h4>
         <div class="result-details">
-            <p>Damage dealt: {{attackResult.report.actualDamage.toLocaleString()}}</p>
-            <p>Boss HP: {{formatHp(attackResult.report.bossHpBefore)}} → {{formatHp(attackResult.report.bossHpAfter)}}</p>
-            <p>Distance multiplier: {{(attackResult.report.distanceMultiplier * 100).toFixed(0)}}%</p>
+            <p>Your troops have been sent to attack <strong>{{boss.name}}</strong>.</p>
+            <p>Estimated travel time: <strong>{{getFormattedAttackEta()}}</strong></p>
+            <p class="hint-text">Results will appear in your Battle Reports once the troops arrive.</p>
         </div>
-
-        <!-- Troops Table -->
-        <div class="troop-table-section">
-            <h5>Raid Result:</h5>
-            <table class="troop-table">
-                <tr>
-                    <th><img class="troop-icon" src="assets/spear.png"></th>
-                    <th><img class="troop-icon" src="assets/sword.png"></th>
-                    <th><img class="troop-icon" src="assets/axe.png"></th>
-                    <th><img class="troop-icon" src="assets/bow.png"></th>
-                    <th><img class="troop-icon" src="assets/hat.png"></th>
-                    <th><img class="troop-icon" src="assets/horse.png"></th>
-                    <th><img class="troop-icon" src="assets/trebuchet.png"></th>
-                </tr>
-                <!-- Troops sent -->
-                <tr>
-                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.spearFighters"></td>
-                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.swordFighters"></td>
-                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.axeFighters"></td>
-                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.archers"></td>
-                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.magicians"></td>
-                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.horsemen"></td>
-                    <td><input disabled class="troops-input" [value]="attackResult.report.attackerTroops.catapults"></td>
-                </tr>
-                <!-- Troops lost -->
-                <tr>
-                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.spearFighters || 0"></td>
-                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.swordFighters || 0"></td>
-                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.axeFighters || 0"></td>
-                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.archers || 0"></td>
-                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.magicians || 0"></td>
-                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.horsemen || 0"></td>
-                    <td><input disabled class="troops-input troops-lost" [value]="attackResult.report.attackerLostTroops.catapults || 0"></td>
-                </tr>
-            </table>
-        </div>
-
-        <div *ngIf="attackResult.bossDefeated && attackResult.rewards" class="rewards-received">
-            <h5>Rewards Received:</h5>
-            <app-resources-amount [resources]="getReceivedRewards()"></app-resources-amount>
-        </div>
-
         <div class="panel-actions">
             <button class="action-btn" (click)="close()">Close</button>
         </div>

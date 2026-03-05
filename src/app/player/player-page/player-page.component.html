@@ -9,7 +9,7 @@
         <div class="profile-card center">
             <h3>
                 {{playerInfo.username}}
-                <span *ngIf="playerInfo.selectedTitle" class="player-title">[{{playerInfo.selectedTitle}}]</span>
+                <span *ngIf="playerInfo.selectedTitle" class="player-title">[{{getAchievementName(playerInfo.selectedTitle)}}]</span>
             </h3>
             
             <div class="profile-info">
@@ -20,16 +20,49 @@
                 </p>
                 <p><strong>Total Population:</strong> {{getTotalPopulation()}}</p>
                 <p><strong>Villages:</strong> {{playerInfo.villages?.length || 0}}</p>
-                <p *ngIf="isOwnProfile">
+                <div *ngIf="isOwnProfile" class="title-section">
                     <strong>Title:</strong>
-                    <select [(ngModel)]="selectedTitleControl">
-                        <option value="">None</option>
-                        <option *ngFor="let t of availableTitles" [value]="t">{{t}}</option>
-                    </select>
-                    <button class="small-btn" (click)="saveTitle()" [disabled]="titleSaving">Save</button>
-                </p>
+                    <div *ngIf="getUnlockedAchievements().length === 0" class="no-titles-message">
+                        You haven't earned any titles yet. Complete achievements to unlock titles!
+                    </div>
+                    <div *ngIf="getUnlockedAchievements().length > 0" class="title-dropdown-wrapper">
+                        <div class="title-dropdown-trigger" (click)="titleDropdownOpen = !titleDropdownOpen">
+                            <span class="title-selected-text">{{selectedTitleControl ? getAchievementName(selectedTitleControl) : 'None'}}</span>
+                            <span class="title-dropdown-arrow">{{titleDropdownOpen ? '▲' : '▼'}}</span>
+                        </div>
+                        <div *ngIf="titleDropdownOpen" class="title-dropdown-list">
+                            <div class="title-dropdown-item" 
+                                 [class.active]="selectedTitleControl === ''"
+                                 (click)="selectedTitleControl = ''; titleDropdownOpen = false">
+                                None
+                            </div>
+                            <div *ngFor="let a of getUnlockedAchievements()" 
+                                 class="title-dropdown-item"
+                                 [class.active]="selectedTitleControl === a.id"
+                                 (click)="selectedTitleControl = a.id; titleDropdownOpen = false">
+                                {{a.name}}
+                                <span class="title-desc">{{a.description}}</span>
+                            </div>
+                        </div>
+                        <button class="action-btn save-title-btn" (click)="saveTitle()" [disabled]="titleSaving">
+                            {{titleSaving ? 'Saving...' : 'Save'}}
+                        </button>
+                        <span class="success-message" *ngIf="titleSuccess">{{titleSuccess}}</span>
+                    </div>
+                </div>
                 <p *ngIf="!isOwnProfile && playerInfo.selectedTitle">
-                    <strong>Title:</strong> {{playerInfo.selectedTitle}}
+                    <strong>Title:</strong> {{getAchievementName(playerInfo.selectedTitle)}}
+                </p>
+                <p *ngIf="isOwnProfile">
+                    <strong>Theme:</strong>
+                    <select [value]="playerInfo.theme || 'default'" (change)="changeTheme($event)">
+                        <option value="default">Default</option>
+                        <option value="dark">Dark</option>
+                        <option value="ocean">Ocean</option>
+                        <option value="forest">Forest</option>
+                        <option value="blood">Blood</option>
+                        <option value="royal">Royal</option>
+                    </select>
                 </p>
                 <p *ngIf="hasBeginnerShield()" class="beginner-shield">
                     <strong>Beginner Protection:</strong> {{formatShieldTime()}} remaining

@@ -5,10 +5,14 @@ import {
   academyUpgradeMaterialCostByLevels,
   Skills,
   SKILL_METADATA,
+  SKILL_TIER_COSTS,
   getSkillPointsByAcademyLevel,
   getUsedSkillPoints,
+  canLearnSkill,
   SkillCategory,
   SkillTier,
+  getResetCost,
+  MaterialsCost,
 } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
@@ -20,6 +24,8 @@ interface SkillCell {
   tier: SkillTier;
   name: string;
   bonusPercent: number;
+  description: string;
+  cost: number;
 }
 
 @Component({
@@ -34,11 +40,19 @@ export class AcademyComponent implements OnInit, OnDestroy {
   skills!: Skills;
   availablePoints: number = 0;
   totalPoints: number = 0;
+  usedPoints: number = 0;
+  resetCost: MaterialsCost = { wood: 0, stones: 0, crop: 0 };
 
   grid: SkillCell[][] = [];
 
   loading: boolean = false;
   errorMessage: string = '';
+
+  // Confirmation dialog state
+  showLearnConfirm: boolean = false;
+  pendingLearnCell: SkillCell | null = null;
+
+  showResetConfirm: boolean = false;
 
   subscription?: Subscription;
 
@@ -74,16 +88,40 @@ export class AcademyComponent implements OnInit, OnDestroy {
   private recalculatePoints(): void {
     this.totalPoints = getSkillPointsByAcademyLevel(this.academyLevel);
     const used = getUsedSkillPoints(this.skills);
+    this.usedPoints = used;
     this.availablePoints = this.totalPoints - used;
+    this.resetCost = getResetCost(this.usedPoints);
   }
 
   private buildGrid(): void {
     const byCategory: { [key in SkillCategory]: SkillCell[] } = {} as any;
     for (const meta of SKILL_METADATA) {
+      const tierBonuses = meta.tierBonuses;
       const cells: SkillCell[] = [
-        { category: meta.category, tier: SkillTier.I, name: meta.name, bonusPercent: Math.round(meta.tierBonuses[SkillTier.I] * 100) },
-        { category: meta.category, tier: SkillTier.II, name: meta.name, bonusPercent: Math.round(meta.tierBonuses[SkillTier.II] * 100) },
-        { category: meta.category, tier: SkillTier.III, name: meta.name, bonusPercent: Math.round(meta.tierBonuses[SkillTier.III] * 100) },
+        {
+          category: meta.category,
+          tier: SkillTier.I,
+          name: meta.name,
+          description: meta.description,
+          bonusPercent: Math.round(tierBonuses[SkillTier.I] * 100),
+          cost: SKILL_TIER_COSTS[SkillTier.I],
+        },
+        {
+          category: meta.category,
+          tier: SkillTier.II,
+          name: meta.name,
+          description: meta.description,
+          bonusPercent: Math.round(tierBonuses[SkillTier.II] * 100),
+          cost: SKILL_TIER_COSTS[SkillTier.II],
+        },
+        {
+          category: meta.category,
+          tier: SkillTier.III,
+          name: meta.name,
+          description: meta.description,
+          bonusPercent: Math.round(tierBonuses[SkillTier.III] * 100),
+          cost: SKILL_TIER_COSTS[SkillTier.III],
+        },
       ];
       byCategory[meta.category] = cells;
     }
@@ -100,25 +138,15 @@ export class AcademyComponent implements OnInit, OnDestroy {
 
   getSkillState(cell: SkillCell): 'unlocked' | 'available' | 'locked' {
     const currentTier = this.skills[cell.category];
-    if (currentTier === cell.tier) return 'unlocked';
-
-    // determine if this tier is available to learn
     const tierOrder: SkillTier[] = [SkillTier.I, SkillTier.II, SkillTier.III];
-    const idx = tierOrder.indexOf(cell.tier);
-    const prevTier = idx > 0 ? tierOrder[idx - 1] : undefined;
+    const currentIdx = currentTier ? tierOrder.indexOf(currentTier) : -1;
+    const cellIdx = tierOrder.indexOf(cell.tier);
 
-    // already learned higher tier? then unlocked is the highest only
-    if (currentTier && tierOrder.indexOf(currentTier) > idx) {
-      return 'locked';
+    if (currentIdx >= cellIdx) {
+      return 'unlocked';
     }
 
-    // tier I: available if not learned yet and has points
-    if (cell.tier === 'I') {
-      return this.availablePoints > 0 && !currentTier ? 'available' : currentTier === 'I' ? 'unlocked' : 'locked';
-    }
-
-    // tier II/III: require previous tier learned
-    if (prevTier && currentTier === prevTier && this.availablePoints > 0) {
+    if (canLearnSkill(this.academyLevel, this.skills, cell.category, cell.tier)) {
       return 'available';
     }
 
@@ -126,13 +154,18 @@ export class AcademyComponent implements OnInit, OnDestroy {
   }
 
   canLearn(cell: SkillCell): boolean {
-    return this.getSkillState(cell) === 'available';
+    return canLearnSkill(this.academyLevel, this.skills, cell.category, cell.tier);
   }
 
-  learnSkill(cell: SkillCell): void {
-    if (!this.canLearn(cell) || this.loading) {
-      return;
-    }
+  onSkillClick(cell: SkillCell): void {
+    if (!this.canLearn(cell) || this.loading) return;
+    this.pendingLearnCell = cell;
+    this.showLearnConfirm = true;
+  }
+
+  confirmLearnSkill(): void {
+    if (!this.pendingLearnCell || this.loading) return;
+    const cell = this.pendingLearnCell;
 
     this.loading = true;
     this.errorMessage = '';
@@ -147,16 +180,29 @@ export class AcademyComponent implements OnInit, OnDestroy {
         this.skills = this.userInformationService.currentVillage.skills;
         this.recalculatePoints();
         this.loading = false;
+        this.cancelLearnConfirm();
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Failed to learn skill';
         this.loading = false;
+        this.cancelLearnConfirm();
       }
     });
   }
 
-  resetSkills(): void {
+  cancelLearnConfirm(): void {
+    this.showLearnConfirm = false;
+    this.pendingLearnCell = null;
+  }
+
+  onResetClick(): void {
+    if (this.loading || this.usedPoints <= 0) return;
+    this.showResetConfirm = true;
+  }
+
+  confirmResetSkills(): void {
     if (this.loading) return;
+
     this.loading = true;
     this.errorMessage = '';
 
@@ -168,11 +214,17 @@ export class AcademyComponent implements OnInit, OnDestroy {
         this.skills = this.userInformationService.currentVillage.skills;
         this.recalculatePoints();
         this.loading = false;
+        this.cancelResetConfirm();
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Failed to reset skills';
         this.loading = false;
+        this.cancelResetConfirm();
       }
     });
+  }
+
+  cancelResetConfirm(): void {
+    this.showResetConfirm = false;
   }
 }

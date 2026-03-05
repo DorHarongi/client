@@ -13,7 +13,8 @@ import {
   axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
   magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
   catapultsAttackingStat, catapultsDefenceStat,
-  calculateDistance, getArmySpeed, calculateTravelTimeMs
+  calculateDistance, getArmySpeed, calculateTravelTimeMs,
+  getSkillBonus, SkillCategory
 } from 'utils';
 
 @Component({
@@ -122,12 +123,14 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     this.showAttackPanel = true;
     this.showSupportPanel = false;
     this.showResourcesPanel = false;
+    this.updateTravelStats();
   }
 
   openSupportPanel(): void {
     this.showSupportPanel = true;
     this.showAttackPanel = false;
     this.showResourcesPanel = false;
+    this.updateTravelStats();
   }
 
   openResourcesPanel(): void {
@@ -195,8 +198,25 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       this.village.y
     );
 
-    const quickStepBonus = 0; // Skill bonus integration will be handled with Skill Tree
+    const skills = (currentVillage as any)?.skills;
+    const quickStepBonus = skills ? getSkillBonus(skills, SkillCategory.QUICK_STEP) : 0;
     this.travelTimeMs = calculateTravelTimeMs(distance, this.armySpeed, quickStepBonus);
+  }
+
+  /** Attack with Sharper Blades bonus (for display in attack confirmation). */
+  get displayAttack(): number {
+    const village = this.userInformationService.currentVillage;
+    const skills = (village as any)?.skills;
+    const bonus = skills ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) : 0;
+    return Math.floor(this.totalAttack * (1 + bonus));
+  }
+
+  /** Defense with Heroic Shield bonus (for display in attack confirmation). */
+  get displayDefense(): number {
+    const village = this.userInformationService.currentVillage;
+    const skills = (village as any)?.skills;
+    const bonus = skills ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD) : 0;
+    return Math.floor(this.totalDefense * (1 + bonus));
   }
 
   getFormattedTravelTime(): string {
@@ -318,8 +338,9 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   getDefenderVillageIndex(): number {
-    if (!this.playerInfo) return 0;
-    return this.playerInfo.villages?.findIndex((v: any) => v.villageName === this.village.villageName) || 0;
+    if (!this.playerInfo?.villages) return 0;
+    const idx = this.playerInfo.villages.findIndex((v: any) => v.villageName === this.village.villageName);
+    return idx >= 0 ? idx : 0;
   }
 
   close(): void {
@@ -352,5 +373,36 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       return `${Math.ceil(hours * 60)} minutes`;
     }
     return `${hours.toFixed(1)} hours`;
+  }
+
+  sendSpy(): void {
+    if (this.isOwnVillage || this.isSameClan) {
+      return;
+    }
+    this.errorMessage = '';
+    const attackerVillageName = this.userInformationService.currentVillage?.villageName;
+    if (!attackerVillageName) {
+      this.errorMessage = 'Could not determine your current village.';
+      return;
+    }
+    this.subscription = this.http.post<{ success: boolean; travelTimeMs: number }>(`${environment.apiUrl}/scouting/scout`, {
+      attackerVillageName,
+      defenderUsername: this.village.ownerUsername,
+      defenderVillageName: this.village.villageName,
+    }).subscribe({
+      next: (res) => {
+        const secs = Math.ceil(res.travelTimeMs / 1000);
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        const eta = m > 0 ? `${m}m ${s}s` : `${s}s`;
+        this.errorMessage = `Your spy was sent! Arrives in ${eta}.`;
+        if (this.userInformationService.currentVillage) {
+          this.userInformationService.currentVillage.aliveSpies = Math.max(0, (this.userInformationService.currentVillage.aliveSpies || 0) - 1);
+        }
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Failed to send spies';
+      }
+    });
   }
 }

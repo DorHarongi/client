@@ -8,6 +8,16 @@
         </div>
         <img class="icons clickable" src="../../../assets/map.png" (click)="goToMap()" title="World Map">
     </div>
+    <div class="theme-container">
+        <select [value]="currentTheme()" (change)="changeTheme($event)" title="Theme">
+            <option value="default">Default</option>
+            <option value="dark">Dark</option>
+            <option value="ocean">Ocean</option>
+            <option value="forest">Forest</option>
+            <option value="blood">Blood</option>
+            <option value="royal">Royal</option>
+        </select>
+    </div>
     <div class="right-side flex-container">
         <span class="resource-item" [title]="getTimeUntilMaxEnergy()">
             <img class="icons" src="../../../assets/energy.png">
@@ -16,6 +26,11 @@
         <h5 *ngIf = "getEnergy() != maxEnergy" id="timeTillNextEnergy"> ( {{getTimeTillNextEnergy() | date:'mm:ss'}} )</h5>
         <img class="icons" src="../../../assets/population.png">
         <h5> {{usedPopulation}} / {{maximumPopulation}}</h5>
+        <span class="spy-display" *ngIf="stableLevel > 0" [title]="spyTooltipText">
+            <img class="icons" src="../../../assets/spy.png" alt="Spies">
+            <h5>{{aliveSpies}} / {{maxSpies}}</h5>
+            <span class="spy-regen-countdown" *ngIf="aliveSpies < maxSpies && spyRegenCountdown">{{spyRegenCountdown}}</span>
+        </span>
         <span class="resource-item" [title]="getTimeUntilMaxCrop()">
             <img class="icons" src="../../../assets/crop.jpg">
             <h5> {{math.floor(resources.cropAmount)}} / {{maxCropStorage}}</h5>
@@ -28,16 +43,6 @@
             <img class="icons" src="../../../assets/rock.jpg">
             <h5> {{math.floor(resources.stonesAmount)}} / {{maxStonesStorage}}</h5>
         </span>
-    </div>
-    <div class="theme-container">
-        <select [value]="currentTheme()" (change)="changeTheme($event)" title="Theme">
-            <option value="default">Default</option>
-            <option value="dark">Dark</option>
-            <option value="ocean">Ocean</option>
-            <option value="forest">Forest</option>
-            <option value="blood">Blood</option>
-            <option value="royal">Royal</option>
-        </select>
     </div>
     <div class="logout-container">
         <img class="icons clickable" src="../../../assets/logout.png" (click)="logout()" title="Logout">

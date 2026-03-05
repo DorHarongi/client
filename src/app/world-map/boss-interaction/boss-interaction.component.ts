@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BossOnMap } from '../models/mapModels';
-import { BossService, BossAttackResult, TroopsAmounts } from '../services/boss.service';
+import { BossService, TroopsAmounts } from '../services/boss.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
 import {
-  bossImages, bossRewardAmounts, getDistanceBonusText,
+  bossImages, bossRewardAmounts, getDistanceBonusText, RELIC_NAMES,
   spearFighterAttackingStat, spearFighterDefenceStat, swordFighterAttackingStat, swordFighterDefenceStat,
   axeFighterAttackingStat, axeFighterDefenceStat, archerAttackingStat, archerDefenceStat,
   magicianAttackingStat, magicianDefenceStat, horsemenAttackingStat, horsemenDefenceStat,
@@ -38,7 +38,12 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   
   // Attack result
-  attackResult: BossAttackResult | null = null;
+  attackSent: boolean = false;
+  attackTravelTimeMs: number = 0;
+
+  // Damage leaderboard
+  showLeaderboard: boolean = false;
+  damageLeaderboard: { clanName: string; totalDamage: number; players: { username: string; damage: number }[] }[] = [];
 
   // Troop stats
   totalAttack: number = 0;
@@ -120,15 +125,19 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     return { crop: amount, wood: amount, stone: amount };
   }
 
-  getReceivedRewards(): ResourcesDisplayAmounts {
-    if (!this.attackResult?.rewards) {
-      return { crop: 0, wood: 0, stone: 0 };
+  /** Mythic boss relic name - from backend or client-side lookup by relicId */
+  getMythicRewardName(): string | null {
+    if (this.boss.tier !== 'mythic') return null;
+    if (this.boss.relicName) return this.boss.relicName;
+    if (this.boss.relicId) {
+      const def = RELIC_NAMES.find((r) => r.id === this.boss.relicId);
+      return def?.name ?? this.boss.relicId;
     }
-    return {
-      crop: this.attackResult.rewards.crop,
-      wood: this.attackResult.rewards.wood,
-      stone: this.attackResult.rewards.stone
-    };
+    return null;
+  }
+
+  getReceivedRewards(): ResourcesDisplayAmounts {
+    return { crop: 0, wood: 0, stone: 0 };
   }
 
   isClaimedByMyClan(): boolean {
@@ -142,7 +151,9 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   canAttack(): boolean {
     // Must be in a clan
     if (!this.currentUserClan) return false;
-    // Either not claimed or claimed by my clan
+    // Mythic: no claiming, always attackable
+    if (this.boss.tier === 'mythic') return true;
+    // Normal bosses: either not claimed or claimed by my clan
     return !this.boss.claimedByClanName || this.isClaimedByMyClan();
   }
 
@@ -284,33 +295,23 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       villageName: this.userInformationService.currentVillage.villageName,
       troops: this.chosenTroops
     }).subscribe({
-      next: (result: BossAttackResult) => {
+      next: (result) => {
         this.loading = false;
-        this.attackResult = result;
+        this.attackSent = true;
+        this.attackTravelTimeMs = result.travelTimeMs;
         this.showAttackPanel = false;
-        
-        // Update user info from backend
+
         this.userInformationService.refreshUserInformation();
 
-        // Update boss HP locally (whether defeated or not)
-        this.boss.currentHp = result.report.bossHpAfter;
-        
-        // Update boss claim status - attacking claims the boss for your clan
-        if (!this.boss.claimedByClanName && this.currentUserClan) {
+        if (!this.boss.claimedByClanName && this.currentUserClan && this.boss.tier !== 'mythic') {
           this.boss.claimedByClanName = this.currentUserClan;
-        }
-        
-        if (result.bossDefeated) {
-          // Boss was defeated - emit event immediately to update map/minimap
-          this.bossDefeated.emit();
         }
       },
       error: (err) => {
         this.loading = false;
         const errorMsg = err.error?.message || 'Attack failed';
         this.errorMessage = errorMsg;
-        
-        // If boss was defeated by someone else, update HP to 0 and show that
+
         if (errorMsg.toLowerCase().includes('already defeated') || errorMsg.toLowerCase().includes('not found')) {
           this.boss.currentHp = 0;
         }
@@ -318,17 +319,35 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     });
   }
 
-  hasAnyLosses(): boolean {
-    if (!this.attackResult) return false;
-    const losses = this.attackResult.report.attackerLostTroops;
-    return (losses.spearFighters || 0) > 0 || (losses.swordFighters || 0) > 0 ||
-      (losses.axeFighters || 0) > 0 || (losses.archers || 0) > 0 ||
-      (losses.magicians || 0) > 0 || (losses.horsemen || 0) > 0 ||
-      (losses.catapults || 0) > 0;
+  getFormattedAttackEta(): string {
+    if (!this.attackTravelTimeMs || this.attackTravelTimeMs <= 0) return 'Arriving soon';
+    const totalSeconds = Math.floor(this.attackTravelTimeMs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    if (minutes > 0) return `${minutes}m ${seconds}s`;
+    return `${seconds}s`;
+  }
+
+  toggleLeaderboard(): void {
+    if (this.showLeaderboard) {
+      this.showLeaderboard = false;
+      return;
+    }
+    this.bossService.getBossDamageLeaderboard(this.boss.id).subscribe({
+      next: (data) => {
+        this.damageLeaderboard = data;
+        this.showLeaderboard = true;
+      },
+      error: () => {
+        this.damageLeaderboard = [];
+        this.showLeaderboard = true;
+      },
+    });
   }
 
   close(): void {
-    // bossDefeated is already emitted immediately after attack succeeds
     this.closed.emit();
   }
 }

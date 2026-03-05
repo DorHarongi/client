@@ -43,6 +43,15 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   clansInPage: Array<ClanStatisticDTO> = [];
   playerLeaderboard: any[] = [];
   clanLeaderboard: any[] = [];
+  previousWeekArchive: {
+    weekEnding: string;
+    playerBossDamage: any[];
+    playerResourcesStolen: any[];
+    playerSuccessfulDefenses: any[];
+    clanBossDamage: any[];
+    clanResourcesStolen: any[];
+    clanSuccessfulDefenses: any[];
+  } | null = null;
   loading: boolean = true;
   subscription1!: Subscription;
   subscription2!: Subscription;
@@ -190,5 +199,34 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       .subscribe((clans) => {
         this.clanLeaderboard = clans;
       });
+
+    // Previous week's archive
+    this.http
+      .get<any>(`${environment.apiUrl}/users/leaderboard-archive`)
+      .subscribe((archive) => {
+        this.previousWeekArchive = archive;
+      });
+  }
+
+  getPreviousWeekPlayers(): any[] {
+    if (!this.previousWeekArchive) return [];
+    const key = this.leaderboardCategory === 'bossDamage' ? 'playerBossDamage'
+      : this.leaderboardCategory === 'resourcesStolen' ? 'playerResourcesStolen'
+      : 'playerSuccessfulDefenses';
+    return this.previousWeekArchive[key] || [];
+  }
+
+  getPreviousWeekClans(): any[] {
+    if (!this.previousWeekArchive) return [];
+    const key = this.leaderboardCategory === 'bossDamage' ? 'clanBossDamage'
+      : this.leaderboardCategory === 'resourcesStolen' ? 'clanResourcesStolen'
+      : 'clanSuccessfulDefenses';
+    return this.previousWeekArchive[key] || [];
+  }
+
+  formatArchiveWeekEnding(iso: string): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
   }
 }

@@ -61,12 +61,14 @@ export class BossService {
 
     constructor(private http: HttpClient) { }
 
-    // Attack a boss
-    attackBoss(username: string, dto: AttackBossDTO): Observable<BossAttackResult> {
-        return this.http.post<BossAttackResult>(`${environment.apiUrl}/bosses/attack/${username}`, dto);
+    attackBoss(username: string, dto: AttackBossDTO): Observable<{ travelTimeMs: number }> {
+        return this.http.post<{ travelTimeMs: number }>(`${environment.apiUrl}/bosses/attack/${username}`, dto);
     }
 
-    // Get all active bosses
+    getBossDamageLeaderboard(bossId: string): Observable<{ clanName: string; totalDamage: number; players: { username: string; damage: number }[] }[]> {
+        return this.http.get<any[]>(`${environment.apiUrl}/bosses/damage-leaderboard/${bossId}`);
+    }
+
     getAllBosses(): Observable<BossOnMap[]> {
         return this.http.get<BossOnMap[]>(`${environment.apiUrl}/bosses`);
     }

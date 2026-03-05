@@ -7,37 +7,106 @@
     min-width: 600px;
     background-image: url("../../../assets/right-bg.jpg");
     background-size: cover;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+:host-context(body[data-theme]:not([data-theme="default"])) .toolbarContainer {
+    background-color: var(--bg-secondary, #16213e);
+    background-blend-mode: multiply;
+    border-left-color: rgba(255, 255, 255, 0.15);
 }
 
 .subContainer {
     width: 250px;
     margin-left: 30px;
     margin-top: 30px;
-    background: url("../../../assets/top-bg.png");
+    background-image: url("../../../assets/top-bg.png");
+    background-size: cover;
+    background-position: center;
     border: 2px black solid;
     box-shadow: 2px 2px 2px 2px;
 }
 
-#villages{
-    height: 250px;
-    overflow-y: auto;
+:host-context(body[data-theme]:not([data-theme="default"])) .subContainer {
+    background-color: var(--bg-primary, #1a1a2e);
+    background-blend-mode: multiply;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+// Theme-aware text colors for right toolbar (all sections)
+:host-context(body[data-theme]:not([data-theme="default"])) {
+    h4, h5, .village-name, .power-value, li {
+        color: var(--text-primary) !important;
+    }
+    .edit-icon {
+        color: var(--text-primary) !important;
+    }
+    .char-counter {
+        color: var(--text-muted) !important;
+        &.limit-reached {
+            color: #dc3545 !important;
+        }
+    }
+    .rename-modal {
+        background-color: var(--bg-primary) !important;
+        background-blend-mode: multiply;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+
+        h4, .rename-input, .rename-input::placeholder {
+            color: var(--text-primary) !important;
+        }
+        .rename-input {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-color: var(--text-muted);
+        }
+    }
+    .success-message {
+        color: #28a745 !important;
+    }
+    .error-message {
+        color: #dc3545 !important;
+    }
+    .action-btn {
+        color: var(--text-primary) !important;
+        border-color: var(--text-muted) !important;
+    }
+    .save-btn {
+        background-color: rgba(40, 167, 69, 0.4);
+    }
+    .cancel-btn {
+        background-color: rgba(220, 53, 69, 0.4);
+    }
+}
+
+#villages {
+    min-height: fit-content;
+    height: auto;
+    overflow: visible;
 }
 
 #troops {
-    height: fit-content;
-    min-height: 200px;
+    min-height: 120px;
+    height: auto;
+    overflow: visible;
 }
 
 #clanTroops {
-    height: fit-content;
-    min-height: 200px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: rgba(144, 238, 144, 0.3);
+    min-height: 120px;
+    height: auto;
+    overflow: visible;
 }
 
 #production {
-    height: 250px;
+    min-height: fit-content;
+    height: auto;
+    overflow: visible;
+}
+
+#villagePower {
+    overflow: visible;
+    min-height: fit-content;
+    height: auto;
 }
 
 h5{
@@ -85,6 +154,10 @@ li {
     }
 }
 
+:host-context(body[data-theme]:not([data-theme="default"])) li:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
 .village-name {
     flex: 1;
 }
@@ -118,7 +191,8 @@ li {
 }
 
 .rename-modal {
-    background: url("../../../assets/top-bg.png");
+    background-image: url("../../../assets/top-bg.png");
+    background-size: cover;
     border: 2px black solid;
     box-shadow: 2px 2px 5px 2px;
     border-radius: 7px;

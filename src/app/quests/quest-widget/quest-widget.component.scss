@@ -51,7 +51,21 @@
 
 .quest-icon { font-size: 18px; }
 .quest-progress { flex: 1; font-weight: bold; font-size: 14px; }
-.expand-icon { font-size: 10px; opacity: 0.8; }
+
+.expand-icon {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid currentColor;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    margin-left: 2px;
+    opacity: 0.9;
+    transition: transform 0.2s ease;
+    &.expanded {
+        transform: rotate(90deg);
+    }
+}
 .widget-title { padding: 8px 12px 4px; font-weight: bold; font-size: 13px; color: #4a3520; cursor: pointer; }
 .widget-hint { padding: 4px 12px 10px; font-size: 11px; color: #666; font-style: italic; }
 

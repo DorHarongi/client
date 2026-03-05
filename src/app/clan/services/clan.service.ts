@@ -22,6 +22,7 @@ export interface ClanStatisticDTO {
     totalPopulation: number;
     isOpen: boolean;
     totalBossesKilled: number;
+    heldRelicIds?: string[];
 }
 
 export interface ClanMemberRaidStatsDTO {
@@ -107,5 +108,13 @@ export class ClanService {
 
   getClanMemberRaidStats(clanName: string): Observable<ClanMemberRaidStatsDTO[]> {
     return this.http.get<ClanMemberRaidStatsDTO[]>(`${environment.apiUrl}/clans/${clanName}/raid-stats`);
+  }
+
+  updateClanDescription(clanName: string, description: string, leaderUsername: string): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/update-description`, {
+      clanName,
+      description,
+      leaderUsername
+    });
   }
 }

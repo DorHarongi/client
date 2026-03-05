@@ -1,9 +1,11 @@
 /* Theme variables - apply via data-theme on body */
+/* --bg-primary: top toolbar, subContainer boxes | --bg-secondary: right toolbar panel */
 [data-theme="default"] {
   --bg-primary: #7d5210;
   --bg-secondary: #5c3d0a;
   --accent: #b7950b;
   --text-primary: #f5e6c8;
+  --text-muted: #c9b896;
 }
 
 [data-theme="dark"] {
@@ -11,6 +13,7 @@
   --bg-secondary: #16213e;
   --accent: #0f3460;
   --text-primary: #e8e8e8;
+  --text-muted: #b0b0b0;
 }
 
 [data-theme="ocean"] {
@@ -18,6 +21,7 @@
   --bg-secondary: #144272;
   --accent: #205295;
   --text-primary: #e8f4fc;
+  --text-muted: #b8d4e8;
 }
 
 [data-theme="forest"] {
@@ -25,6 +29,7 @@
   --bg-secondary: #2d6a4f;
   --accent: #40916c;
   --text-primary: #d8f3dc;
+  --text-muted: #95d5b2;
 }
 
 [data-theme="blood"] {
@@ -32,6 +37,7 @@
   --bg-secondary: #6b1111;
   --accent: #9d0208;
   --text-primary: #fce8e8;
+  --text-muted: #e8b8b8;
 }
 
 [data-theme="royal"] {
@@ -39,6 +45,7 @@
   --bg-secondary: #3c096c;
   --accent: #5a189a;
   --text-primary: #e0aaff;
+  --text-muted: #c77dff;
 }
 
 html, body {

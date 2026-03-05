@@ -25,6 +25,35 @@
                 <div *ngIf="form['confirmPassword'].errors['passwordMismatch']">Passwords do not match</div>
             </div>
         </div>
+
+        <div class="server-select-section">
+            <label class="server-label">Server</label>
+            <div *ngIf="serverLoading" class="server-loading">Loading servers...</div>
+            <div *ngIf="serverError" class="server-error">{{ serverError }}</div>
+
+            <div *ngIf="!serverLoading && !serverError" class="server-dropdown" (click)="dropdownOpen = !dropdownOpen" [class.open]="dropdownOpen">
+                <div class="server-selected">
+                    <span *ngIf="selectedServerId != null">{{ getSelectedServerName() }}</span>
+                    <span *ngIf="selectedServerId == null" class="placeholder">Choose a server</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="server-options" *ngIf="dropdownOpen">
+                    <div
+                        *ngFor="let server of servers"
+                        class="server-option"
+                        [class.active]="selectedServerId === server.serverId"
+                        [class.closed]="server.isClosed || server.status === 'ended'"
+                        (click)="selectServer(server); $event.stopPropagation()">
+                        <span class="option-name">{{ server.name }}</span>
+                        <span class="option-status" [class.ended]="server.status === 'ended'" [class.closed]="server.isClosed">
+                            {{ server.isClosed ? 'Closed' : server.status }}
+                        </span>
+                        <span class="option-players" *ngIf="server.playerCount != null">{{ server.playerCount }} players</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div *ngIf="errorMessage" class="error-message">
             {{errorMessage}}
         </div>

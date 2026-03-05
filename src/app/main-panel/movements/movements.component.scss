@@ -1,53 +1,82 @@
+:host {
+    display: block;
+}
+
+:host:empty,
+:host:not(:has(.movements-container)) {
+    display: none;
+}
+
 .movements-container {
     position: absolute;
     top: 10px;
     right: 260px;
-    max-width: 260px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
+    width: 280px;
+    background: rgba(30, 20, 10, 0.88);
+    border: 2px solid #7d5210;
+    border-radius: 8px;
     padding: 8px 10px;
-    border-radius: 6px;
+    color: #e8dcc8;
     font-size: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.section-header {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #c9a84c;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.3);
 }
 
 .movements-section + .movements-section {
-    margin-top: 6px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding-top: 4px;
-}
-
-.movements-section h4 {
-    margin: 0 0 4px 0;
-    font-size: 13px;
-    font-weight: bold;
+    margin-top: 8px;
 }
 
 .movement-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 2px;
+    height: 28px;
+    gap: 6px;
+    padding: 2px 0;
+
+    &.enemy {
+        .movement-name {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .movement-timer {
+            color: #e74c3c;
+        }
+    }
 }
 
-.movement-main {
-    display: flex;
-    flex-direction: column;
+.movement-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    object-fit: contain;
 }
 
-.movement-label {
-    font-weight: bold;
-    color: #ffd700;
-}
-
-.movement-from,
-.movement-to {
-    font-size: 11px;
-}
-
-.movement-countdown {
-    font-weight: bold;
+.movement-name {
+    flex: 1;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+}
+
+.movement-timer {
+    flex-shrink: 0;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    color: #ffd700;
+    font-size: 12px;
+    min-width: 65px;
+    text-align: right;
 }
 
 @media (max-width: 900px) {
@@ -55,6 +84,6 @@
         position: static;
         margin: 8px auto;
         max-width: 95%;
+        width: auto;
     }
 }
-

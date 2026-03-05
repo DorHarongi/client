@@ -5,6 +5,13 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
 import { Village } from '../models/Village';
 import { TroopsAmounts } from '../models/troopsAmounts';
 import { environment } from 'src/environments/environment';
+import {
+  spearFighterAttackingStat, swordFighterAttackingStat, axeFighterAttackingStat, archerAttackingStat,
+  magicianAttackingStat, horsemenAttackingStat, catapultsAttackingStat,
+  spearFighterDefenceStat, swordFighterDefenceStat, axeFighterDefenceStat, archerDefenceStat,
+  magicianDefenceStat, horsemenDefenceStat, catapultsDefenceStat,
+  getSkillBonus, SkillCategory,
+} from 'utils';
 
 const MAX_VILLAGE_NAME_LENGTH = 20;
 
@@ -42,6 +49,9 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
   clanHorsemen: number = 0;
   clanCatapults: number = 0;
   hasClan: boolean = false;
+
+  totalAttack: number = 0;
+  totalDefense: number = 0;
 
   villages: Array<string> = [];
   activeVillage: number = 0;
@@ -117,6 +127,30 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
       this.clanHorsemen = 0;
       this.clanCatapults = 0;
     }
+
+    const v = this.userInformationService.currentVillage;
+    const troops = v.troops;
+    const support = v.clanTroops || { spearFighters: 0, swordFighters: 0, axeFighters: 0, archers: 0, magicians: 0, horsemen: 0, catapults: 0 };
+    const baseAttack =
+      (troops.spearFighters + support.spearFighters) * spearFighterAttackingStat +
+      (troops.swordFighters + support.swordFighters) * swordFighterAttackingStat +
+      (troops.axeFighters + support.axeFighters) * axeFighterAttackingStat +
+      (troops.archers + support.archers) * archerAttackingStat +
+      (troops.magicians + support.magicians) * magicianAttackingStat +
+      (troops.horsemen + support.horsemen) * horsemenAttackingStat +
+      (troops.catapults + support.catapults) * catapultsAttackingStat;
+    const baseDefense =
+      (troops.spearFighters + support.spearFighters) * spearFighterDefenceStat +
+      (troops.swordFighters + support.swordFighters) * swordFighterDefenceStat +
+      (troops.axeFighters + support.axeFighters) * axeFighterDefenceStat +
+      (troops.archers + support.archers) * archerDefenceStat +
+      (troops.magicians + support.magicians) * magicianDefenceStat +
+      (troops.horsemen + support.horsemen) * horsemenDefenceStat +
+      (troops.catapults + support.catapults) * catapultsDefenceStat;
+    const sharperBlades = getSkillBonus(v.skills, SkillCategory.SHARPER_BLADES);
+    const heroicShield = getSkillBonus(v.skills, SkillCategory.HEROIC_SHIELD);
+    this.totalAttack = Math.floor(baseAttack * (1 + sharperBlades));
+    this.totalDefense = Math.floor(baseDefense * (1 + heroicShield));
   }
 
   switchToVillage(index: number) // clicked on a differnet village

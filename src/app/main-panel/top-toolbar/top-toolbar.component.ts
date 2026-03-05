@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { warehouseStorageByLevel, quartersPopulationByLevel, maxEnergy, energyProductionSpeedPerSecond } from 'utils';
+import { warehouseStorageByLevel, quartersPopulationByLevel, maxEnergy, energyProductionSpeedPerSecond, getMaxSpies, SPY_REGEN_TIME_MS } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { LoginService } from 'src/app/login/login.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ResourcesAmounts } from '../models/resourcesAmounts';
 import { Village } from '../models/Village';
 import { Router } from '@angular/router';
-import { Subscription, forkJoin, timer } from 'rxjs';
+import { Subscription, forkJoin, interval, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -30,9 +30,16 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
 
   unreadCount: number = 0;
 
+  stableLevel: number = 0;
+  aliveSpies: number = 0;
+  maxSpies: number = 0;
+  spyTooltipText: string = 'Spy capacity';
+  spyRegenCountdown: string = '';
+
   subscription!: Subscription;
   unreadSubscription?: Subscription;
   notificationSubscription?: Subscription;
+  spyCountdownSubscription?: Subscription;
 
   constructor(
     private userInformationService: UserInformationService, 
@@ -49,6 +56,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     this.unreadSubscription?.unsubscribe();
     this.notificationSubscription?.unsubscribe();
+    this.spyCountdownSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -68,6 +76,29 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
         this.unreadCount--;
       }
     });
+
+    // Real-time spy regen countdown (same tick as energy timer - every second)
+    this.updateSpyTooltip();
+    this.spyCountdownSubscription = interval(1000).subscribe(() => this.updateSpyTooltip());
+  }
+
+  private updateSpyTooltip(): void {
+    this.spyTooltipText = this.getSpyRegenTooltip();
+    this.spyRegenCountdown = this.getSpyRegenCountdownVisible();
+  }
+
+  getSpyRegenCountdownVisible(): string {
+    if (this.stableLevel <= 0 || this.aliveSpies >= this.maxSpies) return '';
+    const timestamps = this.spyDeathTimestamps.map((t) => (typeof t === 'string' ? new Date(t).getTime() : (t as Date).getTime())).sort((a, b) => a - b);
+    if (timestamps.length === 0) return '';
+    const now = Date.now();
+    const nextRegenAt = timestamps[0] + SPY_REGEN_TIME_MS;
+    const msLeft = Math.max(0, nextRegenAt - now);
+    if (msLeft <= 0) return '';
+    const h = Math.floor(msLeft / 3600000);
+    const m = Math.floor((msLeft % 3600000) / 60000);
+    const s = Math.floor((msLeft % 60000) / 1000);
+    return `Next in: ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   }
 
   loadUnreadCount(): void {
@@ -153,6 +184,33 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
 
     this.maximumPopulation = quartersPopulationByLevel[village.buildingsLevels.quartersLevel];
     this.usedPopulation = this.calculateTotalTroops(village) + this.calculateTotalWorkers(village);
+
+    this.stableLevel = village.buildingsLevels?.stableLevel ?? 0;
+    this.maxSpies = this.stableLevel > 0 ? getMaxSpies(this.stableLevel) : 0;
+    this.aliveSpies = village.aliveSpies ?? 0;
+    this.spyDeathTimestamps = (village as any).spyDeathTimestamps || [];
+    this.updateSpyTooltip();
+  }
+
+  spyDeathTimestamps: Date[] = [];
+
+  getSpyRegenTooltip(): string {
+    if (this.stableLevel <= 0 || this.aliveSpies >= this.maxSpies) {
+      return 'Spy capacity';
+    }
+    const timestamps = this.spyDeathTimestamps.map((t) => (typeof t === 'string' ? new Date(t).getTime() : (t as Date).getTime())).sort((a, b) => a - b);
+    if (timestamps.length === 0) {
+      return 'Spies on mission. They will return once the mission is complete.';
+    }
+    const now = Date.now();
+    const nextRegenAt = timestamps[0] + SPY_REGEN_TIME_MS;
+    const deadCount = timestamps.filter((ts) => ts + SPY_REGEN_TIME_MS > now).length;
+    if (deadCount === 0) return 'Spy capacity';
+    const msLeft = Math.max(0, nextRegenAt - now);
+    const h = Math.floor(msLeft / 3600000);
+    const m = Math.floor((msLeft % 3600000) / 60000);
+    const timeStr = h > 0 ? `${h} hour${h > 1 ? 's' : ''} ${m} min` : `${m} min`;
+    return `Your next spy will be available in ${timeStr}`;
   }
 
   getEnergy(): number{

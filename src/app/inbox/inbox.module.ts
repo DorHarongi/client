@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InboxComponent } from './inbox/inbox.component';
 import { AttackReportComponent } from './attack-report/attack-report.component';
+import { ScoutReportComponent } from './scout-report/scout-report.component';
 import { MainPanelModule } from '../main-panel/main-panel.module';
-
-
 
 @NgModule({
   declarations: [
     InboxComponent,
-    AttackReportComponent
+    AttackReportComponent,
+    ScoutReportComponent
   ],
   imports: [
     CommonModule,

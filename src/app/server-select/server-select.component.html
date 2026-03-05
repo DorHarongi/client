@@ -1,0 +1,33 @@
+<div class="server-select-container">
+  <h2>Select Server</h2>
+  <p class="subtitle">Choose a world to play in.</p>
+
+  <div *ngIf="loading" class="loading">Loading servers...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!loading && !error" class="server-list">
+    <div
+      *ngFor="let server of servers"
+      class="server-card"
+      [class.selected]="selectedServerId === server.serverId"
+      (click)="selectServer(server)">
+      <span class="server-name">{{ server.name }}</span>
+      <span class="server-status"
+            [class.ended]="server.status === 'ended'"
+            [class.closed]="server.isClosed">
+        {{ server.isClosed ? 'Closed for registration' : server.status }}
+      </span>
+      <span class="server-players" *ngIf="server.playerCount && server.playerCount > 0">Players: {{ server.playerCount }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error" class="actions">
+    <button
+      type="button"
+      class="btn-enter"
+      [disabled]="joining || selectedServerId == null"
+      (click)="enterGame()">
+      {{ joining ? 'Entering...' : 'Enter Game' }}
+    </button>
+  </div>
+</div>

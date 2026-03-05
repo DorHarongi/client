@@ -1,8 +1,34 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { ClanService, ClanDTO, ClanMemberRaidStatsDTO } from '../services/clan.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { environment } from 'src/environments/environment';
+
+interface RelicDoc {
+  relicId: string;
+  holderUsername: string | null;
+  holderVillageName: string | null;
+  holderClanName: string | null;
+  transferCooldownUntil: string | null;
+}
+
+// Measured pixel centers of each relic on the 640x427 canvas
+const RELIC_CENTERS: { id: string; x: number; y: number }[] = [
+  { id: 'eternal_flame',        x: 318, y: 109 },
+  { id: 'chalice_of_ascension', x: 422, y: 146 },
+  { id: 'sigil_of_creation',    x: 427, y: 240 },
+  { id: 'all_seeing_orb',       x: 210, y: 239 },
+  { id: 'apple_of_eternity',    x: 215, y: 139 },
+];
+const RELIC_DISPLAY_NAMES: Record<string, string> = {
+  apple_of_eternity: 'Apple of Eternity',
+  eternal_flame: 'Eternal Flame',
+  chalice_of_ascension: 'Chalice of Ascension',
+  all_seeing_orb: 'All-Seeing Orb',
+  sigil_of_creation: 'Sigil of Creation',
+};
 
 @Component({
   selector: 'app-clan-page',
@@ -10,6 +36,7 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
   styleUrls: ['./clan-page.component.scss']
 })
 export class ClanPageComponent implements OnInit, OnDestroy {
+  @ViewChild('relicCanvas') relicCanvasRef!: ElementRef<HTMLCanvasElement>;
 
   clanName: string = '';
   clanInfo?: ClanDTO;
@@ -24,16 +51,27 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   isMember: boolean = false;
   hasAlreadyRequested: boolean = false;
 
-  // Messages for feedback instead of alerts
   successMessage: string = '';
   errorMessage: string = '';
 
-  // Clan name editing
   editingClanName: boolean = false;
   newClanName: string = '';
 
-  // Raid stats
+  editingDescription: boolean = false;
+  newDescription: string = '';
+
   memberRaidStats: ClanMemberRaidStatsDTO[] = [];
+
+  // Relics
+  relics: RelicDoc[] = [];
+  clanRelics: RelicDoc[] = [];
+  showRelicTransfer: boolean = false;
+  selectedRelicId: string = '';
+  transferTargetUser: string = '';
+  transferTargetVillage: string = '';
+  relicError: string = '';
+  transferPlayerVillages: { villageName: string; population: number }[] = [];
+  loadingVillages: boolean = false;
 
   subscription?: Subscription;
 
@@ -41,7 +79,8 @@ export class ClanPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private clanService: ClanService,
-    private userInformationService: UserInformationService
+    private userInformationService: UserInformationService,
+    private http: HttpClient,
   ) {
     this.currentUsername = this.userInformationService.userInformation.username;
     this.currentUserClan = this.userInformationService.userInformation.clanName || '';
@@ -73,8 +112,8 @@ export class ClanPageComponent implements OnInit, OnDestroy {
           this.isMember = clan.members.includes(this.currentUsername);
           this.hasAlreadyRequested = this.userInformationService.userInformation.pendingClanRequests?.includes(this.clanName) || false;
           
-          // Load raid stats for clan members
           this.loadMemberRaidStats();
+          this.loadRelics();
         },
         error: () => {
           this.loading = false;
@@ -248,6 +287,36 @@ export class ClanPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Clan description editing
+  startEditingDescription(): void {
+    this.editingDescription = true;
+    this.newDescription = this.clanInfo?.description || '';
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  cancelEditingDescription(): void {
+    this.editingDescription = false;
+    this.newDescription = '';
+  }
+
+  saveDescription(): void {
+    this.clanService.updateClanDescription(this.clanName, this.newDescription.trim(), this.currentUsername)
+      .subscribe({
+        next: () => {
+          if (this.clanInfo) {
+            this.clanInfo.description = this.newDescription.trim();
+          }
+          this.editingDescription = false;
+          this.successMessage = 'Description updated!';
+          setTimeout(() => this.successMessage = '', 3000);
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to update description';
+        }
+      });
+  }
+
   toggleClanOpen(): void {
     if (!this.clanInfo) return;
     
@@ -275,5 +344,161 @@ export class ClanPageComponent implements OnInit, OnDestroy {
 
   formatDate(date: Date | string): string {
     return new Date(date).toLocaleDateString();
+  }
+
+  // ========== RELICS ==========
+
+  loadRelics(): void {
+    this.http.get<RelicDoc[]>(`${environment.apiUrl}/relics`).subscribe({
+      next: (all) => {
+        this.relics = all;
+        this.clanRelics = all.filter(r => r.holderClanName === this.clanName);
+        setTimeout(() => this.drawRelicImage(), 100);
+      },
+    });
+  }
+
+  getRelicName(id: string): string {
+    return RELIC_DISPLAY_NAMES[id] || id;
+  }
+
+  isClanRelic(id: string): boolean {
+    return this.clanRelics.some(r => r.relicId === id);
+  }
+
+  getRelicHolder(id: string): RelicDoc | undefined {
+    return this.relics.find(r => r.relicId === id);
+  }
+
+  getMemberRelics(username: string): string[] {
+    return this.relics
+      .filter(r => r.holderUsername === username && r.holderClanName === this.clanName)
+      .map(r => this.getRelicName(r.relicId));
+  }
+
+  onRelicClick(relicId: string): void {
+    const relic = this.getRelicHolder(relicId);
+    if (!relic || relic.holderClanName !== this.clanName) return;
+
+    if (this.isLeader) {
+      this.selectedRelicId = relicId;
+      this.transferTargetUser = '';
+      this.transferTargetVillage = '';
+      this.relicError = '';
+      this.transferPlayerVillages = [];
+      this.showRelicTransfer = true;
+    }
+  }
+
+  onTransferPlayerChange(): void {
+    this.transferTargetVillage = '';
+    this.transferPlayerVillages = [];
+    if (!this.transferTargetUser) return;
+    this.loadingVillages = true;
+    this.http.get<any>(`${environment.apiUrl}/users/profile/${this.transferTargetUser}`).subscribe({
+      next: (user) => {
+        this.transferPlayerVillages = (user.villages || []).map((v: any) => ({
+          villageName: v.villageName,
+          population: v.population || 0,
+        }));
+        this.loadingVillages = false;
+      },
+      error: () => {
+        this.transferPlayerVillages = [];
+        this.loadingVillages = false;
+      },
+    });
+  }
+
+  confirmRelicTransfer(): void {
+    if (!this.transferTargetUser || !this.transferTargetVillage) {
+      this.relicError = 'Select a player and a village';
+      return;
+    }
+    this.http.post(`${environment.apiUrl}/relics/transfer`, {
+      relicId: this.selectedRelicId,
+      targetUsername: this.transferTargetUser,
+      targetVillageName: this.transferTargetVillage,
+    }).subscribe({
+      next: () => {
+        this.showRelicTransfer = false;
+        this.loadRelics();
+      },
+      error: (e) => {
+        this.relicError = e.error?.message || 'Transfer failed';
+      },
+    });
+  }
+
+  cancelRelicTransfer(): void {
+    this.showRelicTransfer = false;
+  }
+
+  private drawRelicImage(): void {
+    const canvas = this.relicCanvasRef?.nativeElement;
+    if (!canvas) return;
+
+    const heldIds = new Set(this.clanRelics.map(r => r.relicId));
+
+    const allImg = new Image();
+    const noImg = new Image();
+    let loaded = 0;
+
+    const onLoad = () => {
+      loaded++;
+      if (loaded < 2) return;
+
+      const w = 640;
+      const h = 427;
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d')!;
+
+      const offAll = document.createElement('canvas');
+      offAll.width = w; offAll.height = h;
+      offAll.getContext('2d')!.drawImage(allImg, 0, 0, w, h);
+      const allData = offAll.getContext('2d')!.getImageData(0, 0, w, h);
+
+      const offNo = document.createElement('canvas');
+      offNo.width = w; offNo.height = h;
+      offNo.getContext('2d')!.drawImage(noImg, 0, 0, w, h);
+      const noData = offNo.getContext('2d')!.getImageData(0, 0, w, h);
+
+      // Pre-compute which source image to use per relic center
+      const centerSources = RELIC_CENTERS.map(c => heldIds.has(c.id));
+
+      const result = ctx.createImageData(w, h);
+
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          // Voronoi: find nearest relic center
+          let minDist = Infinity;
+          let nearestIdx = 0;
+          for (let i = 0; i < RELIC_CENTERS.length; i++) {
+            const dx = x - RELIC_CENTERS[i].x;
+            const dy = y - RELIC_CENTERS[i].y;
+            const dist = dx * dx + dy * dy;
+            if (dist < minDist) {
+              minDist = dist;
+              nearestIdx = i;
+            }
+          }
+
+          const idx = (y * w + x) * 4;
+          const src = centerSources[nearestIdx] ? allData : noData;
+          result.data[idx]     = src.data[idx];
+          result.data[idx + 1] = src.data[idx + 1];
+          result.data[idx + 2] = src.data[idx + 2];
+          result.data[idx + 3] = src.data[idx + 3];
+        }
+      }
+
+      ctx.putImageData(result, 0, 0);
+    };
+
+    allImg.onload = onLoad;
+    noImg.onload = onLoad;
+    allImg.src = 'assets/all-relics.png';
+    noImg.src = 'assets/no-relics.png';
   }
 }

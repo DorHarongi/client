@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, interval, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { User } from '../main-panel/models/User';
 import { UserInformationService } from '../user-information/user-information.service';
 import { environment } from '../../environments/environment';
@@ -88,6 +89,7 @@ export class LoginService {
   private clearSession(): void {
     sessionStorage.removeItem(TOKEN_KEY);
     sessionStorage.removeItem(TOKEN_EXPIRY_KEY);
+    sessionStorage.removeItem('serverId');
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
@@ -99,38 +101,33 @@ export class LoginService {
 
   login(username: string, password: string): Observable<LoginResponse>
    {
-     let observable: Observable<LoginResponse> = this.http.post<LoginResponse>(`${environment.apiUrl}/users/login`, {
+     return this.http.post<LoginResponse>(`${environment.apiUrl}/users/login`, {
        username: username,
        password: password
-     });
-      observable.subscribe({
-        next: (response: LoginResponse) => {
-          this.isloggedIn = true;
-          this.storeToken(response.token, response.ttlMinutes);
-          this.userInformationService.setUserInformation(response.user);
-          this.router.navigate(['home']);
-        }
-      });
-      return observable;
+     }).pipe(
+       tap((response: LoginResponse) => {
+         this.isloggedIn = true;
+         this.storeToken(response.token, response.ttlMinutes);
+         this.userInformationService.setUserInformation(response.user);
+         this.router.navigate(['home']);
+       })
+     );
     }
 
-  register(username: string, password: string): void
+  register(username: string, password: string): Observable<LoginResponse>
    {
-     this.http.post<LoginResponse>(`${environment.apiUrl}/users/register`, {
+     return this.http.post<LoginResponse>(`${environment.apiUrl}/users/register`, {
        username: username,
        password: password
-     }).subscribe({
-        next: (response: LoginResponse) => {
-          this.isloggedIn = true;
-          this.storeToken(response.token, response.ttlMinutes);
-          this.userInformationService.setUserInformation(response.user);
-          this.router.navigate(['home']);
-        },
-        error: (err) => {
-          console.error('Registration failed:', err);
-        }
-      });
-    }
+     }).pipe(
+       tap((response: LoginResponse) => {
+         this.isloggedIn = true;
+         this.storeToken(response.token, response.ttlMinutes);
+         this.userInformationService.setUserInformation(response.user);
+         this.router.navigate(['home']);
+       })
+     );
+   }
 
   logout(): void {
     this.isloggedIn = false;

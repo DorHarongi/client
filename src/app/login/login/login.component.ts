@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../login.service';
 import { Subscription } from 'rxjs';
+import { ServerService, ServerListItem } from 'src/app/services/server.service';
 
 
 @Component({
@@ -15,12 +16,20 @@ export class LoginComponent implements OnInit, OnDestroy {
     submitted = false;
     returnUrl!: string;
     subscription!: Subscription;
+    errorMessage: string = '';
+
+    servers: ServerListItem[] = [];
+    serverLoading = true;
+    serverError: string | null = null;
+    selectedServerId: number | null = null;
+    dropdownOpen = false;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private loginService: LoginService
+        private loginService: LoginService,
+        private serverService: ServerService
     ) {
         // redirect to home if already logged in
         if (this.loginService.isUserLoggedIn()) {
@@ -40,10 +49,34 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
 
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
+        this.serverService.getServers().subscribe({
+            next: (list) => {
+                this.servers = list;
+                this.serverLoading = false;
+                if (list.length > 0 && this.selectedServerId == null) {
+                    this.selectServer(list[0]);
+                }
+            },
+            error: () => {
+                this.serverError = 'Could not load server list.';
+                this.serverLoading = false;
+            }
+        });
     }
 
     // convenience getter for easy access to form fields
     get form() { return this.loginForm.controls; }
+
+    selectServer(server: ServerListItem): void {
+        this.selectedServerId = server.serverId;
+        this.dropdownOpen = false;
+    }
+
+    getSelectedServerName(): string {
+        const s = this.servers.find(sv => sv.serverId === this.selectedServerId);
+        return s ? s.name : '';
+    }
 
     async onSubmit() {
         this.submitted = true;
@@ -53,12 +86,27 @@ export class LoginComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (this.selectedServerId == null) {
+            this.errorMessage = 'Please choose a server.';
+            return;
+        }
+
         this.loading = true;
-        this.subscription = this.loginService.login(this.form['username'].value, this.form['password'].value).subscribe({
-             error:()=>{
-                this.loading = false;
-            }
-        });
+        this.errorMessage = '';
+
+        // Persist chosen server so X-Server-Id header is correct
+        sessionStorage.setItem('serverId', String(this.selectedServerId));
+
+        this.subscription = this.loginService.login(this.form['username'].value, this.form['password'].value)
+            .subscribe({
+                next: () => {
+                    this.loading = false;
+                },
+                error: (err) => {
+                    this.loading = false;
+                    this.errorMessage = err.error?.message || 'Login failed';
+                }
+            });
 
             
     }

@@ -1,17 +1,44 @@
 <div class = "flexContainer attackContainer round-square">
+    <!-- Boss raid report layout (ROADMAP: boss image, HP before/after, progress bar, reward) -->
+    <div *ngIf="isBossReport" class="boss-report-section">
+        <h4 class="boss-report-title">Boss Raid Report</h4>
+        <div class="boss-image-row">
+            <img [src]="getBossImageSrc()" alt="{{ attackReport.bossName }}" class="boss-report-image">
+        </div>
+        <h4 class="boss-name">{{ attackReport.bossName }}</h4>
+        <div class="boss-hp-block">
+            <p class="hp-line">Damage dealt: {{ attackReport.bossDamageDealt | number }}</p>
+            <p class="hp-line">HP before: {{ attackReport.bossHpBefore | number }}</p>
+            <p class="hp-line">HP after: {{ attackReport.bossHpAfter | number }}</p>
+            <div class="hp-progress-bar">
+                <div class="hp-progress-fill" [style.width.%]="getBossHpPercent()"></div>
+            </div>
+            <p class="hp-percent">{{ getBossHpPercent() | number:'1.1-1' }}% remaining</p>
+        </div>
+        <div *ngIf="attackReport.attackerWon && attackReport.bossRelicName" class="boss-reward-block">
+            <h5>Reward</h5>
+            <p class="boss-relic-reward">{{ attackReport.bossRelicName }}</p>
+        </div>
+        <div *ngIf="attackReport.attackerWon && !attackReport.bossRelicName && attackReport.bossReward && (attackReport.bossReward.woodAmount > 0 || attackReport.bossReward.stonesAmount > 0 || attackReport.bossReward.cropAmount > 0)" class="boss-reward-block">
+            <h5>Reward</h5>
+            <app-resources-amount [label]="''" [resources]="{ wood: attackReport.bossReward.woodAmount, stone: attackReport.bossReward.stonesAmount, crop: attackReport.bossReward.cropAmount }"></app-resources-amount>
+        </div>
+    </div>
+
     <div *ngFor="let troopTypeKeyValue of troopDictionariesByType | keyvalue">
         <!-- this ng for runs 3 times - 1st attacker for troops, 2nd defender troops, 3rd support troops -->
         <div *ngIf = "troopTypeKeyValue.key == 'attacker'" >
-            <h5> Attacker: {{attackReport.attackerName}} </h5>
+            <h5> {{ isBossReport ? 'Your troops' : 'Attacker' }}: {{attackReport.attackerName}} </h5>
             <h5> Village: {{attackReport.attackerVillageName}} </h5>
-            <h5> Attacker total attack: {{attackReport.attackerTotalAttack}} </h5>
+            <h5 *ngIf="!isBossReport"> Attacker total attack: {{attackReport.attackerTotalAttack}} </h5>
+            <h5 *ngIf="isBossReport"> Damage dealt: {{attackReport.attackerTotalAttack | number}} </h5>
         </div>
-        <div *ngIf = "troopTypeKeyValue.key == 'defender'" >
+        <div *ngIf = "troopTypeKeyValue.key == 'defender' && !isBossReport" >
             <h5> Defender: {{attackReport.defenderName}}</h5>
             <h5> Village: {{attackReport.defenderVillageName}}</h5>
             <h5 *ngIf ="!userAttackedAndLost"> Defender army defence: {{attackReport.defenderTotalArmyDefence}}</h5>
         </div>
-        <div *ngIf = "troopTypeKeyValue.key == 'support' && !userAttackedAndLost" >
+        <div *ngIf = "troopTypeKeyValue.key == 'support' && !userAttackedAndLost && !isBossReport" >
             <h5> Support army defence: {{attackReport.defenderTotalSupportArmyDefence}} </h5>
         </div>
 
@@ -65,19 +92,20 @@
         </table>
     </div>
 
-    <h5 *ngIf="!userAttackedAndLost; else noneOfYourArmyReturned">
+    <h5 *ngIf="!isBossReport && !userAttackedAndLost; else noneOfYourArmyReturned">
         Wall defence:
         {{attackReport.wallDefence}}
     </h5>
 
     <ng-template #noneOfYourArmyReturned>
-        <h5> Defender: {{attackReport.defenderName}}</h5>
-        <h5> Village: {{attackReport.defenderVillageName}}</h5>
-        <h5>None of your soldiers returned.</h5>
+        <h5 *ngIf="!isBossReport && userAttackedAndLost"> Defender: {{attackReport.defenderName}}</h5>
+        <h5 *ngIf="!isBossReport && userAttackedAndLost"> Village: {{attackReport.defenderVillageName}}</h5>
+        <h5 *ngIf="!isBossReport && userAttackedAndLost">None of your soldiers returned.</h5>
     </ng-template>
     
 
     <app-resources-amount 
+        *ngIf="!isBossReport"
         [label]="'Loot stolen:'"
         [resources]="getLootResources()">
     </app-resources-amount>

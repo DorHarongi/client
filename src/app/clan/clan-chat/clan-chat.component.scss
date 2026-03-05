@@ -1,49 +1,106 @@
+$game-bg: #f5e6d3;
+$game-bg-dark: #e8d4b8;
+$game-brown: #8B4513;
+$game-brown-dark: #654321;
+$game-gold: #d4a84b;
+$game-text: #3d2914;
+
 .clan-chat {
-    margin-top: 16px;
-    padding: 8px 10px;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 6px;
-    color: #fff;
-    max-height: 260px;
+    margin-top: 20px;
+    padding: 14px 16px;
+    background-image: url(../../../assets/top-bg.png);
+    background-size: cover;
+    border: 2px solid $game-brown;
+    border-radius: 10px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
+
+    h4 {
+        text-align: center;
+        color: $game-text;
+        margin: 0 0 10px 0;
+        font-weight: 700;
+    }
 }
 
 .messages {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 8px;
-    max-height: 180px;
+    margin-bottom: 10px;
+    max-height: 220px;
+    min-height: 100px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid $game-brown;
+    border-radius: 6px;
+    padding: 8px 10px;
 }
 
 .message-row {
-    margin-bottom: 4px;
+    margin-bottom: 5px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.15);
+    color: $game-text;
+
+    &:last-child {
+        border-bottom: none;
+    }
 }
 
 .sender {
-    font-weight: bold;
+    font-weight: 700;
+    color: $game-brown-dark;
 }
 
 .sender.leader {
-    color: #00aaff;
-    font-weight: bold;
+    color: $game-gold;
+    font-weight: 700;
 }
 
 .content {
-    margin-left: 4px;
+    margin-left: 6px;
+    color: $game-text;
 }
 
 .input-row {
     display: flex;
-    gap: 4px;
-}
+    gap: 8px;
 
-.input-row input {
-    flex: 1;
-    padding: 4px 6px;
-}
+    input {
+        flex: 1;
+        padding: 6px 10px;
+        border: 1px solid $game-brown;
+        border-radius: 0.25rem;
+        outline: none;
+        background: rgba(255, 255, 255, 0.6);
+        color: $game-text;
+        font-size: 0.9em;
 
-.input-row button {
-    padding: 4px 10px;
-}
+        &:focus {
+            border-color: $game-gold;
+            box-shadow: 0 0 0 1px $game-gold;
+        }
+    }
 
+    button {
+        background-image: url(../../../assets/top-bg.png);
+        border: 1px solid black;
+        outline: none;
+        border-radius: 0.25rem;
+        box-shadow: 2px 2px 2px 2px;
+        padding: 6px 16px;
+        cursor: pointer;
+        font-weight: 600;
+        color: $game-text;
+        transition: background 0.15s, transform 0.1s;
+
+        &:hover:not(:disabled) {
+            transform: scale(1.02);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+}

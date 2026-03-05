@@ -101,6 +101,48 @@ $topToolbarMinHeight: 75px;
     border-radius: 5px;
   }
 
+  .leaderboard-tabs {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .small-btn {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px solid black;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+
+    &.active {
+      background-image: none;
+      background-color: #5a3d2b;
+      color: #f5deb3;
+      font-weight: bold;
+      border: 2px solid #3d2817;
+    }
+
+    &:hover:not(.active) {
+      background-color: #ddd;
+    }
+  }
+
+  .leaderboards-container {
+    margin-top: 10px;
+  }
+
+  .leaderboard-archive {
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+
   .player-himself{
     background: #85ff85;
   }

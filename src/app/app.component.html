@@ -1,6 +1,8 @@
 <div class="server-ended-banner" *ngIf="serverEnded && winningClanName">
   Clan <strong>{{ winningClanName }}</strong> has won this server.
 </div>
+<!-- Block all actions when server has ended (ROADMAP: disable all action buttons globally) -->
+<div class="server-ended-overlay" *ngIf="serverEnded" title="Server has ended. No further actions are allowed."></div>
 <app-top-toolbar *ngIf="isLoggedIn()"></app-top-toolbar>
 <router-outlet></router-outlet>
 <app-quest-widget *ngIf="isLoggedIn()"></app-quest-widget>

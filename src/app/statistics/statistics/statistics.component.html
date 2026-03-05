@@ -77,7 +77,7 @@
                         <th class="center">Rank</th>
                         <th class="center">Player</th>
                         <th class="center">Clan</th>
-                        <th class="center">Value</th>
+                        <th class="center">Amount</th>
                     </tr>
                     <tr *ngFor="let p of playerLeaderboard; let i = index" class="center bordered">
                         <td>{{i + 1}}</td>
@@ -92,9 +92,40 @@
                     <tr>
                         <th class="center">Rank</th>
                         <th class="center">Clan</th>
-                        <th class="center">Value</th>
+                        <th class="center">Amount</th>
                     </tr>
                     <tr *ngFor="let c of clanLeaderboard; let i = index" class="center bordered">
+                        <td>{{i + 1}}</td>
+                        <td class="clickable" (click)="goToClan(c._id)">{{c._id}}</td>
+                        <td>{{c.totalStat}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div *ngIf="previousWeekArchive && (getPreviousWeekPlayers().length > 0 || getPreviousWeekClans().length > 0)" class="leaderboard-archive margin-top">
+                <h4 class="center">Previous week (ending {{formatArchiveWeekEnding(previousWeekArchive.weekEnding)}})</h4>
+                <table id="table" class="center bordered margin-top">
+                    <tr>
+                        <th class="center">Rank</th>
+                        <th class="center">Player</th>
+                        <th class="center">Clan</th>
+                        <th class="center">Amount</th>
+                    </tr>
+                    <tr *ngFor="let p of getPreviousWeekPlayers(); let i = index" class="center bordered">
+                        <td>{{i + 1}}</td>
+                        <td class="clickable" (click)="goToPlayer(p.username)">{{p.username}}</td>
+                        <td class="clickable" *ngIf="p.clanName" (click)="goToClan(p.clanName)">{{p.clanName}}</td>
+                        <td *ngIf="!p.clanName">No clan</td>
+                        <td>{{p.stat}}</td>
+                    </tr>
+                </table>
+                <table id="table" class="center bordered margin-top">
+                    <tr>
+                        <th class="center">Rank</th>
+                        <th class="center">Clan</th>
+                        <th class="center">Amount</th>
+                    </tr>
+                    <tr *ngFor="let c of getPreviousWeekClans(); let i = index" class="center bordered">
                         <td>{{i + 1}}</td>
                         <td class="clickable" (click)="goToClan(c._id)">{{c._id}}</td>
                         <td>{{c.totalStat}}</td>

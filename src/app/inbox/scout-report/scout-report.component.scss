@@ -1,0 +1,91 @@
+$scoutPanelWidth: 644px;
+$scoutPanelHeight: 80%;
+$scoutPanelPadding: 1%;
+$topToolbarHeight: max(7.5vh, 75px);
+$MaybeNegativeLeft: calc((100% - $scoutPanelWidth) / 2);
+$MaybeNegativeTop: calc((100% - $scoutPanelHeight) / 2 + $topToolbarHeight / 2);
+$panelLeft: max($MaybeNegativeLeft, 0px);
+$panelTop: max($MaybeNegativeTop, $topToolbarHeight);
+
+.scout-report-container {
+    height: $scoutPanelHeight;
+    left: $panelLeft;
+    top: $panelTop;
+    max-width: 100%;
+    min-height: 125px;
+    box-shadow: 1px 1px 3px 3px;
+    position: fixed;
+    flex-wrap: nowrap;
+    padding-left: $scoutPanelPadding;
+    padding-right: $scoutPanelPadding;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.round-square {
+    border-radius: 7px;
+}
+
+.center {
+    align-self: center;
+}
+
+.buttons {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    margin-bottom: 3%;
+    width: 100px;
+}
+
+.icons {
+    width: 25px;
+    height: 25px;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+}
+
+.troopsInput {
+    width: 90px;
+    padding: 2px 3px 2px 0px;
+    border: 1px solid #7d5210;
+    text-align: center;
+}
+
+table {
+    margin-bottom: 5%;
+    margin-top: 2%;
+}
+
+h4 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+h5 {
+    font-variant-numeric: tabular-nums;
+    min-width: fit-content;
+    width: max-content;
+    font-size: medium;
+}
+
+.troops-section {
+    margin: 2% 0;
+}
+
+.caught-section {
+    text-align: center;
+    padding: 20px 10px;
+
+    h5 {
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #666;
+        font-style: italic;
+    }
+}
