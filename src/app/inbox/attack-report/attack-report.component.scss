@@ -43,6 +43,7 @@ $attackPanelTop: max($MaybeNegativeattackPanelTop, $topToolbarHeight);
     height: 25px;
     display: block;
     margin: 0 auto;
+    object-fit: contain;
 }
 
 .troopsInput{
@@ -81,3 +82,46 @@ h5 {
     margin-left: 10px;
     margin-right: 3px;
 }
+
+.boss-report-section {
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid #8B4513;
+    border-radius: 8px;
+    background: url(../../../assets/top-bg.png) center/cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.boss-report-title {
+    margin-top: 0;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #000;
+}
+.boss-image-row { text-align: center; margin: 0.5rem 0; }
+.boss-report-image { max-width: 150px; height: auto; } /* 25% bigger than 120px */
+.boss-name {
+    text-align: center;
+    color: #000;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0.35rem 0;
+}
+.boss-hp-block { margin: 0.5rem 0; }
+.boss-hp-block .hp-line { margin: 0.2rem 0; color: #1a1a1a; }
+.hp-progress-bar {
+    width: 100%;
+    height: 1.25rem;
+    background: #3d2a0a;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0.25rem 0;
+}
+.hp-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b0000, #c4a84a);
+    transition: width 0.3s ease;
+}
+.hp-percent { font-variant-numeric: tabular-nums; }
+.boss-reward-block { margin-top: 0.5rem; }
+.boss-relic-reward { font-weight: bold; color: #b7950b; margin: 0.25rem 0; }

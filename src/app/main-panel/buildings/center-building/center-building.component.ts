@@ -186,6 +186,14 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
     return `has-boss boss-${boss.tier}`;
   }
 
+  /** Quarters 1-3: tier1, 4-7: tier2, 8-10: tier3 */
+  getVillageTierIcon(village: VillageOnMap): string {
+    const q = village.quartersLevel ?? 1;
+    if (q <= 3) return 'assets/tier1-village.png';
+    if (q <= 7) return 'assets/tier2-village.png';
+    return 'assets/tier3-village.png';
+  }
+
   createNewVillage(): void {
     if (!this.selectedCell || !this.newVillageName.trim()) {
       this.errorMessage = 'Please select a cell and enter a village name';

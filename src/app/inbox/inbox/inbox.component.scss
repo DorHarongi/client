@@ -153,11 +153,17 @@ tr, td{
 }
 
 .icons{
-    vertical-align: unset;
+    vertical-align: middle;
     height: 24px;
     width: 24px;
     margin-right: 5px;
     margin-left: 10px;
+    object-fit: contain;
+
+    &.boss-message-icon {
+        height: 30px;
+        width: 30px;
+    }
 }
 
 .title{

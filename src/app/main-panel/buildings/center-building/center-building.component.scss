@@ -28,7 +28,7 @@
 }
 
 // Colors matching world map
-$enemy-color: #ff0026;    // Red - enemy villages
+$enemy-color: #ad001a;   // Red - enemy villages
 $clan-color: #1e90ff;     // Blue - clan villages
 $your-color: #90EE90;     // Green - your own villages
 
@@ -173,8 +173,8 @@ $your-color: #90EE90;     // Green - your own villages
     }
 
     .boss-icon {
-        width: 35px;
-        height: 35px;
+        width: 44px;
+        height: 44px;
         object-fit: contain;
     }
 }
@@ -267,8 +267,8 @@ $your-color: #90EE90;     // Green - your own villages
     }
 
     .boss-icon {
-      width: 30px;
-      height: 30px;
+      width: 38px;
+      height: 38px;
     }
 
     .coords {

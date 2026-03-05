@@ -30,7 +30,7 @@
                          [ngClass]="cell.boss ? getBossCellClass(cell.boss) : ''">
                         <span class="coords">{{cell.x}},{{cell.y}}</span>
                         <div *ngIf="cell.village && !cell.boss" class="village-marker">
-                            <img src="assets/village.png" class="village-icon">
+                            <img [src]="getVillageTierIcon(cell.village)" class="village-icon">
                         </div>
                         <div *ngIf="cell.boss" class="boss-marker">
                             <img [src]="bossService.getBossImagePath(cell.boss.tier)" class="boss-icon">

@@ -2,7 +2,8 @@ $topToolbarHeight: 7.5vh;
 $topToolbarMinHeight: 75px;
 
 // Shared colors for map elements...
-$enemy-color: #ff0026;    // Red - enemy villages & enemy claimed bosses
+$enemy-color: #ad001a;   // Red - enemy village cells on main map
+$enemy-minimap-color: #ff0026;  // Minimap enemy (different from main map per user request)
 $clan-color: #1e90ff;     // Blue - clan villages & your clan's claimed bosses
 $your-color: #90EE90;     // Green - your own villages
 
@@ -214,8 +215,8 @@ $your-color: #90EE90;     // Green - your own villages
   }
 
   .boss-icon {
-    width: 45px;
-    height: 45px;
+    width: 56px;
+    height: 56px;
     object-fit: contain;
   }
 }
@@ -246,7 +247,7 @@ $your-color: #90EE90;     // Green - your own villages
   position: absolute;
   width: 4px;
   height: 4px;
-  background-color: $enemy-color;
+  background-color: $enemy-minimap-color;  // Minimap keeps original color
   
   &.own {
     background-color: $your-color;
@@ -300,7 +301,7 @@ $your-color: #90EE90;     // Green - your own villages
   
   &.own { background-color: $your-color; }
   &.clan { background-color: $clan-color; }
-  &.enemy { background-color: $enemy-color; }
+  &.enemy { background-color: $enemy-minimap-color; }  // Legend describes minimap
 }
 
 .legend-skull {
@@ -420,8 +421,8 @@ $your-color: #90EE90;     // Green - your own villages
     }
 
     .boss-icon {
-      width: 38px;
-      height: 38px;
+      width: 48px;
+      height: 48px;
     }
 
     .coords {

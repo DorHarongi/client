@@ -298,11 +298,21 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   getBossCellClass(boss: BossOnMap): string {
     const classes = ['has-boss', `boss-${boss.tier}`];
-    if (this.isBossClaimedByMyClan(boss)) {
-      classes.push('boss-claimed-by-me');
-    } else if (boss.claimedByClanName) {
-      classes.push('boss-claimed');
+    if (boss.tier !== 'mythic') {
+      if (this.isBossClaimedByMyClan(boss)) {
+        classes.push('boss-claimed-by-me');
+      } else if (boss.claimedByClanName) {
+        classes.push('boss-claimed');
+      }
     }
     return classes.join(' ');
+  }
+
+  /** Quarters 1-3: tier1, 4-7: tier2, 8-10: tier3 */
+  getVillageTierIcon(village: VillageOnMap): string {
+    const q = village.quartersLevel ?? 1;
+    if (q <= 3) return 'assets/tier1-village.png';
+    if (q <= 7) return 'assets/tier2-village.png';
+    return 'assets/tier3-village.png';
   }
 }

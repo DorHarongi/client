@@ -1,5 +1,7 @@
 #toolbar {
-    background: url("../../../assets/top-bg.png");
+    background-image: url("../../../assets/top-bg.png");
+    background-size: cover;
+    background-position: center;
     width: 100%;
     height: 7.5vh;
     top: 0;
@@ -7,11 +9,33 @@
     border: 2px black solid;
     position: fixed;
     display: flex;
+    align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
     min-height: 75px;
     -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
     touch-action: pan-x; // Allow horizontal touch scrolling
+}
+
+// Theme tint: only when theme is set and not default (no theme = original look)
+// Top toolbar uses --bg-primary; right toolbar uses --bg-secondary for differentiation
+// Safari fix: remove background-image when themed so colors apply correctly (Safari keeps bg image on top of colors)
+:host-context(body[data-theme]:not([data-theme="default"])) #toolbar {
+    background-image: none;
+    background-color: var(--bg-primary, #1a1a2e);
+    border-color: rgba(255, 255, 255, 0.15);
+
+    h5, .resource-item, .spy-display, #timeTillNextEnergy {
+        color: var(--text-primary) !important;
+    }
+    .spy-regen-countdown {
+        color: var(--text-muted) !important;
+    }
+    .theme-container select {
+        color: var(--text-primary);
+        border-color: var(--text-muted);
+        background-color: rgba(0, 0, 0, 0.3);
+    }
 }
 
 .clickable{
@@ -53,12 +77,36 @@
     justify-content: flex-end;
 }
 
+.theme-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 120px;
+    flex-shrink: 0;
+    padding: 0 15px;
+
+    select {
+        padding: 6px 10px;
+        font-size: 14px;
+        border: 1px solid #7d5210;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.95);
+        cursor: pointer;
+        min-height: 36px;
+    }
+}
+
 .logout-container {
     display: flex;
     align-items: center;
     margin-left: 20px;
     margin-right: 20px;
     flex-shrink: 0;
+}
+
+#toolbar h5 {
+    color: #000;
 }
 
 .left-side {
@@ -108,4 +156,26 @@ h5 {
     display: flex;
     align-items: center;
     cursor: default;
+}
+
+.spy-display {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-left: 10px;
+    cursor: default;
+    max-width: 140px;
+}
+
+.spy-regen-countdown {
+    font-size: 10px;
+    color: #888;
+    white-space: nowrap;
+    width: 100%;
+    margin-left: 55px;
+    display: none;
+}
+
+.spy-display:hover .spy-regen-countdown {
+    display: inline;
 }

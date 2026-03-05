@@ -22,8 +22,9 @@
         </tr>
         <tr (click)="openAttackReportPopup(attackReport)" *ngFor="let attackReport of attackReportsInPage" class="bordered clickable-row" [class.unread]="!isReportRead(attackReport)">
             <td class="title">
-                <img *ngIf = "attackReport.attackerName == this.username" src="../../../assets/swords.png" class="icons"> 
-                <img *ngIf = "attackReport.attackerName != this.username" src="../../../assets/shield.png" class="icons"> 
+                <img *ngIf="attackReport.reportType === 'spy'" src="../../../assets/spy.png" class="icons">
+                <img *ngIf="attackReport.reportType !== 'spy' && attackReport.attackerName == this.username" src="../../../assets/swords.png" class="icons"> 
+                <img *ngIf="attackReport.reportType !== 'spy' && attackReport.attackerName != this.username" src="../../../assets/shield.png" class="icons"> 
                 {{makeAttackReportTitle(attackReport)}}
             </td>
             <td>{{getAttackResult(attackReport)}}</td>
@@ -44,7 +45,7 @@
         </tr>
         <tr *ngFor="let message of messagesInPage" class="bordered clickable-row" [class.unread]="!isMessageRead(message)" (click)="openMessageModal(message)">
             <td class="title">
-                <img [src]="getMessageIcon(message)" class="icons">
+                <img [src]="getMessageIcon(message)" class="icons" [class.boss-message-icon]="isBossDefeatedMessage(message.type)">
                 {{getDisplaySubject(message)}}
             </td>
             <td>{{message.senderUsername || 'System'}}</td>
@@ -76,7 +77,8 @@
     <button id = "back" class="buttons center" (click)="goBack()"> Back </button>
 </div>
 
-<app-attack-report *ngIf="attackReportPopupOpened" [attackReport]="clickedAttackReport" (closed)="attackReportPopupClosed()"></app-attack-report>
+<app-attack-report *ngIf="attackReportPopupOpened && clickedAttackReport && clickedAttackReport.reportType !== 'spy'" [attackReport]="clickedAttackReport" (closed)="attackReportPopupClosed()"></app-attack-report>
+<app-scout-report *ngIf="attackReportPopupOpened && clickedAttackReport && clickedAttackReport.reportType === 'spy'" [report]="clickedAttackReport" [currentUsername]="username" (closed)="attackReportPopupClosed()"></app-scout-report>
 
 <!-- Message Modal -->
 <div *ngIf="messageModalOpened && selectedMessage" class="modal-overlay" (click)="closeMessageModal()">

@@ -6,6 +6,7 @@ export interface VillageOnMap {
     ownerUsername: string;
     villageName: string;
     clanName?: string;
+    quartersLevel?: number;
 }
 
 export interface BossOnMap {
@@ -19,6 +20,8 @@ export interface BossOnMap {
     claimedByClanId?: string;
     claimedByClanName?: string;
     expiresAt?: Date;
+    relicId?: string;
+    relicName?: string;
 }
 
 export interface MapWindowResponse {

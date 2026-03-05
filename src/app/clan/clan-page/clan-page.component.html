@@ -17,7 +17,18 @@
     <div *ngIf="!loading && clanInfo" class="clan-content">
         <div class="clan-card center">
             <div class="clan-info">
-                <p><strong>Description:</strong> {{clanInfo.description || 'No description'}}</p>
+                <p *ngIf="!editingDescription">
+                    <strong>Description:</strong> {{clanInfo.description || 'No description'}}
+                    <span *ngIf="isLeader" class="edit-icon clickable" (click)="startEditingDescription()" title="Edit description">✏️</span>
+                </p>
+                <div *ngIf="editingDescription" class="description-edit">
+                    <strong>Description:</strong>
+                    <textarea [(ngModel)]="newDescription" maxlength="200" rows="3" class="description-input" placeholder="Enter clan description..."></textarea>
+                    <div class="description-edit-actions">
+                        <button class="small-btn accept" (click)="saveDescription()">Save</button>
+                        <button class="small-btn decline" (click)="cancelEditingDescription()">Cancel</button>
+                    </div>
+                </div>
                 <p><strong>Leader:</strong>&nbsp;
                     <span class="member-link" (click)="goToMember(clanInfo.leaderUsername)">{{clanInfo.leaderUsername}}</span>
                 </p>
@@ -38,6 +49,7 @@
                         <th>Username</th>
                         <th>Role</th>
                         <th>Weekly Raid Damage</th>
+                        <th *ngIf="isMember">Relics</th>
                         <th *ngIf="isLeader">Actions</th>
                     </tr>
                     <tr *ngFor="let member of clanInfo.members" 
@@ -45,6 +57,7 @@
                         <td class="clickable" (click)="goToMember(member)">{{member}}</td>
                         <td>{{member === clanInfo.leaderUsername ? 'Leader' : 'Member'}}</td>
                         <td>{{formatDamage(getMemberRaidDamage(member))}}</td>
+                        <td *ngIf="isMember">{{getMemberRelics(member).join(', ') || '-'}}</td>
                         <td *ngIf="isLeader">
                             <button class="small-btn kick" 
                                     *ngIf="member !== currentUsername"
@@ -57,7 +70,68 @@
                 </table>
             </div>
 
+            <!-- Relics Section -->
+            <div class="relics-section" *ngIf="isMember">
+                <h4>Divine Relics</h4>
+                <div class="relic-image-container center">
+                    <canvas #relicCanvas class="relic-canvas"></canvas>
+                </div>
+                <div class="relic-details">
+                    <div *ngFor="let id of ['apple_of_eternity','eternal_flame','chalice_of_ascension','all_seeing_orb','sigil_of_creation']"
+                         class="relic-item"
+                         [class.held]="isClanRelic(id)"
+                         [class.clickable]="isClanRelic(id)"
+                         (click)="onRelicClick(id)">
+                        <span class="relic-name">{{getRelicName(id)}}</span>
+                        <span *ngIf="getRelicHolder(id)?.holderClanName === clanName" class="relic-holder">
+                            Held by {{getRelicHolder(id)?.holderUsername}} ({{getRelicHolder(id)?.holderVillageName}})
+                        </span>
+                        <span *ngIf="getRelicHolder(id)?.holderClanName !== clanName" class="relic-empty">Not held</span>
+                    </div>
+                </div>
+
+                <!-- Transfer Modal -->
+                <div *ngIf="showRelicTransfer" class="relic-transfer-modal">
+                    <h5>Transfer {{getRelicName(selectedRelicId)}}</h5>
+                    <p class="relic-warning">Cannot be moved again for 7 days.</p>
+                    <label>Player:</label>
+                    <select [(ngModel)]="transferTargetUser" (ngModelChange)="onTransferPlayerChange()">
+                        <option value="">-- Select --</option>
+                        <option *ngFor="let m of clanInfo!.members" [value]="m">{{m}}</option>
+                    </select>
+
+                    <div *ngIf="loadingVillages" class="loading-villages">Loading villages...</div>
+
+                    <div *ngIf="transferPlayerVillages.length > 0" class="village-select-section">
+                        <label>Select Village:</label>
+                        <table class="village-select-table bordered">
+                            <tr>
+                                <th>Village</th>
+                                <th>Population</th>
+                                <th>Select</th>
+                            </tr>
+                            <tr *ngFor="let v of transferPlayerVillages"
+                                [class.selected-village]="transferTargetVillage === v.villageName"
+                                (click)="transferTargetVillage = v.villageName">
+                                <td>{{v.villageName}}</td>
+                                <td>{{v.population}}</td>
+                                <td class="center">
+                                    <span *ngIf="transferTargetVillage === v.villageName">✔</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <p class="error-message" *ngIf="relicError">{{relicError}}</p>
+                    <div class="relic-transfer-actions">
+                        <button class="action-btn" (click)="confirmRelicTransfer()">Confirm</button>
+                        <button class="action-btn" (click)="cancelRelicTransfer()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
             <app-clan-chat
+                *ngIf="isMember"
                 [clanName]="clanName"
                 [currentUsername]="currentUsername">
             </app-clan-chat>
