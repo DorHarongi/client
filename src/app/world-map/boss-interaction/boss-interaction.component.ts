@@ -347,6 +347,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     });
   }
 
+  isMythicBoss(): boolean {
+    return this.boss.tier === ('mythic' as any);
+  }
+
   close(): void {
     this.closed.emit();
   }
