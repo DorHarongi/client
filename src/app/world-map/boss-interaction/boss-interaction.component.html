@@ -3,7 +3,7 @@
     
     <!-- Boss Info -->
     <div class="boss-header center">
-        <img [src]="getBossImagePath()" class="boss-image">
+        <img [src]="getBossImagePath()" class="boss-image" [class.boss-image-mythic]="isMythicBoss()">
         <h4 class="boss-name">{{boss.name}}</h4>
         <span class="boss-tier tier-{{boss.tier}}">{{boss.tier | uppercase}}</span>
     </div>

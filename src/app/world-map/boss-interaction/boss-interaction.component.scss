@@ -123,6 +123,11 @@
   height: 120px;
   object-fit: contain;
   margin-bottom: 10px;
+
+  &.boss-image-mythic {
+    width: 177px;
+    height: 128px;
+  }
 }
 
 .boss-name {
@@ -139,6 +144,7 @@
   &.tier-rare { background-color: #3498db; color: white; }
   &.tier-epic { background-color: #9b59b6; color: white; }
   &.tier-legendary { background-color: #f1c40f; color: black; }
+  &.tier-mythic { color: orange; }
 }
 
 .hp-section {

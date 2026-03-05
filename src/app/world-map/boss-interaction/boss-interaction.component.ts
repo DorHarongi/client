@@ -327,6 +327,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       (losses.catapults || 0) > 0;
   }
 
+  isMythicBoss(): boolean {
+    return this.boss.tier === ('mythic' as any);
+  }
+
   close(): void {
     // bossDefeated is already emitted immediately after attack succeeds
     this.closed.emit();
