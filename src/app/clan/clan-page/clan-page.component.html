@@ -32,7 +32,7 @@
                 <p><strong>Leader:</strong>&nbsp;
                     <span class="member-link" (click)="goToMember(clanInfo.leaderUsername)">{{clanInfo.leaderUsername}}</span>
                 </p>
-                <p><strong>Members:</strong> {{clanInfo.members.length}}</p>
+                <p><strong>Members:</strong> {{clanInfo.members.length}}/20</p>
                 <p><strong>Status:</strong> {{clanInfo.isOpen ? 'Open' : 'Closed'}}
                     <button *ngIf="isLeader" class="small-btn toggle-status" (click)="toggleClanOpen()">
                         {{clanInfo.isOpen ? 'Make Closed' : 'Make Open'}}
@@ -149,7 +149,7 @@
                         <td>{{request.username}}</td>
                         <td>{{request.message || '-'}}</td>
                         <td>
-                            <button class="small-btn accept" (click)="handleJoinRequest(request.username, true)">Accept</button>
+                            <button class="small-btn accept" (click)="handleJoinRequest(request.username, true)" [disabled]="isClanFull()" [title]="isClanFull() ? 'Clan is full' : ''">Accept</button>
                             <button class="small-btn decline" (click)="handleJoinRequest(request.username, false)">Decline</button>
                         </td>
                     </tr>
@@ -163,6 +163,7 @@
                 <button class="action-btn join-btn" *ngIf="canJoin()" (click)="openJoinModal()">
                     {{clanInfo.isOpen ? 'Join Clan' : 'Request to Join'}}
                 </button>
+                <span *ngIf="!isMember && !currentUserClan && isClanFull()" class="error-message">Clan is full (20/20 members)</span>
                 <span *ngIf="hasAlreadyRequested" class="request-pending">Request Pending</span>
                 <button class="action-btn leave-btn" *ngIf="isMember && !isLeader" (click)="leaveClan()">
                     Leave Clan

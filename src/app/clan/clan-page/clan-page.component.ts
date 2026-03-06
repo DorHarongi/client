@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { ClanService, ClanDTO, ClanMemberRaidStatsDTO } from '../services/clan.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
+import { MAX_CLAN_MEMBERS } from 'utils';
 
 interface RelicDoc {
   relicId: string;
@@ -334,8 +335,12 @@ export class ClanPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  isClanFull(): boolean {
+    return (this.clanInfo?.members?.length ?? 0) >= MAX_CLAN_MEMBERS;
+  }
+
   canJoin(): boolean {
-    return !this.isMember && !this.currentUserClan && !this.hasAlreadyRequested;
+    return !this.isMember && !this.currentUserClan && !this.hasAlreadyRequested && !this.isClanFull();
   }
 
   goBack(): void {

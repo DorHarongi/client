@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { BuildingTypes } from '../models/BuildingTypes';
@@ -9,33 +9,31 @@ import { IntervalService } from '../services/interval.service';
 @Component({
   selector: 'app-main-panel',
   templateUrl: './main-panel.component.html',
-  styleUrls: ['./main-panel.component.scss']
+  styleUrls: ['./main-panel.component.scss'],
 })
 export class MainPanelComponent implements OnInit, OnDestroy {
-
   hoveredBuildingIndex: number = -1;
   village!: Village;
   subscription!: Subscription;
   routeSubscription!: Subscription;
-  
+
   // Weather system
   isRaining: boolean = false;
   isSnowing: boolean = false;
-  isRainFading: boolean = false;  // Stops new drops but lets existing ones fall
-  isSnowFading: boolean = false;  // Stops new flakes but lets existing ones fall
+  isRainFading: boolean = false; // Stops new drops but lets existing ones fall
+  isSnowFading: boolean = false; // Stops new flakes but lets existing ones fall
   rainDrops: number[] = [];
   snowFlakes: number[] = [];
   private weatherCheckInterval: any;
   private weatherTimeout: any;
   private weatherFadeTimeout: any;
-  
+
   constructor(
-    private userInformationService: UserInformationService, 
+    private userInformationService: UserInformationService,
     private router: Router,
     private route: ActivatedRoute,
     private intervalService: IntervalService
-  )
-  { 
+  ) {
     this.intervalService.startIntervals();
     // Generate arrays for rain drops and snowflakes
     this.rainDrops = Array.from({ length: 150 }, (_, i) => i);
@@ -43,63 +41,63 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.subscription)
-      this.subscription.unsubscribe();
-    if(this.routeSubscription)
-      this.routeSubscription.unsubscribe();
-    if(this.weatherCheckInterval)
-      clearInterval(this.weatherCheckInterval);
-    if(this.weatherTimeout)
-      clearTimeout(this.weatherTimeout);
-    if(this.weatherFadeTimeout)
-      clearTimeout(this.weatherFadeTimeout);
+    if (this.subscription) this.subscription.unsubscribe();
+    if (this.routeSubscription) this.routeSubscription.unsubscribe();
+    if (this.weatherCheckInterval) clearInterval(this.weatherCheckInterval);
+    if (this.weatherTimeout) clearTimeout(this.weatherTimeout);
+    if (this.weatherFadeTimeout) clearTimeout(this.weatherFadeTimeout);
   }
 
-  ngOnInit(): void
-  {
+  ngOnInit(): void {
     this.village = this.userInformationService.currentVillage;
-    
+
     // Start weather check system
     this.checkWeather();
     this.weatherCheckInterval = setInterval(() => this.checkWeather(), 1000);
-    
+
     // Handle village name from route parameter
-    this.routeSubscription = this.route.params.subscribe(params => {
+    this.routeSubscription = this.route.params.subscribe((params) => {
       const villageName = params['villageName'];
       if (villageName) {
-        const villageIndex = this.userInformationService.userInformation.villages.findIndex(
-          v => v.villageName === villageName
-        );
-        if (villageIndex >= 0 && villageIndex !== this.userInformationService.currentVillageIndex) {
+        const villageIndex =
+          this.userInformationService.userInformation.villages.findIndex(
+            (v) => v.villageName === villageName
+          );
+        if (
+          villageIndex >= 0 &&
+          villageIndex !== this.userInformationService.currentVillageIndex
+        ) {
           this.userInformationService.switchVillage(villageIndex);
         }
       }
     });
 
-    this.subscription = this.userInformationService.villageChanged$.subscribe(()=>{
-      this.village = this.userInformationService.currentVillage;
-      // Update URL to reflect current village
-      this.router.navigate(['home', this.village.villageName], { replaceUrl: true });
-    })
+    this.subscription = this.userInformationService.villageChanged$.subscribe(
+      () => {
+        this.village = this.userInformationService.currentVillage;
+        // Update URL to reflect current village
+        this.router.navigate(['home', this.village.villageName], {
+          replaceUrl: true,
+        });
+      }
+    );
   }
 
-  handleClickedBuilding(index: number)
-  {
-    this.router.navigateByUrl("/" + BuildingTypes[index]);
+  handleClickedBuilding(index: number) {
+    this.router.navigateByUrl('/' + BuildingTypes[index]);
   }
 
-  handleHoveredBuilding(event: any, index: number)
-  {
+  handleHoveredBuilding(event: any, index: number) {
     this.hoveredBuildingIndex = index;
   }
 
-  handleMouseLeave()
-  {
+  handleMouseLeave() {
     this.hoveredBuildingIndex = -1;
   }
 
-  print(event: any) // for building polygons around buiildings
-  {
+  print(
+    event: any // for building polygons around buiildings
+  ) {
     // console.log(event.clientX + "," + event.clientY);
   }
 
@@ -108,13 +106,13 @@ export class MainPanelComponent implements OnInit, OnDestroy {
     const now = new Date();
     const minutes = now.getMinutes();
     const seconds = now.getSeconds();
-    
+
     // Only trigger at the start of the minute (seconds 0-1)
     if (seconds > 1) return;
-    
+
     // Already showing weather, don't restart
     if (this.isRaining || this.isSnowing) return;
-    
+
     // Snow: divisible by 15 (0, 15, 30, 45)
     if (minutes % 15 === 0) {
       this.startSnow();
@@ -124,7 +122,7 @@ export class MainPanelComponent implements OnInit, OnDestroy {
       this.startRain();
     }
   }
-  
+
   private startRain(): void {
     this.isRaining = true;
     this.isRainFading = false;
@@ -138,7 +136,7 @@ export class MainPanelComponent implements OnInit, OnDestroy {
       }, 2000);
     }, 20000); // 20 seconds
   }
-  
+
   private startSnow(): void {
     this.isSnowing = true;
     this.isSnowFading = false;
@@ -152,23 +150,22 @@ export class MainPanelComponent implements OnInit, OnDestroy {
       }, 7000);
     }, 20000); // 20 seconds
   }
-  
+
   // Random position/delay generators for weather effects
   getRandomLeft(index: number): number {
     // Use index as seed for consistent but varied positions
     return (index * 17 + index * index) % 100;
   }
-  
+
   getRandomDelay(index: number): number {
     return ((index * 13) % 40) / 10; // 0 to 4 seconds
   }
-  
+
   getRandomDuration(index: number, base: number): number {
     return base + ((index * 7) % 20) / 10; // base to base+2 seconds
   }
-  
+
   getRandomSize(index: number): number {
     return 0.5 + ((index * 11) % 10) / 20; // 0.5 to 1
   }
-
 }
