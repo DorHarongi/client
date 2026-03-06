@@ -1,51 +1,85 @@
 <div id="toolbar">
-    <div class="left-side flex-container">
-        <img class="icons clickable" src="../../../assets/village.png" (click)="goToHome()" title="Village">
-        <img class="icons clickable" src="../../../assets/pie-chart.png" (click)="goToStatistics()" title="Statistics">
-        <div class="icon-with-badge" (click)="goToMessages()">
-            <img class="icons clickable" src="../../../assets/ancient-scroll.png" title="Messages">
-            <span class="badge" *ngIf="unreadCount > 0">{{unreadCount}}</span>
-        </div>
-        <img class="icons clickable" src="../../../assets/map.png" (click)="goToMap()" title="World Map">
+  <div class="left-side flex-container">
+    <img
+      class="icons clickable"
+      src="../../../assets/village.png"
+      (click)="goToHome()"
+      title="Village"
+    />
+    <img
+      class="icons clickable"
+      src="../../../assets/pie-chart.png"
+      (click)="goToStatistics()"
+      title="Statistics"
+    />
+    <div class="icon-with-badge" (click)="goToMessages()">
+      <img
+        class="icons clickable"
+        src="../../../assets/ancient-scroll.png"
+        title="Messages"
+      />
+      <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
     </div>
-    <div class="theme-container">
-        <span class="theme-label">Theme:</span>
-        <select [value]="currentTheme()" (change)="changeTheme($event)" title="Theme">
-            <option value="default">Default</option>
-            <option value="dark">Dark</option>
-            <option value="ocean">Ocean</option>
-            <option value="forest">Forest</option>
-            <option value="blood">Blood</option>
-            <option value="royal">Royal</option>
-        </select>
-    </div>
-    <div class="right-side flex-container">
-        <span class="resource-item" [title]="getTimeUntilMaxEnergy()">
-            <img class="icons" src="../../../assets/energy.png">
-            <h5> {{math.floor(getEnergy())}} / {{maxEnergy}}</h5>
-        </span>
-        <h5 *ngIf = "getEnergy() != maxEnergy" id="timeTillNextEnergy"> ( {{getTimeTillNextEnergy() | date:'mm:ss'}} )</h5>
-        <img class="icons" src="../../../assets/population.png">
-        <h5> {{usedPopulation}} / {{maximumPopulation}}</h5>
-        <span class="spy-display" *ngIf="stableLevel > 0" [title]="spyTooltipText">
-            <img class="icons" src="../../../assets/spy.png" alt="Spies">
-            <h5>{{aliveSpies}} / {{maxSpies}}</h5>
-            <span class="spy-regen-countdown" *ngIf="aliveSpies < maxSpies && spyRegenCountdown">{{spyRegenCountdown}}</span>
-        </span>
-        <span class="resource-item" [title]="getTimeUntilMaxCrop()">
-            <img class="icons" src="../../../assets/crop.jpg">
-            <h5> {{math.floor(resources.cropAmount)}} / {{maxCropStorage}}</h5>
-        </span>
-        <span class="resource-item" [title]="getTimeUntilMaxWood()">
-            <img class="icons" src="../../../assets/wood.jpg">
-            <h5> {{math.floor(resources.woodAmount)}} / {{maxWoodStorage}}</h5>
-        </span>
-        <span class="resource-item" [title]="getTimeUntilMaxStone()">
-            <img class="icons" src="../../../assets/rock.jpg">
-            <h5> {{math.floor(resources.stonesAmount)}} / {{maxStonesStorage}}</h5>
-        </span>
-    </div>
-    <div class="logout-container">
-        <img class="icons clickable" src="../../../assets/logout.png" (click)="logout()" title="Logout">
-    </div>
+    <img
+      class="icons clickable"
+      src="../../../assets/map.png"
+      (click)="goToMap()"
+      title="World Map"
+    />
+  </div>
+  <div class="theme-container">
+    <span class="theme-label">Theme:</span>
+    <select
+      [value]="currentTheme()"
+      (change)="changeTheme($event)"
+      title="Theme"
+    >
+      <option value="default">Default</option>
+      <option value="dark">Dark</option>
+      <option value="ocean">Ocean</option>
+      <option value="forest">Forest</option>
+      <option value="blood">Blood</option>
+      <option value="royal">Royal</option>
+    </select>
+  </div>
+  <div class="right-side flex-container">
+    <span class="resource-item" [title]="getTimeUntilMaxEnergy()">
+      <img class="icons" src="../../../assets/energy.png" />
+      <h5>{{ math.floor(getEnergy()) }} / {{ maxEnergy }}</h5>
+    </span>
+    <h5 *ngIf="getEnergy() != maxEnergy" id="timeTillNextEnergy">
+      ( {{ getTimeTillNextEnergy() | date : "mm:ss" }} )
+    </h5>
+    <img class="icons" src="../../../assets/population.png" />
+    <h5>{{ usedPopulation }} / {{ maximumPopulation }}</h5>
+    <span class="spy-display" *ngIf="stableLevel > 0" [title]="spyTooltipText">
+      <img class="icons" src="../../../assets/spy.png" alt="Spies" />
+      <h5>{{ aliveSpies }} / {{ maxSpies }}</h5>
+      <span
+        class="spy-regen-countdown"
+        *ngIf="aliveSpies < maxSpies && spyRegenCountdown"
+        >{{ spyRegenCountdown }}</span
+      >
+    </span>
+    <span class="resource-item" [title]="getTimeUntilMaxCrop()">
+      <img class="icons" src="../../../assets/crop.jpg" />
+      <h5>{{ math.floor(resources.cropAmount) }} / {{ maxCropStorage }}</h5>
+    </span>
+    <span class="resource-item" [title]="getTimeUntilMaxWood()">
+      <img class="icons" src="../../../assets/wood.jpg" />
+      <h5>{{ math.floor(resources.woodAmount) }} / {{ maxWoodStorage }}</h5>
+    </span>
+    <span class="resource-item" [title]="getTimeUntilMaxStone()">
+      <img class="icons" src="../../../assets/rock.jpg" />
+      <h5>{{ math.floor(resources.stonesAmount) }} / {{ maxStonesStorage }}</h5>
+    </span>
+  </div>
+  <div class="logout-container">
+    <img
+      class="icons clickable"
+      src="../../../assets/logout.png"
+      (click)="logout()"
+      title="Logout"
+    />
+  </div>
 </div>

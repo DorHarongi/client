@@ -181,14 +181,11 @@ $game-gold: #c9a84c;
 }
 
 .skill-actions {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.reset-cost {
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 8px;
+    gap: 12px;
+    margin-top: 35px;
 }
 
 // Game-style button matching .buttons class
