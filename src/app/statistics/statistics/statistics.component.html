@@ -78,7 +78,7 @@
                         <th class="center">Rank</th>
                         <th class="center">Player</th>
                         <th class="center">Clan</th>
-                        <th class="center">Amount</th>
+                        <th class="center">Weekly Amount</th>
                     </tr>
                     <tr *ngFor="let p of playerLeaderboard; let i = index" class="center bordered">
                         <td>{{i + 1}}</td>
@@ -94,7 +94,7 @@
                     <tr>
                         <th class="center">Rank</th>
                         <th class="center">Clan</th>
-                        <th class="center">Amount</th>
+                        <th class="center">Weekly Amount</th>
                     </tr>
                     <tr *ngFor="let c of clanLeaderboard; let i = index" class="center bordered">
                         <td>{{i + 1}}</td>
@@ -111,7 +111,7 @@
                         <th class="center">Rank</th>
                         <th class="center">Player</th>
                         <th class="center">Clan</th>
-                        <th class="center">Amount</th>
+                        <th class="center">Weekly Amount</th>
                     </tr>
                     <tr *ngFor="let p of getPreviousWeekPlayers(); let i = index" class="center bordered">
                         <td>{{i + 1}}</td>
@@ -125,7 +125,7 @@
                     <tr>
                         <th class="center">Rank</th>
                         <th class="center">Clan</th>
-                        <th class="center">Amount</th>
+                        <th class="center">Weekly Amount</th>
                     </tr>
                     <tr *ngFor="let c of getPreviousWeekClans(); let i = index" class="center bordered">
                         <td>{{i + 1}}</td>

@@ -232,16 +232,24 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.isDragging = true;
     this.minimapElement = event.currentTarget as HTMLElement;
 
-    document.addEventListener('touchmove', this.boundTouchMove, { passive: false });
+    document.addEventListener('touchmove', this.boundTouchMove, {
+      passive: false,
+    });
     document.addEventListener('touchend', this.boundTouchEnd);
 
-    this.updateMinimapPositionFromCoords(event.touches[0].clientX, event.touches[0].clientY);
+    this.updateMinimapPositionFromCoords(
+      event.touches[0].clientX,
+      event.touches[0].clientY
+    );
   }
 
   private onMinimapTouchDrag(event: TouchEvent): void {
     if (!this.isDragging || !this.minimapElement) return;
     event.preventDefault();
-    this.updateMinimapPositionFromCoords(event.touches[0].clientX, event.touches[0].clientY);
+    this.updateMinimapPositionFromCoords(
+      event.touches[0].clientX,
+      event.touches[0].clientY
+    );
   }
 
   private onMinimapTouchEnd(event: TouchEvent): void {
@@ -260,7 +268,10 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.updateMinimapPositionFromCoords(event.clientX, event.clientY);
   }
 
-  private updateMinimapPositionFromCoords(clientX: number, clientY: number): void {
+  private updateMinimapPositionFromCoords(
+    clientX: number,
+    clientY: number
+  ): void {
     if (!this.minimapElement) return;
 
     const rect = this.minimapElement.getBoundingClientRect();

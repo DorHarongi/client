@@ -1,22 +1,22 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { environment } from 'src/environments/environment';
 import {
   academyUpgradeMaterialCostByLevels,
-  Skills,
-  SKILL_METADATA,
-  SKILL_TIER_COSTS,
+  canLearnSkill,
+  getResetCost,
   getSkillPointsByAcademyLevel,
   getUsedSkillPoints,
-  canLearnSkill,
-  SkillCategory,
-  SkillTier,
-  getResetCost,
   MaterialsCost,
+  SKILL_METADATA,
+  SKILL_TIER_COSTS,
+  SkillCategory,
+  Skills,
+  SkillTier,
 } from 'utils';
-import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
-import { environment } from 'src/environments/environment';
 import { User } from '../../models/User';
 
 interface SkillCell {
@@ -31,10 +31,9 @@ interface SkillCell {
 @Component({
   selector: 'app-academy',
   templateUrl: './academy.component.html',
-  styleUrls: ['./academy.component.scss']
+  styleUrls: ['./academy.component.scss'],
 })
 export class AcademyComponent implements OnInit, OnDestroy {
-
   buildingInformation: Building;
 
   skills!: Skills;
@@ -60,13 +59,14 @@ export class AcademyComponent implements OnInit, OnDestroy {
     private userInformationService: UserInformationService,
     private http: HttpClient
   ) {
-    const academyLevel = this.userInformationService.currentVillage.buildingsLevels.academyLevel;
+    const academyLevel =
+      this.userInformationService.currentVillage.buildingsLevels.academyLevel;
 
     this.buildingInformation = new Building(
-      "academy",
-      "Academy",
+      'academy',
+      'Academy',
       academyLevel,
-      "The Academy grants Skill Points which you can invest in powerful skills. Each level gives +2 points.",
+      'The Academy grants Skill Points which you can invest in powerful skills. Each level gives +2 points.',
       academyUpgradeMaterialCostByLevels[academyLevel + 1]
     );
 
@@ -82,7 +82,8 @@ export class AcademyComponent implements OnInit, OnDestroy {
   }
 
   get academyLevel(): number {
-    return this.userInformationService.currentVillage.buildingsLevels.academyLevel;
+    return this.userInformationService.currentVillage.buildingsLevels
+      .academyLevel;
   }
 
   private recalculatePoints(): void {
@@ -146,7 +147,9 @@ export class AcademyComponent implements OnInit, OnDestroy {
       return 'unlocked';
     }
 
-    if (canLearnSkill(this.academyLevel, this.skills, cell.category, cell.tier)) {
+    if (
+      canLearnSkill(this.academyLevel, this.skills, cell.category, cell.tier)
+    ) {
       return 'available';
     }
 
@@ -154,7 +157,12 @@ export class AcademyComponent implements OnInit, OnDestroy {
   }
 
   canLearn(cell: SkillCell): boolean {
-    return canLearnSkill(this.academyLevel, this.skills, cell.category, cell.tier);
+    return canLearnSkill(
+      this.academyLevel,
+      this.skills,
+      cell.category,
+      cell.tier
+    );
   }
 
   onSkillClick(cell: SkillCell): void {
@@ -170,24 +178,26 @@ export class AcademyComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.errorMessage = '';
 
-    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/learn-skill`, {
-      villageIndex: this.userInformationService.currentVillageIndex,
-      category: cell.category,
-      tier: cell.tier,
-    }).subscribe({
-      next: (user: User) => {
-        this.userInformationService.setUserInformation(user);
-        this.skills = this.userInformationService.currentVillage.skills;
-        this.recalculatePoints();
-        this.loading = false;
-        this.cancelLearnConfirm();
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to learn skill';
-        this.loading = false;
-        this.cancelLearnConfirm();
-      }
-    });
+    this.subscription = this.http
+      .post<User>(`${environment.apiUrl}/interactions/learn-skill`, {
+        villageIndex: this.userInformationService.currentVillageIndex,
+        category: cell.category,
+        tier: cell.tier,
+      })
+      .subscribe({
+        next: (user: User) => {
+          this.userInformationService.setUserInformation(user);
+          this.skills = this.userInformationService.currentVillage.skills;
+          this.recalculatePoints();
+          this.loading = false;
+          this.cancelLearnConfirm();
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to learn skill';
+          this.loading = false;
+          this.cancelLearnConfirm();
+        },
+      });
   }
 
   cancelLearnConfirm(): void {
@@ -206,22 +216,24 @@ export class AcademyComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.errorMessage = '';
 
-    this.subscription = this.http.post<User>(`${environment.apiUrl}/interactions/reset-skills`, {
-      villageIndex: this.userInformationService.currentVillageIndex,
-    }).subscribe({
-      next: (user: User) => {
-        this.userInformationService.setUserInformation(user);
-        this.skills = this.userInformationService.currentVillage.skills;
-        this.recalculatePoints();
-        this.loading = false;
-        this.cancelResetConfirm();
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to reset skills';
-        this.loading = false;
-        this.cancelResetConfirm();
-      }
-    });
+    this.subscription = this.http
+      .post<User>(`${environment.apiUrl}/interactions/reset-skills`, {
+        villageIndex: this.userInformationService.currentVillageIndex,
+      })
+      .subscribe({
+        next: (user: User) => {
+          this.userInformationService.setUserInformation(user);
+          this.skills = this.userInformationService.currentVillage.skills;
+          this.recalculatePoints();
+          this.loading = false;
+          this.cancelResetConfirm();
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to reset skills';
+          this.loading = false;
+          this.cancelResetConfirm();
+        },
+      });
   }
 
   cancelResetConfirm(): void {
