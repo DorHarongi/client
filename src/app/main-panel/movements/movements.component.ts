@@ -113,7 +113,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
       return 'assets/wood.jpg';
     }
     if (movement.type === 'return') {
-      return 'assets/shield.png';
+      return 'assets/swords.png';
     }
     return 'assets/swords.png';
   }
