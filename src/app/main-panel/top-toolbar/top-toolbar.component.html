@@ -9,6 +9,7 @@
         <img class="icons clickable" src="../../../assets/map.png" (click)="goToMap()" title="World Map">
     </div>
     <div class="theme-container">
+        <span class="theme-label">Theme:</span>
         <select [value]="currentTheme()" (change)="changeTheme($event)" title="Theme">
             <option value="default">Default</option>
             <option value="dark">Dark</option>
