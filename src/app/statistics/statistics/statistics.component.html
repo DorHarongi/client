@@ -1,149 +1,253 @@
-<div class = "flexContainer statisticsContainer">
-    <h2 id = "titleText" class="center margin-top">Statistics</h2>
-    
-    <div class="toggle-container center">
-        <button class="toggle-btn" [class.active]="viewMode === 'players'" (click)="switchToPlayers()">Players</button>
-        <button class="toggle-btn" [class.active]="viewMode === 'clans'" (click)="switchToClans()">Clans</button>
-        <button class="toggle-btn" [class.active]="viewMode === 'leaderboards'" (click)="switchToLeaderboards()">Leaderboards</button>
-    </div>
+<div class="flexContainer statisticsContainer">
+  <h2 id="titleText" class="center margin-top">Statistics</h2>
 
-    <!-- Loading State -->
-    <div *ngIf="loading" class="center margin-top loading-text">
-        Loading...
-    </div>
+  <div class="toggle-container center">
+    <button
+      class="toggle-btn"
+      [class.active]="viewMode === 'players'"
+      (click)="switchToPlayers()"
+    >
+      Players
+    </button>
+    <button
+      class="toggle-btn"
+      [class.active]="viewMode === 'clans'"
+      (click)="switchToClans()"
+    >
+      Clans
+    </button>
+    <button
+      class="toggle-btn"
+      [class.active]="viewMode === 'leaderboards'"
+      (click)="switchToLeaderboards()"
+    >
+      Leaderboards
+    </button>
+  </div>
 
-    <!-- Scrollable table wrapper for mobile -->
-    <div class="table-scroll-wrapper">
-        <!-- Players Table -->
-        <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'players' && !loading">
-            <tr>
-                <th class="center">Rank</th>
-                <th class="center">Name</th>
-                <th class="center">Clan</th>
-                <th class="center">Population</th>
-                <th class="center">Villages</th>
-            </tr>
-            <tr *ngFor="let user of usersInPage; let i = index" class="center bordered" [class.player-himself]="user.username == username">
-                <td> {{(page - 1) * 10 + i + 1 }}</td>
-                <td class="clickable" (click)="goToPlayer(user.username)"> {{user.username}} </td>
-                <td *ngIf="user.clanName != ''" class="clickable" (click)="goToClan(user.clanName)"> {{user.clanName}} </td>
-                <td *ngIf="user.clanName == ''"> No clan </td>
-                <td> {{user.population}} </td>
-                <td> {{user.numberOfVillages}} </td>
-            </tr>
+  <!-- Loading State -->
+  <div *ngIf="loading" class="center margin-top loading-text">Loading...</div>
+
+  <!-- Scrollable table wrapper for mobile -->
+  <div class="table-scroll-wrapper">
+    <!-- Players Table -->
+    <table
+      id="table"
+      class="center bordered margin-top"
+      *ngIf="viewMode === 'players' && !loading"
+    >
+      <tr>
+        <th class="center">Rank</th>
+        <th class="center">Name</th>
+        <th class="center">Clan</th>
+        <th class="center">Population</th>
+        <th class="center">Villages</th>
+      </tr>
+      <tr
+        *ngFor="let user of usersInPage; let i = index"
+        class="center bordered"
+        [class.player-himself]="user.username == username"
+      >
+        <td>{{ (page - 1) * 10 + i + 1 }}</td>
+        <td class="clickable" (click)="goToPlayer(user.username)">
+          {{ user.username }}
+        </td>
+        <td
+          *ngIf="user.clanName != ''"
+          class="clickable"
+          (click)="goToClan(user.clanName)"
+        >
+          {{ user.clanName }}
+        </td>
+        <td *ngIf="user.clanName == ''">No clan</td>
+        <td>{{ user.population }}</td>
+        <td>{{ user.numberOfVillages }}</td>
+      </tr>
+    </table>
+
+    <!-- Clans Table -->
+    <table
+      id="table"
+      class="center bordered margin-top"
+      *ngIf="viewMode === 'clans' && !loading"
+    >
+      <tr>
+        <th class="center">Rank</th>
+        <th class="center">Clan Name</th>
+        <th class="center">Leader</th>
+        <th class="center">Members</th>
+        <th class="center">Total Population</th>
+        <th class="center">Bosses Killed</th>
+        <th class="center">Divine Relics</th>
+        <th class="center">Status</th>
+      </tr>
+      <tr
+        *ngFor="let clan of clansInPage; let i = index"
+        class="center bordered"
+      >
+        <td>{{ (page - 1) * 10 + i + 1 }}</td>
+        <td class="clickable" (click)="goToClan(clan.clanName)">
+          {{ clan.clanName }}
+        </td>
+        <td class="clickable" (click)="goToPlayer(clan.leaderUsername)">
+          {{ clan.leaderUsername }}
+        </td>
+        <td>{{ clan.memberCount }}</td>
+        <td>{{ clan.totalPopulation }}</td>
+        <td>{{ clan.totalBossesKilled || 0 }}</td>
+        <td>
+          <app-relic-medallion
+            [heldRelicIds]="clan.heldRelicIds || []"
+          ></app-relic-medallion>
+        </td>
+        <td>{{ clan.isOpen ? "Open" : "Closed" }}</td>
+      </tr>
+    </table>
+
+    <!-- Leaderboards -->
+    <div
+      *ngIf="viewMode === 'leaderboards' && !loading"
+      class="leaderboards-container"
+    >
+      <div class="leaderboard-tabs center">
+        <span
+          class="tab-link"
+          [class.active]="leaderboardCategory === 'bossDamage'"
+          (click)="changeLeaderboardCategory('bossDamage')"
+        >
+          Boss Damage
+        </span>
+        <span
+          class="tab-link"
+          [class.active]="leaderboardCategory === 'resourcesStolen'"
+          (click)="changeLeaderboardCategory('resourcesStolen')"
+        >
+          Resources Raided
+        </span>
+        <span
+          class="tab-link"
+          [class.active]="leaderboardCategory === 'successfulDefenses'"
+          (click)="changeLeaderboardCategory('successfulDefenses')"
+        >
+          Best Defenders
+        </span>
+      </div>
+
+      <div class="leaderboards-tables">
+        <h3 class="section-label center">Players</h3>
+        <table id="table" class="center bordered">
+          <tr>
+            <th class="center">Rank</th>
+            <th class="center">Player</th>
+            <th class="center">Clan</th>
+            <th class="center">Weekly Amount</th>
+          </tr>
+          <tr
+            *ngFor="let p of playerLeaderboard; let i = index"
+            class="center bordered"
+          >
+            <td>{{ i + 1 }}</td>
+            <td class="clickable" (click)="goToPlayer(p.username)">
+              {{ p.username }}
+            </td>
+            <td
+              class="clickable"
+              *ngIf="p.clanName"
+              (click)="goToClan(p.clanName)"
+            >
+              {{ p.clanName }}
+            </td>
+            <td *ngIf="!p.clanName">No clan</td>
+            <td>{{ p.stat }}</td>
+          </tr>
         </table>
 
-        <!-- Clans Table -->
-        <table id="table" class="center bordered margin-top" *ngIf="viewMode === 'clans' && !loading">
-            <tr>
-                <th class="center">Rank</th>
-                <th class="center">Clan Name</th>
-                <th class="center">Leader</th>
-                <th class="center">Members</th>
-                <th class="center">Total Population</th>
-                <th class="center">Bosses Killed</th>
-                <th class="center">Divine Relics</th>
-                <th class="center">Status</th>
-            </tr>
-            <tr *ngFor="let clan of clansInPage; let i = index" class="center bordered">
-                <td> {{(page - 1) * 10 + i + 1 }}</td>
-                <td class="clickable" (click)="goToClan(clan.clanName)"> {{clan.clanName}} </td>
-                <td class="clickable" (click)="goToPlayer(clan.leaderUsername)"> {{clan.leaderUsername}} </td>
-                <td> {{clan.memberCount}} </td>
-                <td> {{clan.totalPopulation}} </td>
-                <td> {{clan.totalBossesKilled || 0}} </td>
-                <td><app-relic-medallion [heldRelicIds]="clan.heldRelicIds || []"></app-relic-medallion></td>
-                <td> {{clan.isOpen ? 'Open' : 'Closed'}} </td>
-            </tr>
+        <h3 class="section-label center">Clans</h3>
+        <table id="table" class="center bordered">
+          <tr>
+            <th class="center">Rank</th>
+            <th class="center">Clan</th>
+            <th class="center">Weekly Amount</th>
+          </tr>
+          <tr
+            *ngFor="let c of clanLeaderboard; let i = index"
+            class="center bordered"
+          >
+            <td>{{ i + 1 }}</td>
+            <td class="clickable" (click)="goToClan(c._id)">{{ c._id }}</td>
+            <td>{{ c.totalStat }}</td>
+          </tr>
         </table>
+      </div>
 
-        <!-- Leaderboards -->
-        <div *ngIf="viewMode === 'leaderboards' && !loading" class="leaderboards-container">
-            <div class="leaderboard-tabs center">
-                <span class="tab-link" [class.active]="leaderboardCategory === 'bossDamage'" (click)="changeLeaderboardCategory('bossDamage')">
-                    Boss Damage
-                </span>
-                <span class="tab-link" [class.active]="leaderboardCategory === 'resourcesStolen'" (click)="changeLeaderboardCategory('resourcesStolen')">
-                    Resources Raided
-                </span>
-                <span class="tab-link" [class.active]="leaderboardCategory === 'successfulDefenses'" (click)="changeLeaderboardCategory('successfulDefenses')">
-                    Best Defenders
-                </span>
-            </div>
-
-            <div class="leaderboards-tables">
-                <h3 class="section-label center">Players</h3>
-                <table id="table" class="center bordered">
-                    <tr>
-                        <th class="center">Rank</th>
-                        <th class="center">Player</th>
-                        <th class="center">Clan</th>
-                        <th class="center">Weekly Amount</th>
-                    </tr>
-                    <tr *ngFor="let p of playerLeaderboard; let i = index" class="center bordered">
-                        <td>{{i + 1}}</td>
-                        <td class="clickable" (click)="goToPlayer(p.username)">{{p.username}}</td>
-                        <td class="clickable" *ngIf="p.clanName" (click)="goToClan(p.clanName)">{{p.clanName}}</td>
-                        <td *ngIf="!p.clanName">No clan</td>
-                        <td>{{p.stat}}</td>
-                    </tr>
-                </table>
-
-                <h3 class="section-label center">Clans</h3>
-                <table id="table" class="center bordered">
-                    <tr>
-                        <th class="center">Rank</th>
-                        <th class="center">Clan</th>
-                        <th class="center">Weekly Amount</th>
-                    </tr>
-                    <tr *ngFor="let c of clanLeaderboard; let i = index" class="center bordered">
-                        <td>{{i + 1}}</td>
-                        <td class="clickable" (click)="goToClan(c._id)">{{c._id}}</td>
-                        <td>{{c.totalStat}}</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div *ngIf="previousWeekArchive && (getPreviousWeekPlayers().length > 0 || getPreviousWeekClans().length > 0)" class="leaderboard-archive margin-top">
-                <h4 class="center">Previous week (ending {{formatArchiveWeekEnding(previousWeekArchive.weekEnding)}})</h4>
-                <table id="table" class="center bordered margin-top">
-                    <tr>
-                        <th class="center">Rank</th>
-                        <th class="center">Player</th>
-                        <th class="center">Clan</th>
-                        <th class="center">Weekly Amount</th>
-                    </tr>
-                    <tr *ngFor="let p of getPreviousWeekPlayers(); let i = index" class="center bordered">
-                        <td>{{i + 1}}</td>
-                        <td class="clickable" (click)="goToPlayer(p.username)">{{p.username}}</td>
-                        <td class="clickable" *ngIf="p.clanName" (click)="goToClan(p.clanName)">{{p.clanName}}</td>
-                        <td *ngIf="!p.clanName">No clan</td>
-                        <td>{{p.stat}}</td>
-                    </tr>
-                </table>
-                <table id="table" class="center bordered margin-top">
-                    <tr>
-                        <th class="center">Rank</th>
-                        <th class="center">Clan</th>
-                        <th class="center">Weekly Amount</th>
-                    </tr>
-                    <tr *ngFor="let c of getPreviousWeekClans(); let i = index" class="center bordered">
-                        <td>{{i + 1}}</td>
-                        <td class="clickable" (click)="goToClan(c._id)">{{c._id}}</td>
-                        <td>{{c.totalStat}}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+      <div
+        *ngIf="
+          previousWeekArchive &&
+          (getPreviousWeekPlayers().length > 0 ||
+            getPreviousWeekClans().length > 0)
+        "
+        class="leaderboard-archive margin-top"
+      >
+        <h4 class="center">
+          Previous week (ending
+          {{ formatArchiveWeekEnding(previousWeekArchive.weekEnding) }})
+        </h4>
+        <table id="table" class="center bordered margin-top">
+          <tr>
+            <th class="center">Rank</th>
+            <th class="center">Player</th>
+            <th class="center">Clan</th>
+            <th class="center">Weekly Amount</th>
+          </tr>
+          <tr
+            *ngFor="let p of getPreviousWeekPlayers(); let i = index"
+            class="center bordered"
+          >
+            <td>{{ i + 1 }}</td>
+            <td class="clickable" (click)="goToPlayer(p.username)">
+              {{ p.username }}
+            </td>
+            <td
+              class="clickable"
+              *ngIf="p.clanName"
+              (click)="goToClan(p.clanName)"
+            >
+              {{ p.clanName }}
+            </td>
+            <td *ngIf="!p.clanName">No clan</td>
+            <td>{{ p.stat }}</td>
+          </tr>
+        </table>
+        <table id="table" class="center bordered margin-top">
+          <tr>
+            <th class="center">Rank</th>
+            <th class="center">Clan</th>
+            <th class="center">Weekly Amount</th>
+          </tr>
+          <tr
+            *ngFor="let c of getPreviousWeekClans(); let i = index"
+            class="center bordered"
+          >
+            <td>{{ i + 1 }}</td>
+            <td class="clickable" (click)="goToClan(c._id)">{{ c._id }}</td>
+            <td>{{ c.totalStat }}</td>
+          </tr>
+        </table>
+      </div>
     </div>
+  </div>
 
-    <div class="pagination center margin-top" *ngIf="viewMode !== 'leaderboards'">
-        <p (click)="moveToPage(1)">&laquo;</p>
-        <p *ngFor="let p of displayedPages" (click)="moveToPage(p)" [class.active]="page == p">
-            {{ p }}
-        </p>
-        <p (click)="moveToPage(numberOfPages)">&raquo;</p>
-    </div>
-    
-    <button id = "back" class="buttons center" (click)="goBack()"> Back </button>
+  <div class="pagination center margin-top" *ngIf="viewMode !== 'leaderboards'">
+    <p (click)="moveToPage(1)">&laquo;</p>
+    <p
+      *ngFor="let p of displayedPages"
+      (click)="moveToPage(p)"
+      [class.active]="page == p"
+    >
+      {{ p }}
+    </p>
+    <p (click)="moveToPage(numberOfPages)">&raquo;</p>
+  </div>
+
+  <button id="back" class="buttons center" (click)="goBack()">Back</button>
 </div>

@@ -39,7 +39,7 @@ export class MainPanelComponent implements OnInit, OnDestroy {
     this.intervalService.startIntervals();
     // Generate arrays for rain drops and snowflakes
     this.rainDrops = Array.from({ length: 150 }, (_, i) => i);
-    this.snowFlakes = Array.from({ length: 100 }, (_, i) => i);
+    this.snowFlakes = Array.from({ length: 200 }, (_, i) => i);
   }
 
   ngOnDestroy(): void {
@@ -160,11 +160,11 @@ export class MainPanelComponent implements OnInit, OnDestroy {
   }
   
   getRandomDelay(index: number): number {
-    return ((index * 13) % 20) / 10; // 0 to 2 seconds
+    return ((index * 13) % 40) / 10; // 0 to 4 seconds
   }
   
   getRandomDuration(index: number, base: number): number {
-    return base + ((index * 7) % 10) / 10; // base to base+1 seconds
+    return base + ((index * 7) % 20) / 10; // base to base+2 seconds
   }
   
   getRandomSize(index: number): number {

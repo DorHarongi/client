@@ -1,10 +1,17 @@
 <app-building [building]="buildingInformation">
   <div extraInformation class="center">
     <h5 *ngIf="stableLevel > 0">Spy capacity: {{ maxSpies }}</h5>
-    <h5 *ngIf="stableLevel > 0">Spy detection reduction: -{{ currentReduction }}% (-{{ reductionPerLevel }}% per level)</h5>
+    <h5 *ngIf="stableLevel > 0">
+      Spy detection reduction: -{{ currentReduction }}% (-{{
+        reductionPerLevel
+      }}% per level)
+    </h5>
     <div *ngIf="!isMaxLevel">
       <h5>
-        Next level: -{{ nextLevelReduction }}% spy detection reduction<span *ngIf="nextLevelUnlocksSpy">, unlocks another spy ({{ nextLevelSpies }} total)</span>
+        Next level: -{{ nextLevelReduction }}% spy detection reduction<span
+          *ngIf="nextLevelUnlocksSpy"
+          >, unlocks another spy ({{ nextLevelSpies }} total)</span
+        >
       </h5>
     </div>
   </div>

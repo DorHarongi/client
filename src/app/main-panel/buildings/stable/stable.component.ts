@@ -1,18 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  stableUpgradeMaterialCostByLevels, getMaxSpies, SPY_SPEED,
-  stableDetectionReductionByLevel, stableMaxSpiesByLevel
-} from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import {
+  getMaxSpies,
+  SPY_SPEED,
+  stableDetectionReductionByLevel,
+  stableMaxSpiesByLevel,
+  stableUpgradeMaterialCostByLevels,
+} from 'utils';
 import { Building } from '../../classes/Building';
 
 @Component({
   selector: 'app-stable',
   templateUrl: './stable.component.html',
-  styleUrls: ['./stable.component.scss']
+  styleUrls: ['./stable.component.scss'],
 })
 export class StableComponent implements OnInit {
-
   buildingInformation: Building;
   stableLevel: number;
   maxSpies: number = 0;
@@ -24,7 +26,8 @@ export class StableComponent implements OnInit {
   isMaxLevel: boolean = false;
 
   constructor(private userInformationService: UserInformationService) {
-    this.stableLevel = this.userInformationService.currentVillage.buildingsLevels.stableLevel;
+    this.stableLevel =
+      this.userInformationService.currentVillage.buildingsLevels.stableLevel;
     const maxLevel = stableDetectionReductionByLevel.length - 1;
     this.isMaxLevel = this.stableLevel >= maxLevel;
 
@@ -37,16 +40,17 @@ export class StableComponent implements OnInit {
     );
 
     this.maxSpies = getMaxSpies(this.stableLevel);
-    this.currentReduction = stableDetectionReductionByLevel[this.stableLevel] ?? 0;
+    this.currentReduction =
+      stableDetectionReductionByLevel[this.stableLevel] ?? 0;
 
     if (!this.isMaxLevel) {
-      this.nextLevelReduction = stableDetectionReductionByLevel[this.stableLevel + 1] ?? 0;
+      this.nextLevelReduction =
+        stableDetectionReductionByLevel[this.stableLevel + 1] ?? 0;
       const currentSpies = stableMaxSpiesByLevel[this.stableLevel] ?? 0;
       this.nextLevelSpies = stableMaxSpiesByLevel[this.stableLevel + 1] ?? 0;
       this.nextLevelUnlocksSpy = this.nextLevelSpies > currentSpies;
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }
