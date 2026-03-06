@@ -1,8 +1,9 @@
 <app-building [building]="buildingInformation">
     <div extraInformation class="center">
-        <h5> Current defence: {{currentDefence}} </h5>
-        <div *ngIf = "nextLevelDefence">
-            <h5> Next level defence: {{nextLevelDefence}} </h5>
+        <h5>Current defence: {{currentDefence}}</h5>
+        <h5>Spy detection bonus: +{{currentDetectionBonus}}% (+{{detectionPerLevel}}% per level)</h5>
+        <div *ngIf="nextLevelDefence">
+            <h5>Next level: {{nextLevelDefence}} defence, +{{nextLevelDetectionBonus}}% spy detection</h5>
         </div>
     </div>
 </app-building>

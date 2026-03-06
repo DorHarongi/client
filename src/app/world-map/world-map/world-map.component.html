@@ -58,6 +58,7 @@
           [style.width.px]="getMinimapSize()"
           [style.height.px]="getMinimapSize()"
           (mousedown)="onMinimapDragStart($event)"
+          (touchstart)="onMinimapTouchStart($event)"
           (click)="onMinimapClick($event)"
         >
           <!-- Villages -->

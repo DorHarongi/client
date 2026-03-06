@@ -43,6 +43,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   isDragging: boolean = false;
   private boundMouseMove: (event: MouseEvent) => void;
   private boundMouseUp: (event: MouseEvent) => void;
+  private boundTouchMove: (event: TouchEvent) => void;
+  private boundTouchEnd: (event: TouchEvent) => void;
 
   constructor(
     private router: Router,
@@ -57,6 +59,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     // Bind methods for global event listeners
     this.boundMouseMove = this.onMinimapDrag.bind(this);
     this.boundMouseUp = this.onMinimapDragEnd.bind(this);
+    this.boundTouchMove = this.onMinimapTouchDrag.bind(this);
+    this.boundTouchEnd = this.onMinimapTouchEnd.bind(this);
   }
 
   ngOnInit(): void {
@@ -88,6 +92,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     // Clean up drag event listeners
     document.removeEventListener('mousemove', this.boundMouseMove);
     document.removeEventListener('mouseup', this.boundMouseUp);
+    document.removeEventListener('touchmove', this.boundTouchMove);
+    document.removeEventListener('touchend', this.boundTouchEnd);
   }
 
   loadMapWindow(): void {
@@ -221,14 +227,46 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.loadMapWindow();
   }
 
+  onMinimapTouchStart(event: TouchEvent): void {
+    event.preventDefault();
+    this.isDragging = true;
+    this.minimapElement = event.currentTarget as HTMLElement;
+
+    document.addEventListener('touchmove', this.boundTouchMove, { passive: false });
+    document.addEventListener('touchend', this.boundTouchEnd);
+
+    this.updateMinimapPositionFromCoords(event.touches[0].clientX, event.touches[0].clientY);
+  }
+
+  private onMinimapTouchDrag(event: TouchEvent): void {
+    if (!this.isDragging || !this.minimapElement) return;
+    event.preventDefault();
+    this.updateMinimapPositionFromCoords(event.touches[0].clientX, event.touches[0].clientY);
+  }
+
+  private onMinimapTouchEnd(event: TouchEvent): void {
+    if (!this.isDragging) return;
+
+    document.removeEventListener('touchmove', this.boundTouchMove);
+    document.removeEventListener('touchend', this.boundTouchEnd);
+
+    this.isDragging = false;
+    this.minimapElement = null;
+    this.loadMapWindow();
+  }
+
   private updateMinimapPosition(event: MouseEvent): void {
+    if (!this.minimapElement) return;
+    this.updateMinimapPositionFromCoords(event.clientX, event.clientY);
+  }
+
+  private updateMinimapPositionFromCoords(clientX: number, clientY: number): void {
     if (!this.minimapElement) return;
 
     const rect = this.minimapElement.getBoundingClientRect();
-    const x = Math.floor((event.clientX - rect.left) / MINIMAP_SCALE);
-    const y = Math.floor((event.clientY - rect.top) / MINIMAP_SCALE);
+    const x = Math.floor((clientX - rect.left) / MINIMAP_SCALE);
+    const y = Math.floor((clientY - rect.top) / MINIMAP_SCALE);
 
-    // Center the window on the cursor position
     this.windowStartX = Math.max(
       0,
       Math.min(x - 5, this.worldSize - WINDOW_SIZE)

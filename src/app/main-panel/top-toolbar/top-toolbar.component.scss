@@ -25,7 +25,7 @@
     background-color: var(--bg-primary, #1a1a2e);
     border-color: rgba(255, 255, 255, 0.15);
 
-    h5, .resource-item, .spy-display, #timeTillNextEnergy {
+    h5, .resource-item, .spy-display, #timeTillNextEnergy, .theme-label {
         color: var(--text-primary) !important;
     }
     .spy-regen-countdown {
@@ -61,6 +61,9 @@
     #toolbar::-webkit-scrollbar-thumb {
         background-color: rgba(0, 0, 0, 0.3);
         border-radius: 2px;
+    }
+    .theme-label {
+        display: none;
     }
 }
 

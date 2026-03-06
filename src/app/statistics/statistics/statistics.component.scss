@@ -106,7 +106,7 @@ $topToolbarMinHeight: 75px;
     gap: 10px;
     margin-top: 20px;
     margin-bottom: 16px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
   }
 
@@ -116,6 +116,7 @@ $topToolbarMinHeight: 75px;
     text-decoration: underline;
     padding: 4px 8px;
     font-size: 15px;
+    white-space: nowrap;
 
     &.active {
       color: #5a3d2b;
@@ -221,6 +222,16 @@ $topToolbarMinHeight: 75px;
     min-width: 600px;
     width: auto;
     display: inline-table;  // So it respects text-align: center
+  }
+
+  .leaderboard-tabs {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .tab-link {
+    font-size: 13px;
+    padding: 4px 6px;
   }
 
   .toggle-container {

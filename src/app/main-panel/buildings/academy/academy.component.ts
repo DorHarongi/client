@@ -66,7 +66,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
       "academy",
       "Academy",
       academyLevel,
-      "The Academy grants Skill Points which you can invest in powerful skills. Each level gives +2 points. Choose your build wisely!",
+      "The Academy grants Skill Points which you can invest in powerful skills. Each level gives +2 points.",
       academyUpgradeMaterialCostByLevels[academyLevel + 1]
     );
 
