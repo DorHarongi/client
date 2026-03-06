@@ -296,6 +296,10 @@ $topToolbarMinHeight: 75px;
 .title-section {
     margin: 10px 0;
     text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .no-titles-message {
@@ -307,17 +311,20 @@ $topToolbarMinHeight: 75px;
 
 .title-dropdown-wrapper {
     position: relative;
-    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .title-dropdown-trigger {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 12px;
+    padding: 6px 10px;
+    width: 160px;
     background-image: url(../../../assets/top-bg.png);
     background-size: cover;
-    border: 2px solid #8B4513;
+    border: 1px solid var(--text-muted);
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
@@ -340,11 +347,11 @@ $topToolbarMinHeight: 75px;
     position: absolute;
     top: 100%;
     left: 0;
-    right: 0;
+    width: 160px;
     z-index: 100;
     background-image: url(../../../assets/top-bg.png);
     background-size: cover;
-    border: 2px solid #8B4513;
+    border: 1px solid var(--text-muted);
     border-top: none;
     border-radius: 0 0 5px 5px;
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
@@ -381,7 +388,6 @@ $topToolbarMinHeight: 75px;
 }
 
 .save-title-btn {
-    margin-top: 8px;
     padding: 6px 16px;
 }
 

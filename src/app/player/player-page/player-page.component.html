@@ -53,17 +53,6 @@
                 <p *ngIf="!isOwnProfile && playerInfo.selectedTitle">
                     <strong>Title:</strong> {{getAchievementName(playerInfo.selectedTitle)}}
                 </p>
-                <p *ngIf="isOwnProfile">
-                    <strong>Theme:</strong>
-                    <select [value]="playerInfo.theme || 'default'" (change)="changeTheme($event)">
-                        <option value="default">Default</option>
-                        <option value="dark">Dark</option>
-                        <option value="ocean">Ocean</option>
-                        <option value="forest">Forest</option>
-                        <option value="blood">Blood</option>
-                        <option value="royal">Royal</option>
-                    </select>
-                </p>
                 <p *ngIf="hasBeginnerShield()" class="beginner-shield">
                     <strong>Beginner Protection:</strong> {{formatShieldTime()}} remaining
                 </p>
