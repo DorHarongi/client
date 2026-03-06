@@ -202,6 +202,7 @@ $game-gold: #c9a84c;
     padding: 10px 24px;
     font-size: 1em;
     cursor: pointer;
+    margin-right: 25px;
     transition: all 0.2s ease;
 
     &:hover:not(:disabled) {
