@@ -110,32 +110,33 @@ $topToolbarMinHeight: 75px;
     justify-content: center;
   }
 
-  .small-btn {
-    background-image: url(../../../assets/top-bg.png);
-    border: 1px solid black;
-    outline: none;
-    border-radius: 0.25rem;
-    box-shadow: 2px 2px 2px 2px;
-    padding: 8px 20px;
+  .tab-link {
     cursor: pointer;
-    font-weight: 500;
-    transition: background 0.15s, color 0.15s;
+    color: #007bff;
+    text-decoration: underline;
+    padding: 4px 8px;
+    font-size: 15px;
 
     &.active {
-      background-image: none;
-      background-color: #5a3d2b;
-      color: #f5deb3;
+      color: #5a3d2b;
       font-weight: bold;
-      border: 2px solid #3d2817;
+      text-decoration: none;
     }
 
     &:hover:not(.active) {
-      background-color: #ddd;
+      color: #0056b3;
     }
   }
 
   .leaderboards-container {
     margin-top: 10px;
+  }
+
+  .section-label {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 8px;
   }
 
   .leaderboard-archive {

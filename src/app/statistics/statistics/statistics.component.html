@@ -60,19 +60,20 @@
         <!-- Leaderboards -->
         <div *ngIf="viewMode === 'leaderboards' && !loading" class="leaderboards-container">
             <div class="leaderboard-tabs center">
-                <button class="small-btn" [class.active]="leaderboardCategory === 'bossDamage'" (click)="changeLeaderboardCategory('bossDamage')">
+                <span class="tab-link" [class.active]="leaderboardCategory === 'bossDamage'" (click)="changeLeaderboardCategory('bossDamage')">
                     Boss Damage
-                </button>
-                <button class="small-btn" [class.active]="leaderboardCategory === 'resourcesStolen'" (click)="changeLeaderboardCategory('resourcesStolen')">
+                </span>
+                <span class="tab-link" [class.active]="leaderboardCategory === 'resourcesStolen'" (click)="changeLeaderboardCategory('resourcesStolen')">
                     Resources Raided
-                </button>
-                <button class="small-btn" [class.active]="leaderboardCategory === 'successfulDefenses'" (click)="changeLeaderboardCategory('successfulDefenses')">
+                </span>
+                <span class="tab-link" [class.active]="leaderboardCategory === 'successfulDefenses'" (click)="changeLeaderboardCategory('successfulDefenses')">
                     Best Defenders
-                </button>
+                </span>
             </div>
 
             <div class="leaderboards-tables">
-                <table id="table" class="center bordered margin-top">
+                <h3 class="section-label center">Players</h3>
+                <table id="table" class="center bordered">
                     <tr>
                         <th class="center">Rank</th>
                         <th class="center">Player</th>
@@ -88,7 +89,8 @@
                     </tr>
                 </table>
 
-                <table id="table" class="center bordered margin-top">
+                <h3 class="section-label center">Clans</h3>
+                <table id="table" class="center bordered">
                     <tr>
                         <th class="center">Rank</th>
                         <th class="center">Clan</th>

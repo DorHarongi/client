@@ -35,14 +35,11 @@
     </div>
 
     <div class="skill-actions">
-      <div class="reset-row">
-        <button class="reset-btn" (click)="onResetClick()" [disabled]="loading || usedPoints <= 0">
-          {{ loading ? 'Processing...' : 'Reset Skills' }}
-        </button>
-        <div class="reset-cost" *ngIf="usedPoints > 0">
-          <span class="reset-label">Cost:</span>
-          <app-materials-cost [materialsCost]="resetCost"></app-materials-cost>
-        </div>
+      <button class="reset-btn" (click)="onResetClick()" [disabled]="loading || usedPoints <= 0">
+        {{ loading ? 'Processing...' : 'Reset Skills' }}
+      </button>
+      <div class="reset-cost" *ngIf="usedPoints > 0">
+        <app-materials-cost [materialsCost]="resetCost"></app-materials-cost>
       </div>
     </div>
 

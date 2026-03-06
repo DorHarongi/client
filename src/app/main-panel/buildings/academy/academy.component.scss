@@ -185,22 +185,10 @@ $game-gold: #c9a84c;
     margin-top: 20px;
 }
 
-.reset-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-}
-
 .reset-cost {
     display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.reset-label {
-    font-weight: 600;
+    justify-content: center;
+    margin-top: 8px;
 }
 
 // Game-style button matching .buttons class
