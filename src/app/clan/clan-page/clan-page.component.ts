@@ -31,10 +31,10 @@ const RELIC_CENTERS: { id: string; x: number; y: number }[] = [
   { id: 'chalice_of_ascension', x: 422, y: 146 },
   { id: 'sigil_of_creation', x: 427, y: 240 },
   { id: 'all_seeing_orb', x: 210, y: 239 },
-  { id: 'apple_of_eternity', x: 215, y: 139 },
+  { id: 'apple_of_immortality', x: 215, y: 139 },
 ];
 const RELIC_DISPLAY_NAMES: Record<string, string> = {
-  apple_of_eternity: 'Apple of Eternity',
+  apple_of_immortality: 'Apple of Immortality',
   eternal_flame: 'Eternal Flame',
   chalice_of_ascension: 'Chalice of Ascension',
   all_seeing_orb: 'All-Seeing Orb',
@@ -258,9 +258,20 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   kickMember(memberUsername: string): void {
-    if (
-      confirm(`Are you sure you want to kick ${memberUsername} from the clan?`)
-    ) {
+    const memberRelics = this.getMemberRelics(memberUsername);
+    let confirmMsg: string;
+
+    if (memberRelics.length > 0) {
+      const relicList = memberRelics.join(' and ');
+      confirmMsg =
+        `${memberUsername} holds the ${relicList}. ` +
+        `Kicking them will forfeit your clan's control over ${memberRelics.length > 1 ? 'these relics' : 'this relic'}. ` +
+        `Are you sure?`;
+    } else {
+      confirmMsg = `Are you sure you want to kick ${memberUsername} from the clan?`;
+    }
+
+    if (confirm(confirmMsg)) {
       this.clanService
         .kickMember(this.clanName, this.currentUsername, memberUsername)
         .subscribe({

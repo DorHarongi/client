@@ -1,6 +1,14 @@
 import { Component, Input } from '@angular/core';
 
-const RELIC_IDS = ['apple_of_eternity', 'eternal_flame', 'chalice_of_ascension', 'all_seeing_orb', 'sigil_of_creation'];
+const RELIC_ICON_MAP: Record<string, string> = {
+  apple_of_immortality: 'assets/apple.png',
+  eternal_flame: 'assets/flame.png',
+  chalice_of_ascension: 'assets/chalice.png',
+  all_seeing_orb: 'assets/orn.png',
+  sigil_of_creation: 'assets/sigil.png',
+};
+
+const RELIC_IDS = ['apple_of_immortality', 'eternal_flame', 'chalice_of_ascension', 'all_seeing_orb', 'sigil_of_creation'];
 
 @Component({
   selector: 'app-relic-medallion',
@@ -9,9 +17,11 @@ const RELIC_IDS = ['apple_of_eternity', 'eternal_flame', 'chalice_of_ascension',
 })
 export class RelicMedallionComponent {
   @Input() heldRelicIds: string[] = [];
-  readonly relicIds = RELIC_IDS;
 
-  isHeld(relicId: string): boolean {
-    return this.heldRelicIds && this.heldRelicIds.includes(relicId);
+  get heldRelics(): { id: string; icon: string }[] {
+    if (!this.heldRelicIds || this.heldRelicIds.length === 0) return [];
+    return RELIC_IDS
+      .filter((id) => this.heldRelicIds.includes(id))
+      .map((id) => ({ id, icon: RELIC_ICON_MAP[id] || '' }));
   }
 }

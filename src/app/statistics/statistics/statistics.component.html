@@ -42,6 +42,7 @@
         <th class="center">Clan</th>
         <th class="center">Population</th>
         <th class="center">Villages</th>
+        <th class="center" *ngIf="anyPlayerHasRelics">Divine Relics</th>
       </tr>
       <tr
         *ngFor="let user of usersInPage; let i = index"
@@ -62,6 +63,11 @@
         <td *ngIf="user.clanName == ''">No clan</td>
         <td>{{ user.population }}</td>
         <td>{{ user.numberOfVillages }}</td>
+        <td *ngIf="anyPlayerHasRelics">
+          <app-relic-medallion
+            [heldRelicIds]="user.heldRelicIds || []"
+          ></app-relic-medallion>
+        </td>
       </tr>
     </table>
 

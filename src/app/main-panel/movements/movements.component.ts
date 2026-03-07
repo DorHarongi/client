@@ -12,7 +12,8 @@ interface Movement {
     | 'return'
     | 'boss_attack'
     | 'spy'
-    | 'spy_return';
+    | 'spy_return'
+    | 'relic_transfer';
   senderUsername: string;
   senderVillageName: string;
   targetUsername: string;
@@ -45,7 +46,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadMovements();
-    this.subscription = interval(5000).subscribe(() => this.loadMovements());
+    this.subscription = interval(15000).subscribe(() => this.loadMovements());
     this.tickSub = interval(1000).subscribe(() => {});
   }
 
@@ -112,6 +113,9 @@ export class MovementsComponent implements OnInit, OnDestroy {
     if (movement.type === 'resources') {
       return 'assets/wood.jpg';
     }
+    if (movement.type === 'relic_transfer') {
+      return 'assets/sigil.png';
+    }
     if (movement.type === 'return') {
       return 'assets/swords.png';
     }
@@ -142,6 +146,11 @@ export class MovementsComponent implements OnInit, OnDestroy {
       return isFromVillage
         ? `Resources → ${movement.targetUsername}`
         : `Resources from ${movement.senderUsername}`;
+    }
+    if (movement.type === 'relic_transfer') {
+      return isFromVillage
+        ? `Relic → ${movement.targetUsername}`
+        : `Relic from ${movement.senderUsername}`;
     }
     if (movement.type === 'return') {
       return 'Troops returning';

@@ -4,7 +4,8 @@
     <div *ngFor="let r of relics" class="relic-row">
       <span class="relic-name">{{ relicName(r.relicId) }}</span>
       <span *ngIf="r.holderUsername" class="holder">Held by {{ r.holderUsername }} ({{ r.holderVillageName }})</span>
-      <span *ngIf="!r.holderUsername" class="holder">Unclaimed</span>
+      <span *ngIf="!r.holderUsername && r.holderClanName === clanName" class="holder in-transit">In transit</span>
+      <span *ngIf="!r.holderUsername && r.holderClanName !== clanName" class="holder">Unclaimed</span>
       <span *ngIf="cooldownActive(r)" class="cooldown">Cooldown until {{ r.transferCooldownUntil | date:'short' }}</span>
       <button *ngIf="canTransfer(r)" class="small-btn" (click)="openTransfer(r.relicId)">Transfer</button>
       <div *ngIf="isHeldByMe(r)" class="holder-notice">You hold this relic. If you leave the clan, it leaves with you.</div>

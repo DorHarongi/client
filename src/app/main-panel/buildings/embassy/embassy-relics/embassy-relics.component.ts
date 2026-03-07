@@ -13,7 +13,7 @@ interface RelicDoc {
 }
 
 const RELIC_NAMES: Record<string, string> = {
-  apple_of_eternity: 'Apple of Eternity',
+  apple_of_immortality: 'Apple of Immortality',
   eternal_flame: 'Eternal Flame',
   chalice_of_ascension: 'Chalice of Ascension',
   all_seeing_orb: 'All-Seeing Orb',

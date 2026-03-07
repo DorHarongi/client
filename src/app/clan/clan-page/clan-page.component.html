@@ -135,7 +135,7 @@
           <div
             *ngFor="
               let id of [
-                'apple_of_eternity',
+                'apple_of_immortality',
                 'eternal_flame',
                 'chalice_of_ascension',
                 'all_seeing_orb',
@@ -149,12 +149,18 @@
           >
             <span class="relic-name">{{ getRelicName(id) }}</span>
             <span
-              *ngIf="getRelicHolder(id)?.holderClanName === clanName"
+              *ngIf="getRelicHolder(id)?.holderClanName === clanName && getRelicHolder(id)?.holderUsername"
               class="relic-holder"
             >
               Held by {{ getRelicHolder(id)?.holderUsername }} ({{
                 getRelicHolder(id)?.holderVillageName
               }})
+            </span>
+            <span
+              *ngIf="getRelicHolder(id)?.holderClanName === clanName && !getRelicHolder(id)?.holderUsername"
+              class="relic-holder relic-in-transit"
+            >
+              In transit
             </span>
             <span
               *ngIf="getRelicHolder(id)?.holderClanName !== clanName"

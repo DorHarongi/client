@@ -134,6 +134,10 @@ export class StatisticsComponent implements OnInit, OnDestroy {
    });
   }
 
+  get anyPlayerHasRelics(): boolean {
+    return this.usersInPage.some(u => u.heldRelicIds && u.heldRelicIds.length > 0);
+  }
+
   getUserStatistics()
   {
     this.subscription1 = this.http.get<any>(`${environment.apiUrl}/users/statistics/${this.page}`, 
