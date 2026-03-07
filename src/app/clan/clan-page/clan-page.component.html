@@ -334,3 +334,41 @@
     </div>
   </div>
 </div>
+
+<!-- Leave/Delete Clan Confirmation -->
+<div class="confirm-overlay" *ngIf="showLeaveConfirm" (click)="cancelLeave()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <h4>{{ leaveIsDeleting ? 'Delete Clan' : 'Leave Clan' }}</h4>
+    <div class="confirm-content">
+      <p *ngIf="leaveIsDeleting">
+        You are the only member. This will <strong>permanently delete</strong> the clan.
+      </p>
+      <p *ngIf="!leaveIsDeleting">
+        Are you sure you want to leave <strong>{{ clanName }}</strong>?
+      </p>
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-danger" (click)="confirmLeave()">
+        {{ leaveIsDeleting ? 'Delete' : 'Leave' }}
+      </button>
+      <button class="confirm-btn confirm-btn-cancel" (click)="cancelLeave()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Kick Member Confirmation -->
+<div class="confirm-overlay" *ngIf="showKickConfirm" (click)="cancelKick()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <h4>Kick Member</h4>
+    <div class="confirm-content">
+      <p>
+        Are you sure you want to kick <strong>{{ pendingKickUsername }}</strong> from the clan?
+      </p>
+      <p *ngIf="kickConfirmMessage" class="confirm-warning">{{ kickConfirmMessage }}</p>
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-danger" (click)="confirmKick()">Kick</button>
+      <button class="confirm-btn confirm-btn-cancel" (click)="cancelKick()">Cancel</button>
+    </div>
+  </div>
+</div>

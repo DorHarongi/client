@@ -73,6 +73,14 @@ export class ClanPageComponent implements OnInit, OnDestroy {
 
   memberRaidStats: ClanMemberRaidStatsDTO[] = [];
 
+  // Confirmation dialogs
+  showLeaveConfirm = false;
+  leaveIsDeleting = false;
+
+  showKickConfirm = false;
+  pendingKickUsername = '';
+  kickConfirmMessage = '';
+
   // Relics
   relics: RelicDoc[] = [];
   clanRelics: RelicDoc[] = [];
@@ -214,29 +222,32 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   leaveClan(): void {
-    const isDeleting = this.isLeader && this.clanInfo?.members.length === 1;
-    const confirmMsg = isDeleting
-      ? 'Are you sure you want to delete this clan?'
-      : 'Are you sure you want to leave this clan?';
+    this.leaveIsDeleting =
+      this.isLeader && this.clanInfo?.members.length === 1;
+    this.showLeaveConfirm = true;
+  }
 
-    if (confirm(confirmMsg)) {
-      this.clanService
-        .leaveClan(this.clanName, this.currentUsername)
-        .subscribe({
-          next: () => {
-            this.userInformationService.updateUser();
-            if (isDeleting) {
-              // Navigate to village after clan deletion
-              this.router.navigate(['home']);
-            } else {
-              this.loadClanInfo();
-            }
-          },
-          error: (err) => {
-            this.errorMessage = err.error?.message || 'Failed to leave clan';
-          },
-        });
-    }
+  confirmLeave(): void {
+    this.showLeaveConfirm = false;
+    this.clanService
+      .leaveClan(this.clanName, this.currentUsername)
+      .subscribe({
+        next: () => {
+          this.userInformationService.updateUser();
+          if (this.leaveIsDeleting) {
+            this.router.navigate(['home']);
+          } else {
+            this.loadClanInfo();
+          }
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to leave clan';
+        },
+      });
+  }
+
+  cancelLeave(): void {
+    this.showLeaveConfirm = false;
   }
 
   handleJoinRequest(requestUsername: string, accept: boolean): void {
@@ -259,32 +270,40 @@ export class ClanPageComponent implements OnInit, OnDestroy {
 
   kickMember(memberUsername: string): void {
     const memberRelics = this.getMemberRelics(memberUsername);
-    let confirmMsg: string;
+    this.pendingKickUsername = memberUsername;
 
     if (memberRelics.length > 0) {
       const relicList = memberRelics.join(' and ');
-      confirmMsg =
+      this.kickConfirmMessage =
         `${memberUsername} holds the ${relicList}. ` +
-        `Kicking them will forfeit your clan's control over ${memberRelics.length > 1 ? 'these relics' : 'this relic'}. ` +
-        `Are you sure?`;
+        `Kicking them will forfeit your clan's control over ${memberRelics.length > 1 ? 'these relics' : 'this relic'}.`;
     } else {
-      confirmMsg = `Are you sure you want to kick ${memberUsername} from the clan?`;
+      this.kickConfirmMessage = '';
     }
 
-    if (confirm(confirmMsg)) {
-      this.clanService
-        .kickMember(this.clanName, this.currentUsername, memberUsername)
-        .subscribe({
-          next: () => {
-            this.successMessage = `${memberUsername} has been kicked from the clan`;
-            setTimeout(() => (this.successMessage = ''), 3000);
-            this.loadClanInfo();
-          },
-          error: (err) => {
-            this.errorMessage = err.error?.message || 'Failed to kick member';
-          },
-        });
-    }
+    this.showKickConfirm = true;
+  }
+
+  confirmKick(): void {
+    this.showKickConfirm = false;
+    this.clanService
+      .kickMember(this.clanName, this.currentUsername, this.pendingKickUsername)
+      .subscribe({
+        next: () => {
+          this.successMessage = `${this.pendingKickUsername} has been kicked from the clan`;
+          setTimeout(() => (this.successMessage = ''), 3000);
+          this.loadClanInfo();
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to kick member';
+        },
+      });
+  }
+
+  cancelKick(): void {
+    this.showKickConfirm = false;
+    this.pendingKickUsername = '';
+    this.kickConfirmMessage = '';
   }
 
   // Clan name editing

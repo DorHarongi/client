@@ -442,3 +442,81 @@ $topToolbarMinHeight: 75px;
         font-weight: bold;
     }
 }
+
+// Confirmation dialogs
+.confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.confirm-dialog {
+    background-image: url(../../../assets/top-bg.png);
+    background-size: cover;
+    border-radius: 7px;
+    padding: 25px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 2px 2px 5px 2px;
+    border: 2px solid black;
+
+    h4 {
+        text-align: center;
+        margin-bottom: 16px;
+        font-size: 1.3em;
+    }
+
+    .confirm-content {
+        text-align: center;
+        margin-bottom: 20px;
+
+        p {
+            margin: 6px 0;
+        }
+    }
+
+    .confirm-warning {
+        color: #c0392b;
+        font-weight: 600;
+        font-size: 0.9em;
+        margin-top: 10px;
+    }
+
+    .confirm-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+}
+
+.confirm-btn {
+    background-image: url(../../../assets/top-bg.png);
+    background-size: cover;
+    padding: 10px 25px;
+    cursor: pointer;
+    border: 2px solid black;
+    border-radius: 0.25rem;
+    box-shadow: 2px 1px 2px 0px #00000091;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: scale(1.03);
+    }
+
+    &.confirm-btn-danger {
+        background-blend-mode: multiply;
+        background-color: #f5c6cb;
+    }
+
+    &.confirm-btn-cancel {
+        background-blend-mode: multiply;
+    }
+}
