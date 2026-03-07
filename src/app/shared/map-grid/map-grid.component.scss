@@ -55,8 +55,8 @@ $your-color: #90EE90;
   }
 
   &.other-village {
-    background-color: $enemy-color;
-    &:hover { background-color: darken($enemy-color, 5%); }
+    background-color: #ff4848;
+    &:hover { background-color: #ff4848; }
   }
 
   // --- Center-building cell states ---
