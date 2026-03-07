@@ -1,11 +1,21 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ClanService, ClanDTO, ClanMemberRaidStatsDTO } from '../services/clan.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
 import { MAX_CLAN_MEMBERS } from 'utils';
+import {
+  ClanDTO,
+  ClanMemberRaidStatsDTO,
+  ClanService,
+} from '../services/clan.service';
 
 interface RelicDoc {
   relicId: string;
@@ -17,11 +27,11 @@ interface RelicDoc {
 
 // Measured pixel centers of each relic on the 640x427 canvas
 const RELIC_CENTERS: { id: string; x: number; y: number }[] = [
-  { id: 'eternal_flame',        x: 318, y: 109 },
+  { id: 'eternal_flame', x: 318, y: 109 },
   { id: 'chalice_of_ascension', x: 422, y: 146 },
-  { id: 'sigil_of_creation',    x: 427, y: 240 },
-  { id: 'all_seeing_orb',       x: 210, y: 239 },
-  { id: 'apple_of_eternity',    x: 215, y: 139 },
+  { id: 'sigil_of_creation', x: 427, y: 240 },
+  { id: 'all_seeing_orb', x: 210, y: 239 },
+  { id: 'apple_of_eternity', x: 215, y: 139 },
 ];
 const RELIC_DISPLAY_NAMES: Record<string, string> = {
   apple_of_eternity: 'Apple of Eternity',
@@ -34,7 +44,7 @@ const RELIC_DISPLAY_NAMES: Record<string, string> = {
 @Component({
   selector: 'app-clan-page',
   templateUrl: './clan-page.component.html',
-  styleUrls: ['./clan-page.component.scss']
+  styleUrls: ['./clan-page.component.scss'],
 })
 export class ClanPageComponent implements OnInit, OnDestroy {
   @ViewChild('relicCanvas') relicCanvasRef!: ElementRef<HTMLCanvasElement>;
@@ -44,10 +54,10 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   loading: boolean = true;
   currentUsername: string;
   currentUserClan: string;
-  
+
   showJoinModal: boolean = false;
   joinMessage: string = '';
-  
+
   isLeader: boolean = false;
   isMember: boolean = false;
   hasAlreadyRequested: boolean = false;
@@ -81,18 +91,21 @@ export class ClanPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private clanService: ClanService,
     private userInformationService: UserInformationService,
-    private http: HttpClient,
+    private http: HttpClient
   ) {
     this.currentUsername = this.userInformationService.userInformation.username;
-    this.currentUserClan = this.userInformationService.userInformation.clanName || '';
+    this.currentUserClan =
+      this.userInformationService.userInformation.clanName || '';
   }
 
   ngOnInit(): void {
     // Refresh username in case user info was loaded after component constructed
-    this.currentUsername = this.userInformationService.userInformation?.username || '';
-    this.currentUserClan = this.userInformationService.userInformation?.clanName || '';
-    
-    this.route.params.subscribe(params => {
+    this.currentUsername =
+      this.userInformationService.userInformation?.username || '';
+    this.currentUserClan =
+      this.userInformationService.userInformation?.clanName || '';
+
+    this.route.params.subscribe((params) => {
       this.clanName = params['clanName'];
       this.loadClanInfo();
     });
@@ -104,38 +117,39 @@ export class ClanPageComponent implements OnInit, OnDestroy {
 
   loadClanInfo(): void {
     this.loading = true;
-    this.subscription = this.clanService.getClan(this.clanName)
-      .subscribe({
-        next: (clan) => {
-          this.clanInfo = clan;
-          this.loading = false;
-          this.isLeader = clan.leaderUsername === this.currentUsername;
-          this.isMember = clan.members.includes(this.currentUsername);
-          this.hasAlreadyRequested = this.userInformationService.userInformation.pendingClanRequests?.includes(this.clanName) || false;
-          
-          this.loadMemberRaidStats();
-          this.loadRelics();
-        },
-        error: () => {
-          this.loading = false;
-        }
-      });
+    this.subscription = this.clanService.getClan(this.clanName).subscribe({
+      next: (clan) => {
+        this.clanInfo = clan;
+        this.loading = false;
+        this.isLeader = clan.leaderUsername === this.currentUsername;
+        this.isMember = clan.members.includes(this.currentUsername);
+        this.hasAlreadyRequested =
+          this.userInformationService.userInformation.pendingClanRequests?.includes(
+            this.clanName
+          ) || false;
+
+        this.loadMemberRaidStats();
+        this.loadRelics();
+      },
+      error: () => {
+        this.loading = false;
+      },
+    });
   }
 
   loadMemberRaidStats(): void {
-    this.clanService.getClanMemberRaidStats(this.clanName)
-      .subscribe({
-        next: (stats) => {
-          this.memberRaidStats = stats;
-        },
-        error: () => {
-          this.memberRaidStats = [];
-        }
-      });
+    this.clanService.getClanMemberRaidStats(this.clanName).subscribe({
+      next: (stats) => {
+        this.memberRaidStats = stats;
+      },
+      error: () => {
+        this.memberRaidStats = [];
+      },
+    });
   }
 
   getMemberRaidDamage(username: string): number {
-    const stat = this.memberRaidStats.find(s => s.username === username);
+    const stat = this.memberRaidStats.find((s) => s.username === username);
     return stat?.weeklyRaidDamage || 0;
   }
 
@@ -169,15 +183,17 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   joinClan(): void {
     // Ensure we have a valid username
     if (!this.currentUsername) {
-      this.currentUsername = this.userInformationService.userInformation?.username;
+      this.currentUsername =
+        this.userInformationService.userInformation?.username;
     }
-    
+
     if (!this.currentUsername) {
       this.errorMessage = 'User session expired. Please refresh the page.';
       return;
     }
 
-    this.clanService.requestToJoinClan(this.clanName, this.currentUsername, this.joinMessage)
+    this.clanService
+      .requestToJoinClan(this.clanName, this.currentUsername, this.joinMessage)
       .subscribe({
         next: () => {
           if (this.clanInfo?.isOpen) {
@@ -188,23 +204,24 @@ export class ClanPageComponent implements OnInit, OnDestroy {
             this.hasAlreadyRequested = true;
             this.closeJoinModal();
             this.successMessage = 'Join request sent successfully!';
-            setTimeout(() => this.successMessage = '', 3000);
+            setTimeout(() => (this.successMessage = ''), 3000);
           }
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to join clan';
-        }
+        },
       });
   }
 
   leaveClan(): void {
     const isDeleting = this.isLeader && this.clanInfo?.members.length === 1;
-    const confirmMsg = isDeleting 
-      ? 'Are you sure you want to delete this clan?' 
+    const confirmMsg = isDeleting
+      ? 'Are you sure you want to delete this clan?'
       : 'Are you sure you want to leave this clan?';
-    
+
     if (confirm(confirmMsg)) {
-      this.clanService.leaveClan(this.clanName, this.currentUsername)
+      this.clanService
+        .leaveClan(this.clanName, this.currentUsername)
         .subscribe({
           next: () => {
             this.userInformationService.updateUser();
@@ -217,35 +234,44 @@ export class ClanPageComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             this.errorMessage = err.error?.message || 'Failed to leave clan';
-          }
+          },
         });
     }
   }
 
   handleJoinRequest(requestUsername: string, accept: boolean): void {
-    this.clanService.handleJoinRequest(this.clanName, this.currentUsername, requestUsername, accept)
+    this.clanService
+      .handleJoinRequest(
+        this.clanName,
+        this.currentUsername,
+        requestUsername,
+        accept
+      )
       .subscribe({
         next: () => {
           this.loadClanInfo();
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to handle request';
-        }
+        },
       });
   }
 
   kickMember(memberUsername: string): void {
-    if (confirm(`Are you sure you want to kick ${memberUsername} from the clan?`)) {
-      this.clanService.kickMember(this.clanName, this.currentUsername, memberUsername)
+    if (
+      confirm(`Are you sure you want to kick ${memberUsername} from the clan?`)
+    ) {
+      this.clanService
+        .kickMember(this.clanName, this.currentUsername, memberUsername)
         .subscribe({
           next: () => {
             this.successMessage = `${memberUsername} has been kicked from the clan`;
-            setTimeout(() => this.successMessage = '', 3000);
+            setTimeout(() => (this.successMessage = ''), 3000);
             this.loadClanInfo();
           },
           error: (err) => {
             this.errorMessage = err.error?.message || 'Failed to kick member';
-          }
+          },
         });
     }
   }
@@ -274,7 +300,12 @@ export class ClanPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.clanService.updateClanName(this.clanName, this.newClanName.trim(), this.currentUsername)
+    this.clanService
+      .updateClanName(
+        this.clanName,
+        this.newClanName.trim(),
+        this.currentUsername
+      )
       .subscribe({
         next: () => {
           this.successMessage = 'Clan name updated successfully!';
@@ -283,8 +314,9 @@ export class ClanPageComponent implements OnInit, OnDestroy {
           this.router.navigate(['clan', this.newClanName.trim()]);
         },
         error: (err) => {
-          this.errorMessage = err.error?.message || 'Failed to update clan name';
-        }
+          this.errorMessage =
+            err.error?.message || 'Failed to update clan name';
+        },
       });
   }
 
@@ -302,7 +334,12 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   saveDescription(): void {
-    this.clanService.updateClanDescription(this.clanName, this.newDescription.trim(), this.currentUsername)
+    this.clanService
+      .updateClanDescription(
+        this.clanName,
+        this.newDescription.trim(),
+        this.currentUsername
+      )
       .subscribe({
         next: () => {
           if (this.clanInfo) {
@@ -310,28 +347,31 @@ export class ClanPageComponent implements OnInit, OnDestroy {
           }
           this.editingDescription = false;
           this.successMessage = 'Description updated!';
-          setTimeout(() => this.successMessage = '', 3000);
+          setTimeout(() => (this.successMessage = ''), 3000);
         },
         error: (err) => {
-          this.errorMessage = err.error?.message || 'Failed to update description';
-        }
+          this.errorMessage =
+            err.error?.message || 'Failed to update description';
+        },
       });
   }
 
   toggleClanOpen(): void {
     if (!this.clanInfo) return;
-    
+
     const newStatus = !this.clanInfo.isOpen;
-    this.clanService.toggleClanOpen(this.clanName, this.currentUsername, newStatus)
+    this.clanService
+      .toggleClanOpen(this.clanName, this.currentUsername, newStatus)
       .subscribe({
         next: () => {
           this.clanInfo!.isOpen = newStatus;
           this.successMessage = `Clan is now ${newStatus ? 'open' : 'closed'}`;
-          setTimeout(() => this.successMessage = '', 3000);
+          setTimeout(() => (this.successMessage = ''), 3000);
         },
         error: (err) => {
-          this.errorMessage = err.error?.message || 'Failed to update clan status';
-        }
+          this.errorMessage =
+            err.error?.message || 'Failed to update clan status';
+        },
       });
   }
 
@@ -340,7 +380,12 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   canJoin(): boolean {
-    return !this.isMember && !this.currentUserClan && !this.hasAlreadyRequested && !this.isClanFull();
+    return (
+      !this.isMember &&
+      !this.currentUserClan &&
+      !this.hasAlreadyRequested &&
+      !this.isClanFull()
+    );
   }
 
   goBack(): void {
@@ -357,7 +402,7 @@ export class ClanPageComponent implements OnInit, OnDestroy {
     this.http.get<RelicDoc[]>(`${environment.apiUrl}/relics`).subscribe({
       next: (all) => {
         this.relics = all;
-        this.clanRelics = all.filter(r => r.holderClanName === this.clanName);
+        this.clanRelics = all.filter((r) => r.holderClanName === this.clanName);
         setTimeout(() => this.drawRelicImage(), 100);
       },
     });
@@ -368,17 +413,20 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   isClanRelic(id: string): boolean {
-    return this.clanRelics.some(r => r.relicId === id);
+    return this.clanRelics.some((r) => r.relicId === id);
   }
 
   getRelicHolder(id: string): RelicDoc | undefined {
-    return this.relics.find(r => r.relicId === id);
+    return this.relics.find((r) => r.relicId === id);
   }
 
   getMemberRelics(username: string): string[] {
     return this.relics
-      .filter(r => r.holderUsername === username && r.holderClanName === this.clanName)
-      .map(r => this.getRelicName(r.relicId));
+      .filter(
+        (r) =>
+          r.holderUsername === username && r.holderClanName === this.clanName
+      )
+      .map((r) => this.getRelicName(r.relicId));
   }
 
   onRelicClick(relicId: string): void {
@@ -400,19 +448,23 @@ export class ClanPageComponent implements OnInit, OnDestroy {
     this.transferPlayerVillages = [];
     if (!this.transferTargetUser) return;
     this.loadingVillages = true;
-    this.http.get<any>(`${environment.apiUrl}/users/profile/${this.transferTargetUser}`).subscribe({
-      next: (user) => {
-        this.transferPlayerVillages = (user.villages || []).map((v: any) => ({
-          villageName: v.villageName,
-          population: v.population || 0,
-        }));
-        this.loadingVillages = false;
-      },
-      error: () => {
-        this.transferPlayerVillages = [];
-        this.loadingVillages = false;
-      },
-    });
+    this.http
+      .get<any>(
+        `${environment.apiUrl}/users/profile/${this.transferTargetUser}`
+      )
+      .subscribe({
+        next: (user) => {
+          this.transferPlayerVillages = (user.villages || []).map((v: any) => ({
+            villageName: v.villageName,
+            population: v.population || 0,
+          }));
+          this.loadingVillages = false;
+        },
+        error: () => {
+          this.transferPlayerVillages = [];
+          this.loadingVillages = false;
+        },
+      });
   }
 
   confirmRelicTransfer(): void {
@@ -420,19 +472,21 @@ export class ClanPageComponent implements OnInit, OnDestroy {
       this.relicError = 'Select a player and a village';
       return;
     }
-    this.http.post(`${environment.apiUrl}/relics/transfer`, {
-      relicId: this.selectedRelicId,
-      targetUsername: this.transferTargetUser,
-      targetVillageName: this.transferTargetVillage,
-    }).subscribe({
-      next: () => {
-        this.showRelicTransfer = false;
-        this.loadRelics();
-      },
-      error: (e) => {
-        this.relicError = e.error?.message || 'Transfer failed';
-      },
-    });
+    this.http
+      .post(`${environment.apiUrl}/relics/transfer`, {
+        relicId: this.selectedRelicId,
+        targetUsername: this.transferTargetUser,
+        targetVillageName: this.transferTargetVillage,
+      })
+      .subscribe({
+        next: () => {
+          this.showRelicTransfer = false;
+          this.loadRelics();
+        },
+        error: (e) => {
+          this.relicError = e.error?.message || 'Transfer failed';
+        },
+      });
   }
 
   cancelRelicTransfer(): void {
@@ -443,7 +497,7 @@ export class ClanPageComponent implements OnInit, OnDestroy {
     const canvas = this.relicCanvasRef?.nativeElement;
     if (!canvas) return;
 
-    const heldIds = new Set(this.clanRelics.map(r => r.relicId));
+    const heldIds = new Set(this.clanRelics.map((r) => r.relicId));
 
     const allImg = new Image();
     const noImg = new Image();
@@ -460,17 +514,19 @@ export class ClanPageComponent implements OnInit, OnDestroy {
       const ctx = canvas.getContext('2d')!;
 
       const offAll = document.createElement('canvas');
-      offAll.width = w; offAll.height = h;
+      offAll.width = w;
+      offAll.height = h;
       offAll.getContext('2d')!.drawImage(allImg, 0, 0, w, h);
       const allData = offAll.getContext('2d')!.getImageData(0, 0, w, h);
 
       const offNo = document.createElement('canvas');
-      offNo.width = w; offNo.height = h;
+      offNo.width = w;
+      offNo.height = h;
       offNo.getContext('2d')!.drawImage(noImg, 0, 0, w, h);
       const noData = offNo.getContext('2d')!.getImageData(0, 0, w, h);
 
       // Pre-compute which source image to use per relic center
-      const centerSources = RELIC_CENTERS.map(c => heldIds.has(c.id));
+      const centerSources = RELIC_CENTERS.map((c) => heldIds.has(c.id));
 
       const result = ctx.createImageData(w, h);
 
@@ -491,7 +547,7 @@ export class ClanPageComponent implements OnInit, OnDestroy {
 
           const idx = (y * w + x) * 4;
           const src = centerSources[nearestIdx] ? allData : noData;
-          result.data[idx]     = src.data[idx];
+          result.data[idx] = src.data[idx];
           result.data[idx + 1] = src.data[idx + 1];
           result.data[idx + 2] = src.data[idx + 2];
           result.data[idx + 3] = src.data[idx + 3];

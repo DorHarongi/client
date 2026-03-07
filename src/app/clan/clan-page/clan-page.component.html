@@ -1,192 +1,330 @@
-<div class="flexContainer clanContainer step" [class.show]="!showJoinModal" [class.hide]="showJoinModal">
-    <h2 id="titleText" class="center margin-top">
-        <span *ngIf="!editingClanName">Clan: {{clanName}}
-            <span *ngIf="isLeader" class="edit-icon clickable" (click)="startEditingClanName()" title="Edit clan name">✏️</span>
-        </span>
-        <span *ngIf="editingClanName" class="edit-clan-name">
-            Clan: <input type="text" [(ngModel)]="newClanName" maxlength="30" class="clan-name-input">
-            <button class="small-btn accept" (click)="saveClanName()">Save</button>
-            <button class="small-btn decline" (click)="cancelEditingClanName()">Cancel</button>
-        </span>
-    </h2>
+<div
+  class="flexContainer clanContainer step"
+  [class.show]="!showJoinModal"
+  [class.hide]="showJoinModal"
+>
+  <h2 id="titleText" class="center margin-top">
+    <span *ngIf="!editingClanName"
+      >Clan: {{ clanName }}
+      <span
+        *ngIf="isLeader"
+        class="edit-icon clickable"
+        (click)="startEditingClanName()"
+        title="Edit clan name"
+        >✏️</span
+      >
+    </span>
+    <span *ngIf="editingClanName" class="edit-clan-name">
+      Clan:
+      <input
+        type="text"
+        [(ngModel)]="newClanName"
+        maxlength="30"
+        class="clan-name-input"
+      />
+      <button class="small-btn accept" (click)="saveClanName()">Save</button>
+      <button class="small-btn decline" (click)="cancelEditingClanName()">
+        Cancel
+      </button>
+    </span>
+  </h2>
 
-    <div *ngIf="loading" class="center">
-        Loading...
-    </div>
+  <div *ngIf="loading" class="center">Loading...</div>
 
-    <div *ngIf="!loading && clanInfo" class="clan-content">
-        <div class="clan-card center">
-            <div class="clan-info">
-                <p *ngIf="!editingDescription">
-                    <strong>Description:</strong> {{clanInfo.description || 'No description'}}
-                    <span *ngIf="isLeader" class="edit-icon clickable" (click)="startEditingDescription()" title="Edit description">✏️</span>
-                </p>
-                <div *ngIf="editingDescription" class="description-edit">
-                    <strong>Description:</strong>
-                    <textarea [(ngModel)]="newDescription" maxlength="200" rows="3" class="description-input" placeholder="Enter clan description..."></textarea>
-                    <div class="description-edit-actions">
-                        <button class="small-btn accept" (click)="saveDescription()">Save</button>
-                        <button class="small-btn decline" (click)="cancelEditingDescription()">Cancel</button>
-                    </div>
-                </div>
-                <p><strong>Leader:</strong>&nbsp;
-                    <span class="member-link" (click)="goToMember(clanInfo.leaderUsername)">{{clanInfo.leaderUsername}}</span>
-                </p>
-                <p><strong>Members:</strong> {{clanInfo.members.length}}/20</p>
-                <p><strong>Status:</strong> {{clanInfo.isOpen ? 'Open' : 'Closed'}}
-                    <button *ngIf="isLeader" class="small-btn toggle-status" (click)="toggleClanOpen()">
-                        {{clanInfo.isOpen ? 'Make Closed' : 'Make Open'}}
-                    </button>
-                </p>
-                <p><strong>Raid Bosses Defeated:</strong> {{clanInfo.totalBossesKilled || 0}}</p>
-                <p><strong>Created:</strong> {{formatDate(clanInfo.createdDate)}}</p>
-            </div>
-
-            <div class="members-section">
-                <h4>Members</h4>
-                <table class="members-table bordered">
-                    <tr>
-                        <th>Username</th>
-                        <th>Role</th>
-                        <th>Weekly Raid Damage</th>
-                        <th *ngIf="isMember">Relics</th>
-                        <th *ngIf="isLeader">Actions</th>
-                    </tr>
-                    <tr *ngFor="let member of clanInfo.members" 
-                        class="member-row">
-                        <td class="clickable" (click)="goToMember(member)">{{member}}</td>
-                        <td>{{member === clanInfo.leaderUsername ? 'Leader' : 'Member'}}</td>
-                        <td>{{formatDamage(getMemberRaidDamage(member))}}</td>
-                        <td *ngIf="isMember">{{getMemberRelics(member).join(', ') || '-'}}</td>
-                        <td *ngIf="isLeader">
-                            <button class="small-btn kick" 
-                                    *ngIf="member !== currentUsername"
-                                    (click)="kickMember(member); $event.stopPropagation()">
-                                Kick
-                            </button>
-                            <span *ngIf="member === currentUsername">-</span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- Relics Section -->
-            <div class="relics-section" *ngIf="isMember">
-                <h4>Divine Relics</h4>
-                <div class="relic-image-container center">
-                    <canvas #relicCanvas class="relic-canvas"></canvas>
-                </div>
-                <div class="relic-details">
-                    <div *ngFor="let id of ['apple_of_eternity','eternal_flame','chalice_of_ascension','all_seeing_orb','sigil_of_creation']"
-                         class="relic-item"
-                         [class.held]="isClanRelic(id)"
-                         [class.clickable]="isClanRelic(id)"
-                         (click)="onRelicClick(id)">
-                        <span class="relic-name">{{getRelicName(id)}}</span>
-                        <span *ngIf="getRelicHolder(id)?.holderClanName === clanName" class="relic-holder">
-                            Held by {{getRelicHolder(id)?.holderUsername}} ({{getRelicHolder(id)?.holderVillageName}})
-                        </span>
-                        <span *ngIf="getRelicHolder(id)?.holderClanName !== clanName" class="relic-empty">Not held</span>
-                    </div>
-                </div>
-
-                <!-- Transfer Modal -->
-                <div *ngIf="showRelicTransfer" class="relic-transfer-modal">
-                    <h5>Transfer {{getRelicName(selectedRelicId)}}</h5>
-                    <p class="relic-warning">Cannot be moved again for 7 days.</p>
-                    <label>Player:</label>
-                    <select [(ngModel)]="transferTargetUser" (ngModelChange)="onTransferPlayerChange()">
-                        <option value="">-- Select --</option>
-                        <option *ngFor="let m of clanInfo!.members" [value]="m">{{m}}</option>
-                    </select>
-
-                    <div *ngIf="loadingVillages" class="loading-villages">Loading villages...</div>
-
-                    <div *ngIf="transferPlayerVillages.length > 0" class="village-select-section">
-                        <label>Select Village:</label>
-                        <table class="village-select-table bordered">
-                            <tr>
-                                <th>Village</th>
-                                <th>Population</th>
-                                <th>Select</th>
-                            </tr>
-                            <tr *ngFor="let v of transferPlayerVillages"
-                                [class.selected-village]="transferTargetVillage === v.villageName"
-                                (click)="transferTargetVillage = v.villageName">
-                                <td>{{v.villageName}}</td>
-                                <td>{{v.population}}</td>
-                                <td class="center">
-                                    <span *ngIf="transferTargetVillage === v.villageName">✔</span>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <p class="error-message" *ngIf="relicError">{{relicError}}</p>
-                    <div class="relic-transfer-actions">
-                        <button class="action-btn" (click)="confirmRelicTransfer()">Confirm</button>
-                        <button class="action-btn" (click)="cancelRelicTransfer()">Cancel</button>
-                    </div>
-                </div>
-            </div>
-
-            <app-clan-chat
-                *ngIf="isMember"
-                [clanName]="clanName"
-                [currentUsername]="currentUsername">
-            </app-clan-chat>
-
-            <!-- Pending Requests (only visible to leader) -->
-            <div class="requests-section" *ngIf="isLeader && clanInfo.pendingRequests && clanInfo.pendingRequests.length > 0">
-                <h4>Pending Join Requests</h4>
-                <table class="requests-table bordered">
-                    <tr>
-                        <th>Username</th>
-                        <th>Message</th>
-                        <th>Actions</th>
-                    </tr>
-                    <tr *ngFor="let request of clanInfo.pendingRequests">
-                        <td>{{request.username}}</td>
-                        <td>{{request.message || '-'}}</td>
-                        <td>
-                            <button class="small-btn accept" (click)="handleJoinRequest(request.username, true)" [disabled]="isClanFull()" [title]="isClanFull() ? 'Clan is full' : ''">Accept</button>
-                            <button class="small-btn decline" (click)="handleJoinRequest(request.username, false)">Decline</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <p class="success-message" *ngIf="successMessage">{{successMessage}}</p>
-            <p class="error-message" *ngIf="errorMessage">{{errorMessage}}</p>
-
-            <div class="actions">
-                <button class="action-btn join-btn" *ngIf="canJoin()" (click)="openJoinModal()">
-                    {{clanInfo.isOpen ? 'Join Clan' : 'Request to Join'}}
-                </button>
-                <span *ngIf="!isMember && !currentUserClan && isClanFull()" class="error-message">Clan is full (20/20 members)</span>
-                <span *ngIf="hasAlreadyRequested" class="request-pending">Request Pending</span>
-                <button class="action-btn leave-btn" *ngIf="isMember && !isLeader" (click)="leaveClan()">
-                    Leave Clan
-                </button>
-                <button class="action-btn leave-btn" *ngIf="isLeader" (click)="leaveClan()">
-                    {{clanInfo.members.length > 1 ? 'Leave & Transfer Leadership' : 'Delete Clan'}}
-                </button>
-            </div>
+  <div *ngIf="!loading && clanInfo" class="clan-content">
+    <div class="clan-card center">
+      <div class="clan-info">
+        <p *ngIf="!editingDescription">
+          <strong>Description:</strong>
+          {{ clanInfo.description || "No description" }}
+          <span
+            *ngIf="isLeader"
+            class="edit-icon clickable"
+            (click)="startEditingDescription()"
+            title="Edit description"
+            >✏️</span
+          >
+        </p>
+        <div *ngIf="editingDescription" class="description-edit">
+          <strong>Description:</strong>
+          <textarea
+            [(ngModel)]="newDescription"
+            maxlength="200"
+            rows="3"
+            class="description-input"
+            placeholder="Enter clan description..."
+          ></textarea>
+          <div class="description-edit-actions">
+            <button class="small-btn accept" (click)="saveDescription()">
+              Save
+            </button>
+            <button
+              class="small-btn decline"
+              (click)="cancelEditingDescription()"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-    </div>
+        <p>
+          <strong>Leader:</strong>&nbsp;
+          <span
+            class="member-link"
+            (click)="goToMember(clanInfo.leaderUsername)"
+            >{{ clanInfo.leaderUsername }}</span
+          >
+        </p>
+        <p><strong>Members:</strong> {{ clanInfo.members.length }}/20</p>
+        <p>
+          <strong>Status:</strong> {{ clanInfo.isOpen ? "Open" : "Closed" }}
+          <button
+            *ngIf="isLeader"
+            class="small-btn toggle-status"
+            (click)="toggleClanOpen()"
+          >
+            {{ clanInfo.isOpen ? "Make Closed" : "Make Open" }}
+          </button>
+        </p>
+        <p>
+          <strong>Raid Bosses Defeated:</strong>
+          {{ clanInfo.totalBossesKilled || 0 }}
+        </p>
+        <p><strong>Created:</strong> {{ formatDate(clanInfo.createdDate) }}</p>
+      </div>
 
-    <button id="back" class="buttons center" (click)="goBack()">Back</button>
+      <div class="members-section">
+        <h4>Members</h4>
+        <table class="members-table bordered">
+          <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Weekly Raid Damage</th>
+            <th *ngIf="isMember">Relics</th>
+            <th *ngIf="isLeader">Actions</th>
+          </tr>
+          <tr *ngFor="let member of clanInfo.members" class="member-row">
+            <td class="clickable" (click)="goToMember(member)">{{ member }}</td>
+            <td>
+              {{ member === clanInfo.leaderUsername ? "Leader" : "Member" }}
+            </td>
+            <td>{{ formatDamage(getMemberRaidDamage(member)) }}</td>
+            <td *ngIf="isMember">
+              {{ getMemberRelics(member).join(", ") || "-" }}
+            </td>
+            <td *ngIf="isLeader">
+              <button
+                class="small-btn kick"
+                *ngIf="member !== currentUsername"
+                (click)="kickMember(member); $event.stopPropagation()"
+              >
+                Kick
+              </button>
+              <span *ngIf="member === currentUsername">-</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Relics Section -->
+      <div class="relics-section" *ngIf="isMember">
+        <h4>Divine Relics</h4>
+        <div class="relic-image-container center">
+          <canvas #relicCanvas class="relic-canvas"></canvas>
+        </div>
+        <div class="relic-details">
+          <div
+            *ngFor="
+              let id of [
+                'apple_of_eternity',
+                'eternal_flame',
+                'chalice_of_ascension',
+                'all_seeing_orb',
+                'sigil_of_creation'
+              ]
+            "
+            class="relic-item"
+            [class.held]="isClanRelic(id)"
+            [class.clickable]="isClanRelic(id)"
+            (click)="onRelicClick(id)"
+          >
+            <span class="relic-name">{{ getRelicName(id) }}</span>
+            <span
+              *ngIf="getRelicHolder(id)?.holderClanName === clanName"
+              class="relic-holder"
+            >
+              Held by {{ getRelicHolder(id)?.holderUsername }} ({{
+                getRelicHolder(id)?.holderVillageName
+              }})
+            </span>
+            <span
+              *ngIf="getRelicHolder(id)?.holderClanName !== clanName"
+              class="relic-empty"
+              >Not held</span
+            >
+          </div>
+        </div>
+
+        <!-- Transfer Modal -->
+        <div *ngIf="showRelicTransfer" class="relic-transfer-modal">
+          <h5>Transfer {{ getRelicName(selectedRelicId) }}</h5>
+          <p class="relic-warning">Cannot be moved again for 7 days.</p>
+          <label>Player:</label>
+          <select
+            [(ngModel)]="transferTargetUser"
+            (ngModelChange)="onTransferPlayerChange()"
+          >
+            <option value="">-- Select --</option>
+            <option *ngFor="let m of clanInfo!.members" [value]="m">
+              {{ m }}
+            </option>
+          </select>
+
+          <div *ngIf="loadingVillages" class="loading-villages">
+            Loading villages...
+          </div>
+
+          <div
+            *ngIf="transferPlayerVillages.length > 0"
+            class="village-select-section"
+          >
+            <label>Select Village:</label>
+            <table class="village-select-table bordered">
+              <tr>
+                <th>Village</th>
+                <th>Population</th>
+                <th>Select</th>
+              </tr>
+              <tr
+                *ngFor="let v of transferPlayerVillages"
+                [class.selected-village]="
+                  transferTargetVillage === v.villageName
+                "
+                (click)="transferTargetVillage = v.villageName"
+              >
+                <td>{{ v.villageName }}</td>
+                <td>{{ v.population }}</td>
+                <td class="center">
+                  <span *ngIf="transferTargetVillage === v.villageName">✔</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <p class="error-message" *ngIf="relicError">{{ relicError }}</p>
+          <div class="relic-transfer-actions">
+            <button class="action-btn" (click)="confirmRelicTransfer()">
+              Confirm
+            </button>
+            <button class="action-btn" (click)="cancelRelicTransfer()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <app-clan-chat
+        *ngIf="isMember"
+        [clanName]="clanName"
+        [currentUsername]="currentUsername"
+      >
+      </app-clan-chat>
+
+      <!-- Pending Requests (only visible to leader) -->
+      <div
+        class="requests-section"
+        *ngIf="
+          isLeader &&
+          clanInfo.pendingRequests &&
+          clanInfo.pendingRequests.length > 0
+        "
+      >
+        <h4>Pending Join Requests</h4>
+        <table class="requests-table bordered">
+          <tr>
+            <th>Username</th>
+            <th>Message</th>
+            <th>Actions</th>
+          </tr>
+          <tr *ngFor="let request of clanInfo.pendingRequests">
+            <td>{{ request.username }}</td>
+            <td>{{ request.message || "-" }}</td>
+            <td>
+              <button
+                class="small-btn accept"
+                (click)="handleJoinRequest(request.username, true)"
+                [disabled]="isClanFull()"
+                [title]="isClanFull() ? 'Clan is full' : ''"
+              >
+                Accept
+              </button>
+              <button
+                class="small-btn decline"
+                (click)="handleJoinRequest(request.username, false)"
+              >
+                Decline
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <div class="actions">
+        <button
+          class="action-btn join-btn"
+          *ngIf="canJoin()"
+          (click)="openJoinModal()"
+        >
+          {{ clanInfo.isOpen ? "Join Clan" : "Request to Join" }}
+        </button>
+        <span
+          *ngIf="!isMember && !currentUserClan && isClanFull()"
+          class="error-message"
+          >Clan is full (20/20 members)</span
+        >
+        <span *ngIf="hasAlreadyRequested" class="request-pending"
+          >Request Pending</span
+        >
+        <button
+          class="action-btn leave-btn"
+          *ngIf="isMember && !isLeader"
+          (click)="leaveClan()"
+        >
+          Leave Clan
+        </button>
+        <button
+          class="action-btn leave-btn"
+          *ngIf="isLeader"
+          (click)="leaveClan()"
+        >
+          {{
+            clanInfo.members.length > 1
+              ? "Leave & Transfer Leadership"
+              : "Delete Clan"
+          }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button id="back" class="buttons center" (click)="goBack()">Back</button>
 </div>
 
 <!-- Join Modal -->
 <div *ngIf="showJoinModal" class="modal-overlay">
-    <div class="flexContainer modal-container round-square">
-        <h4 class="center">Request to Join {{clanName}}</h4>
-        <p class="center">This is a closed clan. Please introduce yourself:</p>
-        <textarea [(ngModel)]="joinMessage" placeholder="Why do you want to join this clan?" rows="4"></textarea>
-        <div class="modal-actions center">
-            <button class="action-btn" (click)="joinClan()">Send Request</button>
-            <button class="action-btn" (click)="closeJoinModal()">Cancel</button>
-        </div>
+  <div class="flexContainer modal-container round-square">
+    <h4 class="center">Request to Join {{ clanName }}</h4>
+    <p class="center">This is a closed clan. Please introduce yourself:</p>
+    <textarea
+      [(ngModel)]="joinMessage"
+      placeholder="Why do you want to join this clan?"
+      rows="4"
+    ></textarea>
+    <div class="modal-actions center">
+      <button class="action-btn" (click)="joinClan()">Send Request</button>
+      <button class="action-btn" (click)="closeJoinModal()">Cancel</button>
     </div>
+  </div>
 </div>
