@@ -1,12 +1,10 @@
 $attackReportPanelWidth: 644px;
 $attackReportPadding: 1%;
-$topToolbarHeight: max(7.5vh, 75px);
-$MaybeNegativeAttackPanelLeft: calc((100% - $attackReportPanelWidth) / 2);
-$attackPanelLeft: max($MaybeNegativeAttackPanelLeft, 0px);
 
 .attackContainer{
-    left: $attackPanelLeft;
-    top: $topToolbarHeight;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     max-width: 100%;
     min-height: 125px;
     box-shadow: 1px 1px 3px 3px;

@@ -1,12 +1,10 @@
 $scoutPanelWidth: 644px;
 $scoutPanelPadding: 1%;
-$topToolbarHeight: max(7.5vh, 75px);
-$MaybeNegativeLeft: calc((100% - $scoutPanelWidth) / 2);
-$panelLeft: max($MaybeNegativeLeft, 0px);
 
 .scout-report-container {
-    left: $panelLeft;
-    top: $topToolbarHeight;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     max-width: 100%;
     min-height: 125px;
     box-shadow: 1px 1px 3px 3px;
