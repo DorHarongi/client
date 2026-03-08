@@ -46,6 +46,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   unreadSubscription?: Subscription;
   notificationSubscription?: Subscription;
   spyCountdownSubscription?: Subscription;
+  private visibilityHandler = () => this.onVisibilityChange();
 
   constructor(
     private userInformationService: UserInformationService,
@@ -59,9 +60,9 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.subscription) this.subscription.unsubscribe();
-    this.unreadSubscription?.unsubscribe();
+    this.stopTimers();
     this.notificationSubscription?.unsubscribe();
-    this.spyCountdownSubscription?.unsubscribe();
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 
   ngOnInit(): void {
@@ -71,11 +72,8 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
       }
     );
 
-    // Load unread count initially and refresh every 30 seconds
     this.loadUnreadCount();
-    this.unreadSubscription = timer(30000, 30000).subscribe(() => {
-      this.loadUnreadCount();
-    });
+    this.startTimers();
 
     // Immediately decrement count when an item is marked as read
     this.notificationSubscription =
@@ -85,11 +83,34 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
         }
       });
 
-    // Real-time spy regen countdown (same tick as energy timer - every second)
+    document.addEventListener('visibilitychange', this.visibilityHandler);
+  }
+
+  private onVisibilityChange(): void {
+    if (document.hidden) {
+      this.stopTimers();
+    } else {
+      this.loadUnreadCount();
+      this.startTimers();
+    }
+  }
+
+  private startTimers(): void {
+    this.stopTimers();
+    this.unreadSubscription = timer(30000, 30000).subscribe(() => {
+      this.loadUnreadCount();
+    });
     this.updateSpyTooltip();
     this.spyCountdownSubscription = interval(1000).subscribe(() =>
       this.updateSpyTooltip()
     );
+  }
+
+  private stopTimers(): void {
+    this.unreadSubscription?.unsubscribe();
+    this.unreadSubscription = undefined;
+    this.spyCountdownSubscription?.unsubscribe();
+    this.spyCountdownSubscription = undefined;
   }
 
   private updateSpyTooltip(): void {

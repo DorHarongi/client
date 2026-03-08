@@ -34,6 +34,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   toVillage: Movement[] = [];
   private subscription?: Subscription;
   private tickSub?: Subscription;
+  private visibilityHandler = () => this.onVisibilityChange();
 
   get hasMovements(): boolean {
     return this.fromVillage.length > 0 || this.toVillage.length > 0;
@@ -46,13 +47,35 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadMovements();
-    this.subscription = interval(15000).subscribe(() => this.loadMovements());
-    this.tickSub = interval(1000).subscribe(() => {});
+    this.startPolling();
+    document.addEventListener('visibilitychange', this.visibilityHandler);
   }
 
   ngOnDestroy(): void {
+    this.stopPolling();
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
+  }
+
+  private onVisibilityChange(): void {
+    if (document.hidden) {
+      this.stopPolling();
+    } else {
+      this.loadMovements();
+      this.startPolling();
+    }
+  }
+
+  private startPolling(): void {
+    this.stopPolling();
+    this.subscription = interval(5000).subscribe(() => this.loadMovements());
+    this.tickSub = interval(1000).subscribe(() => {});
+  }
+
+  private stopPolling(): void {
     this.subscription?.unsubscribe();
+    this.subscription = undefined;
     this.tickSub?.unsubscribe();
+    this.tickSub = undefined;
   }
 
   loadMovements(): void {
