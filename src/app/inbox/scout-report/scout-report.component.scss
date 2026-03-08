@@ -13,6 +13,8 @@ $topToolbarHeight: max(7.5vh, 75px);
     flex-wrap: nowrap;
     padding-left: $scoutPanelPadding;
     padding-right: $scoutPanelPadding;
+    overflow-y: auto;
+    max-height: calc(100vh - #{$topToolbarHeight} - 20px);
 }
 
 .round-square {
