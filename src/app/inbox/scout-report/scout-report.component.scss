@@ -1,9 +1,10 @@
 $scoutPanelWidth: 644px;
 $scoutPanelPadding: 1%;
+$topToolbarHeight: max(7.5vh, 75px);
 
 .scout-report-container {
     left: 50%;
-    top: 50%;
+    top: calc(50% + #{$topToolbarHeight} / 2);
     transform: translate(-50%, -50%);
     max-width: 100%;
     min-height: 125px;
