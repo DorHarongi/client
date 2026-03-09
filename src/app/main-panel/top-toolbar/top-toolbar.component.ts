@@ -245,7 +245,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   }
 
   get hasExpertSpy(): boolean {
-    return this.stableLevel >= 5;
+    return this.stableLevel >= 5 && this.expertSpyStatus !== null;
   }
 
   get expertSpyAvailable(): boolean {
