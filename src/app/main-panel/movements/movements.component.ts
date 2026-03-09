@@ -13,7 +13,12 @@ interface Movement {
     | 'boss_attack'
     | 'spy'
     | 'spy_return'
-    | 'relic_transfer';
+    | 'relic_transfer'
+    | 'oasis_garrison'
+    | 'oasis_attack'
+    | 'oasis_return'
+    | 'crow'
+    | 'crow_return';
   senderUsername: string;
   senderVillageName: string;
   targetUsername: string;
@@ -142,6 +147,12 @@ export class MovementsComponent implements OnInit, OnDestroy {
     if (movement.type === 'return') {
       return 'assets/swords.png';
     }
+    if (movement.type === 'oasis_garrison' || movement.type === 'oasis_attack') {
+      return 'assets/oasis.png';
+    }
+    if (movement.type === 'crow' || movement.type === 'crow_return') {
+      return 'assets/crow.png';
+    }
     return 'assets/swords.png';
   }
 
@@ -154,6 +165,23 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
     if (movement.type === 'spy_return') {
       return 'Spy returning';
+    }
+    if (movement.type === 'oasis_garrison') {
+      return isFromVillage
+        ? 'Garrison → Oasis'
+        : 'Troops to oasis';
+    }
+    if (movement.type === 'oasis_attack') {
+      return 'Attack → Oasis';
+    }
+    if (movement.type === 'oasis_return') {
+      return 'Troops returning';
+    }
+    if (movement.type === 'crow') {
+      return 'Crow incoming';
+    }
+    if (movement.type === 'crow_return') {
+      return 'Crow returning';
     }
     if (movement.type === 'attack') {
       return isFromVillage

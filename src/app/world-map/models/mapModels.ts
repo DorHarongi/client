@@ -24,14 +24,22 @@ export interface BossOnMap {
     relicName?: string;
 }
 
+export interface OasisOnMap {
+    id: string;
+    x: number;
+    y: number;
+}
+
 export interface MapWindowResponse {
     villages: VillageOnMap[];
     bosses: BossOnMap[];
+    oases?: OasisOnMap[];
     worldSize: number;
 }
 
 export interface MinimapResponse {
     villages: VillageOnMap[];
     bosses: BossOnMap[];
+    oases?: OasisOnMap[];
     worldSize: number;
 }

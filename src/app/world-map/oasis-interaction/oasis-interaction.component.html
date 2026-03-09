@@ -1,0 +1,20 @@
+<div class="flexContainer interactionContainer round-square">
+  <h3 class="center modal-title">Oasis</h3>
+
+  <div class="oasis-header center">
+    <img src="assets/oasis.png" class="oasis-image" />
+    <h4 class="oasis-name">Oasis at ({{ oasis.x }}, {{ oasis.y }})</h4>
+  </div>
+
+  <div class="info-section center">
+    <p class="location">Location: ({{ oasis.x }}, {{ oasis.y }})</p>
+  </div>
+
+  <div class="actions center">
+    <button class="action-btn" (click)="findOnMap()">Find on Map</button>
+    <button class="action-btn">Scout</button>
+    <button class="action-btn">Attack</button>
+    <button class="action-btn">Send Troops</button>
+    <button class="action-btn" (click)="close()">Close</button>
+  </div>
+</div>

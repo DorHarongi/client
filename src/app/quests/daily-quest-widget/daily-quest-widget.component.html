@@ -1,0 +1,79 @@
+<!-- Floating Daily Quest Widget -->
+<div *ngIf="isVisible"
+     class="daily-quest-widget"
+     [style.left.px]="position.x"
+     [style.top.px]="position.y"
+     [class.dragging]="isDragging"
+     [class.claimable]="hasAnyClaimable"
+     (mousedown)="onMouseDown($event)"
+     (touchstart)="onTouchStart($event)">
+
+    <div class="widget-header" (click)="toggleDetails()">
+        <span class="quest-icon">📋</span>
+        <span class="quest-title">Daily Quests</span>
+        <span class="expand-icon" [class.expanded]="showDetails"></span>
+    </div>
+
+    <!-- Collapsed view: quest titles only -->
+    <div class="widget-collapsed" *ngIf="!showDetails">
+        <div *ngIf="isLoading" class="loading-text">Loading...</div>
+        <div *ngIf="!isLoading && quests.length === 0" class="no-quests">No quests today</div>
+        <div *ngIf="!isLoading && quests.length > 0" class="quest-titles-list">
+            <div class="quest-title-item" *ngFor="let q of quests">
+                {{ q.quest.title }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Expanded modal: all 3 quests -->
+<div *ngIf="showDetails" class="modal-overlay" (click)="toggleDetails()">
+    <div class="quest-details-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>📋 Daily Quests</h3>
+            <button class="close-btn" (click)="toggleDetails()">×</button>
+        </div>
+
+        <div class="modal-body">
+            <div *ngIf="isLoading" class="loading-text">Loading...</div>
+            <div *ngIf="!isLoading && quests.length === 0" class="no-quests">No quests available today.</div>
+
+            <div *ngFor="let q of quests" class="quest-card" [class.claimable]="isQuestClaimable(q)">
+                <h4 class="quest-card-title">{{ q.quest.title }}</h4>
+                <p class="quest-description">{{ q.quest.description }}</p>
+
+                <div class="progress-section">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" [style.width.%]="(q.progress / q.quest.target) * 100"></div>
+                    </div>
+                    <span class="progress-text">{{ q.progress }} / {{ q.quest.target }}</span>
+                </div>
+
+                <div class="rewards-section">
+                    <div class="rewards-list">
+                        <div class="reward-item" *ngIf="q.quest.reward.wood > 0">
+                            <img src="../../../assets/wood.jpg" alt="Wood">
+                            <span>{{ q.quest.reward.wood }}</span>
+                        </div>
+                        <div class="reward-item" *ngIf="q.quest.reward.stone > 0">
+                            <img src="../../../assets/rock.jpg" alt="Stone">
+                            <span>{{ q.quest.reward.stone }}</span>
+                        </div>
+                        <div class="reward-item" *ngIf="q.quest.reward.crop > 0">
+                            <img src="../../../assets/crop.jpg" alt="Crop">
+                            <span>{{ q.quest.reward.crop }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button *ngIf="!q.claimed"
+                        class="claim-btn"
+                        [disabled]="q.progress < q.quest.target || claimingQuestId === q.quest.id"
+                        (click)="claimQuest(q, $event)">
+                    {{ claimingQuestId === q.quest.id ? 'Claiming...' : (q.progress >= q.quest.target ? 'Claim!' : 'Complete to claim') }}
+                </button>
+                <div *ngIf="q.claimed" class="claimed-badge">✓ Claimed</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin, interval, Subscription, timer } from 'rxjs';
 import { LoginService } from 'src/app/login/login.service';
+import { ExpertSpyService, ExpertSpyStatus } from 'src/app/services/expert-spy.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
@@ -42,6 +43,8 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   spyTooltipText: string = 'Spy capacity';
   spyRegenCountdown: string = '';
 
+  expertSpyStatus: ExpertSpyStatus | null = null;
+
   subscription!: Subscription;
   unreadSubscription?: Subscription;
   notificationSubscription?: Subscription;
@@ -53,7 +56,8 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private loginService: LoginService,
     private http: HttpClient,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private expertSpyService: ExpertSpyService
   ) {
     this.updateVillage();
   }
@@ -104,6 +108,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     this.spyCountdownSubscription = interval(1000).subscribe(() =>
       this.updateSpyTooltip()
     );
+    this.loadExpertSpyStatus();
   }
 
   private stopTimers(): void {
@@ -223,6 +228,68 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     this.aliveSpies = village.aliveSpies ?? 0;
     this.spyDeathTimestamps = (village as any).spyDeathTimestamps || [];
     this.updateSpyTooltip();
+    if (this.stableLevel >= 5) {
+      this.loadExpertSpyStatus();
+    } else {
+      this.expertSpyStatus = null;
+    }
+  }
+
+  private loadExpertSpyStatus(): void {
+    const villageName = this.userInformationService.currentVillage?.villageName;
+    if (!villageName || this.stableLevel < 5) return;
+    this.expertSpyService.getExpertSpyStatus(villageName).subscribe({
+      next: (status) => (this.expertSpyStatus = status),
+      error: () => (this.expertSpyStatus = null),
+    });
+  }
+
+  get hasExpertSpy(): boolean {
+    return this.stableLevel >= 5;
+  }
+
+  get expertSpyAvailable(): boolean {
+    return this.expertSpyStatus?.status === 'available';
+  }
+
+  get expertSpyDeployed(): boolean {
+    return this.expertSpyStatus?.status === 'deployed';
+  }
+
+  get expertSpyDead(): boolean {
+    return this.expertSpyStatus?.status === 'dead';
+  }
+
+  get expertSpyStatusText(): string {
+    return this.getExpertSpyStatusIcon();
+  }
+
+  get expertSpyTooltip(): string {
+    if (!this.expertSpyStatus) return 'Expert Spy';
+    switch (this.expertSpyStatus.status) {
+      case 'available':
+        return 'Expert Spy: Ready for deployment';
+      case 'deployed':
+        return `Expert Spy: Embedded at ${this.expertSpyStatus.targetUsername} - ${this.expertSpyStatus.targetVillageName}`;
+      case 'dead':
+        return 'Expert Spy: Caught! On cooldown';
+      default:
+        return 'Expert Spy';
+    }
+  }
+
+  getExpertSpyStatusIcon(): string {
+    if (!this.expertSpyStatus) return '?';
+    switch (this.expertSpyStatus.status) {
+      case 'available':
+        return '✓';
+      case 'deployed':
+        return '👁';
+      case 'dead':
+        return '✗';
+      default:
+        return '?';
+    }
   }
 
   spyDeathTimestamps: Date[] = [];

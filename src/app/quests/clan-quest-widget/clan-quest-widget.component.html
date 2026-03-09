@@ -1,0 +1,91 @@
+<!-- Floating Clan Quest Widget -->
+<div *ngIf="isVisible"
+     class="clan-quest-widget"
+     [style.left.px]="position.x"
+     [style.top.px]="position.y"
+     [class.dragging]="isDragging"
+     [class.claimable]="status?.canClaim"
+     (mousedown)="onMouseDown($event)"
+     (touchstart)="onTouchStart($event)">
+
+    <div class="widget-header" (click)="toggleDetails()">
+        <span class="quest-icon">⚔️</span>
+        <span class="quest-title">Clan Quest</span>
+        <span class="expand-icon" [class.expanded]="showDetails"></span>
+    </div>
+
+    <!-- Collapsed view: quest title -->
+    <div class="widget-collapsed" *ngIf="!showDetails">
+        <div *ngIf="isLoading" class="loading-text">Loading...</div>
+        <div *ngIf="!isLoading && status?.quest" class="quest-title-text">
+            {{ status?.quest?.title }}
+        </div>
+    </div>
+</div>
+
+<!-- Expanded modal -->
+<div *ngIf="showDetails" class="modal-overlay" (click)="toggleDetails()">
+    <div class="quest-details-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>⚔️ Clan Quest</h3>
+            <button class="close-btn" (click)="toggleDetails()">×</button>
+        </div>
+
+        <div class="modal-body">
+            <div *ngIf="isLoading" class="loading-text">Loading...</div>
+
+            <div *ngIf="!isLoading && status">
+                <div class="already-claimed-msg" *ngIf="status.alreadyClaimed">
+                    You already completed the clan quest this week
+                </div>
+
+                <div class="quest-info" [class.disabled]="status.alreadyClaimed">
+                    <h4 class="quest-card-title">{{ status.quest.title }}</h4>
+                    <p class="quest-description">{{ status.quest.description }}</p>
+
+                    <div class="progress-section">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" [style.width.%]="target > 0 ? (progress / target) * 100 : 0"></div>
+                        </div>
+                        <span class="progress-text">{{ progress }} / {{ target }}</span>
+                    </div>
+
+                    <div class="contributions-section" *ngIf="contributions.length > 0">
+                        <h5>Clan contributions:</h5>
+                        <div class="contributions-list">
+                            <div class="contribution-item" *ngFor="let c of contributions">
+                                <span class="contributor-name">{{ c.username }}</span>
+                                <span class="contributor-amount">{{ c.amount | number }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rewards-section">
+                        <h5>Rewards:</h5>
+                        <div class="rewards-list">
+                            <div class="reward-item" *ngIf="status.quest.reward.wood > 0">
+                                <img src="../../../assets/wood.jpg" alt="Wood">
+                                <span>{{ status.quest.reward.wood }}</span>
+                            </div>
+                            <div class="reward-item" *ngIf="status.quest.reward.stone > 0">
+                                <img src="../../../assets/rock.jpg" alt="Stone">
+                                <span>{{ status.quest.reward.stone }}</span>
+                            </div>
+                            <div class="reward-item" *ngIf="status.quest.reward.crop > 0">
+                                <img src="../../../assets/crop.jpg" alt="Crop">
+                                <span>{{ status.quest.reward.crop }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button *ngIf="!status.alreadyClaimed"
+                            class="claim-btn"
+                            [disabled]="!status.canClaim || isClaiming"
+                            (click)="claimReward($event)">
+                        {{ isClaiming ? 'Claiming...' : (status.canClaim ? 'Claim Reward!' : 'Complete to claim') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

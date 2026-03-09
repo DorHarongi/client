@@ -21,6 +21,9 @@
           [class.boss-icon-mythic]="isMythicBoss(cell.boss)"
         />
       </div>
+      <div *ngIf="cell.oasis && !cell.village && !cell.boss" class="oasis-marker">
+        <img src="assets/oasis.png" class="oasis-icon" />
+      </div>
     </div>
   </div>
 </div>

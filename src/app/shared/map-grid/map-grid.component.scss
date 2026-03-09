@@ -158,4 +158,16 @@ $your-color: #90EE90;
       height: var(--boss-mythic-size);
     }
   }
+
+  .oasis-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .oasis-icon {
+    width: var(--village-tier3-size);
+    height: var(--village-tier3-size);
+    object-fit: contain;
+  }
 }

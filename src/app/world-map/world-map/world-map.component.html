@@ -1,7 +1,7 @@
 <div
   class="flexContainer mapContainer step"
-  [class.show]="!selectedVillage && !selectedBoss"
-  [class.hide]="selectedVillage || selectedBoss"
+  [class.show]="!selectedVillage && !selectedBoss && !selectedOasis"
+  [class.hide]="selectedVillage || selectedBoss || selectedOasis"
 >
   <h2 id="titleText" class="center margin-top">World Map</h2>
 
@@ -77,6 +77,14 @@
           >
             💀
           </div>
+          <!-- Oases -->
+          <div
+            class="minimap-oasis"
+            *ngFor="let oasis of allOases"
+            [ngStyle]="getMinimapOasisStyle(oasis)"
+          >
+            🏝️
+          </div>
           <div
             class="minimap-window"
             [ngStyle]="getMinimapWindowStyle()"
@@ -96,6 +104,9 @@
           </div>
           <div class="legend-item">
             <span class="legend-skull">💀</span> Raid Boss
+          </div>
+          <div class="legend-item">
+            <span class="legend-oasis">🏝️</span> Oasis
           </div>
         </div>
       </div>
@@ -122,3 +133,11 @@
   (bossDefeated)="onBossDefeated()"
 >
 </app-boss-interaction>
+
+<app-oasis-interaction
+  *ngIf="selectedOasis"
+  [oasis]="selectedOasis"
+  [currentUsername]="currentUsername"
+  (closed)="closeOasisInteraction()"
+>
+</app-oasis-interaction>

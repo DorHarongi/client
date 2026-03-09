@@ -7,6 +7,7 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
 import {
   BossOnMap,
   MapWindowResponse,
+  OasisOnMap,
   VillageOnMap,
 } from 'src/app/world-map/models/mapModels';
 import { WorldMapService } from 'src/app/world-map/services/world-map.service';
@@ -39,6 +40,7 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
   // For map display
   villages: VillageOnMap[] = [];
   bosses: BossOnMap[] = [];
+  oases: OasisOnMap[] = [];
   windowStartX: number = 0;
   windowStartY: number = 0;
   currentUsername: string;
@@ -119,6 +121,7 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
       .subscribe((response: MapWindowResponse) => {
         this.villages = response.villages;
         this.bosses = response.bosses || [];
+        this.oases = response.oases || [];
         this.buildGrid();
       });
   }
@@ -134,7 +137,9 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
           this.villages.find((v) => v.x === worldX && v.y === worldY) || null;
         const boss =
           this.bosses.find((b) => b.x === worldX && b.y === worldY) || null;
-        row.push({ x: worldX, y: worldY, village, boss });
+        const oasis =
+          this.oases.find((o) => o.x === worldX && o.y === worldY) || null;
+        row.push({ x: worldX, y: worldY, village, boss, oasis });
       }
       this.gridCells.push(row);
     }
@@ -164,6 +169,7 @@ export class CenterBuildingComponent implements OnInit, OnDestroy {
       this.isInAvailableArea(cell) &&
       !cell.village &&
       !cell.boss &&
+      !cell.oasis &&
       !this.isCurrentVillage(cell)
     );
   }

@@ -7,6 +7,7 @@ import {
   BossOnMap,
   MapWindowResponse,
   MinimapResponse,
+  OasisOnMap,
   VillageOnMap,
 } from '../models/mapModels';
 import { WorldMapService } from '../services/world-map.service';
@@ -25,10 +26,13 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   worldSize: number = 100;
   villages: VillageOnMap[] = [];
   bosses: BossOnMap[] = [];
+  oases: OasisOnMap[] = [];
   allVillages: VillageOnMap[] = [];
   allBosses: BossOnMap[] = [];
+  allOases: OasisOnMap[] = [];
   selectedVillage: VillageOnMap | null = null;
   selectedBoss: BossOnMap | null = null;
+  selectedOasis: OasisOnMap | null = null;
 
   gridCells: GridCell[][] = [];
 
@@ -102,6 +106,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
       .subscribe((response: MapWindowResponse) => {
         this.villages = response.villages;
         this.bosses = response.bosses || [];
+        this.oases = response.oases || [];
         this.worldSize = response.worldSize;
         this.buildGrid();
       });
@@ -113,6 +118,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
       .subscribe((response: MinimapResponse) => {
         this.allVillages = response.villages;
         this.allBosses = response.bosses || [];
+        this.allOases = response.oases || [];
         this.worldSize = response.worldSize;
       });
   }
@@ -128,7 +134,9 @@ export class WorldMapComponent implements OnInit, OnDestroy {
           this.villages.find((v) => v.x === worldX && v.y === worldY) || null;
         const boss =
           this.bosses.find((b) => b.x === worldX && b.y === worldY) || null;
-        row.push({ x: worldX, y: worldY, village, boss });
+        const oasis =
+          this.oases.find((o) => o.x === worldX && o.y === worldY) || null;
+        row.push({ x: worldX, y: worldY, village, boss, oasis });
       }
       this.gridCells.push(row);
     }
@@ -166,8 +174,14 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     if (cell.boss) {
       this.selectedBoss = cell.boss;
       this.selectedVillage = null;
+      this.selectedOasis = null;
     } else if (cell.village) {
       this.selectedVillage = cell.village;
+      this.selectedBoss = null;
+      this.selectedOasis = null;
+    } else if (cell.oasis) {
+      this.selectedOasis = cell.oasis;
+      this.selectedVillage = null;
       this.selectedBoss = null;
     }
   }
@@ -344,6 +358,17 @@ export class WorldMapComponent implements OnInit, OnDestroy {
       left: boss.x * MINIMAP_SCALE - 4 + 'px',
       top: boss.y * MINIMAP_SCALE - 4 + 'px',
     };
+  }
+
+  getMinimapOasisStyle(oasis: OasisOnMap): any {
+    return {
+      left: oasis.x * MINIMAP_SCALE - 4 + 'px',
+      top: oasis.y * MINIMAP_SCALE - 4 + 'px',
+    };
+  }
+
+  closeOasisInteraction(): void {
+    this.selectedOasis = null;
   }
 
   getMinimapWindowStyle(): any {

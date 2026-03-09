@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BossOnMap, VillageOnMap } from '../../world-map/models/mapModels';
+import { BossOnMap, OasisOnMap, VillageOnMap } from '../../world-map/models/mapModels';
 import { BossService } from '../../world-map/services/boss.service';
 
 export interface GridCell {
@@ -7,6 +7,7 @@ export interface GridCell {
   y: number;
   village: VillageOnMap | null;
   boss: BossOnMap | null;
+  oasis: OasisOnMap | null;
 }
 
 @Component({
@@ -38,6 +39,7 @@ export class MapGridComponent {
       'clan-village': isClan,
       'other-village': !!cell.village && !isOwn && !isClan,
       'has-boss': !!cell.boss,
+      'has-oasis': !!cell.oasis,
     };
 
     if (cell.boss) {

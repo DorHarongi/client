@@ -148,6 +148,15 @@ $your-color: #90EE90;     // Green - your own villages
   text-align: center;
 }
 
+.minimap-oasis {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  font-size: 8px;
+  line-height: 8px;
+  text-align: center;
+}
+
 .minimap-window {
   position: absolute;
   border: 2px solid yellow;
@@ -186,6 +195,11 @@ $your-color: #90EE90;     // Green - your own villages
 }
 
 .legend-skull {
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.legend-oasis {
   font-size: 12px;
   line-height: 12px;
 }
