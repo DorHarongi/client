@@ -35,6 +35,13 @@
                 Spy village
             </button>
 
+            <button class="action-btn expert-spy-btn" 
+                    *ngIf="!isOwnVillage && !isSameClan && hasExpertSpy" 
+                    (click)="sendExpertSpy()"
+                    [disabled]="expertSpyDeploying">
+                {{ expertSpyDeploying ? 'Deploying...' : 'Expert Spy' }}
+            </button>
+
             <button class="action-btn attack-btn" 
                     *ngIf="!isOwnVillage && !isSameClan" 
                     (click)="openAttackPanel()"

@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { User } from 'src/app/main-panel/models/User';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { ExpertSpyService } from 'src/app/services/expert-spy.service';
 import { environment } from 'src/environments/environment';
 import {
   archerAttackingStat,
@@ -65,6 +66,9 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
 
   errorMessage: string = '';
 
+  expertSpyDeploying: boolean = false;
+  hasExpertSpy: boolean = false;
+
   // Troop stats
   totalAttack: number = 0;
   totalDefense: number = 0;
@@ -78,13 +82,24 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private userInformationService: UserInformationService
+    private userInformationService: UserInformationService,
+    private expertSpyService: ExpertSpyService
   ) {}
 
   ngOnInit(): void {
     this.isOwnVillage = this.village.ownerUsername === this.currentUsername;
     this.loadPlayerInfo();
     this.initMaxTroops();
+    const stableLevel = this.userInformationService.currentVillage?.buildingsLevels?.stableLevel ?? 0;
+    if (stableLevel >= 5) {
+      const villageName = this.userInformationService.currentVillage?.villageName;
+      if (villageName) {
+        this.expertSpyService.getExpertSpyStatus(villageName).subscribe({
+          next: (status) => { this.hasExpertSpy = status.status === 'available'; },
+          error: () => { this.hasExpertSpy = false; },
+        });
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -484,6 +499,37 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to send spies';
+        },
+      });
+  }
+
+  sendExpertSpy(): void {
+    if (this.isOwnVillage || this.isSameClan || this.expertSpyDeploying) {
+      return;
+    }
+    this.errorMessage = '';
+    const villageName = this.userInformationService.currentVillage?.villageName;
+    if (!villageName) {
+      this.errorMessage = 'Could not determine your current village.';
+      return;
+    }
+    this.expertSpyDeploying = true;
+    this.expertSpyService
+      .deployExpertSpy(
+        villageName,
+        this.village.ownerUsername,
+        this.village.villageName,
+        'village'
+      )
+      .subscribe({
+        next: () => {
+          this.expertSpyDeploying = false;
+          this.hasExpertSpy = false;
+          this.closed.emit();
+        },
+        error: (err) => {
+          this.expertSpyDeploying = false;
+          this.errorMessage = err.error?.message || 'Failed to deploy Expert Spy';
         },
       });
   }
