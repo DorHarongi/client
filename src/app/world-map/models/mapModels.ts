@@ -29,6 +29,7 @@ export interface OasisOnMap {
     x: number;
     y: number;
     tier?: OasisTier;
+    ownerType?: 'mine' | 'clan';
 }
 
 export interface MapWindowResponse {

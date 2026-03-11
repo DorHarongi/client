@@ -14,14 +14,17 @@
         <span class="expand-icon" [class.expanded]="showDetails"></span>
     </div>
 
-    <!-- Collapsed view: quest titles only -->
+    <!-- Collapsed view: quest titles with status -->
     <div class="widget-collapsed" *ngIf="!showDetails" (click)="toggleDetails()">
         <div *ngIf="isLoading" class="loading-text">Loading...</div>
         <div *ngIf="!isLoading && quests.length === 0" class="no-quests">No quests today</div>
         <div *ngIf="!isLoading && quests.length > 0" class="quest-titles-list">
-            <div class="quest-title-item" *ngFor="let q of quests">
-                {{ q.quest.title }}
-            </div>
+            <ng-container *ngFor="let q of quests">
+                <div class="quest-title-item" *ngIf="!q.claimed">
+                    <span class="quest-title-text">{{ q.quest.title }}</span>
+                    <span class="claimable-badge" *ngIf="isQuestClaimable(q)">Claim!</span>
+                </div>
+            </ng-container>
         </div>
     </div>
 </div>

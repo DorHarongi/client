@@ -393,6 +393,12 @@ export class WorldMapComponent implements OnInit, OnDestroy {
           !!cell.boss.claimedByClanName,
       };
     }
+    if (cell.oasis && cell.oasis.ownerType) {
+      return {
+        'oasis-owned-by-me': cell.oasis.ownerType === 'mine',
+        'oasis-clan-owned': cell.oasis.ownerType === 'clan',
+      };
+    }
     return {};
   };
 }

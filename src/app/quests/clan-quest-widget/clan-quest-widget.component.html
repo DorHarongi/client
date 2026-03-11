@@ -14,11 +14,15 @@
         <span class="expand-icon" [class.expanded]="showDetails"></span>
     </div>
 
-    <!-- Collapsed view: quest title -->
+    <!-- Collapsed view: quest title with status -->
     <div class="widget-collapsed" *ngIf="!showDetails" (click)="toggleDetails()">
         <div *ngIf="isLoading" class="loading-text">Loading...</div>
-        <div *ngIf="!isLoading && status?.quest" class="quest-title-text">
+        <div *ngIf="!isLoading && status?.quest && !status?.alreadyClaimed" class="quest-title-text">
             {{ status?.quest?.title }}
+            <span class="claimable-badge" *ngIf="status?.canClaim">Claim!</span>
+        </div>
+        <div *ngIf="!isLoading && status?.alreadyClaimed" class="quest-title-text completed-text">
+            Completed
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { MapWindowResponse, MinimapResponse, VillageOnMap } from '../models/mapModels';
 import { environment } from 'src/environments/environment';
+import { UserInformationService } from '../../user-information/user-information.service';
 
 export interface AvailableCell {
   x: number;
@@ -26,7 +27,7 @@ export class WorldMapService {
   private mapCache: Map<string, CachedMapWindow> = new Map();
   private minimapCache: { data: MinimapResponse; timestamp: number } | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private userInfo: UserInformationService) { }
 
   private getCacheKey(startX: number, startY: number): string {
     return `${startX},${startY}`;
@@ -46,7 +47,8 @@ export class WorldMapService {
     }
 
     // Fetch from server and cache
-    return this.http.get<MapWindowResponse>(`${environment.apiUrl}/world/map?startX=${startX}&startY=${startY}`)
+    const username = this.userInfo.userInformation?.username || '';
+    return this.http.get<MapWindowResponse>(`${environment.apiUrl}/world/map?startX=${startX}&startY=${startY}&username=${username}`)
       .pipe(
         tap(response => {
           this.mapCache.set(cacheKey, {
@@ -63,7 +65,8 @@ export class WorldMapService {
       return of(this.minimapCache.data);
     }
 
-    return this.http.get<MinimapResponse>(`${environment.apiUrl}/world/minimap`)
+    const username = this.userInfo.userInformation?.username || '';
+    return this.http.get<MinimapResponse>(`${environment.apiUrl}/world/minimap?username=${username}`)
       .pipe(
         tap(response => {
           this.minimapCache = {

@@ -21,6 +21,8 @@ export class DailyQuestWidgetComponent implements OnInit, OnDestroy {
   timeLeft: string = '';
 
   isDragging = false;
+  private hasMoved = false;
+  private wasDragging = false;
   dragOffset = { x: 0, y: 0 };
   position = { x: 0, y: 0 };
 
@@ -125,9 +127,10 @@ export class DailyQuestWidgetComponent implements OnInit, OnDestroy {
   }
 
   toggleDetails(): void {
-    if (!this.isDragging) {
-      this.showDetails = !this.showDetails;
+    if (this.wasDragging) {
+      return;
     }
+    this.showDetails = !this.showDetails;
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -167,6 +170,7 @@ export class DailyQuestWidgetComponent implements OnInit, OnDestroy {
 
   private startDrag(clientX: number, clientY: number, event: Event): void {
     this.isDragging = true;
+    this.hasMoved = false;
     const rect = (event.target as HTMLElement).closest('.daily-quest-widget')?.getBoundingClientRect();
     if (rect) {
       this.dragOffset = {
@@ -177,6 +181,7 @@ export class DailyQuestWidgetComponent implements OnInit, OnDestroy {
   }
 
   private updateDragPosition(clientX: number, clientY: number): void {
+    this.hasMoved = true;
     const newX = clientX - this.dragOffset.x;
     const newY = clientY - this.dragOffset.y;
     const maxX = window.innerWidth - 280;
@@ -189,6 +194,10 @@ export class DailyQuestWidgetComponent implements OnInit, OnDestroy {
 
   private endDrag(): void {
     if (this.isDragging) {
+      if (this.hasMoved) {
+        this.wasDragging = true;
+        setTimeout(() => this.wasDragging = false, 0);
+      }
       this.isDragging = false;
       this.savePosition();
     }

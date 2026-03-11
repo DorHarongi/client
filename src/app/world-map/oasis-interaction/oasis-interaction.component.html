@@ -6,7 +6,15 @@
     <span *ngIf="oasisRarity" class="rarity-badge" [ngClass]="rarityClass">{{ oasisRarity }}</span>
   </div>
 
-  <div *ngIf="oasisInfo" class="info-section center">
+  <div *ngIf="isClanOwned && !isOccupier" class="clan-owned-section center">
+    <p class="clan-owned-message">This oasis is occupied by <strong>{{ clanOwnerName }}</strong> from your clan.</p>
+    <div class="actions center">
+      <button class="action-btn" (click)="findOnMap()">Find on Map</button>
+      <button class="action-btn" (click)="close()">Close</button>
+    </div>
+  </div>
+
+  <div *ngIf="oasisInfo && !isClanOwned" class="info-section center">
     <div *ngIf="oasisInfo.garrison" class="garrison-info">
       <p class="garrison-label">Your Garrison: {{ getTotalTroopCount(oasisInfo.garrison.troops) | number }} troops</p>
       <div class="resources-remaining">
@@ -27,7 +35,7 @@
     </div>
   </div>
 
-  <div *ngIf="!showSendTroopsPanel">
+  <div *ngIf="!showSendTroopsPanel && !isClanOwned">
     <div class="actions center">
       <button class="action-btn" (click)="findOnMap()">Find on Map</button>
       <button class="action-btn" (click)="scout()" [disabled]="scouting">
@@ -41,7 +49,7 @@
     </div>
   </div>
 
-  <div *ngIf="showSendTroopsPanel">
+  <div *ngIf="showSendTroopsPanel && !isClanOwned">
     <h5 class="center">Send Troops to {{ oasisName }}</h5>
     <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
     <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">

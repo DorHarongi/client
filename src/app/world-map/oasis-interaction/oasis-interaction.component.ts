@@ -72,6 +72,9 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initMaxTroops();
+    if (this.oasis.ownerType === 'clan' || this.oasis.ownerType === 'mine') {
+      this.scout();
+    }
   }
 
   ngOnDestroy(): void {
@@ -279,6 +282,14 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   get isOccupier(): boolean {
     return !!this.oasisInfo?.garrison &&
       this.oasisInfo.garrison.username === this.currentUsername;
+  }
+
+  get isClanOwned(): boolean {
+    return this.oasis.ownerType === 'clan' || !!this.oasisInfo?.clanOwner;
+  }
+
+  get clanOwnerName(): string {
+    return this.oasisInfo?.clanOwner || '';
   }
 
   getTotalTroopCount(troops: any): number {
