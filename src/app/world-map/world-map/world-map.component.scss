@@ -185,13 +185,20 @@ $your-color: #90EE90;     // Green - your own villages
   gap: 5px;
 }
 
+.legend-square,
+.legend-skull,
+.legend-oasis {
+  width: 12px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
 .legend-square {
-  width: 8px;
   height: 8px;
   
   &.own { background-color: $your-color; }
   &.clan { background-color: $clan-color; }
-  &.enemy { background-color: $enemy-minimap-color; }  // Legend describes minimap
+  &.enemy { background-color: $enemy-minimap-color; }
 }
 
 .legend-skull {
