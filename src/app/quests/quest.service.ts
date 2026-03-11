@@ -45,8 +45,7 @@ export class QuestService {
    * Check if quests are available (only for first village)
    */
   areQuestsAvailable(currentQuestIndex: number, villageCount: number): boolean {
-    // Quests only show for users on their first village and who haven't completed all quests
-    return villageCount === 1 && currentQuestIndex >= 1 && currentQuestIndex <= TOTAL_QUESTS;
+    return currentQuestIndex >= 1 && currentQuestIndex <= TOTAL_QUESTS;
   }
 
   /**

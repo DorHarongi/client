@@ -131,16 +131,6 @@ h5 {
   font-weight: bold;
 }
 
-.flexContainer {
-  display: flex !important;
-  flex-direction: column !important;
-  flex-wrap: nowrap !important;
-  align-items: stretch !important;
-  align-content: stretch !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
 @media (max-width: 768px) {
   .interactionContainer {
     min-width: unset;
