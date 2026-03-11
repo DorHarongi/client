@@ -6,15 +6,53 @@
     <h4 class="oasis-name">Oasis at ({{ oasis.x }}, {{ oasis.y }})</h4>
   </div>
 
-  <div class="info-section center">
+  <div *ngIf="oasisInfo" class="info-section center">
+    <p>Tier: {{ oasisInfo.tier }}</p>
+    <p *ngIf="oasisInfo.occupied">Status: Occupied</p>
+    <p *ngIf="!oasisInfo.occupied && !oasisInfo.garrison">Status: Unoccupied</p>
+    <p *ngIf="oasisInfo.garrison">Garrison: {{ formatGarrison(oasisInfo.garrison) }}</p>
+    <p *ngIf="oasisInfo.resourcesRemaining !== undefined">Resources remaining: {{ oasisInfo.resourcesRemaining }}</p>
+  </div>
+
+  <div *ngIf="!oasisInfo" class="info-section center">
     <p class="location">Location: ({{ oasis.x }}, {{ oasis.y }})</p>
   </div>
 
-  <div class="actions center">
-    <button class="action-btn" (click)="findOnMap()">Find on Map</button>
-    <button class="action-btn">Scout</button>
-    <button class="action-btn">Attack</button>
-    <button class="action-btn">Send Troops</button>
-    <button class="action-btn" (click)="close()">Close</button>
+  <div *ngIf="!showSendTroopsPanel">
+    <div class="actions center">
+      <button class="action-btn" (click)="findOnMap()">Find on Map</button>
+      <button class="action-btn" (click)="scout()" [disabled]="scouting">
+        {{ scouting ? 'Scouting...' : 'Scout' }}
+      </button>
+      <button class="action-btn" (click)="openSendTroopsPanel()">Send Troops</button>
+      <button class="action-btn" (click)="close()">Close</button>
+    </div>
   </div>
+
+  <div *ngIf="showSendTroopsPanel">
+    <h5 class="center">Send Troops to Oasis</h5>
+    <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
+    <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
+      <div class="stat-row">
+        <img src="assets/swords.png" class="stat-icon"> {{ totalAttack }}
+      </div>
+      <div class="stat-row">
+        <img src="assets/shield.png" class="stat-icon"> {{ totalDefense }}
+      </div>
+      <div class="stat-row" *ngIf="armySpeed > 0">
+        <img src="assets/speed.png" class="stat-icon"> {{ armySpeed }} tiles/min
+      </div>
+      <div class="stat-row" *ngIf="armySpeed > 0">
+        ETA: {{ getFormattedTravelTime() }}
+      </div>
+    </div>
+    <div class="panel-actions center">
+      <button class="action-btn" (click)="sendTroops()" [disabled]="!hasSelectedTroops() || sending">
+        {{ sending ? 'Sending...' : 'Send Troops' }}
+      </button>
+      <button class="action-btn" (click)="cancelPanel()">Cancel</button>
+    </div>
+  </div>
+
+  <p class="error-message center" *ngIf="errorMessage">{{ errorMessage }}</p>
 </div>

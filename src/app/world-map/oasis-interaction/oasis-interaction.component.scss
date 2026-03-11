@@ -1,31 +1,38 @@
 .interactionContainer {
   background-image: url(../../../assets/top-bg.png);
-  min-width: 350px;
-  max-width: 650px;
-  width: 90%;
-  margin: 0 auto;
-  padding: 20px;
+  height: fit-content;
+  width: fit-content;
+  min-width: 500px;
+  max-width: 90%;
+  max-height: 80%;
+  box-shadow: 1px 1px 3px 3px;
   position: fixed;
-  top: 50%;
   left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
-  max-height: 90vh;
-  overflow-y: auto;
+  flex-wrap: nowrap;
+  padding: 25px 40px;
   z-index: 100;
+  overflow-y: auto;
 }
 
 .round-square {
   border: 1px black solid;
-  border-radius: 0.5rem;
-  box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 7px;
 }
 
 .center {
+  align-self: center;
+  align-items: center;
   text-align: center;
 }
 
 .modal-title {
-  margin-bottom: 15px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 20px;
+  border-bottom: 1px solid #7d5210;
+  padding-bottom: 10px;
 }
 
 .oasis-header {
@@ -46,8 +53,17 @@
   margin: 5px 0;
 }
 
+h5 {
+  margin-bottom: 15px;
+}
+
 .info-section {
-  margin: 15px 0;
+  text-align: center;
+  margin-bottom: 20px;
+
+  p {
+    margin: 5px 0;
+  }
 }
 
 .location {
@@ -56,11 +72,10 @@
 }
 
 .actions {
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 .action-btn {
@@ -71,11 +86,49 @@
   box-shadow: 2px 2px 2px 2px;
   padding: 10px 20px;
   cursor: pointer;
+  width: 200px;
+  margin: 0 auto;
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  &:hover:not(:disabled) {
+    background-color: #e0e0e0;
+  }
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.total-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+}
+
+.stat-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.error-message {
+  color: #dc3545;
+  margin: 10px 0;
+  font-weight: bold;
 }
 
 .flexContainer {
@@ -112,7 +165,6 @@
 
   .actions {
     width: 100%;
-    flex-wrap: wrap;
   }
 
   .action-btn {

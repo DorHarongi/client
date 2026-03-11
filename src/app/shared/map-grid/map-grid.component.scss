@@ -10,6 +10,7 @@ $your-color: #90EE90;
   --village-tier3-size: 60px;
   --boss-size: 50px;
   --boss-mythic-size: 80px;
+  --oasis-size: 35px;
   --coords-font-size: 8px;
   --coords-top: 2px;
   --coords-left: 2px;
@@ -166,8 +167,8 @@ $your-color: #90EE90;
   }
 
   .oasis-icon {
-    width: var(--village-tier3-size);
-    height: var(--village-tier3-size);
+    width: var(--oasis-size);
+    height: var(--oasis-size);
     object-fit: contain;
   }
 }
