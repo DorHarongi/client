@@ -10,7 +10,7 @@
 
     <div class="widget-header" (click)="toggleDetails()">
         <span class="quest-icon">⚔️</span>
-        <span class="quest-title">Clan Quest</span>
+        <span class="quest-title">Clan Quest (Weekly)</span>
         <span class="expand-icon" [class.expanded]="showDetails"></span>
     </div>
 
@@ -27,7 +27,7 @@
 <div *ngIf="showDetails" class="modal-overlay" (click)="toggleDetails()">
     <div class="quest-details-modal" (click)="$event.stopPropagation()">
         <div class="modal-header">
-            <h3>⚔️ Clan Quest</h3>
+            <h3>⚔️ Clan Quest (Weekly)</h3>
             <button class="close-btn" (click)="toggleDetails()">×</button>
         </div>
 
@@ -65,15 +65,15 @@
                         <div class="rewards-list">
                             <div class="reward-item" *ngIf="status.quest.reward.wood > 0">
                                 <img src="../../../assets/wood.jpg" alt="Wood">
-                                <span>{{ status.quest.reward.wood }}</span>
+                                <span>{{ status.quest.reward.wood | number }}</span>
                             </div>
                             <div class="reward-item" *ngIf="status.quest.reward.stone > 0">
                                 <img src="../../../assets/rock.jpg" alt="Stone">
-                                <span>{{ status.quest.reward.stone }}</span>
+                                <span>{{ status.quest.reward.stone | number }}</span>
                             </div>
                             <div class="reward-item" *ngIf="status.quest.reward.crop > 0">
                                 <img src="../../../assets/crop.jpg" alt="Crop">
-                                <span>{{ status.quest.reward.crop }}</span>
+                                <span>{{ status.quest.reward.crop | number }}</span>
                             </div>
                         </div>
                     </div>

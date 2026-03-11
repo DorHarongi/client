@@ -67,7 +67,9 @@ export class DailyQuestWidgetComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       return;
     }
-    this.isLoading = true;
+    if (this.quests.length === 0) {
+      this.isLoading = true;
+    }
     this.dailyQuestService.getTodaysQuests().subscribe({
       next: (response) => {
         this.quests = response.quests || [];

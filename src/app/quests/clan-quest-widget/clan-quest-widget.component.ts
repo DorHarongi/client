@@ -72,7 +72,9 @@ export class ClanQuestWidgetComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       return;
     }
-    this.isLoading = true;
+    if (!this.status) {
+      this.isLoading = true;
+    }
     this.clanQuestService.getClanQuestStatus().subscribe({
       next: (response) => {
         this.status = response;

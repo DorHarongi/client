@@ -53,15 +53,15 @@
                     <div class="rewards-list">
                         <div class="reward-item" *ngIf="q.quest.reward.wood > 0">
                             <img src="../../../assets/wood.jpg" alt="Wood">
-                            <span>{{ q.quest.reward.wood }}</span>
+                            <span>{{ q.quest.reward.wood | number }}</span>
                         </div>
                         <div class="reward-item" *ngIf="q.quest.reward.stone > 0">
                             <img src="../../../assets/rock.jpg" alt="Stone">
-                            <span>{{ q.quest.reward.stone }}</span>
+                            <span>{{ q.quest.reward.stone | number }}</span>
                         </div>
                         <div class="reward-item" *ngIf="q.quest.reward.crop > 0">
                             <img src="../../../assets/crop.jpg" alt="Crop">
-                            <span>{{ q.quest.reward.crop }}</span>
+                            <span>{{ q.quest.reward.crop | number }}</span>
                         </div>
                     </div>
                 </div>
