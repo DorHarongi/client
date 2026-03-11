@@ -15,7 +15,7 @@
     </div>
 
     <!-- Collapsed view: quest title -->
-    <div class="widget-collapsed" *ngIf="!showDetails">
+    <div class="widget-collapsed" *ngIf="!showDetails" (click)="toggleDetails()">
         <div *ngIf="isLoading" class="loading-text">Loading...</div>
         <div *ngIf="!isLoading && status?.quest" class="quest-title-text">
             {{ status?.quest?.title }}
