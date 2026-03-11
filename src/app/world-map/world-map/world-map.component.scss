@@ -182,33 +182,33 @@ $your-color: #90EE90;     // Green - your own villages
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
-.legend-square,
-.legend-skull,
-.legend-oasis {
-  width: 12px;
-  text-align: center;
+.legend-icon-cell {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
 .legend-square {
-  height: 8px;
+  width: 10px;
+  height: 10px;
+  display: block;
   
   &.own { background-color: $your-color; }
   &.clan { background-color: $clan-color; }
   &.enemy { background-color: $enemy-minimap-color; }
 }
 
-.legend-skull {
-  font-size: 12px;
-  line-height: 12px;
-}
-
-.legend-oasis {
-  font-size: 12px;
-  line-height: 12px;
+.legend-icon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  display: block;
 }
 
 .buttons {
