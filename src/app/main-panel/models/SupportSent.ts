@@ -5,3 +5,8 @@ export interface SupportSentEntry {
     recipientVillageName: string;
     troops: TroopsAmounts;
 }
+
+export interface OasisTroopsSentEntry {
+    oasisId: string;
+    troops: TroopsAmounts;
+}
