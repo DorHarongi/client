@@ -23,8 +23,9 @@
         <tr (click)="openAttackReportPopup(attackReport)" *ngFor="let attackReport of attackReportsInPage" class="bordered clickable-row" [class.unread]="!isReportRead(attackReport)">
             <td class="title">
                 <img *ngIf="attackReport.reportType === 'spy'" src="../../../assets/spy.png" class="icons">
-                <img *ngIf="attackReport.reportType !== 'spy' && attackReport.attackerName == this.username" src="../../../assets/swords.png" class="icons"> 
-                <img *ngIf="attackReport.reportType !== 'spy' && attackReport.attackerName != this.username" src="../../../assets/shield.png" class="icons"> 
+                <img *ngIf="attackReport.reportType === 'oasis'" src="../../../assets/oasis.png" class="icons">
+                <img *ngIf="attackReport.reportType !== 'spy' && attackReport.reportType !== 'oasis' && attackReport.attackerName == this.username" src="../../../assets/swords.png" class="icons"> 
+                <img *ngIf="attackReport.reportType !== 'spy' && attackReport.reportType !== 'oasis' && attackReport.attackerName != this.username" src="../../../assets/shield.png" class="icons"> 
                 {{makeAttackReportTitle(attackReport)}}
             </td>
             <td>{{getAttackResult(attackReport)}}</td>

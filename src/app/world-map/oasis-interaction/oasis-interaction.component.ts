@@ -50,6 +50,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   oasisInfo: any = null;
   scouting: boolean = false;
   sending: boolean = false;
+  retreating: boolean = false;
   errorMessage: string = '';
 
   showSendTroopsPanel: boolean = false;
@@ -275,23 +276,59 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       });
   }
 
-  formatGarrison(garrison: any): string {
-    if (!garrison) return '';
-    const parts: string[] = [];
-    if (garrison.username) parts.push(`Owner: ${garrison.username}`);
-    if (garrison.troops) {
-      const t = garrison.troops;
-      const total =
-        (t.spearFighters || 0) +
-        (t.swordFighters || 0) +
-        (t.axeFighters || 0) +
-        (t.archers || 0) +
-        (t.magicians || 0) +
-        (t.horsemen || 0) +
-        (t.catapults || 0);
-      parts.push(`${total} troops`);
+  get isOccupier(): boolean {
+    return !!this.oasisInfo?.garrison &&
+      this.oasisInfo.garrison.username === this.currentUsername;
+  }
+
+  getTotalTroopCount(troops: any): number {
+    if (!troops) return 0;
+    return (troops.spearFighters || 0) +
+      (troops.swordFighters || 0) +
+      (troops.axeFighters || 0) +
+      (troops.archers || 0) +
+      (troops.magicians || 0) +
+      (troops.horsemen || 0) +
+      (troops.catapults || 0);
+  }
+
+  getLootedAmount(resource: 'wood' | 'stone' | 'crop'): number {
+    if (!this.oasisInfo?.garrison?.totalForOccupier || !this.oasisInfo?.resourcesRemaining) return 0;
+    return this.oasisInfo.garrison.totalForOccupier[resource] - this.oasisInfo.resourcesRemaining[resource];
+  }
+
+  getTotalForOccupier(resource: 'wood' | 'stone' | 'crop'): number {
+    if (!this.oasisInfo?.garrison?.totalForOccupier) return 0;
+    return this.oasisInfo.garrison.totalForOccupier[resource];
+  }
+
+  retreat(): void {
+    if (this.retreating) return;
+    this.retreating = true;
+    this.errorMessage = '';
+
+    const villageName = this.oasisInfo?.garrison?.villageName;
+    if (!villageName) {
+      this.errorMessage = 'Could not determine garrison village.';
+      this.retreating = false;
+      return;
     }
-    return parts.join(' - ');
+
+    this.subscription = this.http
+      .post<any>(`${environment.apiUrl}/oasis/retreat`, {
+        villageName,
+        oasisId: this.oasis.id,
+      })
+      .subscribe({
+        next: () => {
+          this.retreating = false;
+          this.closed.emit();
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to retreat';
+          this.retreating = false;
+        },
+      });
   }
 
   get oasisName(): string {

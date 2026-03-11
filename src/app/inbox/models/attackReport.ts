@@ -1,7 +1,7 @@
 import { ResourcesAmounts } from "src/app/main-panel/models/resourcesAmounts";
 import { TroopsAmounts } from "src/app/main-panel/models/troopsAmounts";
 
-export type BossReportType = 'pvp' | 'boss' | 'spy';
+export type BossReportType = 'pvp' | 'boss' | 'spy' | 'oasis';
 
 export interface AttackReport {
     id: string;

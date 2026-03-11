@@ -40,6 +40,10 @@ export class AttackReportComponent implements OnInit {
     return this.attackReport.reportType === 'boss';
   }
 
+  get isOasisReport(): boolean {
+    return this.attackReport.reportType === 'oasis';
+  }
+
   getBossImageSrc(): string {
     return 'assets/' + getBossImageByName(this.attackReport.bossName);
   }

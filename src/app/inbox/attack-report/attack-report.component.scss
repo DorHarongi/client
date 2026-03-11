@@ -123,3 +123,16 @@ h5 {
 .hp-percent { font-variant-numeric: tabular-nums; }
 .boss-reward-block { margin-top: 0.5rem; }
 .boss-relic-reward { font-weight: bold; color: #b7950b; margin: 0.25rem 0; }
+
+.oasis-report-header {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 8px;
+    background-color: rgba(46, 204, 113, 0.15);
+    border-radius: 6px;
+    border: 1px solid #2ecc71;
+}
+.oasis-conquest-title {
+    color: #2ecc71;
+    margin: 0 0 4px;
+}

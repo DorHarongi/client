@@ -80,6 +80,44 @@ h5 {
   }
 }
 
+.garrison-info {
+  .garrison-label {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+}
+
+.resources-remaining {
+  h5 {
+    margin: 5px 0 8px;
+    font-size: 14px;
+  }
+}
+
+.resource-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.resource-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.retreat-btn {
+  background-color: #dc3545 !important;
+  color: white;
+  background-image: none !important;
+
+  &:hover:not(:disabled) {
+    background-color: #c82333 !important;
+  }
+}
+
 .location {
   color: #666;
   font-size: 14px;

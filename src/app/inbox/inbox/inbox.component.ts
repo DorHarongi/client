@@ -254,6 +254,20 @@ export class InboxComponent implements OnInit, OnDestroy {
       return `${attackReport.attackerName} [${attackReport.attackerVillageName}] tried to scout you`;
     }
 
+    if (attackReport.reportType === 'oasis') {
+      const isAttacker = attackReport.attackerName === this.username;
+      if (isAttacker) {
+        if (attackReport.attackerWon) {
+          return `You conquered an oasis from ${attackReport.defenderName}`;
+        }
+        return `You failed to conquer an oasis from ${attackReport.defenderName}`;
+      }
+      if (attackReport.attackerWon) {
+        return `${attackReport.attackerName} conquered your oasis`;
+      }
+      return `${attackReport.attackerName} failed to conquer your oasis`;
+    }
+
     let title = "";
     if(attackReport.attackerName == this.username)
       title += "You";

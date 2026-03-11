@@ -7,8 +7,24 @@
   </div>
 
   <div *ngIf="oasisInfo" class="info-section center">
-    <p *ngIf="oasisInfo.garrison">Garrison: {{ formatGarrison(oasisInfo.garrison) }}</p>
-    <p *ngIf="oasisInfo.resourcesRemaining !== undefined">Resources remaining: {{ oasisInfo.resourcesRemaining | number }}</p>
+    <div *ngIf="oasisInfo.garrison" class="garrison-info">
+      <p class="garrison-label">Your Garrison: {{ getTotalTroopCount(oasisInfo.garrison.troops) | number }} troops</p>
+      <div class="resources-remaining">
+        <h5>Resources Looted</h5>
+        <div class="resource-row">
+          <img src="assets/wood.png" class="resource-icon" />
+          <span>{{ getLootedAmount('wood') | number }} / {{ getTotalForOccupier('wood') | number }}</span>
+        </div>
+        <div class="resource-row">
+          <img src="assets/stone.png" class="resource-icon" />
+          <span>{{ getLootedAmount('stone') | number }} / {{ getTotalForOccupier('stone') | number }}</span>
+        </div>
+        <div class="resource-row">
+          <img src="assets/crop.png" class="resource-icon" />
+          <span>{{ getLootedAmount('crop') | number }} / {{ getTotalForOccupier('crop') | number }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div *ngIf="!showSendTroopsPanel">
@@ -18,6 +34,9 @@
         {{ scouting ? 'Scouting...' : 'Scout' }}
       </button>
       <button class="action-btn" (click)="openSendTroopsPanel()">Send Troops</button>
+      <button *ngIf="isOccupier" class="action-btn retreat-btn" (click)="retreat()" [disabled]="retreating">
+        {{ retreating ? 'Retreating...' : 'Retreat' }}
+      </button>
       <button class="action-btn" (click)="close()">Close</button>
     </div>
   </div>
