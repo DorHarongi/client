@@ -16,20 +16,43 @@
 
   <div *ngIf="oasisInfo && !isClanOwned" class="info-section center">
     <div *ngIf="oasisInfo.garrison" class="garrison-info">
-      <p class="garrison-label">Your Garrison: {{ getTotalTroopCount(oasisInfo.garrison.troops) | number }} troops</p>
+      <h5>Your Troops</h5>
+      <div class="troop-breakdown">
+        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.spearFighters">
+          <img src="assets/spear.png" class="troop-icon" /> <span>Spear fighters: {{ oasisInfo.garrison.troops.spearFighters }}</span>
+        </div>
+        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.swordFighters">
+          <img src="assets/sword.png" class="troop-icon" /> <span>Sword fighters: {{ oasisInfo.garrison.troops.swordFighters }}</span>
+        </div>
+        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.axeFighters">
+          <img src="assets/axe.png" class="troop-icon" /> <span>Axe fighters: {{ oasisInfo.garrison.troops.axeFighters }}</span>
+        </div>
+        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.archers">
+          <img src="assets/bow.png" class="troop-icon" /> <span>Archers: {{ oasisInfo.garrison.troops.archers }}</span>
+        </div>
+        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.magicians">
+          <img src="assets/hat.png" class="troop-icon" /> <span>Magicians: {{ oasisInfo.garrison.troops.magicians }}</span>
+        </div>
+        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.horsemen">
+          <img src="assets/horse.png" class="troop-icon" /> <span>Horsemen: {{ oasisInfo.garrison.troops.horsemen }}</span>
+        </div>
+        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.catapults">
+          <img src="assets/trebuchet.png" class="troop-icon" /> <span>Catapults: {{ oasisInfo.garrison.troops.catapults }}</span>
+        </div>
+      </div>
       <div class="resources-remaining">
         <h5>Resources Looted</h5>
         <div class="resource-row">
-          <img src="assets/wood.png" class="resource-icon" />
-          <span>{{ getLootedAmount('wood') | number }} / {{ getTotalForOccupier('wood') | number }}</span>
+          <img src="assets/wood.jpg" class="resource-icon" />
+          <span>{{ getLootedAmount('wood') | number:'1.0-0' }} / {{ getTotalForOccupier('wood') | number:'1.0-0' }}</span>
         </div>
         <div class="resource-row">
-          <img src="assets/stone.png" class="resource-icon" />
-          <span>{{ getLootedAmount('stone') | number }} / {{ getTotalForOccupier('stone') | number }}</span>
+          <img src="assets/rock.jpg" class="resource-icon" />
+          <span>{{ getLootedAmount('stone') | number:'1.0-0' }} / {{ getTotalForOccupier('stone') | number:'1.0-0' }}</span>
         </div>
         <div class="resource-row">
-          <img src="assets/crop.png" class="resource-icon" />
-          <span>{{ getLootedAmount('crop') | number }} / {{ getTotalForOccupier('crop') | number }}</span>
+          <img src="assets/crop.jpg" class="resource-icon" />
+          <span>{{ getLootedAmount('crop') | number:'1.0-0' }} / {{ getTotalForOccupier('crop') | number:'1.0-0' }}</span>
         </div>
       </div>
     </div>

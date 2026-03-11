@@ -39,7 +39,7 @@
             <h5 *ngIf="isBossReport"> Damage dealt: {{attackReport.attackerTotalAttack | number}} </h5>
         </div>
         <div *ngIf = "troopTypeKeyValue.key == 'defender' && !isBossReport" >
-            <h5> {{ isOasisReport ? 'Oasis Garrison' : 'Defender' }}: {{attackReport.defenderName}}</h5>
+            <h5> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: {{attackReport.defenderName}}</h5>
             <h5> {{ isOasisReport ? 'Oasis' : 'Village' }}: {{attackReport.defenderVillageName}}</h5>
             <h5 *ngIf ="!userAttackedAndLost"> Defender army defence: {{attackReport.defenderTotalArmyDefence}}</h5>
         </div>
@@ -103,14 +103,14 @@
     </h5>
 
     <ng-template #noneOfYourArmyReturned>
-        <h5 *ngIf="!isBossReport && userAttackedAndLost"> {{ isOasisReport ? 'Oasis Garrison' : 'Defender' }}: {{attackReport.defenderName}}</h5>
+        <h5 *ngIf="!isBossReport && userAttackedAndLost"> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: {{attackReport.defenderName}}</h5>
         <h5 *ngIf="!isBossReport && userAttackedAndLost"> {{ isOasisReport ? 'Oasis' : 'Village' }}: {{attackReport.defenderVillageName}}</h5>
         <h5 *ngIf="!isBossReport && userAttackedAndLost">None of your soldiers returned.</h5>
     </ng-template>
 
     <app-resources-amount 
         *ngIf="!isBossReport"
-        [label]="isOasisReport ? 'Looted from garrison:' : 'Loot stolen:'"
+        [label]="isOasisReport ? 'Looted from oasis:' : 'Loot stolen:'"
         [resources]="getLootResources()">
     </app-resources-amount>
 

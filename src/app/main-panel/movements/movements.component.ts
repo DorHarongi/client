@@ -163,7 +163,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
     if (movement.type === 'oasis_garrison') {
       return isFromVillage
-        ? 'Garrison → Oasis'
+        ? 'Troops → Oasis'
         : 'Troops to oasis';
     }
     if (movement.type === 'oasis_attack') {

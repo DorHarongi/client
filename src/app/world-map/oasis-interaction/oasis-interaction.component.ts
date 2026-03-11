@@ -34,8 +34,11 @@ import {
   swordFighterDefenceStat,
   oasisTierConfigs,
   OasisTier,
+  OASIS_HARVEST_RATE_PER_TROOP_PER_HOUR,
 } from 'utils';
 import { OasisOnMap } from '../models/mapModels';
+
+const SYNC_INTERVAL_MS = 15_000;
 
 @Component({
   selector: 'app-oasis-interaction',
@@ -63,6 +66,8 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   travelTimeMs: number = 0;
 
   private subscription?: Subscription;
+  private harvestInterval: any;
+  private syncInterval: any;
 
   constructor(
     private http: HttpClient,
@@ -79,6 +84,56 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.stopHarvestTimer();
+  }
+
+  private startHarvestTimer(): void {
+    this.stopHarvestTimer();
+    if (!this.isOccupier || !this.oasisInfo?.garrison?.troops) return;
+
+    this.harvestInterval = setInterval(() => {
+      this.tickLocalHarvest();
+    }, 1000);
+
+    this.syncInterval = setInterval(() => {
+      this.syncFromServer();
+    }, SYNC_INTERVAL_MS);
+  }
+
+  private stopHarvestTimer(): void {
+    if (this.harvestInterval) { clearInterval(this.harvestInterval); this.harvestInterval = null; }
+    if (this.syncInterval) { clearInterval(this.syncInterval); this.syncInterval = null; }
+  }
+
+  private tickLocalHarvest(): void {
+    if (!this.oasisInfo?.garrison?.troops || !this.oasisInfo.resourcesRemaining) return;
+
+    const troops = this.oasisInfo.garrison.troops;
+    const troopCount =
+      (troops.spearFighters || 0) + (troops.swordFighters || 0) +
+      (troops.axeFighters || 0) + (troops.archers || 0) +
+      (troops.magicians || 0) + (troops.horsemen || 0) +
+      (troops.catapults || 0);
+    if (troopCount <= 0) return;
+
+    const harvestPerSecond = (troopCount * OASIS_HARVEST_RATE_PER_TROOP_PER_HOUR) / 3600;
+    const remaining = this.oasisInfo.resourcesRemaining;
+    const stash = this.oasisInfo.garrison.stash;
+
+    for (const res of ['wood', 'stone', 'crop'] as const) {
+      const harvested = Math.min(harvestPerSecond, remaining[res] || 0);
+      remaining[res] = Math.max(0, (remaining[res] || 0) - harvested);
+      stash[res] = (stash[res] || 0) + harvested;
+    }
+  }
+
+  private syncFromServer(): void {
+    if (!this.isOccupier) return;
+    this.http.get<any>(`${environment.apiUrl}/oasis/info/${this.oasis.id}`)
+      .subscribe({
+        next: (info) => { this.oasisInfo = info; },
+        error: () => {},
+      });
   }
 
   initMaxTroops(): void {
@@ -109,6 +164,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
         next: (info) => {
           this.oasisInfo = info;
           this.scouting = false;
+          this.startHarvestTimer();
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to scout oasis';
@@ -320,7 +376,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
 
     const villageName = this.oasisInfo?.garrison?.villageName;
     if (!villageName) {
-      this.errorMessage = 'Could not determine garrison village.';
+      this.errorMessage = 'Could not determine the source village.';
       this.retreating = false;
       return;
     }
