@@ -16,9 +16,7 @@ interface Movement {
     | 'relic_transfer'
     | 'oasis_garrison'
     | 'oasis_attack'
-    | 'oasis_return'
-    | 'crow'
-    | 'crow_return';
+    | 'oasis_return';
   senderUsername: string;
   senderVillageName: string;
   targetUsername: string;
@@ -150,9 +148,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
     if (movement.type === 'oasis_garrison' || movement.type === 'oasis_attack') {
       return 'assets/oasis.png';
     }
-    if (movement.type === 'crow' || movement.type === 'crow_return') {
-      return 'assets/crow.png';
-    }
     return 'assets/swords.png';
   }
 
@@ -176,12 +171,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
     if (movement.type === 'oasis_return') {
       return 'Troops returning';
-    }
-    if (movement.type === 'crow') {
-      return 'Crow incoming';
-    }
-    if (movement.type === 'crow_return') {
-      return 'Crow returning';
     }
     if (movement.type === 'attack') {
       return isFromVillage

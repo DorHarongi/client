@@ -315,8 +315,6 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   getMessageIcon(message: Message): string {
     switch(message.type) {
-      case 'expert_spy_report':
-        return 'assets/crow.png';
       case 'clan_join_request':
         return 'assets/population.png';
       case 'clan_request_accepted':
