@@ -122,30 +122,30 @@ $your-color: #90EE90;
     box-sizing: border-box;
   }
 
-  // --- Oasis tier cell colors ---
+  // --- Oasis tier cell colors (aligned with rarity palette) ---
   &.oasis-dusty_springs {
-    background-color: #C2B280;
-    &:hover { background-color: #B2A270; }
+    background-color: #909090;
+    &:hover { background-color: #808080; }
   }
 
   &.oasis-fertile_clearing {
-    background-color: #8FBC8F;
-    &:hover { background-color: #7FAC7F; }
+    background-color: #a0a0a0;
+    &:hover { background-color: #909090; }
   }
 
   &.oasis-hidden_wellspring {
-    background-color: #5DADE2;
-    &:hover { background-color: #4D9DD2; }
+    background-color: #3498db;
+    &:hover { background-color: #2e86c1; }
   }
 
   &.oasis-abundant_grove {
-    background-color: #2ECC71;
-    &:hover { background-color: #1EBC61; }
+    background-color: #9b59b6;
+    &:hover { background-color: #8e44ad; }
   }
 
   &.oasis-golden_oasis {
-    background-color: #F4D03F;
-    &:hover { background-color: #E4C02F; }
+    background-color: #f1c40f;
+    &:hover { background-color: #d4ac0d; }
   }
 
   // --- Inner elements ---

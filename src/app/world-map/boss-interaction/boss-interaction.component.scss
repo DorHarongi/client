@@ -134,17 +134,19 @@
   margin: 5px 0;
 }
 
-.boss-tier {
+.rarity-badge {
   padding: 4px 12px;
   border-radius: 4px;
   font-weight: bold;
   font-size: 12px;
+  display: inline-block;
+  margin-top: 5px;
 
-  &.tier-common { background-color: #808080; color: white; }
-  &.tier-rare { background-color: #3498db; color: white; }
-  &.tier-epic { background-color: #9b59b6; color: white; }
-  &.tier-legendary { background-color: #f1c40f; color: black; }
-  &.tier-mythic { background-color: orange; color: #fff; }
+  &.rarity-common { background-color: #808080; color: white; }
+  &.rarity-rare { background-color: #3498db; color: white; }
+  &.rarity-epic { background-color: #9b59b6; color: white; }
+  &.rarity-legendary { background-color: #f1c40f; color: black; }
+  &.rarity-mythic { background-color: #e74c3c; color: white; }
 }
 
 .hp-section {

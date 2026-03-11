@@ -350,9 +350,9 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   get rarityClass(): string {
     switch (this.oasisRarity) {
       case 'Common': return 'rarity-common';
-      case 'Uncommon': return 'rarity-uncommon';
       case 'Rare': return 'rarity-rare';
-      case 'Very Rare': return 'rarity-very-rare';
+      case 'Epic': return 'rarity-epic';
+      case 'Legendary': return 'rarity-legendary';
       default: return '';
     }
   }

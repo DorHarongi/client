@@ -53,7 +53,7 @@
   margin: 5px 0;
 }
 
-.oasis-rarity {
+.rarity-badge {
   padding: 4px 12px;
   border-radius: 4px;
   font-weight: bold;
@@ -62,9 +62,9 @@
   margin-top: 5px;
 
   &.rarity-common { background-color: #808080; color: white; }
-  &.rarity-uncommon { background-color: #5DADE2; color: white; }
-  &.rarity-rare { background-color: #2ECC71; color: white; }
-  &.rarity-very-rare { background-color: #F4D03F; color: black; }
+  &.rarity-rare { background-color: #3498db; color: white; }
+  &.rarity-epic { background-color: #9b59b6; color: white; }
+  &.rarity-legendary { background-color: #f1c40f; color: black; }
 }
 
 h5 {

@@ -3,7 +3,7 @@
 
   <div class="oasis-header center">
     <img src="assets/oasis.png" class="oasis-image" />
-    <span *ngIf="oasisRarity" class="oasis-rarity" [ngClass]="rarityClass">{{ oasisRarity }}</span>
+    <span *ngIf="oasisRarity" class="rarity-badge" [ngClass]="rarityClass">{{ oasisRarity }}</span>
   </div>
 
   <div *ngIf="oasisInfo" class="info-section center">
