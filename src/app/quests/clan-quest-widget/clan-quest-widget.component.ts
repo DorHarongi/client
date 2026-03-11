@@ -20,11 +20,14 @@ export class ClanQuestWidgetComponent implements OnInit, OnDestroy {
   isLoading = true;
   isClaiming = false;
 
+  timeLeft: string = '';
+
   isDragging = false;
   dragOffset = { x: 0, y: 0 };
   position = { x: 0, y: 0 };
 
   private subscriptions: Subscription[] = [];
+  private timerInterval: any;
   totalQuests = TOTAL_QUESTS;
 
   constructor(
@@ -35,6 +38,8 @@ export class ClanQuestWidgetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadPosition();
     this.loadStatus();
+    this.updateTimeLeft();
+    this.timerInterval = setInterval(() => this.updateTimeLeft(), 1000);
 
     this.subscriptions.push(
       this.userInformationService.villageChanged$.subscribe(() => {
@@ -45,6 +50,22 @@ export class ClanQuestWidgetComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+    if (this.timerInterval) clearInterval(this.timerInterval);
+  }
+
+  private updateTimeLeft(): void {
+    const now = new Date();
+    const dayOfWeek = now.getUTCDay();
+    const daysUntilMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+    const nextMonday = new Date(Date.UTC(
+      now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + daysUntilMonday
+    ));
+    const diff = nextMonday.getTime() - now.getTime();
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    this.timeLeft = days > 0 ? `${days}d ${hours}h ${minutes}m` : `${hours}h ${minutes}m ${seconds}s`;
   }
 
   get isVisible(): boolean {
