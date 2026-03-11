@@ -53,6 +53,20 @@
   margin: 5px 0;
 }
 
+.oasis-rarity {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+  display: inline-block;
+  margin-top: 5px;
+
+  &.rarity-common { background-color: #808080; color: white; }
+  &.rarity-uncommon { background-color: #5DADE2; color: white; }
+  &.rarity-rare { background-color: #2ECC71; color: white; }
+  &.rarity-very-rare { background-color: #F4D03F; color: black; }
+}
+
 h5 {
   margin-bottom: 15px;
 }

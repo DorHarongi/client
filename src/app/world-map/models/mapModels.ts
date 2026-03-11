@@ -1,4 +1,4 @@
-import { BossTier } from 'utils';
+import { BossTier, OasisTier } from 'utils';
 
 export interface VillageOnMap {
     x: number;
@@ -28,6 +28,7 @@ export interface OasisOnMap {
     id: string;
     x: number;
     y: number;
+    tier?: OasisTier;
 }
 
 export interface MapWindowResponse {

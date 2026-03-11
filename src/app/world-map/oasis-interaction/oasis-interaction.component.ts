@@ -32,6 +32,8 @@ import {
   spearFighterDefenceStat,
   swordFighterAttackingStat,
   swordFighterDefenceStat,
+  oasisTierConfigs,
+  OasisTier,
 } from 'utils';
 import { OasisOnMap } from '../models/mapModels';
 
@@ -290,6 +292,32 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       parts.push(`${total} troops`);
     }
     return parts.join(' - ');
+  }
+
+  get oasisName(): string {
+    const tier = this.oasis.tier || this.oasisInfo?.tier;
+    if (tier && oasisTierConfigs[tier as OasisTier]) {
+      return oasisTierConfigs[tier as OasisTier].name;
+    }
+    return 'Oasis';
+  }
+
+  get oasisRarity(): string {
+    const tier = this.oasis.tier || this.oasisInfo?.tier;
+    if (tier && oasisTierConfigs[tier as OasisTier]) {
+      return oasisTierConfigs[tier as OasisTier].rarity;
+    }
+    return '';
+  }
+
+  get rarityClass(): string {
+    switch (this.oasisRarity) {
+      case 'Common': return 'rarity-common';
+      case 'Uncommon': return 'rarity-uncommon';
+      case 'Rare': return 'rarity-rare';
+      case 'Very Rare': return 'rarity-very-rare';
+      default: return '';
+    }
   }
 
   close(): void {

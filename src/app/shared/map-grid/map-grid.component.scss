@@ -122,6 +122,32 @@ $your-color: #90EE90;
     box-sizing: border-box;
   }
 
+  // --- Oasis tier cell colors ---
+  &.oasis-dusty_springs {
+    background-color: #C2B280;
+    &:hover { background-color: #B2A270; }
+  }
+
+  &.oasis-fertile_clearing {
+    background-color: #8FBC8F;
+    &:hover { background-color: #7FAC7F; }
+  }
+
+  &.oasis-hidden_wellspring {
+    background-color: #5DADE2;
+    &:hover { background-color: #4D9DD2; }
+  }
+
+  &.oasis-abundant_grove {
+    background-color: #2ECC71;
+    &:hover { background-color: #1EBC61; }
+  }
+
+  &.oasis-golden_oasis {
+    background-color: #F4D03F;
+    &:hover { background-color: #E4C02F; }
+  }
+
   // --- Inner elements ---
   .coords {
     font-size: var(--coords-font-size);

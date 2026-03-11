@@ -46,6 +46,10 @@ export class MapGridComponent {
       classes[`boss-${cell.boss.tier}`] = true;
     }
 
+    if (cell.oasis?.tier) {
+      classes[`oasis-${cell.oasis.tier}`] = true;
+    }
+
     if (this.extraCellClassFn) {
       Object.assign(classes, this.extraCellClassFn(cell));
     }
