@@ -49,9 +49,10 @@ export class AttackReportComponent implements OnInit {
   }
 
   getBossHpPercent(): number {
-    if (this.attackReport.bossHpBefore == null || this.attackReport.bossHpBefore <= 0) return 0;
+    const maxHp = this.attackReport.bossMaxHp || this.attackReport.bossHpBefore;
+    if (maxHp == null || maxHp <= 0) return 0;
     const after = this.attackReport.bossHpAfter ?? 0;
-    return Math.max(0, (after / this.attackReport.bossHpBefore) * 100);
+    return Math.max(0, (after / maxHp) * 100);
   }
 
   goBack(){
