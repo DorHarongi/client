@@ -55,6 +55,8 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   sending: boolean = false;
   retreating: boolean = false;
   errorMessage: string = '';
+  spySent: boolean = false;
+  spyTravelTimeMs: number = 0;
 
   showSendTroopsPanel: boolean = false;
   maxPossibleTroops!: TroopsAmounts;
@@ -78,7 +80,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initMaxTroops();
     if (this.oasis.ownerType === 'clan' || this.oasis.ownerType === 'mine') {
-      this.scout();
+      this.fetchOasisInfo();
     }
   }
 
@@ -156,6 +158,44 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   }
 
   scout(): void {
+    if (this.oasis.ownerType === 'clan' || this.oasis.ownerType === 'mine') {
+      this.fetchOasisInfo();
+      return;
+    }
+
+    this.scouting = true;
+    this.errorMessage = '';
+    const villageName = this.userInformationService.currentVillage?.villageName;
+    if (!villageName) {
+      this.errorMessage = 'Could not determine your current village.';
+      this.scouting = false;
+      return;
+    }
+
+    this.subscription = this.http
+      .post<any>(`${environment.apiUrl}/scouting/scout-oasis`, {
+        attackerVillageName: villageName,
+        oasisId: this.oasis.id,
+      })
+      .subscribe({
+        next: (result) => {
+          this.scouting = false;
+          this.spySent = true;
+          this.spyTravelTimeMs = result.travelTimeMs || 0;
+          this.userInformationService.currentVillage.aliveSpies = Math.max(
+            0,
+            (this.userInformationService.currentVillage.aliveSpies || 0) - 1
+          );
+          this.userInformationService.notifyVillageChanged();
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to spy on oasis';
+          this.scouting = false;
+        },
+      });
+  }
+
+  private fetchOasisInfo(): void {
     this.scouting = true;
     this.errorMessage = '';
     this.subscription = this.http
@@ -167,7 +207,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
           this.startHarvestTimer();
         },
         error: (err) => {
-          this.errorMessage = err.error?.message || 'Failed to scout oasis';
+          this.errorMessage = err.error?.message || 'Failed to load oasis info';
           this.scouting = false;
         },
       });
@@ -422,6 +462,17 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       case 'Legendary': return 'rarity-legendary';
       default: return '';
     }
+  }
+
+  getFormattedSpyTravelTime(): string {
+    if (!this.spyTravelTimeMs || this.spyTravelTimeMs <= 0) return '—';
+    const totalSeconds = Math.floor(this.spyTravelTimeMs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    if (minutes > 0) return `${minutes}m ${seconds}s`;
+    return `${seconds}s`;
   }
 
   close(): void {

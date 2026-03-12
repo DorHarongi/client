@@ -23,6 +23,21 @@ export class ScoutReportComponent {
     return this.report.attackerWon;
   }
 
+  get isOasisSpy(): boolean {
+    return this.report.reportType === 'oasis_spy';
+  }
+
+  get hasOasisOwner(): boolean {
+    return !!this.report.defenderName && this.report.defenderName.length > 0;
+  }
+
+  get hasGarrisonTroops(): boolean {
+    const t = this.report.defenderTotalTroops;
+    if (!t) return false;
+    return (t.spearFighters || 0) + (t.swordFighters || 0) + (t.axeFighters || 0) +
+      (t.archers || 0) + (t.magicians || 0) + (t.horsemen || 0) + (t.catapults || 0) > 0;
+  }
+
   goBack(): void {
     this.closed.emit();
   }

@@ -94,3 +94,44 @@ h5 {
         color: #2a6ea8 !important;
     }
 }
+
+.unoccupied-label {
+    color: #888;
+    font-style: italic;
+}
+
+.no-troops-notice {
+    text-align: center;
+    padding: 5px 0;
+    p {
+        color: #888;
+        font-style: italic;
+    }
+}
+
+.oasis-resources-section {
+    margin: 10px 0;
+
+    h5 {
+        margin-bottom: 8px;
+    }
+
+    .resources-display {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .resource-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .resource-icon {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+    }
+}

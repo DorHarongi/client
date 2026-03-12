@@ -245,12 +245,13 @@ h5 {
   }
 }
 
-.spy-results {
-  margin: 8px 0;
-}
-
-.occupied-warning {
-  color: #c0392b;
-  font-weight: 600;
-  margin-bottom: 6px;
+.spy-sent-notice {
+  margin: 10px 0;
+  padding: 8px 12px;
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 6px;
+  color: #27ae60;
+  font-weight: 500;
+  font-size: 14px;
 }

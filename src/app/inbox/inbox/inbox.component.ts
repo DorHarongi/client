@@ -254,6 +254,13 @@ export class InboxComponent implements OnInit, OnDestroy {
       return `${attackReport.attackerName} [${attackReport.attackerVillageName}] tried to scout you`;
     }
 
+    if (attackReport.reportType === 'oasis_spy') {
+      if (attackReport.attackerWon) {
+        return `You spied on ${attackReport.oasisName || attackReport.defenderVillageName}`;
+      }
+      return `Your spy to ${attackReport.oasisName || attackReport.defenderVillageName} was caught`;
+    }
+
     if (attackReport.reportType === 'oasis') {
       const isAttacker = attackReport.attackerName === this.username;
       if (isAttacker) {
@@ -288,7 +295,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   getAttackResult(attackReport: AttackReport): string
   {
-    if (attackReport.reportType === 'spy') {
+    if (attackReport.reportType === 'spy' || attackReport.reportType === 'oasis_spy') {
       if (attackReport.attackerWon) return 'Success';
       const isAttacker = attackReport.attackerName === this.username;
       return isAttacker ? 'Caught' : 'Intercepted';

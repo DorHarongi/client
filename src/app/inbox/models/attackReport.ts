@@ -1,7 +1,7 @@
 import { ResourcesAmounts } from "src/app/main-panel/models/resourcesAmounts";
 import { TroopsAmounts } from "src/app/main-panel/models/troopsAmounts";
 
-export type BossReportType = 'pvp' | 'boss' | 'spy' | 'oasis';
+export type BossReportType = 'pvp' | 'boss' | 'spy' | 'oasis' | 'oasis_spy';
 
 export interface AttackReport {
     id: string;
@@ -47,4 +47,10 @@ export interface AttackReport {
     defenderVillageY?: number;
     bossRelicId?: string;
     bossRelicName?: string;
+
+    oasisId?: string;
+    oasisName?: string;
+    oasisX?: number;
+    oasisY?: number;
+    oasisResources?: { wood: number; stone: number; crop: number };
 } 

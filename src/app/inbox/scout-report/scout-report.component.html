@@ -1,8 +1,74 @@
 <div class="flexContainer scout-report-container round-square">
-  <h4>Scout Report</h4>
+  <h4>{{ isOasisSpy ? 'Oasis Spy Report' : 'Scout Report' }}</h4>
 
-  <!-- Successful spy - attacker view (only attacker sees this) -->
-  <div *ngIf="wasSuccessful && isAttacker">
+  <!-- Successful oasis spy -->
+  <div *ngIf="isOasisSpy && wasSuccessful && isAttacker">
+    <h5>Your spy successfully scouted
+      <a *ngIf="report.oasisX != null" class="report-link" (click)="navigateToMap(report.oasisX, report.oasisY)">{{ report.oasisName || report.defenderVillageName }}</a>
+      <span *ngIf="report.oasisX == null">{{ report.oasisName || report.defenderVillageName }}</span>
+    </h5>
+
+    <h5 *ngIf="hasOasisOwner">Owner: <a class="report-link" (click)="navigateToPlayer(report.defenderName)">{{ report.defenderName }}</a></h5>
+    <h5 *ngIf="!hasOasisOwner">Owner: <span class="unoccupied-label">Unoccupied</span></h5>
+
+    <div class="troops-section" *ngIf="hasGarrisonTroops">
+      <h5>Troops</h5>
+      <table>
+        <tr>
+          <th><img class="icons" src="../../../../assets/spear.png" alt="Spear"></th>
+          <th><img class="icons" src="../../../../assets/sword.png" alt="Sword"></th>
+          <th><img class="icons" src="../../../../assets/axe.png" alt="Axe"></th>
+          <th><img class="icons" src="../../../../assets/bow.png" alt="Bow"></th>
+          <th><img class="icons" src="../../../../assets/hat.png" alt="Magician"></th>
+          <th><img class="icons" src="../../../../assets/horse.png" alt="Horse"></th>
+          <th><img class="icons" src="../../../../assets/trebuchet.png" alt="Catapult"></th>
+        </tr>
+        <tr>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.spearFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.swordFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.axeFighters ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.archers ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.magicians ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.horsemen ?? 0"></td>
+          <td><input disabled class="troopsInput" [value]="report.defenderTotalTroops?.catapults ?? 0"></td>
+        </tr>
+      </table>
+    </div>
+
+    <div *ngIf="!hasGarrisonTroops && hasOasisOwner" class="no-troops-notice">
+      <p>No troops stationed at this oasis.</p>
+    </div>
+
+    <div *ngIf="report.oasisResources" class="oasis-resources-section">
+      <h5>Resources Remaining</h5>
+      <div class="resources-display">
+        <div class="resource-item">
+          <img src="../../../../assets/wood.jpg" class="resource-icon">
+          <span>{{ report.oasisResources.wood | number }}</span>
+        </div>
+        <div class="resource-item">
+          <img src="../../../../assets/rock.jpg" class="resource-icon">
+          <span>{{ report.oasisResources.stone | number }}</span>
+        </div>
+        <div class="resource-item">
+          <img src="../../../../assets/crop.jpg" class="resource-icon">
+          <span>{{ report.oasisResources.crop | number }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Caught oasis spy -->
+  <div *ngIf="isOasisSpy && !wasSuccessful && isAttacker" class="caught-section">
+    <h5>Your spy to
+      <a *ngIf="report.oasisX != null" class="report-link" (click)="navigateToMap(report.oasisX, report.oasisY)">{{ report.oasisName || report.defenderVillageName }}</a>
+      <span *ngIf="report.oasisX == null">{{ report.oasisName || report.defenderVillageName }}</span>
+      has been caught.</h5>
+    <p>Your spy was detected and eliminated. No intelligence was gathered.</p>
+  </div>
+
+  <!-- Successful village spy - attacker view -->
+  <div *ngIf="!isOasisSpy && wasSuccessful && isAttacker">
     <h5>Your spy successfully scouted <a *ngIf="report.defenderVillageX != null" class="report-link" (click)="navigateToMap(report.defenderVillageX, report.defenderVillageY)">{{ report.defenderVillageName }}</a><span *ngIf="report.defenderVillageX == null">{{ report.defenderVillageName }}</span></h5>
     <h5>Defender: <a class="report-link" (click)="navigateToPlayer(report.defenderName)">{{ report.defenderName }}</a></h5>
 
@@ -55,14 +121,14 @@
     </div>
   </div>
 
-  <!-- Caught spy - attacker view -->
-  <div *ngIf="!wasSuccessful && isAttacker" class="caught-section">
+  <!-- Caught spy - attacker view (village) -->
+  <div *ngIf="!isOasisSpy && !wasSuccessful && isAttacker" class="caught-section">
     <h5>Your scout to <a *ngIf="report.defenderVillageX != null" class="report-link" (click)="navigateToMap(report.defenderVillageX, report.defenderVillageY)">{{ report.defenderVillageName }}</a><span *ngIf="report.defenderVillageX == null">{{ report.defenderVillageName }}</span> of <a class="report-link" (click)="navigateToPlayer(report.defenderName)">{{ report.defenderName }}</a> has been caught.</h5>
     <p>Your spy was detected and eliminated. No intelligence was gathered.</p>
   </div>
 
-  <!-- Caught spy - defender view -->
-  <div *ngIf="!wasSuccessful && !isAttacker" class="caught-section">
+  <!-- Caught spy - defender view (village) -->
+  <div *ngIf="!isOasisSpy && !wasSuccessful && !isAttacker" class="caught-section">
     <h5><a class="report-link" (click)="navigateToPlayer(report.attackerName)">{{ report.attackerName }}</a> from <a *ngIf="report.attackerVillageX != null" class="report-link" (click)="navigateToMap(report.attackerVillageX, report.attackerVillageY)">{{ report.attackerVillageName }}</a><span *ngIf="report.attackerVillageX == null">{{ report.attackerVillageName }}</span> tried to scout you.</h5>
     <p>An enemy spy was intercepted at <a *ngIf="report.defenderVillageX != null" class="report-link" (click)="navigateToMap(report.defenderVillageX, report.defenderVillageY)">{{ report.defenderVillageName }}</a><span *ngIf="report.defenderVillageX == null">{{ report.defenderVillageName }}</span>. The spy has been eliminated.</p>
   </div>
