@@ -56,13 +56,32 @@
         </div>
       </div>
     </div>
+
+    <div *ngIf="!oasisInfo.garrison && oasisInfo.resourcesRemaining" class="spy-results">
+      <p *ngIf="oasisInfo.occupied" class="occupied-warning">This oasis is occupied by another player.</p>
+      <h5>Resources Available</h5>
+      <div class="resources-remaining">
+        <div class="resource-row">
+          <img src="assets/wood.jpg" class="resource-icon" />
+          <span>{{ oasisInfo.resourcesRemaining.wood | number:'1.0-0' }}</span>
+        </div>
+        <div class="resource-row">
+          <img src="assets/rock.jpg" class="resource-icon" />
+          <span>{{ oasisInfo.resourcesRemaining.stone | number:'1.0-0' }}</span>
+        </div>
+        <div class="resource-row">
+          <img src="assets/crop.jpg" class="resource-icon" />
+          <span>{{ oasisInfo.resourcesRemaining.crop | number:'1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div *ngIf="!showSendTroopsPanel && !isClanOwned">
     <div class="actions center">
       <button class="action-btn" (click)="findOnMap()">Find on Map</button>
       <button class="action-btn" (click)="scout()" [disabled]="scouting">
-        {{ scouting ? 'Scouting...' : 'Scout' }}
+        {{ scouting ? 'Spying...' : 'Spy' }}
       </button>
       <button class="action-btn" (click)="openSendTroopsPanel()">Send Troops</button>
       <button *ngIf="isOccupier" class="action-btn retreat-btn" (click)="retreat()" [disabled]="retreating">

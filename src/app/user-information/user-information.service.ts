@@ -61,6 +61,10 @@ export class UserInformationService {
     }
   }
 
+  notifyVillageChanged(): void {
+    this.villageChagnedSubject.next();
+  }
+
   clearUserInformation(): void {
     sessionStorage.removeItem(USER_KEY);
     // Also clear in-memory user to prevent stale data

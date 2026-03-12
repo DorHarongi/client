@@ -479,6 +479,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
               0,
               (this.userInformationService.currentVillage.aliveSpies || 0) - 1
             );
+            this.userInformationService.notifyVillageChanged();
           }
           this.closed.emit();
         },
