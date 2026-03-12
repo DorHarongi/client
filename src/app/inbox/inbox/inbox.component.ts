@@ -363,6 +363,10 @@ export class InboxComponent implements OnInit, OnDestroy {
     return type === 'boss_defeated';
   }
 
+  isOasisReturnMessage(type: string): boolean {
+    return type === 'oasis_return';
+  }
+
   claimBossReward(): void {
     if (this.claimingReward) return;
     

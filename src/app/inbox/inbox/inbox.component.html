@@ -108,6 +108,25 @@
             </div>
         </div>
 
+        <!-- Oasis Return Resources Display -->
+        <div *ngIf="isOasisReturnMessage(selectedMessage.type) && selectedMessage.metadata?.resources" class="transfer-details">
+            <h5 class="center">Resources Gathered:</h5>
+            <div class="resources-display">
+                <div class="resource-item">
+                    <img src="../../../assets/wood.jpg" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.resources?.wood | number}}</span>
+                </div>
+                <div class="resource-item">
+                    <img src="../../../assets/rock.jpg" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.resources?.stone | number}}</span>
+                </div>
+                <div class="resource-item">
+                    <img src="../../../assets/crop.jpg" class="resource-icon">
+                    <span>{{selectedMessage.metadata?.resources?.crop | number}}</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Troops Display for support troop messages -->
         <div *ngIf="isSupportMessage(selectedMessage.type) && selectedMessage.metadata?.troops" class="transfer-details">
             <h5 class="center">Troops Sent:</h5>
