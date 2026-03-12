@@ -16,28 +16,30 @@
 
   <div *ngIf="oasisInfo && !isClanOwned" class="info-section center">
     <div *ngIf="oasisInfo.garrison" class="garrison-info">
-      <h5>Your Troops</h5>
-      <div class="troop-breakdown">
-        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.spearFighters">
-          <img src="assets/spear.png" class="troop-icon" /> <span>Spear fighters: {{ oasisInfo.garrison.troops.spearFighters }}</span>
-        </div>
-        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.swordFighters">
-          <img src="assets/sword.png" class="troop-icon" /> <span>Sword fighters: {{ oasisInfo.garrison.troops.swordFighters }}</span>
-        </div>
-        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.axeFighters">
-          <img src="assets/axe.png" class="troop-icon" /> <span>Axe fighters: {{ oasisInfo.garrison.troops.axeFighters }}</span>
-        </div>
-        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.archers">
-          <img src="assets/bow.png" class="troop-icon" /> <span>Archers: {{ oasisInfo.garrison.troops.archers }}</span>
-        </div>
-        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.magicians">
-          <img src="assets/hat.png" class="troop-icon" /> <span>Magicians: {{ oasisInfo.garrison.troops.magicians }}</span>
-        </div>
-        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.horsemen">
-          <img src="assets/horse.png" class="troop-icon" /> <span>Horsemen: {{ oasisInfo.garrison.troops.horsemen }}</span>
-        </div>
-        <div class="troop-row" *ngIf="oasisInfo.garrison.troops.catapults">
-          <img src="assets/trebuchet.png" class="troop-icon" /> <span>Catapults: {{ oasisInfo.garrison.troops.catapults }}</span>
+      <div *ngFor="let contrib of garrisonContributions" class="village-contribution">
+        <h5>{{ contrib.villageName }}</h5>
+        <div class="troop-breakdown">
+          <div class="troop-row" *ngIf="contrib.troops.spearFighters">
+            <img src="assets/spear.png" class="troop-icon" /> <span>Spear fighters: {{ contrib.troops.spearFighters }}</span>
+          </div>
+          <div class="troop-row" *ngIf="contrib.troops.swordFighters">
+            <img src="assets/sword.png" class="troop-icon" /> <span>Sword fighters: {{ contrib.troops.swordFighters }}</span>
+          </div>
+          <div class="troop-row" *ngIf="contrib.troops.axeFighters">
+            <img src="assets/axe.png" class="troop-icon" /> <span>Axe fighters: {{ contrib.troops.axeFighters }}</span>
+          </div>
+          <div class="troop-row" *ngIf="contrib.troops.archers">
+            <img src="assets/bow.png" class="troop-icon" /> <span>Archers: {{ contrib.troops.archers }}</span>
+          </div>
+          <div class="troop-row" *ngIf="contrib.troops.magicians">
+            <img src="assets/hat.png" class="troop-icon" /> <span>Magicians: {{ contrib.troops.magicians }}</span>
+          </div>
+          <div class="troop-row" *ngIf="contrib.troops.horsemen">
+            <img src="assets/horse.png" class="troop-icon" /> <span>Horsemen: {{ contrib.troops.horsemen }}</span>
+          </div>
+          <div class="troop-row" *ngIf="contrib.troops.catapults">
+            <img src="assets/trebuchet.png" class="troop-icon" /> <span>Catapults: {{ contrib.troops.catapults }}</span>
+          </div>
         </div>
       </div>
       <div class="resources-remaining">

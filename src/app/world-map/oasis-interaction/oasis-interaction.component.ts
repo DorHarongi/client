@@ -91,7 +91,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
 
   private startHarvestTimer(): void {
     this.stopHarvestTimer();
-    if (!this.isOccupier || !this.oasisInfo?.garrison?.troops) return;
+    if (!this.isOccupier || !this.oasisInfo?.garrison) return;
 
     this.harvestInterval = setInterval(() => {
       this.tickLocalHarvest();
@@ -108,14 +108,10 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   }
 
   private tickLocalHarvest(): void {
-    if (!this.oasisInfo?.garrison?.troops || !this.oasisInfo.resourcesRemaining) return;
+    if (!this.oasisInfo?.garrison || !this.oasisInfo.resourcesRemaining) return;
 
-    const troops = this.oasisInfo.garrison.troops;
-    const troopCount =
-      (troops.spearFighters || 0) + (troops.swordFighters || 0) +
-      (troops.axeFighters || 0) + (troops.archers || 0) +
-      (troops.magicians || 0) + (troops.horsemen || 0) +
-      (troops.catapults || 0);
+    const troops = this.totalGarrisonTroops;
+    const troopCount = this.getTotalTroopCount(troops);
     if (troopCount <= 0) return;
 
     const harvestPerSecond = (troopCount * OASIS_HARVEST_RATE_PER_TROOP_PER_HOUR) / 3600;
@@ -399,6 +395,33 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       (troops.catapults || 0);
   }
 
+  get garrisonContributions(): any[] {
+    if (!this.oasisInfo?.garrison) return [];
+    const g = this.oasisInfo.garrison;
+    if (g.contributions && g.contributions.length > 0) {
+      return g.contributions;
+    }
+    if (g.villageName && g.troops) {
+      return [{ villageName: g.villageName, troops: g.troops }];
+    }
+    return [];
+  }
+
+  get totalGarrisonTroops(): any {
+    const contribs = this.garrisonContributions;
+    const total = { spearFighters: 0, swordFighters: 0, axeFighters: 0, archers: 0, magicians: 0, horsemen: 0, catapults: 0 };
+    for (const c of contribs) {
+      total.spearFighters += c.troops?.spearFighters || 0;
+      total.swordFighters += c.troops?.swordFighters || 0;
+      total.axeFighters += c.troops?.axeFighters || 0;
+      total.archers += c.troops?.archers || 0;
+      total.magicians += c.troops?.magicians || 0;
+      total.horsemen += c.troops?.horsemen || 0;
+      total.catapults += c.troops?.catapults || 0;
+    }
+    return total;
+  }
+
   getLootedAmount(resource: 'wood' | 'stone' | 'crop'): number {
     if (!this.oasisInfo?.garrison?.totalForOccupier || !this.oasisInfo?.resourcesRemaining) return 0;
     return this.oasisInfo.garrison.totalForOccupier[resource] - this.oasisInfo.resourcesRemaining[resource];
@@ -414,16 +437,8 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
     this.retreating = true;
     this.errorMessage = '';
 
-    const villageName = this.oasisInfo?.garrison?.villageName;
-    if (!villageName) {
-      this.errorMessage = 'Could not determine the source village.';
-      this.retreating = false;
-      return;
-    }
-
     this.subscription = this.http
       .post<any>(`${environment.apiUrl}/oasis/retreat`, {
-        villageName,
         oasisId: this.oasis.id,
       })
       .subscribe({
