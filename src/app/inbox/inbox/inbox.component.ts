@@ -515,6 +515,10 @@ export class InboxComponent implements OnInit, OnDestroy {
     return message.subject || 'No subject';
   }
 
+  navigateToPlayer(username: string): void {
+    this.router.navigate(['player', username]);
+  }
+
   goBack()
   {
     this.router.navigateByUrl('home');

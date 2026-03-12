@@ -4,7 +4,7 @@
   <!-- Successful spy - attacker view (only attacker sees this) -->
   <div *ngIf="wasSuccessful && isAttacker">
     <h5>Your spy successfully scouted {{ report.defenderVillageName }}</h5>
-    <h5>Defender: {{ report.defenderName }}</h5>
+    <h5>Defender: <a class="report-link" (click)="navigateToPlayer(report.defenderName)">{{ report.defenderName }}</a></h5>
 
     <div class="troops-section">
       <h5>Village Troops</h5>
@@ -57,13 +57,13 @@
 
   <!-- Caught spy - attacker view -->
   <div *ngIf="!wasSuccessful && isAttacker" class="caught-section">
-    <h5>Your scout to {{ report.defenderVillageName }} of {{ report.defenderName }} has been caught.</h5>
+    <h5>Your scout to {{ report.defenderVillageName }} of <a class="report-link" (click)="navigateToPlayer(report.defenderName)">{{ report.defenderName }}</a> has been caught.</h5>
     <p>Your spy was detected and eliminated. No intelligence was gathered.</p>
   </div>
 
   <!-- Caught spy - defender view -->
   <div *ngIf="!wasSuccessful && !isAttacker" class="caught-section">
-    <h5>{{ report.attackerName }} from {{ report.attackerVillageName }} tried to scout you.</h5>
+    <h5><a class="report-link" (click)="navigateToPlayer(report.attackerName)">{{ report.attackerName }}</a> from {{ report.attackerVillageName }} tried to scout you.</h5>
     <p>An enemy spy was intercepted at {{ report.defenderVillageName }}. The spy has been eliminated.</p>
   </div>
 

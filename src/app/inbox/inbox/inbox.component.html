@@ -84,10 +84,10 @@
 <!-- Message Modal -->
 <div *ngIf="messageModalOpened && selectedMessage" class="modal-overlay" (click)="closeMessageModal()">
     <div class="flexContainer message-modal round-square" (click)="$event.stopPropagation()">
-        <h4 class="center">{{selectedMessage.subject}}</h4>
-        <p class="message-from" *ngIf="selectedMessage.senderUsername">From: <strong>{{selectedMessage.senderUsername}}</strong></p>
+        <h4 class="center"><app-linked-text [text]="selectedMessage.subject"></app-linked-text></h4>
+        <p class="message-from" *ngIf="selectedMessage.senderUsername">From: <strong><a class="inline-link" (click)="navigateToPlayer(selectedMessage.senderUsername)">{{selectedMessage.senderUsername}}</a></strong></p>
         <p class="message-date">{{selectedMessage.date | date:'d/MM/yyyy H:mm'}}</p>
-        <div class="message-content">{{selectedMessage.content}}</div>
+        <div class="message-content"><app-linked-text [text]="selectedMessage.content"></app-linked-text></div>
 
         <!-- Resources Display for resource transfer messages -->
         <div *ngIf="isResourceMessage(selectedMessage.type) && selectedMessage.metadata?.resources" class="transfer-details">

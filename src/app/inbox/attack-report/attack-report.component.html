@@ -33,13 +33,13 @@
     <div *ngFor="let troopTypeKeyValue of troopDictionariesByType | keyvalue">
         <!-- this ng for runs 3 times - 1st attacker for troops, 2nd defender troops, 3rd support troops -->
         <div *ngIf = "troopTypeKeyValue.key == 'attacker'" >
-            <h5> {{ isBossReport ? 'Your troops' : 'Attacker' }}: {{attackReport.attackerName}} </h5>
+            <h5> {{ isBossReport ? 'Your troops' : 'Attacker' }}: <a class="report-link" (click)="navigateToPlayer(attackReport.attackerName)">{{attackReport.attackerName}}</a> </h5>
             <h5> Village: {{attackReport.attackerVillageName}} </h5>
             <h5 *ngIf="!isBossReport"> Attacker total attack: {{attackReport.attackerTotalAttack}} </h5>
             <h5 *ngIf="isBossReport"> Damage dealt: {{attackReport.attackerTotalAttack | number}} </h5>
         </div>
         <div *ngIf = "troopTypeKeyValue.key == 'defender' && !isBossReport" >
-            <h5> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: {{attackReport.defenderName}}</h5>
+            <h5> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: <a class="report-link" (click)="navigateToPlayer(attackReport.defenderName)">{{attackReport.defenderName}}</a></h5>
             <h5> {{ isOasisReport ? 'Oasis' : 'Village' }}: {{attackReport.defenderVillageName}}</h5>
             <h5 *ngIf ="!userAttackedAndLost"> Defender army defence: {{attackReport.defenderTotalArmyDefence}}</h5>
         </div>
@@ -103,7 +103,7 @@
     </h5>
 
     <ng-template #noneOfYourArmyReturned>
-        <h5 *ngIf="!isBossReport && userAttackedAndLost"> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: {{attackReport.defenderName}}</h5>
+        <h5 *ngIf="!isBossReport && userAttackedAndLost"> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: <a class="report-link" (click)="navigateToPlayer(attackReport.defenderName)">{{attackReport.defenderName}}</a></h5>
         <h5 *ngIf="!isBossReport && userAttackedAndLost"> {{ isOasisReport ? 'Oasis' : 'Village' }}: {{attackReport.defenderVillageName}}</h5>
         <h5 *ngIf="!isBossReport && userAttackedAndLost">None of your soldiers returned.</h5>
     </ng-template>

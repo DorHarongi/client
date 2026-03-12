@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
@@ -17,7 +18,7 @@ export class AttackReportComponent implements OnInit {
   troopDictionariesByType: {[troopsType: string]: TroopsAmounts[]} = {};
   userAttackedAndLost!: boolean;
 
-  constructor(private userInformationService: UserInformationService) { }
+  constructor(private userInformationService: UserInformationService, private router: Router) { }
 
   ngOnInit(): void {
     this.userAttackedAndLost = this.didUserAttackAndLost(); 
@@ -69,5 +70,9 @@ export class AttackReportComponent implements OnInit {
       wood: this.attackReport.lootedResources?.woodAmount || 0,
       stone: this.attackReport.lootedResources?.stonesAmount || 0
     };
+  }
+
+  navigateToPlayer(username: string): void {
+    this.router.navigate(['player', username]);
   }
 }

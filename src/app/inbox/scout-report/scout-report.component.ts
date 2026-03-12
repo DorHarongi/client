@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { AttackReport } from '../models/attackReport';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 
@@ -12,6 +13,8 @@ export class ScoutReportComponent {
   @Input() currentUsername: string = '';
   @Output() closed = new EventEmitter<void>();
 
+  constructor(private router: Router) {}
+
   get isAttacker(): boolean {
     return this.report.attackerName === this.currentUsername;
   }
@@ -22,6 +25,10 @@ export class ScoutReportComponent {
 
   goBack(): void {
     this.closed.emit();
+  }
+
+  navigateToPlayer(username: string): void {
+    this.router.navigate(['player', username]);
   }
 
   hasSupportTroops(): boolean {
