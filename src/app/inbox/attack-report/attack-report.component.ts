@@ -75,4 +75,10 @@ export class AttackReportComponent implements OnInit {
   navigateToPlayer(username: string): void {
     this.router.navigate(['player', username]);
   }
+
+  navigateToMap(x?: number, y?: number): void {
+    if (x != null && y != null) {
+      this.router.navigate(['Map'], { queryParams: { x, y } });
+    }
+  }
 }

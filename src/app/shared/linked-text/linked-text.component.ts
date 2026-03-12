@@ -71,13 +71,13 @@ function parseLinkedText(raw: string): TextSegment[] {
   styles: [`
     :host { display: inline; }
     .inline-link {
-      color: #3387ce;
-      text-decoration: underline;
+      color: #3387ce !important;
+      text-decoration: underline !important;
       cursor: pointer;
       font-weight: 500;
     }
     .inline-link:hover {
-      color: #2a6ea8;
+      color: #2a6ea8 !important;
     }
     .inactive-link {
       font-weight: 500;

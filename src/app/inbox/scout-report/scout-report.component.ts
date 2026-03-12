@@ -31,6 +31,12 @@ export class ScoutReportComponent {
     this.router.navigate(['player', username]);
   }
 
+  navigateToMap(x?: number, y?: number): void {
+    if (x != null && y != null) {
+      this.router.navigate(['Map'], { queryParams: { x, y } });
+    }
+  }
+
   hasSupportTroops(): boolean {
     const t = this.report.supportTotalTroops;
     if (!t) return false;

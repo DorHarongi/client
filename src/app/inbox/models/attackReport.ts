@@ -38,6 +38,13 @@ export interface AttackReport {
     bossMaxHp?: number;
     bossDamageDealt?: number;
     bossReward?: ResourcesAmounts;
+    bossX?: number;
+    bossY?: number;
+    bossId?: string;
+    attackerVillageX?: number;
+    attackerVillageY?: number;
+    defenderVillageX?: number;
+    defenderVillageY?: number;
     bossRelicId?: string;
     bossRelicName?: string;
 } 
