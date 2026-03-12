@@ -346,6 +346,8 @@ export class InboxComponent implements OnInit, OnDestroy {
         return 'assets/spear.png';
       case 'boss_defeated':
         return 'assets/' + getBossImageByName(message.metadata?.bossReward?.bossName);
+      case 'oasis_return':
+        return 'assets/oasis.png';
       default:
         return 'assets/ancient-scroll.png';
     }
