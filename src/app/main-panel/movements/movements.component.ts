@@ -90,11 +90,14 @@ export class MovementsComponent implements OnInit, OnDestroy {
         const from: Movement[] = [];
         const to: Movement[] = [];
 
+        const returnTypes = new Set(['return', 'oasis_return', 'spy_return']);
         for (const m of movements) {
           const arrival = new Date(m.arrivalTime).getTime();
           if (arrival <= now) continue;
 
-          if (m.senderUsername === username) {
+          if (returnTypes.has(m.type)) {
+            to.push(m);
+          } else if (m.senderUsername === username) {
             from.push(m);
           } else if (m.targetUsername === username) {
             to.push(m);
