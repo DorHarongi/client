@@ -1,50 +1,62 @@
 $topToolbarHeight: 7.5vh;
 $topToolbarMinHeight: 75px;
 
-#mainPanel{
+#mainPanel {
     display: flex;
     margin-top: max($topToolbarHeight, $topToolbarMinHeight);
-    position: relative;
     background-color: transparent;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
 }
 
-// Desktop - hide scrollbars
-@media (min-width: 1201px) {
-    #mainPanel {
-        overflow: hidden;
-    }
-}
-
-// Mobile/tablet - allow scrolling
 @media (max-width: 1200px) {
     #mainPanel {
+        flex-direction: column;
         overflow: auto;
         touch-action: pan-x pan-y;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
-#buildingsMap{
-    cursor: pointer;
-}
-#hoveredBuilding{
-    position: absolute;
-    background-color: white;
-}
-
-area {
-    outline-color: white;
-  }
-
-#village{
-    display: block;
+.game-world-wrapper {
     flex-shrink: 0;
-    height: auto;
-    max-height: 100%;
+    overflow: hidden;
+    width: calc(1526px * var(--game-scale, 0.852));
+    height: calc(100vh - max($topToolbarHeight, $topToolbarMinHeight));
+    background: linear-gradient(to bottom, #5b7d3a, #3d5a1e);
 }
 
-.buildingLevels{
+@media (max-width: 1200px) {
+    .game-world-wrapper {
+        width: calc(1526px * var(--game-scale, 0.5));
+        height: calc(1024px * var(--game-scale, 0.5));
+    }
+}
+
+.game-world {
+    width: 1526px;
+    height: 1024px;
+    position: relative;
+    transform: scale(var(--game-scale, 0.852));
+    transform-origin: top left;
+}
+
+#village {
+    display: block;
+    width: 1526px;
+    height: 1024px;
+}
+
+.building-hitbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.buildingLevels {
     width: 25px;
     height: 25px;
     position: absolute;
@@ -57,9 +69,11 @@ area {
     box-sizing: content-box !important;
     font-size: large;
     border: 1px black solid;
+    z-index: 6;
+    pointer-events: none;
 }
 
-.selectedBuildingLevel{
+.selectedBuildingLevel {
     background-color: #00ff00;
 }
 
@@ -67,67 +81,67 @@ area {
     background-color: #ffe7c1;
 }
 
-#centerBuildingLevel{
+#centerBuildingLevel {
     left: 1310px;
     top: 200px;
 }
 
-#woodWarehouseLevel{
+#woodWarehouseLevel {
     left: 1165px;
     top: 780px;
 }
 
-#woodFactoryLevel{
+#woodFactoryLevel {
     left: 1365px;
     top: 790px;
 }
 
-#stoneWarehouseLevel{
+#stoneWarehouseLevel {
     left: 145px;
     top: 620px;
 }
 
-#stoneMineLevel{
+#stoneMineLevel {
     left: 50px;
     top: 620px;
 }
 
-#cropFarmLevel{
+#cropFarmLevel {
     left: 950px;
     top: 565px;
 }
 
-#cropWarehouseLevel{
+#cropWarehouseLevel {
     left: 1360px;
     top: 535px;
 }
 
-#arsenalLevel{
+#arsenalLevel {
     left: 840px;
     top: 415px;
 }
 
-#quartersLevel{
+#quartersLevel {
     left: 960px;
     top: 460px;
 }
 
-#wallLevel{
+#wallLevel {
     left: 690px;
     top: 490px;
 }
 
-#embassyLevel{
+#embassyLevel {
     left: 165px;
     top: 350px;
 }
 
-#academyLevel{
+#academyLevel {
     left: 325px;
     top: 460px;
 }
 
-#stableLevel{
+#stableLevel {
     left: 395px;
     top: 705px;
 }
@@ -145,7 +159,7 @@ area {
     left: 0;
     right: 0;
     bottom: 0;
-    pointer-events: none; // Allow clicks through to buildings
+    pointer-events: none;
     overflow: hidden;
     z-index: 10;
 }
@@ -174,23 +188,21 @@ area {
     border-radius: 0 0 5px 5px;
     animation: rainFall linear infinite;
     opacity: 0.6;
-    
-    // Add slight blur for realism
+
     filter: blur(0.5px);
-    
-    // Randomize appearance
+
     &:nth-child(odd) {
         width: 1px;
         height: 15px;
         opacity: 0.4;
     }
-    
+
     &:nth-child(3n) {
         width: 3px;
         height: 25px;
         opacity: 0.7;
     }
-    
+
     &:nth-child(5n) {
         height: 30px;
         opacity: 0.5;
@@ -214,7 +226,6 @@ area {
     }
 }
 
-// When fading, let current drops finish but don't start new cycles
 .rain-container.fading .rain-drop {
     animation-iteration-count: 1;
 }
@@ -303,7 +314,6 @@ area {
     }
 }
 
-// When fading, let current flakes finish their cycle and fade the whole container out smoothly
 .snow-container.fading {
     opacity: 0;
 
@@ -311,4 +321,3 @@ area {
         animation-iteration-count: 1;
     }
 }
-
