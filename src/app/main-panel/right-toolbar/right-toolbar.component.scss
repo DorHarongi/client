@@ -8,7 +8,6 @@
     background-image: url("../../../assets/right-bg.jpg");
     background-size: cover;
     overflow-x: hidden;
-    min-height: 100vh;
 }
 
 :host-context(body[data-theme]:not([data-theme="default"])) .toolbarContainer {
