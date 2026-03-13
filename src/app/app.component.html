@@ -6,5 +6,5 @@
 <app-top-toolbar *ngIf="isLoggedIn()"></app-top-toolbar>
 <router-outlet></router-outlet>
 <app-quest-widget *ngIf="isLoggedIn()"></app-quest-widget>
-<app-daily-quest-widget *ngIf="isLoggedIn()"></app-daily-quest-widget>
-<app-clan-quest-widget *ngIf="isLoggedIn()"></app-clan-quest-widget>
+<app-daily-quest-widget *ngIf="isLoggedIn() && isMainScreen"></app-daily-quest-widget>
+<app-clan-quest-widget *ngIf="isLoggedIn() && isMainScreen"></app-clan-quest-widget>
