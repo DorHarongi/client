@@ -80,6 +80,10 @@ export class DailyQuestWidgetComponent implements OnInit, OnDestroy {
     return !quest.claimed && quest.progress >= quest.quest.target;
   }
 
+  getClampedProgress(progress: number): number {
+    return Math.max(0, progress);
+  }
+
   loadQuests(): void {
     if (!this.isVisible) {
       this.isLoading = false;

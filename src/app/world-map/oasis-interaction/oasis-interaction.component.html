@@ -20,25 +20,25 @@
         <h5>{{ contrib.villageName }}</h5>
         <div class="troop-breakdown">
           <div class="troop-row" *ngIf="contrib.troops.spearFighters">
-            <img src="assets/spear.png" class="troop-icon" /> <span>Spear fighters: {{ contrib.troops.spearFighters }}</span>
+            <img src="assets/spear.png" class="troop-icon" /> <span>Spear fighters: {{ contrib.troops.spearFighters | number }}</span>
           </div>
           <div class="troop-row" *ngIf="contrib.troops.swordFighters">
-            <img src="assets/sword.png" class="troop-icon" /> <span>Sword fighters: {{ contrib.troops.swordFighters }}</span>
+            <img src="assets/sword.png" class="troop-icon" /> <span>Sword fighters: {{ contrib.troops.swordFighters | number }}</span>
           </div>
           <div class="troop-row" *ngIf="contrib.troops.axeFighters">
-            <img src="assets/axe.png" class="troop-icon" /> <span>Axe fighters: {{ contrib.troops.axeFighters }}</span>
+            <img src="assets/axe.png" class="troop-icon" /> <span>Axe fighters: {{ contrib.troops.axeFighters | number }}</span>
           </div>
           <div class="troop-row" *ngIf="contrib.troops.archers">
-            <img src="assets/bow.png" class="troop-icon" /> <span>Archers: {{ contrib.troops.archers }}</span>
+            <img src="assets/bow.png" class="troop-icon" /> <span>Archers: {{ contrib.troops.archers | number }}</span>
           </div>
           <div class="troop-row" *ngIf="contrib.troops.magicians">
-            <img src="assets/hat.png" class="troop-icon" /> <span>Magicians: {{ contrib.troops.magicians }}</span>
+            <img src="assets/hat.png" class="troop-icon" /> <span>Magicians: {{ contrib.troops.magicians | number }}</span>
           </div>
           <div class="troop-row" *ngIf="contrib.troops.horsemen">
-            <img src="assets/horse.png" class="troop-icon" /> <span>Horsemen: {{ contrib.troops.horsemen }}</span>
+            <img src="assets/horse.png" class="troop-icon" /> <span>Horsemen: {{ contrib.troops.horsemen | number }}</span>
           </div>
           <div class="troop-row" *ngIf="contrib.troops.catapults">
-            <img src="assets/trebuchet.png" class="troop-icon" /> <span>Catapults: {{ contrib.troops.catapults }}</span>
+            <img src="assets/trebuchet.png" class="troop-icon" /> <span>Catapults: {{ contrib.troops.catapults | number }}</span>
           </div>
         </div>
       </div>
@@ -84,10 +84,10 @@
     <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
     <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
       <div class="stat-row">
-        <img src="assets/swords.png" class="stat-icon"> {{ totalAttack }}
+        <img src="assets/swords.png" class="stat-icon"> {{ totalAttack | number }}
       </div>
       <div class="stat-row">
-        <img src="assets/shield.png" class="stat-icon"> {{ totalDefense }}
+        <img src="assets/shield.png" class="stat-icon"> {{ totalDefense | number }}
       </div>
       <div class="stat-row" *ngIf="armySpeed > 0">
         <img src="assets/speed.png" class="stat-icon"> {{ armySpeed }} tiles/min

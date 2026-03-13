@@ -90,6 +90,10 @@ export class ClanQuestWidgetComponent implements OnInit, OnDestroy {
     return this.status?.clanProgress?.contributions ?? [];
   }
 
+  getClampedProgress(): number {
+    return Math.max(0, this.progress);
+  }
+
   loadStatus(): void {
     if (!this.isVisible) {
       this.isLoading = false;

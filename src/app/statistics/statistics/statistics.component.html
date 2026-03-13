@@ -61,8 +61,8 @@
           {{ user.clanName }}
         </td>
         <td *ngIf="user.clanName == ''">No clan</td>
-        <td>{{ user.population }}</td>
-        <td>{{ user.numberOfVillages }}</td>
+        <td>{{ user.population | number }}</td>
+        <td>{{ user.numberOfVillages | number }}</td>
         <td *ngIf="anyPlayerHasRelics">
           <app-relic-medallion
             [heldRelicIds]="user.heldRelicIds || []"
@@ -98,9 +98,9 @@
         <td class="clickable" (click)="goToPlayer(clan.leaderUsername)">
           {{ clan.leaderUsername }}
         </td>
-        <td>{{ clan.memberCount }}</td>
-        <td>{{ clan.totalPopulation }}</td>
-        <td>{{ clan.totalBossesKilled || 0 }}</td>
+        <td>{{ clan.memberCount | number }}</td>
+        <td>{{ clan.totalPopulation | number }}</td>
+        <td>{{ (clan.totalBossesKilled || 0) | number }}</td>
         <td>
           <app-relic-medallion
             [heldRelicIds]="clan.heldRelicIds || []"
@@ -164,7 +164,7 @@
               {{ p.clanName }}
             </td>
             <td *ngIf="!p.clanName">No clan</td>
-            <td>{{ p.stat }}</td>
+            <td>{{ p.stat | number }}</td>
           </tr>
         </table>
 
@@ -181,7 +181,7 @@
           >
             <td>{{ i + 1 }}</td>
             <td class="clickable" (click)="goToClan(c._id)">{{ c._id }}</td>
-            <td>{{ c.totalStat }}</td>
+            <td>{{ c.totalStat | number }}</td>
           </tr>
         </table>
       </div>
@@ -221,7 +221,7 @@
               {{ p.clanName }}
             </td>
             <td *ngIf="!p.clanName">No clan</td>
-            <td>{{ p.stat }}</td>
+            <td>{{ p.stat | number }}</td>
           </tr>
         </table>
         <table id="table" class="center bordered margin-top">
@@ -236,7 +236,7 @@
           >
             <td>{{ i + 1 }}</td>
             <td class="clickable" (click)="goToClan(c._id)">{{ c._id }}</td>
-            <td>{{ c.totalStat }}</td>
+            <td>{{ c.totalStat | number }}</td>
           </tr>
         </table>
       </div>

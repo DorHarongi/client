@@ -9,7 +9,7 @@
 
     <div *ngIf="!loading && !showAttackPanel && !showSupportPanel && !showResourcesPanel">
         <div class="info-section">
-            <p>Population: {{getVillagePopulation()}}</p>
+            <p>Population: {{getVillagePopulation() | number}}</p>
             <p *ngIf="playerInfo?.clanName">Clan: {{playerInfo.clanName}}</p>
             <p *ngIf="!playerInfo?.clanName">Clan: No clan</p>
         </div>
@@ -53,10 +53,10 @@
         <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
         <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
             <div class="stat-row">
-                <img src="assets/swords.png" class="stat-icon"> {{displayAttack}}
+                <img src="assets/swords.png" class="stat-icon"> {{displayAttack | number}}
             </div>
             <div class="stat-row">
-                <img src="assets/shield.png" class="stat-icon"> {{displayDefense}}
+                <img src="assets/shield.png" class="stat-icon"> {{displayDefense | number}}
             </div>
             <div class="stat-row" *ngIf="armySpeed > 0">
                 <img src="assets/speed.png" class="stat-icon"> {{armySpeed}} tiles/min
@@ -77,10 +77,10 @@
         <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
         <div class="total-stats center" *ngIf="armySpeed > 0">
             <div class="stat-row">
-                <img src="assets/swords.png" class="stat-icon"> {{totalAttack}}
+                <img src="assets/swords.png" class="stat-icon"> {{totalAttack | number}}
             </div>
             <div class="stat-row">
-                <img src="assets/shield.png" class="stat-icon"> {{totalDefense}}
+                <img src="assets/shield.png" class="stat-icon"> {{totalDefense | number}}
             </div>
             <div class="stat-row">{{armySpeed}} tiles/min</div>
             <div class="stat-row">Support will arrive in {{getFormattedTravelTime()}}</div>
@@ -98,17 +98,17 @@
             <div class="resource-input">
                 <img class="resource-icon" src="assets/wood.jpg">
                 <input type="number" [(ngModel)]="resourcesWood" [max]="getMaxWood()" min="0">
-                <span class="max-link" (click)="resourcesWood = getMaxWood()">({{getMaxWood()}})</span>
+                <span class="max-link" (click)="resourcesWood = getMaxWood()">({{getMaxWood() | number}})</span>
             </div>
             <div class="resource-input">
                 <img class="resource-icon" src="assets/rock.jpg">
                 <input type="number" [(ngModel)]="resourcesStones" [max]="getMaxStones()" min="0">
-                <span class="max-link" (click)="resourcesStones = getMaxStones()">({{getMaxStones()}})</span>
+                <span class="max-link" (click)="resourcesStones = getMaxStones()">({{getMaxStones() | number}})</span>
             </div>
             <div class="resource-input">
                 <img class="resource-icon" src="assets/crop.jpg">
                 <input type="number" [(ngModel)]="resourcesCrop" [max]="getMaxCrop()" min="0">
-                <span class="max-link" (click)="resourcesCrop = getMaxCrop()">({{getMaxCrop()}})</span>
+                <span class="max-link" (click)="resourcesCrop = getMaxCrop()">({{getMaxCrop() | number}})</span>
             </div>
         </div>
         <div class="panel-actions center">

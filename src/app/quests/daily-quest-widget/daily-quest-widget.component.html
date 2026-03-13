@@ -48,9 +48,9 @@
 
                 <div class="progress-section">
                     <div class="progress-bar-container">
-                        <div class="progress-bar-fill" [style.width.%]="(q.progress / q.quest.target) * 100"></div>
+                        <div class="progress-bar-fill" [style.width.%]="(getClampedProgress(q.progress) / q.quest.target) * 100"></div>
                     </div>
-                    <span class="progress-text">{{ q.progress }} / {{ q.quest.target }}</span>
+                    <span class="progress-text">{{ getClampedProgress(q.progress) | number }} / {{ q.quest.target | number }}</span>
                 </div>
 
                 <div class="rewards-section">

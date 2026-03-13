@@ -40,9 +40,9 @@ export class CropFarmComponent implements OnInit, OnDestroy {
     "The crop farm produces the crop of your village. The higher its level and the more crop workers you employ there, the faster the production is.",
     cropFarmUpgradeMaterialCostByLevels[village.buildingsLevels.cropFarmLevel + 1]);
 
-    this.currentProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.cropFarmLevel] * 3600 * productionMultiplier;
-    this.nextLevelProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.cropFarmLevel + 1] * 3600 * productionMultiplier;
-    this.singleWorkerProductionPerHour = singleWorkerProductionSpeedPerSecond * 3600 * productionMultiplier;
+    this.currentProductionPerHour = Math.round(factoriesProductionSpeedByLevel[village.buildingsLevels.cropFarmLevel] * 3600 * productionMultiplier);
+    this.nextLevelProductionPerHour = Math.round(factoriesProductionSpeedByLevel[village.buildingsLevels.cropFarmLevel + 1] * 3600 * productionMultiplier);
+    this.singleWorkerProductionPerHour = Math.round(singleWorkerProductionSpeedPerSecond * 3600 * productionMultiplier);
 
     this.cropWorkers = this.userInformationService.currentVillage.resourcesWorkers.cropWorkers;
   }

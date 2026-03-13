@@ -45,13 +45,13 @@
   <div class="right-side flex-container">
     <span class="resource-item" [title]="getTimeUntilMaxEnergy()">
       <img class="icons" src="../../../assets/energy.png" />
-      <h5>{{ math.floor(getEnergy()) }} / {{ maxEnergy }}</h5>
+      <h5>{{ math.floor(getEnergy()) | number }} / {{ maxEnergy | number }}</h5>
     </span>
     <h5 *ngIf="getEnergy() != maxEnergy" id="timeTillNextEnergy">
       ( {{ getTimeTillNextEnergy() | date : "mm:ss" }} )
     </h5>
     <img class="icons" src="../../../assets/population.png" />
-    <h5>{{ usedPopulation }} / {{ maximumPopulation }}</h5>
+    <h5>{{ usedPopulation | number }} / {{ maximumPopulation | number }}</h5>
     <span class="spy-display" *ngIf="stableLevel > 0" [title]="spyTooltipText">
       <img class="icons" src="../../../assets/spy.png" alt="Spies" />
       <h5>{{ aliveSpies }} / {{ maxSpies }}</h5>
@@ -63,15 +63,15 @@
     </span>
     <span class="resource-item" [title]="getTimeUntilMaxCrop()">
       <img class="icons" src="../../../assets/crop.jpg" />
-      <h5>{{ math.floor(resources.cropAmount) }} / {{ maxCropStorage }}</h5>
+      <h5>{{ math.floor(resources.cropAmount) | number }} / {{ maxCropStorage | number }}</h5>
     </span>
     <span class="resource-item" [title]="getTimeUntilMaxWood()">
       <img class="icons" src="../../../assets/wood.jpg" />
-      <h5>{{ math.floor(resources.woodAmount) }} / {{ maxWoodStorage }}</h5>
+      <h5>{{ math.floor(resources.woodAmount) | number }} / {{ maxWoodStorage | number }}</h5>
     </span>
     <span class="resource-item" [title]="getTimeUntilMaxStone()">
       <img class="icons" src="../../../assets/rock.jpg" />
-      <h5>{{ math.floor(resources.stonesAmount) }} / {{ maxStonesStorage }}</h5>
+      <h5>{{ math.floor(resources.stonesAmount) | number }} / {{ maxStonesStorage | number }}</h5>
     </span>
   </div>
   <div class="logout-container">

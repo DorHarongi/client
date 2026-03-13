@@ -40,9 +40,9 @@ export class StoneMineComponent implements OnInit, OnDestroy {
     "The stone mine produces the stones of your village. The higher its level and the more stone workers you employ there, the faster the production is.",
     stoneMineUpgradeMaterialCostByLevels[village.buildingsLevels.stoneMineLevel + 1]);
 
-    this.currentProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.stoneMineLevel] * 3600 * productionMultiplier;
-    this.nextLevelProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.stoneMineLevel + 1] * 3600 * productionMultiplier;
-    this.singleWorkerProductionPerHour = singleWorkerProductionSpeedPerSecond * 3600 * productionMultiplier;
+    this.currentProductionPerHour = Math.round(factoriesProductionSpeedByLevel[village.buildingsLevels.stoneMineLevel] * 3600 * productionMultiplier);
+    this.nextLevelProductionPerHour = Math.round(factoriesProductionSpeedByLevel[village.buildingsLevels.stoneMineLevel + 1] * 3600 * productionMultiplier);
+    this.singleWorkerProductionPerHour = Math.round(singleWorkerProductionSpeedPerSecond * 3600 * productionMultiplier);
 
     this.stoneWorkers = village.resourcesWorkers.stoneWorkers;
   }

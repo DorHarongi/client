@@ -145,10 +145,10 @@
     ></app-troops-choosing>
     <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
       <div class="stat-row">
-        <img src="assets/swords.png" class="stat-icon" /> {{ totalAttack }}
+        <img src="assets/swords.png" class="stat-icon" /> {{ totalAttack | number }}
       </div>
       <div class="stat-row">
-        <img src="assets/shield.png" class="stat-icon" /> {{ totalDefense }}
+        <img src="assets/shield.png" class="stat-icon" /> {{ totalDefense | number }}
       </div>
       <div class="stat-row" *ngIf="armySpeed > 0">
         <img src="assets/speed.png" class="stat-icon" />

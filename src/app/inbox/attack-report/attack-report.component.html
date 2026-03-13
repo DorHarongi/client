@@ -38,16 +38,16 @@
         <div *ngIf = "troopTypeKeyValue.key == 'attacker'" >
             <h5> {{ isBossReport ? 'Your troops' : 'Attacker' }}: <a class="report-link" (click)="navigateToPlayer(attackReport.attackerName)">{{attackReport.attackerName}}</a> </h5>
             <h5> Village: <a *ngIf="attackReport.attackerVillageX != null" class="report-link" (click)="navigateToMap(attackReport.attackerVillageX, attackReport.attackerVillageY)">{{attackReport.attackerVillageName}}</a><span *ngIf="attackReport.attackerVillageX == null">{{attackReport.attackerVillageName}}</span> </h5>
-            <h5 *ngIf="!isBossReport"> Attacker total attack: {{attackReport.attackerTotalAttack}} </h5>
+            <h5 *ngIf="!isBossReport"> Attacker total attack: {{attackReport.attackerTotalAttack | number}} </h5>
             <h5 *ngIf="isBossReport"> Damage dealt: {{attackReport.attackerTotalAttack | number}} </h5>
         </div>
         <div *ngIf = "troopTypeKeyValue.key == 'defender' && !isBossReport" >
             <h5> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: <a class="report-link" (click)="navigateToPlayer(attackReport.defenderName)">{{attackReport.defenderName}}</a></h5>
             <h5> {{ isOasisReport ? 'Oasis' : 'Village' }}: <a *ngIf="attackReport.defenderVillageX != null" class="report-link" (click)="navigateToMap(attackReport.defenderVillageX, attackReport.defenderVillageY)">{{attackReport.defenderVillageName}}</a><span *ngIf="attackReport.defenderVillageX == null">{{attackReport.defenderVillageName}}</span></h5>
-            <h5 *ngIf ="!userAttackedAndLost"> Defender army defence: {{attackReport.defenderTotalArmyDefence}}</h5>
+            <h5 *ngIf ="!userAttackedAndLost"> Defender army defence: {{attackReport.defenderTotalArmyDefence | number}}</h5>
         </div>
         <div *ngIf = "troopTypeKeyValue.key == 'support' && !userAttackedAndLost && !isBossReport" >
-            <h5> Support army defence: {{attackReport.defenderTotalSupportArmyDefence}} </h5>
+            <h5> Support army defence: {{attackReport.defenderTotalSupportArmyDefence | number}} </h5>
         </div>
 
         <table>
@@ -77,24 +77,24 @@
             <tr *ngFor = "let troops of troopDictionariesByType[troopTypeKeyValue.key]">
                 <!-- this ng for runs twice - 1st total troops, 2nd for dead troops -->
                 <td>
-                    <input disabled class = "troopsInput" [value]="troops.spearFighters">
+                    <input disabled class = "troopsInput" [value]="troops.spearFighters | number">
                 <td>
-                    <input disabled class = "troopsInput" [value]="troops.swordFighters">
+                    <input disabled class = "troopsInput" [value]="troops.swordFighters | number">
                 </td>
                 <td>
-                    <input disabled class = "troopsInput" [value]="troops.axeFighters">
+                    <input disabled class = "troopsInput" [value]="troops.axeFighters | number">
                 </td>
                 <td>
-                    <input disabled class = "troopsInput" [value]="troops.archers">
+                    <input disabled class = "troopsInput" [value]="troops.archers | number">
                 </td>
                 <td>
-                    <input disabled class = "troopsInput" [value]="troops.magicians">
+                    <input disabled class = "troopsInput" [value]="troops.magicians | number">
                 </td>
                 <td>
-                    <input disabled class = "troopsInput"  [value]="troops.horsemen">
+                    <input disabled class = "troopsInput"  [value]="troops.horsemen | number">
                 </td>
                 <td>
-                    <input disabled class = "troopsInput" [value]="troops.catapults">
+                    <input disabled class = "troopsInput" [value]="troops.catapults | number">
                 </td>
             </tr>
         </table>
@@ -102,7 +102,7 @@
 
     <h5 *ngIf="!isBossReport && !isOasisReport && !userAttackedAndLost; else noneOfYourArmyReturned">
         Wall defence:
-        {{attackReport.wallDefence}}
+        {{attackReport.wallDefence | number}}
     </h5>
 
     <ng-template #noneOfYourArmyReturned>

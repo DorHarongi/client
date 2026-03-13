@@ -40,9 +40,9 @@ export class WoodFactoryComponent implements OnInit, OnDestroy {
     "The wood factory produces the wood of your village. The higher its level and the more wood workers you employ there, the faster the production is.",
     woodFactoryUpgradeMaterialCostByLevels[village.buildingsLevels.woodFactoryLevel + 1]);
 
-    this.currentProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.woodFactoryLevel] * 3600 * productionMultiplier;
-    this.nextLevelProductionPerHour = factoriesProductionSpeedByLevel[village.buildingsLevels.woodFactoryLevel + 1] * 3600 * productionMultiplier;
-    this.singleWorkerProductionPerHour = singleWorkerProductionSpeedPerSecond * 3600 * productionMultiplier;
+    this.currentProductionPerHour = Math.round(factoriesProductionSpeedByLevel[village.buildingsLevels.woodFactoryLevel] * 3600 * productionMultiplier);
+    this.nextLevelProductionPerHour = Math.round(factoriesProductionSpeedByLevel[village.buildingsLevels.woodFactoryLevel + 1] * 3600 * productionMultiplier);
+    this.singleWorkerProductionPerHour = Math.round(singleWorkerProductionSpeedPerSecond * 3600 * productionMultiplier);
 
     this.woodWorkers = village.resourcesWorkers.woodWorkers;
   }

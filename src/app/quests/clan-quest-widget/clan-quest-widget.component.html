@@ -50,9 +50,9 @@
 
                     <div class="progress-section">
                         <div class="progress-bar-container">
-                            <div class="progress-bar-fill" [style.width.%]="target > 0 ? (progress / target) * 100 : 0"></div>
+                            <div class="progress-bar-fill" [style.width.%]="target > 0 ? (getClampedProgress() / target) * 100 : 0"></div>
                         </div>
-                        <span class="progress-text">{{ progress }} / {{ target }}</span>
+                        <span class="progress-text">{{ getClampedProgress() | number }} / {{ target | number }}</span>
                     </div>
 
                     <div class="contributions-section" *ngIf="contributions.length > 0">

@@ -1,8 +1,8 @@
 <app-building [building]="buildingInformation">
     <div extraInformation class="center">
-        <h5> Current maximum storage: {{currentMaximumStorage}} </h5>
+        <h5> Current maximum storage: {{currentMaximumStorage | number}} </h5>
         <div *ngIf = "nextLevelMaximumStorage">
-            <h5> Next level maximum storage: {{nextLevelMaximumStorage}} </h5>
+            <h5> Next level maximum storage: {{nextLevelMaximumStorage | number}} </h5>
         </div>
     </div>
 </app-building>

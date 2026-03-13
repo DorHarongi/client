@@ -1,10 +1,10 @@
 <app-building [building]="buildingInformation">
     <div extraInformation class="center">
-        <h5> Current production: {{currentProductionPerHour}} per hour</h5>
+        <h5> Current production: {{currentProductionPerHour | number}} per hour</h5>
         <div *ngIf = "nextLevelProductionPerHour">
-            <h5> Next level production: {{nextLevelProductionPerHour}} per hour </h5>
+            <h5> Next level production: {{nextLevelProductionPerHour | number}} per hour </h5>
         </div>
-        <h5> Worker bonus: {{singleWorkerProductionPerHour}} per hour </h5>
+        <h5> Worker bonus: {{singleWorkerProductionPerHour | number}} per hour </h5>
         <app-hire-workers [workers]="stoneWorkers" (onWorkersChange)="updateWorkers($event)"></app-hire-workers>
         <button id="hire" class="buttons" (click)="hireWorkers()"> Hire </button>
     </div>

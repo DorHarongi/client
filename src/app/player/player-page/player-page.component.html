@@ -18,7 +18,7 @@
                     <span *ngIf="playerInfo.clanName" class="clan-link" (click)="goToClan()">{{playerInfo.clanName}}</span>
                     <span *ngIf="!playerInfo.clanName">No clan</span>
                 </p>
-                <p><strong>Total Population:</strong> {{getTotalPopulation()}}</p>
+                <p><strong>Total Population:</strong> {{getTotalPopulation() | number}}</p>
                 <p><strong>Villages:</strong> {{playerInfo.villages?.length || 0}}</p>
                 <div *ngIf="isOwnProfile" class="title-section">
                     <strong>Title:</strong>
@@ -108,7 +108,7 @@
                         (click)="openVillageInteraction(village)"
                         [class.clickable-row]="!isOwnProfile">
                         <td>{{village.villageName}}</td>
-                        <td>{{village.population}}</td>
+                        <td>{{village.population | number}}</td>
                         <td>{{village.location?.x}}, {{village.location?.y}}</td>
                         <td *ngIf="!isOwnProfile && !isSameClan" (click)="$event.stopPropagation()">
                             <button class="attack-icon" 

@@ -95,15 +95,15 @@
             <div class="resources-display">
                 <div class="resource-item">
                     <img src="../../../assets/wood.jpg" class="resource-icon">
-                    <span>{{selectedMessage.metadata?.resources?.wood}}</span>
+                    <span>{{selectedMessage.metadata?.resources?.wood | number}}</span>
                 </div>
                 <div class="resource-item">
                     <img src="../../../assets/rock.jpg" class="resource-icon">
-                    <span>{{selectedMessage.metadata?.resources?.stone}}</span>
+                    <span>{{selectedMessage.metadata?.resources?.stone | number}}</span>
                 </div>
                 <div class="resource-item">
                     <img src="../../../assets/crop.jpg" class="resource-icon">
-                    <span>{{selectedMessage.metadata?.resources?.crop}}</span>
+                    <span>{{selectedMessage.metadata?.resources?.crop | number}}</span>
                 </div>
             </div>
         </div>
@@ -141,13 +141,13 @@
                     <th><img src="../../../assets/trebuchet.png" class="troop-icon" title="Catapults"></th>
                 </tr>
                 <tr>
-                    <td>{{selectedMessage.metadata?.troops?.spearFighters}}</td>
-                    <td>{{selectedMessage.metadata?.troops?.swordFighters}}</td>
-                    <td>{{selectedMessage.metadata?.troops?.axeFighters}}</td>
-                    <td>{{selectedMessage.metadata?.troops?.archers}}</td>
-                    <td>{{selectedMessage.metadata?.troops?.magicians}}</td>
-                    <td>{{selectedMessage.metadata?.troops?.horsemen}}</td>
-                    <td>{{selectedMessage.metadata?.troops?.catapults}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.spearFighters | number}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.swordFighters | number}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.axeFighters | number}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.archers | number}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.magicians | number}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.horsemen | number}}</td>
+                    <td>{{selectedMessage.metadata?.troops?.catapults | number}}</td>
                 </tr>
             </table>
         </div>

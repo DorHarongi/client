@@ -9,10 +9,10 @@
             <app-materials-cost [materialsCost]="totalMaterialsCost"></app-materials-cost>
             <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
                 <div class="stat-row">
-                    <img src="../../../assets/swords.png" class="stat-icon"> {{totalAttack}} <span class="stat-hint">(base)</span>
+                    <img src="../../../assets/swords.png" class="stat-icon"> {{totalAttack | number}} <span class="stat-hint">(base)</span>
                 </div>
                 <div class="stat-row">
-                    <img src="../../../assets/shield.png" class="stat-icon"> {{totalDefense}} <span class="stat-hint">(base)</span>
+                    <img src="../../../assets/shield.png" class="stat-icon"> {{totalDefense | number}} <span class="stat-hint">(base)</span>
                 </div>
             </div>
             <button id = "train" class ="buttons" (click)="trainTroops()" [disabled]="!canTrain()"> Train </button>

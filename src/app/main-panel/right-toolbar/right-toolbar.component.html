@@ -2,13 +2,13 @@
     <div class="subContainer" id=production>
         <h4> Production </h4>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/crop.jpg">
-            <h5> Crop: {{cropProduction.toFixed(0)}} per hour </h5>
+            <h5> Crop: {{cropProduction | number:'1.0-0'}} per hour </h5>
         </div>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/wood.jpg">
-            <h5> Wood: {{woodProduction.toFixed(0)}} per hour </h5>
+            <h5> Wood: {{woodProduction | number:'1.0-0'}} per hour </h5>
         </div>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/rock.jpg">
-            <h5> Stone: {{stoneProduction.toFixed(0)}} per hour </h5>
+            <h5> Stone: {{stoneProduction | number:'1.0-0'}} per hour </h5>
         </div>
     </div>
     <div class="subContainer" id="villages">
@@ -23,58 +23,58 @@
     <div class="subContainer" id=troops>
         <h4> Troops </h4>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/spear.png">
-            <h5> Spear fighters: {{spearFighters}} </h5>
+            <h5> Spear fighters: {{spearFighters | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/sword.png">
-            <h5> Sword fighters: {{swordFighters}} </h5>
+            <h5> Sword fighters: {{swordFighters | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/axe.png">
-            <h5> Axe fighters: {{axeFighters}} </h5>
+            <h5> Axe fighters: {{axeFighters | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/bow.png">
-            <h5> Archers: {{archers}} </h5>
+            <h5> Archers: {{archers | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/hat.png">
-            <h5> Magicians: {{magicians}} </h5>
+            <h5> Magicians: {{magicians | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/horse.png">
-            <h5> Horsemen: {{horsemen}} </h5>
+            <h5> Horsemen: {{horsemen | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/trebuchet.png">
-            <h5> Catapults: {{catapults}} </h5>
+            <h5> Catapults: {{catapults | number}} </h5>
         </div>
     </div>
     <div class="subContainer" id="clanTroops" *ngIf="hasClan">
         <h4> Support Troops </h4>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/spear.png">
-            <h5> Spear: {{clanSpearFighters}} </h5>
+            <h5> Spear: {{clanSpearFighters | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/sword.png">
-            <h5> Sword: {{clanSwordFighters}} </h5>
+            <h5> Sword: {{clanSwordFighters | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/axe.png">
-            <h5> Axe: {{clanAxeFighters}} </h5>
+            <h5> Axe: {{clanAxeFighters | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/bow.png">
-            <h5> Archers: {{clanArchers}} </h5>
+            <h5> Archers: {{clanArchers | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/hat.png">
-            <h5> Magicians: {{clanMagicians}} </h5>
+            <h5> Magicians: {{clanMagicians | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/horse.png">
-            <h5> Horsemen: {{clanHorsemen}} </h5>
+            <h5> Horsemen: {{clanHorsemen | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/trebuchet.png">
-            <h5> Catapults: {{clanCatapults}} </h5>
+            <h5> Catapults: {{clanCatapults | number}} </h5>
         </div>
     </div>
     <div class="subContainer" id="villagePower">
         <h4> Village Statistics </h4>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/swords.png">
-            <h5> Attack: {{totalAttack}} </h5>
+            <h5> Attack: {{totalAttack | number}} </h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/shield.png">
-            <h5> Defense: {{totalDefense}} </h5>
+            <h5> Defense: {{totalDefense | number}} </h5>
         </div>
     </div>
 </div>

@@ -1,8 +1,8 @@
 <app-building [building]="buildingInformation">
     <div extraInformation class="center">
-        <h5> Maximum village population: {{currentMaximumPopulation}}</h5>
+        <h5> Maximum village population: {{currentMaximumPopulation | number}}</h5>
         <div *ngIf = "nextLevelMaximumPopulation">
-            <h5> Next level maximum village population: {{nextLevelMaximumPopulation}}</h5>
+            <h5> Next level maximum village population: {{nextLevelMaximumPopulation | number}}</h5>
         </div>
     </div>
 </app-building>

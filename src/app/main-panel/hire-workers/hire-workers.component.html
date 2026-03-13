@@ -1,5 +1,5 @@
 <div id="hireWorkers" class="center">
     <h5> Current Workers: </h5>
     <input id ="workersInput" type="number" [ngModel]="workers" (ngModelChange)="workersInputChange($event)" oninput="validity.valid||(value='');">
-    <h5 id="max" *ngIf="maxPossibleWorkers > 0" (click)="maxWorkers()"> ({{maxPossibleWorkers}}) </h5>
+    <h5 id="max" *ngIf="maxPossibleWorkers > 0" (click)="maxWorkers()"> ({{maxPossibleWorkers | number}}) </h5>
 </div>

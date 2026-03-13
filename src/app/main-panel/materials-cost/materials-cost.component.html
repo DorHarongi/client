@@ -1,8 +1,8 @@
 <div id="materialsContainer" class="center">
     <img class="materials" src="../../../assets/crop.jpg">
-    <h5 class = "costTexts" [ngClass] = "checkIfEnoughCropToUpgrade() ? 'enoughMaterial' : 'missingMaterial'"> {{materialsCost.crop}}</h5>
+    <h5 class = "costTexts" [ngClass] = "checkIfEnoughCropToUpgrade() ? 'enoughMaterial' : 'missingMaterial'"> {{materialsCost.crop | number}}</h5>
     <img class="materials" src="../../../assets/wood.jpg">
-    <h5 class = "costTexts" [ngClass] = "checkIfEnoughWoodToUpgrade() ? 'enoughMaterial' : 'missingMaterial'"> {{materialsCost.wood}}</h5>
+    <h5 class = "costTexts" [ngClass] = "checkIfEnoughWoodToUpgrade() ? 'enoughMaterial' : 'missingMaterial'"> {{materialsCost.wood | number}}</h5>
     <img class="materials" src="../../../assets/rock.jpg">
-    <h5 class = "costTexts" [ngClass] = "checkIfEnoughStonesToUpgrade() ? 'enoughMaterial' : 'missingMaterial'"> {{materialsCost.stones}} </h5>
+    <h5 class = "costTexts" [ngClass] = "checkIfEnoughStonesToUpgrade() ? 'enoughMaterial' : 'missingMaterial'"> {{materialsCost.stones | number}} </h5>
 </div>

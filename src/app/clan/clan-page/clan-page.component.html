@@ -87,7 +87,7 @@
         </p>
         <p>
           <strong>Raid Bosses Defeated:</strong>
-          {{ clanInfo.totalBossesKilled || 0 }}
+          {{ (clanInfo.totalBossesKilled || 0) | number }}
         </p>
         <p><strong>Created:</strong> {{ formatDate(clanInfo.createdDate) }}</p>
       </div>
@@ -208,7 +208,7 @@
                 (click)="transferTargetVillage = v.villageName"
               >
                 <td>{{ v.villageName }}</td>
-                <td>{{ v.population }}</td>
+                <td>{{ v.population | number }}</td>
                 <td class="center">
                   <span *ngIf="transferTargetVillage === v.villageName">✔</span>
                 </td>

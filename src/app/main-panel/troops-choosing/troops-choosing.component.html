@@ -55,64 +55,64 @@
         <tr>
             <td>
                 <div class="max-wrapper" *ngIf="maxPossibleTroops.spearFighters > 0 && canTrainSpearFighters">
-                    <h5 id="max" (click)="maxSpearFighters()"> ({{maxPossibleTroops.spearFighters}}) </h5>
+                    <h5 id="max" (click)="maxSpearFighters()"> ({{maxPossibleTroops.spearFighters | number}}) </h5>
                     <div class="stats-tooltip">
-                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.spearFighters * spearFighterAttackingStat}}</div>
-                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.spearFighters * spearFighterDefenceStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.spearFighters * spearFighterAttackingStat | number}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.spearFighters * spearFighterDefenceStat | number}}</div>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="max-wrapper" *ngIf="maxPossibleTroops.swordFighters > 0 && canTrainSwordFighters">
-                    <h5 id="max" (click)="maxSwordFighters()"> ({{maxPossibleTroops.swordFighters}}) </h5>
+                    <h5 id="max" (click)="maxSwordFighters()"> ({{maxPossibleTroops.swordFighters | number}}) </h5>
                     <div class="stats-tooltip">
-                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.swordFighters * swordFighterAttackingStat}}</div>
-                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.swordFighters * swordFighterDefenceStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.swordFighters * swordFighterAttackingStat | number}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.swordFighters * swordFighterDefenceStat | number}}</div>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="max-wrapper" *ngIf="maxPossibleTroops.axeFighters > 0 && canTrainAxeFighters">
-                    <h5 id="max" (click)="maxAxeFighters()"> ({{maxPossibleTroops.axeFighters}}) </h5>
+                    <h5 id="max" (click)="maxAxeFighters()"> ({{maxPossibleTroops.axeFighters | number}}) </h5>
                     <div class="stats-tooltip">
-                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.axeFighters * axeFighterAttackingStat}}</div>
-                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.axeFighters * axeFighterDefenceStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.axeFighters * axeFighterAttackingStat | number}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.axeFighters * axeFighterDefenceStat | number}}</div>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="max-wrapper" *ngIf="maxPossibleTroops.archers > 0 && canTrainArchers">
-                    <h5 id="max" (click)="maxArchers()"> ({{maxPossibleTroops.archers}}) </h5>
+                    <h5 id="max" (click)="maxArchers()"> ({{maxPossibleTroops.archers | number}}) </h5>
                     <div class="stats-tooltip">
-                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.archers * archerAttackingStat}}</div>
-                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.archers * archerDefenceStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.archers * archerAttackingStat | number}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.archers * archerDefenceStat | number}}</div>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="max-wrapper" *ngIf="maxPossibleTroops.magicians > 0 && canTrainMagicians">
-                    <h5 id="max" (click)="maxMagicians()"> ({{maxPossibleTroops.magicians}}) </h5>
+                    <h5 id="max" (click)="maxMagicians()"> ({{maxPossibleTroops.magicians | number}}) </h5>
                     <div class="stats-tooltip">
-                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.magicians * magicianAttackingStat}}</div>
-                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.magicians * magicianDefenceStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.magicians * magicianAttackingStat | number}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.magicians * magicianDefenceStat | number}}</div>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="max-wrapper" *ngIf="maxPossibleTroops.horsemen > 0 && canTrainHorsemen">
-                    <h5 id="max" (click)="maxHorsemen()"> ({{maxPossibleTroops.horsemen}}) </h5>
+                    <h5 id="max" (click)="maxHorsemen()"> ({{maxPossibleTroops.horsemen | number}}) </h5>
                     <div class="stats-tooltip">
-                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.horsemen * horsemenAttackingStat}}</div>
-                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.horsemen * horsemenDefenceStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.horsemen * horsemenAttackingStat | number}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.horsemen * horsemenDefenceStat | number}}</div>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="max-wrapper" *ngIf="maxPossibleTroops.catapults > 0 && canTrainCatapults">
-                    <h5 id="max" (click)="maxCatapults()"> ({{maxPossibleTroops.catapults}}) </h5>
+                    <h5 id="max" (click)="maxCatapults()"> ({{maxPossibleTroops.catapults | number}}) </h5>
                     <div class="stats-tooltip">
-                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.catapults * catapultsAttackingStat}}</div>
-                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.catapults * catapultsDefenceStat}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/swords.png" class="tooltip-icon">{{maxPossibleTroops.catapults * catapultsAttackingStat | number}}</div>
+                        <div class="tooltip-row"><img src="../../../../assets/shield.png" class="tooltip-icon">{{maxPossibleTroops.catapults * catapultsDefenceStat | number}}</div>
                     </div>
                 </div>
             </td>

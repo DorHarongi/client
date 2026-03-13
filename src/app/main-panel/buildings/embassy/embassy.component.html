@@ -7,9 +7,9 @@
         
         <!-- Show support troops capacity info -->
         <div>
-            <h5> Current maximum support troops: {{currentMaximumDefenceTroops}}</h5>
+            <h5> Current maximum support troops: {{currentMaximumDefenceTroops | number}}</h5>
             <div *ngIf="nextLevelMaximumDefenceTroops">
-                <h5> Next level maximum support troops : {{nextLevelMaximumDefenceTroops}}</h5>
+                <h5> Next level maximum support troops : {{nextLevelMaximumDefenceTroops | number}}</h5>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
                 <tr *ngFor="let support of supportSent">
                     <td>{{support.recipientUsername}}</td>
                     <td>{{support.recipientVillageName}}</td>
-                    <td>{{getTotalTroops(support.troops)}} total</td>
+                    <td>{{getTotalTroops(support.troops) | number}} total</td>
                     <td>
                         <button class="withdraw-btn" (click)="openWithdrawPanel(support)">Withdraw</button>
                     </td>

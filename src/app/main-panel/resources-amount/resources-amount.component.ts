@@ -17,6 +17,6 @@ export class ResourcesAmountComponent {
   @Input() label: string = '';
 
   formatNumber(value: number): string {
-    return value.toFixed(0);
+    return Math.round(value).toLocaleString();
   }
 }
