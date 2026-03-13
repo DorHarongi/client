@@ -5,9 +5,7 @@ import { LoginService } from './login/login.service';
 import { ServerService } from './services/server.service';
 
 const MAIN_SCREEN_ROUTES = new Set([
-  '/home', '/CenterBuilding', '/WoodWarehouse', '/WoodFactory',
-  '/StoneWarehouse', '/StoneMine', '/CropWarehouse', '/CropFarm',
-  '/Arsenal', '/Quarters', '/Wall', '/Embassy', '/Academy', '/Stable',
+  '/home',
 ]);
 
 @Component({
