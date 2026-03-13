@@ -7,6 +7,9 @@ $topToolbarMinHeight: 75px;
     position: relative;
     background-color: transparent;
     overflow: hidden;
+    max-width: 2200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media (max-width: 1200px) {
@@ -23,7 +26,7 @@ $topToolbarMinHeight: 75px;
     overflow: hidden;
     width: calc(1526px * var(--game-scale, 0.852));
     height: calc(100vh - max($topToolbarHeight, $topToolbarMinHeight));
-    background: linear-gradient(to bottom, #5b7d3a, #3d5a1e);
+
 }
 
 @media (max-width: 1200px) {
