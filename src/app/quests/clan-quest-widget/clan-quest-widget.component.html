@@ -83,6 +83,9 @@
                         </div>
                     </div>
 
+                    <p *ngIf="status.clanCompleted && !status.canClaim && !status.alreadyClaimed" class="participate-warning">
+                        You need to participate in this quest to claim the reward.
+                    </p>
                     <button *ngIf="!status.alreadyClaimed"
                             class="claim-btn"
                             [disabled]="!status.canClaim || isClaiming"
