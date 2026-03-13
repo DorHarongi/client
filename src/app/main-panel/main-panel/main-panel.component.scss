@@ -4,6 +4,7 @@ $topToolbarMinHeight: 75px;
 #mainPanel {
     display: flex;
     margin-top: max($topToolbarHeight, $topToolbarMinHeight);
+    position: relative;
     background-color: transparent;
     overflow: hidden;
 }

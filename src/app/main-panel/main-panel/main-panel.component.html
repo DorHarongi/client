@@ -194,9 +194,9 @@
         {{ village.buildingsLevels.stableLevel || 0 }}
       </div>
 
-      <!-- Building Hitboxes (percentage-based clip-path polygons) -->
+      <!-- Building Hitboxes (percentage-based clip-path polygons, sanitized for Angular) -->
       <div
-        *ngFor="let polygon of buildingPolygons; let i = index"
+        *ngFor="let polygon of sanitizedPolygons; let i = index"
         class="building-hitbox"
         [style.clip-path]="polygon"
         (click)="handleClickedBuilding(i)"

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
@@ -17,8 +18,11 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription!: Subscription;
   routeSubscription!: Subscription;
 
+  // Sanitized clip-path values (Angular strips unsanitized polygon() values)
+  sanitizedPolygons: SafeStyle[] = [];
+
   // Percentage-based clip-path polygons for building hitboxes (converted from 1526x1024 pixel coords)
-  buildingPolygons: string[] = [
+  private buildingPolygons: string[] = [
     // Center Building (index 0)
     'polygon(89.4495% -0.0977%, 90.6291% 2.0508%, 90.8912% 4.5898%, 90.6946% 8.4961%, 91.1533% 8.7891%, 93.1848% 12.2070%, 93.1193% 14.3555%, 94.1678% 8.7891%, 95.0852% 14.2578%, 94.7575% 31.8359%, 92.2674% 36.2305%, 90.6946% 38.8672%, 86.7628% 40.4297%, 81.0616% 36.4258%, 81.0616% 32.8125%, 78.5714% 31.4453%, 78.4404% 23.2422%, 78.9646% 22.4609%, 81.4548% 23.0469%, 81.4548% 13.3789%, 81.9790% 11.0352%, 82.4377% 13.4766%, 82.6999% 11.9141%, 82.7654% 9.7656%, 83.7484% 9.4727%, 84.9934% 9.8633%, 85.3866% 10.8398%, 86.0419% 10.8398%, 86.0419% 8.3008%, 86.2385% 3.9063%, 86.8938% 0.0000%)',
     // Wood Warehouse (index 1)
@@ -62,12 +66,15 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     private userInformationService: UserInformationService,
     private router: Router,
     private route: ActivatedRoute,
-    private intervalService: IntervalService
+    private intervalService: IntervalService,
+    private sanitizer: DomSanitizer
   ) {
     this.intervalService.startIntervals();
-    // Generate arrays for rain drops and snowflakes
     this.rainDrops = Array.from({ length: 150 }, (_, i) => i);
     this.snowFlakes = Array.from({ length: 200 }, (_, i) => i);
+    this.sanitizedPolygons = this.buildingPolygons.map(p =>
+      this.sanitizer.bypassSecurityTrustStyle(p)
+    );
   }
 
   ngOnDestroy(): void {
