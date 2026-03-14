@@ -412,9 +412,9 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   getInfoLines(): string[] {
     if (this.isMythicBoss()) {
       return [
-        'This is an Ancient Titan — a powerful mythic boss that can only be defeated by coordinated clan effort.',
+        'This is an Ancient Titan — an extremely powerful mythic boss. All clans, ready yourselves for battle — you will need to give everything you have got to bring it down.',
         'Each Ancient Titan guards a unique Divine Relic. The clan that deals the most total damage will claim the relic once the titan falls.',
-        'Relics can be stolen by defeating the village that holds one, so protect it carefully and entrust it only to the most loyal member of your clan.',
+        'Relics can be stolen by defeating the village where the relic is being kept, so protect it carefully and entrust it only to the most loyal member of your clan.',
         'The first clan to collect all 5 Divine Relics will achieve ultimate victory and win the game.',
       ];
     }
@@ -422,7 +422,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       'Raid Bosses appear across the map and are claimed by the first clan to attack them.',
       'Once claimed, only members of that clan can continue attacking the boss.',
       'Defeat the boss before it disappears to earn a generous resource reward for every member of your clan.',
-      'The closer you are to the boss, the more damage your troops will deal.',
+      'The closer you are to the boss, the more damage your troops will deal. Higher rarity bosses have more HP and deal more damage back to your troops.',
     ];
   }
 

@@ -61,11 +61,12 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   showInfo: boolean = false;
   oasisInfoLines: string[] = [
     'An oasis can be controlled by one player at a time. To conquer it, you must defeat the army of its current owner.',
-    'Once you control an oasis, your troops will automatically loot its resources. The more troops you station there, the faster the looting.',
+    'Once you control an oasis, your troops will start looting it. The more troops you station there, the faster the looting.',
     'You can reinforce your oasis with troops from all of your villages to keep it secure.',
     'You can retreat at any time and your troops will carry back the resources they have gathered so far.',
     'Each oasis has a limited pool of resources. Higher rarity oases contain significantly more resources.',
     'Once all resources have been looted, the oasis disappears.',
+    'You cannot tell whether an oasis is already claimed just by looking at the map. Scout it first to gather information before sending your troops.',
   ];
   showSendTroopsPanel: boolean = false;
   maxPossibleTroops!: TroopsAmounts;
