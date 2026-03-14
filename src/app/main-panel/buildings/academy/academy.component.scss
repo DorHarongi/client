@@ -48,7 +48,6 @@ $green-available: #4CAF50;
     padding: 6px 8px;
     border-radius: 6px;
     background-image: url(../../../../assets/top-bg.png);
-    background-size: cover;
     border: 1px solid rgba(0, 0, 0, 0.15);
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -225,20 +224,20 @@ $tile-size: 70px;
 
     // Locked — gray + dimmed + lock badge
     &.locked {
-        opacity: 0.5;
-
         .tile-icon-wrapper {
             border-color: #bbb;
             filter: grayscale(0.6);
+            opacity: 0.5;
         }
 
         .tile-label,
         .tile-cost {
             color: #999;
+            opacity: 0.5;
         }
 
         .tile-status-icon {
-            opacity: 0.7;
+            opacity: 0.45;
         }
     }
 }
