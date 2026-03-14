@@ -110,7 +110,8 @@ $tile-size: 70px;
         border: 3px solid #888;
         overflow: visible;
         position: relative;
-        background: rgba(0, 0, 0, 0.03);
+        background: transparent;
+        padding: 0;
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -120,6 +121,7 @@ $tile-size: 70px;
         object-fit: cover;
         display: block;
         border-radius: 7px;
+        margin: 0;
     }
 
     .tile-status-icon {
@@ -180,16 +182,16 @@ $tile-size: 70px;
         opacity: 1;
     }
 
-    // Available — green border + strong glow, clickable
+    // Available — green border + intense glow, clickable
     &.available {
         cursor: pointer;
 
         .tile-icon-wrapper {
             border-color: $green-available;
             box-shadow:
-                0 0 6px rgba($green-available, 0.6),
-                0 0 14px rgba($green-available, 0.4),
-                0 0 24px rgba($green-available, 0.25);
+                0 0 8px 2px rgba($green-available, 0.8),
+                0 0 18px 4px rgba($green-available, 0.5),
+                0 0 32px 8px rgba($green-available, 0.3);
         }
 
         .tile-label {
@@ -201,9 +203,9 @@ $tile-size: 70px;
 
             .tile-icon-wrapper {
                 box-shadow:
-                    0 0 8px rgba($green-available, 0.7),
-                    0 0 18px rgba($green-available, 0.5),
-                    0 0 30px rgba($green-available, 0.3);
+                    0 0 10px 3px rgba($green-available, 0.9),
+                    0 0 22px 6px rgba($green-available, 0.6),
+                    0 0 40px 10px rgba($green-available, 0.35);
             }
         }
 
@@ -212,14 +214,14 @@ $tile-size: 70px;
         }
     }
 
-    // Unlocked — golden border + strong warm glow + checkmark badge
+    // Unlocked — golden border + intense warm glow + checkmark badge
     &.unlocked {
         .tile-icon-wrapper {
             border-color: #c8a24e;
             box-shadow:
-                0 0 6px rgba(200, 162, 78, 0.6),
-                0 0 14px rgba(200, 162, 78, 0.4),
-                0 0 24px rgba(200, 162, 78, 0.25);
+                0 0 8px 2px rgba(200, 162, 78, 0.8),
+                0 0 18px 4px rgba(200, 162, 78, 0.5),
+                0 0 32px 8px rgba(200, 162, 78, 0.3);
         }
 
         .tile-label {
