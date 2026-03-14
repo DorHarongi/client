@@ -1,23 +1,25 @@
 $game-gold: #c9a84c;
+$green-available: #4CAF50;
 
 .academy-content {
-    padding: 20px;
+    padding: 16px;
     max-width: 700px;
     margin: 0 auto;
 }
 
 .section-title {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 1.3em;
 }
 
+// #6 — Emphasize available points in green
 .skill-points {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 16px;
     font-weight: 600;
     font-size: 0.95em;
 
@@ -25,46 +27,55 @@ $game-gold: #c9a84c;
         white-space: nowrap;
     }
 
+    .available-points {
+        color: $green-available;
+        font-size: 1.05em;
+    }
+
     .used-points {
-        color: #2e7d32;
+        color: #7d5210;
     }
 }
 
+// #7 — Tighter grid
 .skill-table {
     display: grid;
     grid-template-columns: auto repeat(3, 1fr);
-    gap: 6px;
-    margin-bottom: 24px;
+    gap: 4px 6px;
+    margin-bottom: 16px;
 }
 
 .skill-header-cell {
     text-align: center;
     font-weight: 700;
     font-size: 0.85em;
-    padding: 6px 4px;
+    padding: 4px 4px;
 }
 
 .corner-cell {
     visibility: hidden;
 }
 
+// #5 — Darker skill names
 .skill-name-cell {
     display: flex;
     align-items: center;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 0.85em;
     padding-right: 8px;
     white-space: nowrap;
+    color: #333;
 }
 
+// #7+#8 — More square tiles, tighter
 .skill-cell {
-    padding: 10px 6px;
+    padding: 6px 4px;
     border-radius: 0.25rem;
     border: 2px solid black;
     background-image: url(../../../../assets/top-bg.png);
     background-size: cover;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: default;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -72,7 +83,8 @@ $game-gold: #c9a84c;
     text-align: center;
     position: relative;
     box-shadow: 1px 1px 2px 1px;
-    min-height: 60px;
+    min-height: 70px;
+    aspect-ratio: 1 / 1;
 
     .skill-bonus {
         font-size: 0.9em;
@@ -81,21 +93,34 @@ $game-gold: #c9a84c;
     }
 
     .skill-cost {
-        margin-top: 3px;
+        margin-top: 2px;
         font-size: 0.75em;
         color: #39e75f;
         font-weight: 700;
     }
 
+    // #3 — Bigger overlay icons
     .skill-overlay-icon {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 36px;
-        height: 36px;
+        width: 44px;
+        height: 44px;
         z-index: 2;
         pointer-events: none;
+    }
+
+    // #4 — Tier connector line
+    .tier-connector {
+        position: absolute;
+        right: -5px;
+        top: 50%;
+        width: 6px;
+        height: 2px;
+        background: #999;
+        transform: translateY(-50%);
+        z-index: 3;
     }
 
     .skill-tooltip {
@@ -134,38 +159,48 @@ $game-gold: #c9a84c;
         }
     }
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.25);
-    }
-
     &:hover .skill-tooltip {
         opacity: 1;
     }
 
+    // #1 — Available: green border + glow, obvious clickable
     &.available {
+        border: 2px solid $green-available;
+        box-shadow: 0 0 8px rgba($green-available, 0.5);
         cursor: pointer;
+        background-color: rgba($green-available, 0.08);
 
         .skill-bonus {
             color: #1b5e20;
         }
+
+        // #9 — Hover/tap feedback for clickable tiles
+        &:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 12px rgba($green-available, 0.7);
+            border-color: darken($green-available, 8%);
+        }
+
+        &:active {
+            transform: scale(0.97);
+        }
     }
 
+    // #3 — Unlocked: bigger check, white backdrop
     &.unlocked {
-        border-color: #888;
-        cursor: default;
+        border-color: #aaa;
 
         &::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.4);
             border-radius: 0.2rem;
             z-index: 1;
         }
 
         .skill-overlay-icon {
-            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
         }
 
         &:hover {
@@ -174,19 +209,24 @@ $game-gold: #c9a84c;
         }
     }
 
+    // #2 — Locked: stronger disabled + lock icon
     &.locked {
-        border-color: #9e9e9e;
-        background-color: rgba(0, 0, 0, 0.08);
-        cursor: default;
-        opacity: 0.55;
+        border-color: #bbb;
+        background-color: rgba(0, 0, 0, 0.12);
+        opacity: 0.5;
 
         .skill-bonus,
         .skill-cost {
-            color: #757575;
+            color: #888;
         }
 
         .skill-overlay-icon {
-            opacity: 0.7;
+            opacity: 0.65;
+            filter: grayscale(0.3);
+        }
+
+        .tier-connector {
+            background: #bbb;
         }
 
         &:hover {
@@ -201,7 +241,7 @@ $game-gold: #c9a84c;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin-top: 35px;
+    margin-top: 24px;
 }
 
 .buttons {
@@ -339,21 +379,21 @@ $game-gold: #c9a84c;
 
 @media (max-width: 600px) {
     .academy-content {
-        padding: 12px;
+        padding: 10px;
     }
 
     .skill-table {
-        gap: 4px;
+        gap: 3px 4px;
     }
 
     .skill-name-cell {
-        font-size: 0.75em;
+        font-size: 0.7em;
         padding-right: 4px;
     }
 
     .skill-cell {
-        min-height: 50px;
-        padding: 6px 3px;
+        min-height: 56px;
+        padding: 4px 2px;
 
         .skill-bonus {
             font-size: 0.8em;
@@ -364,8 +404,8 @@ $game-gold: #c9a84c;
         }
 
         .skill-overlay-icon {
-            width: 28px;
-            height: 28px;
+            width: 34px;
+            height: 34px;
         }
     }
 }
