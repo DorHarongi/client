@@ -21,6 +21,7 @@ export class Village {
   stoneProductionPerSecond!: number;
   cropProductionPerSecond!: number;
   skills!: Skills;
+  troopsInTransit!: number;
   aliveSpies!: number;
   spyDeathTimestamps!: Date[];
 
@@ -83,7 +84,8 @@ export class Village {
       Village.getTotalTroops(village) +
       Village.getTotalWorkers(village) +
       Village.getTotalSupportSent(village) +
-      Village.getTotalOasisTroops(village);
+      Village.getTotalOasisTroops(village) +
+      (village.troopsInTransit || 0);
     return max - used;
   }
 }

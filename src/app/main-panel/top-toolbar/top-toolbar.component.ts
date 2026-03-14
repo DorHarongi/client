@@ -217,7 +217,8 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
       Village.getTotalTroops(village) +
       Village.getTotalWorkers(village) +
       Village.getTotalSupportSent(village) +
-      Village.getTotalOasisTroops(village);
+      Village.getTotalOasisTroops(village) +
+      (village.troopsInTransit || 0);
 
     this.stableLevel = village.buildingsLevels?.stableLevel ?? 0;
     this.maxSpies = this.stableLevel > 0 ? getMaxSpies(this.stableLevel) : 0;

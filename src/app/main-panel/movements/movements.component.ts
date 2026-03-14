@@ -25,7 +25,16 @@ interface Movement {
   arrivalTime: string;
   status: 'in_transit' | 'completed';
   bossId?: string;
+  relicId?: string;
 }
+
+const RELIC_ICON_MAP: Record<string, string> = {
+  apple_of_immortality: 'assets/apple.png',
+  eternal_flame: 'assets/flame.png',
+  chalice_of_ascension: 'assets/chalice.png',
+  all_seeing_orb: 'assets/orn.png',
+  sigil_of_creation: 'assets/sigil.png',
+};
 
 @Component({
   selector: 'app-movements',
@@ -143,7 +152,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
       return 'assets/wood.jpg';
     }
     if (movement.type === 'relic_transfer') {
-      return 'assets/sigil.png';
+      return (movement.relicId && RELIC_ICON_MAP[movement.relicId]) || 'assets/sigil.png';
     }
     if (movement.type === 'return') {
       return 'assets/swords.png';
