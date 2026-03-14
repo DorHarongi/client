@@ -2,7 +2,6 @@ $game-gold: #c9a84c;
 
 .academy-content {
     padding: 20px;
-    max-width: 900px;
     margin: 0 auto;
 }
 
@@ -30,25 +29,38 @@ $game-gold: #c9a84c;
     }
 }
 
-// Skill grid: 3 rows (Tier I, II, III), multiple columns (categories)
-.skill-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+.skill-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     margin-bottom: 24px;
 }
 
-.skill-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
+.skill-table {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(90px, 1fr));
+    gap: 6px;
+    min-width: 820px;
+}
+
+.skill-header-row {
+    display: contents;
+}
+
+.skill-header-cell {
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.8em;
+    padding: 6px 2px;
+    line-height: 1.2;
+    word-wrap: break-word;
+}
+
+.skill-body-row {
+    display: contents;
 }
 
 .skill-cell {
-    width: 140px;
-    min-height: 100px;
-    padding: 12px;
+    padding: 8px 4px;
     border-radius: 0.25rem;
     border: 2px solid black;
     background-image: url(../../../../assets/top-bg.png);
@@ -61,36 +73,37 @@ $game-gold: #c9a84c;
     justify-content: center;
     text-align: center;
     position: relative;
-    box-shadow: 2px 2px 2px 2px;
-
-    .skill-name {
-        font-weight: 700;
-        font-size: 0.95em;
-        margin-bottom: 4px;
-        line-height: 1.2;
-    }
+    box-shadow: 1px 1px 2px 1px;
+    min-height: 80px;
 
     .skill-tier {
-        font-size: 0.8em;
+        font-size: 0.75em;
         color: #7d5210;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }
 
     .skill-bonus {
-        font-size: 0.9em;
+        font-size: 0.85em;
         font-weight: 600;
         color: #2e7d32;
     }
 
     .skill-cost {
-        margin-top: 4px;
-        font-size: 0.8em;
-        color: #7d5210;
+        margin-top: 3px;
+        font-size: 0.75em;
+        color: #39e75f;
+        font-weight: 700;
+    }
 
-        .skill-cost-value {
-            color: #39e75f;
-            font-weight: 700;
-        }
+    .skill-overlay-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 36px;
+        height: 36px;
+        z-index: 2;
+        pointer-events: none;
     }
 
     .skill-tooltip {
@@ -98,8 +111,8 @@ $game-gold: #c9a84c;
         left: 50%;
         bottom: 110%;
         transform: translateX(-50%);
-        min-width: 220px;
-        max-width: 260px;
+        min-width: 200px;
+        max-width: 240px;
         padding: 8px 10px;
         background-image: url(../../../../assets/top-bg.png);
         border: 2px solid #7d5210;
@@ -114,22 +127,28 @@ $game-gold: #c9a84c;
         .tooltip-title {
             font-weight: 700;
             margin-bottom: 4px;
+            font-size: 0.85em;
         }
 
         .tooltip-line {
-            font-size: 0.8em;
+            font-size: 0.75em;
             margin-bottom: 2px;
         }
     }
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.25);
+        box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.25);
     }
 
-    // Available to learn
+    &:hover .skill-tooltip {
+        opacity: 1;
+    }
+
+    // Available to learn — green border, normal look
     &.available {
         border-color: #2e7d32;
+        border-width: 3px;
         background-color: rgba(46, 125, 50, 0.12);
         cursor: pointer;
 
@@ -138,39 +157,51 @@ $game-gold: #c9a84c;
         }
     }
 
-    // Already learned
+    // Already learned — subtle gold tint + success icon overlay with backdrop
     &.unlocked {
-        border-color: $game-gold;
-        background-color: rgba(212, 168, 75, 0.2);
+        border-color: #888;
         cursor: default;
 
-        .skill-bonus {
-            color: #5d4037;
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 0.2rem;
+            z-index: 1;
+        }
+
+        .skill-overlay-icon {
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+        }
+
+        &:hover {
+            transform: none;
+            box-shadow: 1px 1px 2px 1px;
         }
     }
 
-    // Locked (cannot learn yet - need previous tier or more points)
+    // Locked — gray, dimmed, lock icon overlay
     &.locked {
         border-color: #9e9e9e;
-        background-color: rgba(0, 0, 0, 0.06);
+        background-color: rgba(0, 0, 0, 0.08);
         cursor: default;
-        opacity: 0.85;
+        opacity: 0.55;
 
-        .skill-name,
         .skill-tier,
         .skill-bonus,
         .skill-cost {
             color: #757575;
         }
 
+        .skill-overlay-icon {
+            opacity: 0.7;
+        }
+
         &:hover {
             transform: none;
-            box-shadow: 2px 2px 2px 2px;
+            box-shadow: 1px 1px 2px 1px;
         }
-    }
-
-    &:hover .skill-tooltip {
-        opacity: 1;
     }
 }
 
@@ -182,7 +213,6 @@ $game-gold: #c9a84c;
     margin-top: 35px;
 }
 
-// Game-style button matching .buttons class
 .buttons {
     background-image: url(../../../../assets/top-bg.png);
     border: 1px black solid;
@@ -214,282 +244,6 @@ $game-gold: #c9a84c;
     color: #c0392b;
     margin-top: 12px;
     font-weight: 600;
-}
-
-// Current Trait Info
-.current-trait-info {
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 15px;
-
-    .current-label {
-        margin-right: 8px;
-    }
-
-    .current-trait-name {
-        font-weight: bold;
-        font-size: 1.1em;
-    }
-
-    .current-bonus {
-        color: #27ae60;
-        margin-left: 8px;
-    }
-
-    .no-trait-warning {
-        color: #e67e22;
-        font-weight: 500;
-    }
-}
-
-// 3D Carousel
-.carousel-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin: 30px 0;
-    perspective: 1000px;
-}
-
-// Smaller arrow buttons matching world map style
-.carousel-btn {
-    width: 26px;
-    height: 26px;
-    border-radius: 5px;
-    border: 1px solid black;
-    background-image: url(../../../../assets/top-bg.png);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 1px 1px 2px 1px;
-    margin-bottom: 25px;
-
-    .arrow-left, .arrow-right {
-        width: 0;
-        height: 0;
-        border-style: solid;
-    }
-
-    .arrow-left {
-        border-width: 5px 7px 5px 0;
-        border-color: transparent black transparent transparent;
-        margin-left: -2px;
-    }
-
-    .arrow-right {
-        border-width: 5px 0 5px 7px;
-        border-color: transparent transparent transparent black;
-        margin-right: -2px;
-    }
-
-    &:hover:not(:disabled) {
-        transform: scale(1.05);
-    }
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-}
-
-.carousel-track {
-    position: relative;
-    width: 300px;
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.trait-card {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 10px;
-
-    &.active {
-        .trait-icon-wrapper {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-    }
-
-    &.current {
-        .trait-icon-wrapper {
-            &::after {
-                content: '✓';
-                position: absolute;
-                top: 5px;
-                right: 5px;
-                width: 24px;
-                height: 24px;
-                background: #27ae60;
-                color: white;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 14px;
-                font-weight: bold;
-                border: 2px solid white;
-            }
-        }
-    }
-}
-
-.trait-icon-wrapper {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 15px;
-    border: 4px solid;
-    overflow: hidden;
-    background-image: url(../../../../assets/top-bg.png);
-    background-size: cover;
-    transition: all 0.3s ease;
-}
-
-.trait-icon {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.trait-name {
-    margin-top: 8px;
-    font-weight: bold;
-    font-size: 1em;
-    text-align: center;
-}
-
-.current-badge {
-    background: #27ae60;
-    color: white;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 0.7em;
-    font-weight: bold;
-    margin-top: 4px;
-}
-
-// Selected Trait Info Box
-.selected-trait-info {
-    border: 2px solid #7d5210;
-    border-radius: 7px;
-    padding: 20px;
-    margin: 20px 0;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-
-    .trait-title {
-        text-align: center;
-        margin: 0 0 10px 0;
-        font-size: 1.3em;
-    }
-
-    .trait-short-desc {
-        text-align: center;
-        font-style: italic;
-        margin-bottom: 15px;
-    }
-
-    .trait-full-desc {
-        text-align: justify;
-        line-height: 1.5;
-        margin-bottom: 15px;
-    }
-
-    .trait-bonus-preview {
-        padding: 12px;
-        border-radius: 8px;
-        text-align: center;
-        border: 1px solid #7d5210;
-
-        strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .bonus-text {
-            color: #27ae60;
-            font-weight: bold;
-        }
-    }
-}
-
-// Learn Section
-.learn-section {
-    text-align: center;
-    margin-top: 20px;
-
-    .cost-title {
-        margin-bottom: 10px;
-    }
-}
-
-.free-learn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    color: #27ae60;
-    font-weight: 500;
-
-    .free-badge {
-        background: #27ae60;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 15px;
-        font-weight: bold;
-    }
-}
-
-.learn-btn {
-    @extend .buttons;
-    padding: 12px 30px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 15px;
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-}
-
-.same-trait-notice {
-    text-align: center;
-    padding: 15px;
-    font-style: italic;
-    margin-top: 15px;
-}
-
-// Locked State
-.trait-locked {
-    text-align: center;
-    padding: 40px 20px;
-    border-radius: 15px;
-    margin: 20px 0;
-
-    .lock-icon {
-        font-size: 3em;
-        margin-bottom: 15px;
-    }
-
-    h4 {
-        margin-bottom: 10px;
-    }
-
-    .hint {
-        margin-top: 15px;
-        font-weight: bold;
-    }
 }
 
 // Confirmation Dialog
@@ -592,20 +346,38 @@ $game-gold: #c9a84c;
     }
 }
 
-// Responsive
+// Mobile: allow horizontal scroll, make cells a bit smaller
 @media (max-width: 600px) {
-    .carousel-track {
-        width: 250px;
-        height: 160px;
+    .skill-table {
+        grid-template-columns: repeat(9, 80px);
+        min-width: 740px;
+        gap: 4px;
     }
 
-    .trait-icon-wrapper {
-        width: 80px;
-        height: 80px;
+    .skill-header-cell {
+        font-size: 0.7em;
+        padding: 4px 1px;
     }
 
-    .carousel-btn {
-        width: 28px;
-        height: 28px;
+    .skill-cell {
+        min-height: 70px;
+        padding: 6px 2px;
+
+        .skill-tier {
+            font-size: 0.7em;
+        }
+
+        .skill-bonus {
+            font-size: 0.8em;
+        }
+
+        .skill-cost {
+            font-size: 0.7em;
+        }
+
+        .skill-overlay-icon {
+            width: 30px;
+            height: 30px;
+        }
     }
 }

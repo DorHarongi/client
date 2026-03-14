@@ -43,6 +43,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
   resetCost: MaterialsCost = { wood: 0, stones: 0, crop: 0 };
 
   grid: SkillCell[][] = [];
+  categoryHeaders: string[] = [];
 
   loading: boolean = false;
   errorMessage: string = '';
@@ -128,9 +129,11 @@ export class AcademyComponent implements OnInit, OnDestroy {
     }
 
     this.grid = [[], [], []];
+    this.categoryHeaders = [];
     const categories = Object.keys(byCategory) as SkillCategory[];
     for (const category of categories) {
       const cells = byCategory[category];
+      this.categoryHeaders.push(cells[0].name);
       this.grid[0].push(cells[0]);
       this.grid[1].push(cells[1]);
       this.grid[2].push(cells[2]);
