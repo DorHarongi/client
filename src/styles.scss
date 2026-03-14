@@ -52,12 +52,21 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: auto;
-    background-image: url("./assets/right-bg.jpg");
-    background-size: cover;
-    background-attachment: fixed;
     min-height: 100%;
     width: 100%;
     -webkit-overflow-scrolling: touch;
+}
+
+body[data-theme="default"],
+body:not([data-theme]) {
+    background-image: url("./assets/right-bg.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+body[data-theme]:not([data-theme="default"]) {
+    background-image: none;
+    background-color: var(--bg-secondary);
 }
 
 body {
@@ -69,6 +78,15 @@ body {
     flex-direction: column;
     flex-wrap: wrap;
     align-content: center;
-    background-image: url("./assets/right-bg.jpg");
     overflow: auto;
+}
+
+body[data-theme="default"] .flexContainer,
+body:not([data-theme]) .flexContainer {
+    background-image: url("./assets/right-bg.jpg");
+}
+
+body[data-theme]:not([data-theme="default"]) .flexContainer {
+    background-image: none;
+    background-color: var(--bg-secondary);
 }
