@@ -626,6 +626,13 @@ body[data-theme]:not([data-theme="default"]) {
         border-color: var(--border-color);
     }
 
+    .quest-details-modal,
+    .completion-modal {
+        background: var(--bg-panel);
+        border-color: var(--border-color);
+        color: var(--text-content);
+    }
+
     .widget-header,
     .modal-header {
         background: var(--bg-primary);

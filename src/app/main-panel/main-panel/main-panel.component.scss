@@ -73,7 +73,6 @@ $topToolbarMinHeight: 75px;
     box-sizing: content-box !important;
     font-size: large;
     border: 1px black solid;
-    color: black;
     z-index: 6;
     pointer-events: none;
 }
@@ -84,6 +83,18 @@ $topToolbarMinHeight: 75px;
 
 .unselectedBuildingLevel {
     background-color: #ffe7c1;
+}
+
+:host-context(body[data-theme]:not([data-theme="default"])) {
+    .selectedBuildingLevel {
+        background-color: var(--accent);
+        color: var(--text-primary);
+    }
+
+    .unselectedBuildingLevel {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+    }
 }
 
 #centerBuildingLevel {
