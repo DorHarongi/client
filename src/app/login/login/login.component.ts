@@ -38,11 +38,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
     
     ngOnDestroy(): void {
+        if (this.previousTheme) {
+            document.body.setAttribute('data-theme', this.previousTheme);
+        }
         if(this.subscription)
             this.subscription.unsubscribe();
     }
 
+    private previousTheme: string | null = null;
+
     ngOnInit() {
+        this.previousTheme = document.body.getAttribute('data-theme');
+        document.body.removeAttribute('data-theme');
+
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', Validators.required]
