@@ -26,6 +26,7 @@ interface SkillCell {
   bonusPercent: number;
   description: string;
   cost: number;
+  icon: string;
 }
 
 @Component({
@@ -107,6 +108,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
           description: meta.description,
           bonusPercent: Math.round(tierBonuses[SkillTier.I] * 100),
           cost: SKILL_TIER_COSTS[SkillTier.I],
+          icon: meta.icon,
         },
         {
           category: meta.category,
@@ -115,6 +117,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
           description: meta.description,
           bonusPercent: Math.round(tierBonuses[SkillTier.II] * 100),
           cost: SKILL_TIER_COSTS[SkillTier.II],
+          icon: meta.icon,
         },
         {
           category: meta.category,
@@ -123,6 +126,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
           description: meta.description,
           bonusPercent: Math.round(tierBonuses[SkillTier.III] * 100),
           cost: SKILL_TIER_COSTS[SkillTier.III],
+          icon: meta.icon,
         },
       ];
       byCategory[meta.category] = cells;

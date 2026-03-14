@@ -1,9 +1,8 @@
-$game-gold: #c9a84c;
 $green-available: #4CAF50;
 
 .academy-content {
     padding: 16px;
-    max-width: 700px;
+    max-width: 750px;
     margin: 0 auto;
 }
 
@@ -13,7 +12,6 @@ $green-available: #4CAF50;
     font-size: 1.3em;
 }
 
-// #6 — Emphasize available points in green
 .skill-points {
     display: flex;
     flex-wrap: wrap;
@@ -37,90 +35,103 @@ $green-available: #4CAF50;
     }
 }
 
-// #7 — Tighter grid
-.skill-table {
-    display: grid;
-    grid-template-columns: auto repeat(3, 1fr);
-    gap: 4px 6px;
-    margin-bottom: 16px;
+.skill-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.skill-header-cell {
-    text-align: center;
-    font-weight: 700;
-    font-size: 0.85em;
-    padding: 4px 4px;
-}
-
-.corner-cell {
-    visibility: hidden;
-}
-
-// #5 — Darker skill names
-.skill-name-cell {
+.skill-row {
     display: flex;
     align-items: center;
-    font-weight: 600;
-    font-size: 0.85em;
-    padding-right: 8px;
-    white-space: nowrap;
-    color: #333;
-}
-
-// #7+#8 — More square tiles, tighter
-.skill-cell {
-    padding: 6px 4px;
-    border-radius: 0.25rem;
-    border: 2px solid black;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 6px;
     background-image: url(../../../../assets/top-bg.png);
     background-size: cover;
-    cursor: default;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.skill-row-name {
+    width: 110px;
+    min-width: 110px;
+    font-weight: 700;
+    font-size: 0.85em;
+    color: #333;
+    text-align: right;
+    padding-right: 6px;
+}
+
+.skill-row-tiers {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+    justify-content: center;
+}
+
+.tier-arrow {
+    width: 20px;
+    height: 20px;
+    margin: 0 4px;
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+$tile-size: 70px;
+
+.skill-tile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;
     position: relative;
-    box-shadow: 1px 1px 2px 1px;
-    min-height: 70px;
-    aspect-ratio: 1 / 1;
+    cursor: default;
+    transition: transform 0.15s ease;
 
-    .skill-bonus {
-        font-size: 0.9em;
+    .tile-label {
+        font-size: 0.7em;
         font-weight: 600;
-        color: #2e7d32;
+        color: #555;
+        margin-bottom: 3px;
+        white-space: nowrap;
+        text-align: center;
     }
 
-    .skill-cost {
-        margin-top: 2px;
-        font-size: 0.75em;
-        color: #39e75f;
-        font-weight: 700;
+    .tile-icon-wrapper {
+        width: $tile-size;
+        height: $tile-size;
+        border-radius: 10px;
+        border: 3px solid #888;
+        overflow: hidden;
+        position: relative;
+        background: rgba(0, 0, 0, 0.03);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    // #3 — Bigger overlay icons
-    .skill-overlay-icon {
+    .tile-icon {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .tile-status-icon {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 44px;
-        height: 44px;
+        width: 36px;
+        height: 36px;
         z-index: 2;
         pointer-events: none;
     }
 
-    // #4 — Tier connector line
-    .tier-connector {
-        position: absolute;
-        right: -5px;
-        top: 50%;
-        width: 6px;
-        height: 2px;
-        background: #999;
-        transform: translateY(-50%);
-        z-index: 3;
+    .tile-cost {
+        margin-top: 2px;
+        font-size: 0.7em;
+        font-weight: 700;
+        color: #39e75f;
     }
 
     .skill-tooltip {
@@ -163,75 +174,71 @@ $green-available: #4CAF50;
         opacity: 1;
     }
 
-    // #1 — Available: green border + glow, obvious clickable
+    // Available — green border + glow, clickable
     &.available {
-        border: 2px solid $green-available;
-        box-shadow: 0 0 8px rgba($green-available, 0.5);
         cursor: pointer;
-        background-color: rgba($green-available, 0.08);
 
-        .skill-bonus {
+        .tile-icon-wrapper {
+            border-color: $green-available;
+            box-shadow: 0 0 10px rgba($green-available, 0.5);
+        }
+
+        .tile-label {
             color: #1b5e20;
         }
 
-        // #9 — Hover/tap feedback for clickable tiles
         &:hover {
-            transform: scale(1.06);
-            box-shadow: 0 0 12px rgba($green-available, 0.7);
-            border-color: darken($green-available, 8%);
+            transform: scale(1.08);
+
+            .tile-icon-wrapper {
+                box-shadow: 0 0 14px rgba($green-available, 0.7);
+            }
         }
 
         &:active {
-            transform: scale(0.97);
+            transform: scale(0.96);
         }
     }
 
-    // #3 — Unlocked: bigger check, white backdrop
+    // Unlocked — white tint overlay + success badge
     &.unlocked {
-        border-color: #aaa;
+        .tile-icon-wrapper {
+            border-color: #aaa;
 
-        &::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 0.2rem;
-            z-index: 1;
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: rgba(255, 255, 255, 0.35);
+                z-index: 1;
+            }
         }
 
-        .skill-overlay-icon {
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+        .tile-status-icon {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         }
 
-        &:hover {
-            transform: none;
-            box-shadow: 1px 1px 2px 1px;
+        .tile-label {
+            color: #2e7d32;
         }
     }
 
-    // #2 — Locked: stronger disabled + lock icon
+    // Locked — gray + dimmed + lock badge
     &.locked {
-        border-color: #bbb;
-        background-color: rgba(0, 0, 0, 0.12);
         opacity: 0.5;
 
-        .skill-bonus,
-        .skill-cost {
-            color: #888;
+        .tile-icon-wrapper {
+            border-color: #bbb;
+            filter: grayscale(0.6);
         }
 
-        .skill-overlay-icon {
-            opacity: 0.65;
-            filter: grayscale(0.3);
+        .tile-label,
+        .tile-cost {
+            color: #999;
         }
 
-        .tier-connector {
-            background: #bbb;
-        }
-
-        &:hover {
-            transform: none;
-            box-shadow: 1px 1px 2px 1px;
+        .tile-status-icon {
+            opacity: 0.7;
         }
     }
 }
@@ -377,35 +384,55 @@ $green-available: #4CAF50;
     }
 }
 
+// Mobile
 @media (max-width: 600px) {
     .academy-content {
         padding: 10px;
     }
 
-    .skill-table {
-        gap: 3px 4px;
+    .skill-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        padding: 8px;
     }
 
-    .skill-name-cell {
-        font-size: 0.7em;
-        padding-right: 4px;
+    .skill-row-name {
+        width: auto;
+        min-width: auto;
+        text-align: center;
+        padding-right: 0;
+        font-size: 0.9em;
+        margin-bottom: 2px;
     }
 
-    .skill-cell {
-        min-height: 56px;
-        padding: 4px 2px;
+    .skill-row-tiers {
+        justify-content: center;
+    }
 
-        .skill-bonus {
-            font-size: 0.8em;
+    .tier-arrow {
+        width: 16px;
+        height: 16px;
+        margin: 0 2px;
+    }
+
+    .skill-tile {
+        .tile-icon-wrapper {
+            width: 56px;
+            height: 56px;
         }
 
-        .skill-cost {
-            font-size: 0.65em;
+        .tile-label {
+            font-size: 0.6em;
         }
 
-        .skill-overlay-icon {
-            width: 34px;
-            height: 34px;
+        .tile-cost {
+            font-size: 0.6em;
+        }
+
+        .tile-status-icon {
+            width: 28px;
+            height: 28px;
         }
     }
 }
