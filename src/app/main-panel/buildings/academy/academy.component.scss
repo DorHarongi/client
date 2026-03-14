@@ -50,6 +50,12 @@ $green-available: #4CAF50;
     background-image: url(../../../../assets/top-bg.png);
     border: 1px solid rgba(0, 0, 0, 0.15);
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+
+    &:hover {
+        z-index: 10;
+    }
 }
 
 .skill-row-name {
@@ -166,6 +172,7 @@ $tile-size: 70px;
         &.tooltip-below {
             bottom: auto;
             top: calc(100% + 6px);
+            z-index: 30;
         }
     }
 
