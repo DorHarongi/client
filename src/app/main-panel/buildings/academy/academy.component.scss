@@ -218,7 +218,7 @@ $tile-size: 70px;
     }
 
     @keyframes tile-pulse {
-        0%, 100% { transform: scale(0.9); }
+        0%, 100% { transform: scale(1); }
         50% { transform: scale(1.1); }
     }
 
