@@ -117,15 +117,21 @@ export class MovementsComponent implements OnInit, OnDestroy {
           }
         }
 
+        const villageNames = this.userInformationService.userInformation.villages.map(v => v.villageName);
+        const villageOrder = (name: string) => {
+          const idx = villageNames.indexOf(name);
+          return idx === -1 ? villageNames.length : idx;
+        };
+
         this.fromVillage = from.sort(
           (a, b) =>
-            new Date(a.arrivalTime).getTime() -
-            new Date(b.arrivalTime).getTime()
+            villageOrder(a.senderVillageName) - villageOrder(b.senderVillageName) ||
+            new Date(a.arrivalTime).getTime() - new Date(b.arrivalTime).getTime()
         );
         this.toVillage = to.sort(
           (a, b) =>
-            new Date(a.arrivalTime).getTime() -
-            new Date(b.arrivalTime).getTime()
+            villageOrder(a.targetVillageName) - villageOrder(b.targetVillageName) ||
+            new Date(a.arrivalTime).getTime() - new Date(b.arrivalTime).getTime()
         );
       });
   }
