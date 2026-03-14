@@ -21,8 +21,9 @@
               <div class="tile-label">Tier {{ cell.tier }} · +{{ cell.bonusPercent }}%</div>
               <div class="tile-icon-wrapper">
                 <img [src]="'assets/' + cell.icon" class="tile-icon" />
-                <img *ngIf="getSkillState(cell) === 'unlocked'" src="assets/success.png" class="tile-status-icon" />
-                <img *ngIf="getSkillState(cell) === 'locked'" src="assets/lock.png" class="tile-status-icon" />
+                <img *ngIf="getSkillState(cell) === 'available'" src="assets/upgrade.png" class="tile-status-icon" />
+                <img *ngIf="getSkillState(cell) === 'unlocked'" src="assets/checked.png" class="tile-status-icon" />
+                <img *ngIf="getSkillState(cell) === 'locked'" src="assets/locked.png" class="tile-status-icon" />
               </div>
               <div class="tile-cost">{{ cell.cost }} SP</div>
               <div class="skill-tooltip" [ngClass]="{ 'tooltip-below': rowIdx < 2 }">
