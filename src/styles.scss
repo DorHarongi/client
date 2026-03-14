@@ -1,51 +1,78 @@
 /* Theme variables - apply via data-theme on body */
 /* --bg-primary: top toolbar, subContainer boxes | --bg-secondary: right toolbar panel */
+/* --text-primary: light text for dark panels    | --text-muted: muted panel text */
+/* --text-content: text on the main content area | --text-content-muted: secondary content text */
+/* --border-color: standard border               | --bg-panel: floating panel overlay */
 [data-theme="default"] {
   --bg-primary: #7d5210;
   --bg-secondary: #5c3d0a;
   --accent: #b7950b;
   --text-primary: #f5e6c8;
   --text-muted: #c9b896;
+  --text-content: #3d2914;
+  --text-content-muted: #666;
+  --border-color: rgba(0, 0, 0, 0.7);
+  --bg-panel: rgba(30, 20, 10, 0.88);
 }
 
 [data-theme="dark"] {
   --bg-primary: #1a1a2e;
   --bg-secondary: #16213e;
-  --accent: #0f3460;
+  --accent: #4a6fa5;
   --text-primary: #e8e8e8;
   --text-muted: #b0b0b0;
+  --text-content: #d8d8e8;
+  --text-content-muted: #8888a0;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --bg-panel: rgba(22, 33, 62, 0.92);
 }
 
 [data-theme="ocean"] {
   --bg-primary: #0a2647;
   --bg-secondary: #144272;
-  --accent: #205295;
+  --accent: #4a8ac7;
   --text-primary: #e8f4fc;
   --text-muted: #b8d4e8;
+  --text-content: #d8e8f4;
+  --text-content-muted: #8ab4d0;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --bg-panel: rgba(10, 38, 71, 0.92);
 }
 
 [data-theme="forest"] {
   --bg-primary: #1b4332;
   --bg-secondary: #2d6a4f;
-  --accent: #40916c;
+  --accent: #6dbf8b;
   --text-primary: #d8f3dc;
   --text-muted: #95d5b2;
+  --text-content: #c8e8d0;
+  --text-content-muted: #80b898;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --bg-panel: rgba(27, 67, 50, 0.92);
 }
 
 [data-theme="blood"] {
   --bg-primary: #3d0a0a;
   --bg-secondary: #6b1111;
-  --accent: #9d0208;
+  --accent: #d04040;
   --text-primary: #fce8e8;
   --text-muted: #e8b8b8;
+  --text-content: #f0d0d0;
+  --text-content-muted: #c09898;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --bg-panel: rgba(61, 10, 10, 0.92);
 }
 
 [data-theme="royal"] {
   --bg-primary: #240046;
   --bg-secondary: #3c096c;
-  --accent: #5a189a;
+  --accent: #9055d0;
   --text-primary: #e0aaff;
   --text-muted: #c77dff;
+  --text-content: #d8c0f0;
+  --text-content-muted: #b098c8;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --bg-panel: rgba(36, 0, 70, 0.92);
 }
 
 html, body {
@@ -89,4 +116,600 @@ body:not([data-theme]) .flexContainer {
 body[data-theme]:not([data-theme="default"]) .flexContainer {
     background-image: none;
     background-color: var(--bg-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Non-default theme: global overrides
+   All rules below only apply when a non-default theme is active.
+   ═══════════════════════════════════════════════════════════════════ */
+body[data-theme]:not([data-theme="default"]) {
+    color: var(--text-content);
+
+    /* ── Wood-texture backgrounds → themed solid ── */
+    .buttons,
+    .toggle-btn,
+    .small-btn,
+    .action-btn,
+    .confirm-btn,
+    .reset-btn,
+    .confirm-dialog,
+    .message-modal,
+    .clan-card,
+    .create-clan-form,
+    .relic-transfer-modal,
+    .skill-row,
+    .modal-container,
+    .server-selected,
+    .server-options,
+    .clan-chat {
+        background-image: none;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    /* ── Toggle buttons ── */
+    .toggle-btn.active {
+        background-image: none;
+        background-color: var(--accent);
+        color: var(--text-primary);
+        border-color: var(--accent);
+    }
+
+    .toggle-btn:hover:not(.active) {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* ── Pagination ── */
+    .pagination p {
+        color: var(--text-content);
+    }
+
+    .pagination p.active {
+        background-color: var(--accent);
+        color: var(--text-primary);
+    }
+
+    .pagination p:hover:not(.active) {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* ── Tab links ── */
+    .tab-link {
+        color: var(--text-muted);
+
+        &.active {
+            color: var(--text-primary);
+        }
+
+        &:hover:not(.active) {
+            color: var(--text-primary);
+        }
+    }
+
+    /* ── Tables ── */
+    table,
+    .bordered {
+        border-color: var(--border-color);
+    }
+
+    th, td {
+        border-color: var(--border-color);
+    }
+
+    th {
+        background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Inputs ── */
+    input, textarea, select {
+        color: var(--text-primary);
+        background-color: rgba(0, 0, 0, 0.2);
+        border-color: var(--border-color);
+    }
+
+    /* ── Movements panel ── */
+    .movements-container {
+        background: var(--bg-panel);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .section-header {
+        color: var(--accent);
+        border-bottom-color: var(--border-color);
+    }
+
+    /* ── Muted text (various components) ── */
+    .char-counter,
+    .stat-hint,
+    .hint-text,
+    .location,
+    .loading-text,
+    .loading-villages,
+    .message-date,
+    .relic-holder,
+    .relic-empty,
+    .relic-in-transit,
+    .no-intro,
+    .no-titles-message,
+    .timer-text,
+    .completed-text,
+    .quest-description,
+    .no-rewards,
+    .no-quests,
+    .widget-hint,
+    .progress-text,
+    .cooldown,
+    .holder,
+    .title-desc,
+    .click-hint {
+        color: var(--text-content-muted);
+    }
+
+    .char-counter.limit-reached {
+        color: #dc3545;
+    }
+
+    /* ── Links / clickables ── */
+    .clickable,
+    .member-link,
+    .clan-link,
+    .inline-link,
+    .report-link,
+    .btn-link {
+        color: var(--accent);
+
+        &:hover {
+            color: var(--text-primary);
+        }
+    }
+
+    /* ── Tooltips ── */
+    .skill-tooltip,
+    .stats-tooltip {
+        background-image: none;
+        background-color: var(--bg-primary);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .skill-tooltip .tooltip-title,
+    .skill-tooltip .tooltip-line,
+    .stats-tooltip .tooltip-row {
+        color: var(--text-primary);
+    }
+
+    .stats-tooltip::after {
+        border-color: var(--border-color) transparent transparent transparent;
+    }
+
+    /* ── Academy ── */
+    .skill-row-name {
+        color: var(--text-content);
+    }
+
+    .skill-points .used-points {
+        color: var(--accent);
+    }
+
+    .confirm-detail {
+        color: #27ae60;
+    }
+
+    /* ── Hover states ── */
+    .clickable-row:hover,
+    .member-row:hover {
+        background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Info modals ── */
+    .info-dialog {
+        background-image: none;
+        background-color: var(--bg-primary);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .info-body p {
+        color: var(--text-content);
+    }
+
+    .info-title {
+        border-bottom-color: var(--border-color);
+    }
+
+    /* ── Various accent-colored text ── */
+    .relic-name,
+    .relic-reward,
+    .transfer-details h5,
+    .next-spy-message {
+        color: var(--accent);
+    }
+
+    /* ── Modal title borders ── */
+    .modal-title {
+        border-bottom-color: var(--border-color);
+    }
+
+    /* ── Boss interaction ── */
+    .distance-section,
+    .rewards-section,
+    .attack-result,
+    .rewards-received {
+        border-color: var(--border-color);
+    }
+
+    .attack-result {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .boss-leaderboard {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: var(--border-color);
+    }
+
+    .leaderboard-table {
+        border-color: var(--border-color);
+    }
+
+    .leaderboard-table td,
+    .leaderboard-table th {
+        border-color: var(--border-color);
+    }
+
+    .leaderboard-table th {
+        background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Oasis / village interaction ── */
+    .round-square {
+        border-color: var(--border-color);
+    }
+
+    .resource-input input {
+        border-color: var(--border-color);
+    }
+
+    .max-link {
+        color: var(--accent);
+    }
+
+    .village-contribution {
+        border-bottom-color: var(--border-color);
+    }
+
+    .village-contribution h5 {
+        color: var(--accent);
+    }
+
+    .clan-owned-message {
+        color: var(--accent);
+        background: rgba(255, 255, 255, 0.03);
+        border-color: var(--accent);
+    }
+
+    /* ── Hire workers / training ── */
+    .workersInput,
+    .troopsInput {
+        border-color: var(--border-color);
+    }
+
+    #max {
+        color: var(--accent);
+    }
+
+    /* ── Materials cost ── */
+    .enoughMaterial {
+        color: var(--text-content);
+    }
+
+    /* ── Clan page ── */
+    .clan-section {
+        border-top-color: var(--border-color);
+    }
+
+    .relics-section {
+        border-color: var(--border-color);
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .relic-item {
+        border-color: var(--border-color);
+        background: rgba(255, 255, 255, 0.03);
+
+        &.held {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        &.clickable:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+    }
+
+    .relic-canvas {
+        box-shadow: 2px 0px 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .request-pending {
+        background-color: rgba(255, 243, 205, 0.1);
+        border-color: var(--border-color);
+        color: var(--text-content);
+    }
+
+    .village-select-table th {
+        background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .village-select-table tr:hover {
+        background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .village-select-table tr.selected-village {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ── Clan chat ── */
+    .chat-messages {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .message-row {
+        border-bottom-color: var(--border-color);
+    }
+
+    .chat-input-area input {
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--text-primary);
+    }
+
+    /* ── Player page ── */
+    .intro-content {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .intro-section {
+        border-color: var(--border-color);
+    }
+
+    .message-form {
+        border-color: var(--border-color);
+    }
+
+    .player-title {
+        color: var(--accent);
+    }
+
+    .title-dropdown-trigger:hover,
+    .title-dropdown-arrow {
+        color: var(--text-content);
+    }
+
+    .title-dropdown-item {
+        border-bottom-color: var(--border-color);
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.06);
+        }
+
+        &.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+
+    /* ── Player himself row (leaderboard) ── */
+    .player-himself {
+        background: rgba(133, 255, 133, 0.15);
+    }
+
+    /* ── Unread messages ── */
+    .unread {
+        background-color: rgba(255, 255, 200, 0.08);
+    }
+
+    /* ── Green/red button backgrounds ── */
+    .accept, .join-btn, .create-btn {
+        background-color: rgba(40, 167, 69, 0.25);
+    }
+
+    .decline, .leave-btn, .withdraw-btn {
+        background-color: rgba(220, 53, 69, 0.25);
+    }
+
+    .save-btn {
+        background-color: rgba(40, 167, 69, 0.3);
+    }
+
+    .cancel-btn {
+        background-color: rgba(220, 53, 69, 0.3);
+    }
+
+    .attack-btn {
+        background-color: rgba(255, 100, 100, 0.2);
+    }
+
+    .support-btn {
+        background-color: rgba(100, 255, 100, 0.2);
+    }
+
+    .resources-btn {
+        background-color: rgba(100, 100, 255, 0.2);
+    }
+
+    .retreat-btn {
+        background-color: rgba(220, 53, 69, 0.25);
+    }
+
+    .confirm-btn-danger {
+        background-color: rgba(220, 53, 69, 0.3);
+        background-blend-mode: normal;
+    }
+
+    /* ── Center building ── */
+    .already-created-message {
+        color: var(--accent);
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: var(--border-color);
+    }
+
+    .village-name-input input {
+        border-color: var(--border-color);
+    }
+
+    /* ── Embassy ── */
+    .support-table th,
+    .support-table td {
+        border-color: var(--border-color);
+    }
+
+    .support-table th {
+        background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .support-sent-section h4 {
+        color: #27ae60;
+    }
+
+    .create-clan-prompt p {
+        color: var(--text-content-muted);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .clan-name-input,
+    .description-input,
+    .modal-container textarea {
+        border-color: var(--border-color);
+    }
+
+    /* ── Embassy relics ── */
+    .embassy-relics {
+        border-color: var(--border-color);
+    }
+
+    .relic-list .relic-row {
+        border-bottom-color: var(--border-color);
+    }
+
+    .transfer-modal {
+        background: var(--bg-primary);
+    }
+
+    /* ── Inbox message/troops tables ── */
+    .message-content {
+        border-color: var(--border-color);
+    }
+
+    .transfer-details {
+        border-color: var(--border-color);
+    }
+
+    .transfer-details h5 {
+        color: var(--accent);
+    }
+
+    .troops-table th,
+    .troops-table td {
+        border-color: var(--border-color);
+    }
+
+    .troops-table th {
+        background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Quest widgets ── */
+    .quest-widget,
+    .clan-quest-widget,
+    .daily-quest-widget {
+        background: var(--bg-panel);
+        border-color: var(--border-color);
+    }
+
+    .widget-header,
+    .modal-header {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .widget-title,
+    .quest-title-text,
+    .quest-card-title,
+    .quest-title-item,
+    .celebration-header h3,
+    .completed-quest-title {
+        color: var(--text-content);
+    }
+
+    .reward-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--border-color);
+
+        span {
+            color: var(--text-content);
+        }
+    }
+
+    .progress-bar-container {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: var(--border-color);
+    }
+
+    .quest-card {
+        border-color: var(--border-color);
+    }
+
+    .next-quest {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .modal-footer {
+        border-top-color: var(--border-color);
+    }
+
+    .rewards-section,
+    .contributions-section {
+        border-color: var(--border-color);
+    }
+
+    .completion-modal {
+        background: var(--bg-panel);
+        border-color: var(--accent);
+    }
+
+    /* ── Scout report ── */
+    .caught-section p,
+    .unoccupied-label,
+    .no-troops-notice p {
+        color: var(--text-content-muted);
+    }
+
+    /* ── Attack report ── */
+    .trait-info,
+    .boss-report-section {
+        border-color: var(--border-color);
+    }
+
+    .boss-report-title,
+    .boss-name {
+        color: var(--text-content);
+    }
+
+    .boss-relic-reward {
+        color: var(--accent);
+    }
+
+    /* ── World map ── */
+    .nav-arrow {
+        border-color: var(--border-color);
+    }
+
+    .minimap {
+        border-color: var(--border-color);
+    }
+
+    /* ── Server select ── */
+    .server-option {
+        border-bottom-color: var(--border-color);
+    }
 }
