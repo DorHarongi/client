@@ -218,8 +218,8 @@ $tile-size: 70px;
     }
 
     @keyframes tile-pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.06); }
+        0%, 100% { transform: scale(0.9); }
+        50% { transform: scale(1.1); }
     }
 
     // Unlocked — golden border + intense warm glow + checkmark badge
