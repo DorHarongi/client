@@ -6,6 +6,7 @@ import { UserInformationService } from 'src/app/user-information/user-informatio
 import { BuildingTypes } from '../models/BuildingTypes';
 import { Village } from '../models/Village';
 import { IntervalService } from '../services/interval.service';
+import { WeatherService, WeatherState } from '../services/weather.service';
 
 @Component({
   selector: 'app-main-panel',
@@ -51,27 +52,19 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     'polygon(18.0210% 65.3320%, 31.8480% 61.6211%, 35.9109% 67.1875%, 34.7969% 68.1641%, 35.3211% 72.0703%, 37.8113% 71.8750%, 39.1219% 74.1211%, 38.5321% 77.2461%, 35.3211% 76.5625%, 31.1927% 77.7344%, 28.2438% 78.6133%, 25.7536% 79.9805%, 28.4404% 80.8594%, 28.3093% 83.3984%, 24.5085% 84.4727%, 20.5767% 84.1797%, 18.1520% 82.5195%, 16.2516% 81.0547%, 14.5478% 79.4922%, 14.3512% 74.9023%, 16.5138% 73.8281%, 16.7104% 70.1172%, 15.5963% 69.6289%)',
   ];
 
-  // Weather system
-  isRaining: boolean = false;
-  isSnowing: boolean = false;
-  isRainFading: boolean = false; // Stops new drops but lets existing ones fall
-  isSnowFading: boolean = false; // Stops new flakes but lets existing ones fall
-  rainDrops: number[] = [];
-  snowFlakes: number[] = [];
-  private weatherCheckInterval: any;
-  private weatherTimeout: any;
-  private weatherFadeTimeout: any;
+  // Weather — driven by WeatherService (persists across navigation)
+  weather!: WeatherState;
+  private weatherSub!: Subscription;
 
   constructor(
     private userInformationService: UserInformationService,
     private router: Router,
     private route: ActivatedRoute,
     private intervalService: IntervalService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    public weatherService: WeatherService
   ) {
     this.intervalService.startIntervals();
-    this.rainDrops = Array.from({ length: 150 }, (_, i) => i);
-    this.snowFlakes = Array.from({ length: 200 }, (_, i) => i);
     this.sanitizedPolygons = this.buildingPolygons.map(p =>
       this.sanitizer.bypassSecurityTrustStyle(p)
     );
@@ -80,17 +73,15 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     if (this.subscription) this.subscription.unsubscribe();
     if (this.routeSubscription) this.routeSubscription.unsubscribe();
-    if (this.weatherCheckInterval) clearInterval(this.weatherCheckInterval);
-    if (this.weatherTimeout) clearTimeout(this.weatherTimeout);
-    if (this.weatherFadeTimeout) clearTimeout(this.weatherFadeTimeout);
+    if (this.weatherSub) this.weatherSub.unsubscribe();
   }
 
   ngOnInit(): void {
     this.village = this.userInformationService.currentVillage;
 
-    // Start weather check system
-    this.checkWeather();
-    this.weatherCheckInterval = setInterval(() => this.checkWeather(), 1000);
+    // Subscribe to persistent weather state
+    this.weatherService.start();
+    this.weatherSub = this.weatherService.state$.subscribe(s => this.weather = s);
 
     // Handle village name from route parameter
     this.routeSubscription = this.route.params.subscribe((params) => {
@@ -160,71 +151,4 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.hoveredBuildingIndex = -1;
   }
 
-  // Weather system methods
-  private checkWeather(): void {
-    const now = new Date();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-
-    // Only trigger at the start of the minute (seconds 0-1)
-    if (seconds > 1) return;
-
-    // Already showing weather, don't restart
-    if (this.isRaining || this.isSnowing) return;
-
-    // Snow: divisible by 15 (0, 15, 30, 45)
-    if (minutes % 15 === 0) {
-      this.startSnow();
-    }
-    // Rain: divisible by 5 but NOT by 15 (5, 10, 20, 25, 35, 40, 50, 55)
-    else if (minutes % 5 === 0) {
-      this.startRain();
-    }
-  }
-
-  private startRain(): void {
-    this.isRaining = true;
-    this.isRainFading = false;
-    this.weatherTimeout = setTimeout(() => {
-      // Stop generating new drops, but let existing ones finish falling
-      this.isRainFading = true;
-      // Remove container after drops have time to fall (max ~1.5s animation)
-      this.weatherFadeTimeout = setTimeout(() => {
-        this.isRaining = false;
-        this.isRainFading = false;
-      }, 2000);
-    }, 20000); // 20 seconds
-  }
-
-  private startSnow(): void {
-    this.isSnowing = true;
-    this.isSnowFading = false;
-    this.weatherTimeout = setTimeout(() => {
-      // Stop generating new flakes, but let existing ones finish falling
-      this.isSnowFading = true;
-      // Remove container after flakes have time to fall (max ~6s animation)
-      this.weatherFadeTimeout = setTimeout(() => {
-        this.isSnowing = false;
-        this.isSnowFading = false;
-      }, 7000);
-    }, 20000); // 20 seconds
-  }
-
-  // Random position/delay generators for weather effects
-  getRandomLeft(index: number): number {
-    // Use index as seed for consistent but varied positions
-    return (index * 17 + index * index) % 100;
-  }
-
-  getRandomDelay(index: number): number {
-    return ((index * 13) % 40) / 10; // 0 to 4 seconds
-  }
-
-  getRandomDuration(index: number, base: number): number {
-    return base + ((index * 7) % 20) / 10; // base to base+2 seconds
-  }
-
-  getRandomSize(index: number): number {
-    return 0.5 + ((index * 11) % 10) / 20; // 0.5 to 1
-  }
 }

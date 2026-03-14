@@ -5,34 +5,34 @@
         <img id="village" src="assets/game-background.png" />
 
         <!-- Weather Effects Overlay -->
-        <div class="weather-overlay" *ngIf="isRaining || isSnowing">
+        <div class="weather-overlay" *ngIf="weather?.isRaining || weather?.isSnowing">
           <!-- Rain Effect -->
           <div
             class="rain-container"
-            [class.fading]="isRainFading"
-            *ngIf="isRaining"
+            [class.fading]="weather.isRainFading"
+            *ngIf="weather.isRaining"
           >
             <div
-              *ngFor="let drop of rainDrops"
+              *ngFor="let drop of weatherService.rainDrops"
               class="rain-drop"
-              [style.left.%]="getRandomLeft(drop)"
-              [style.animationDelay.s]="getRandomDelay(drop)"
-              [style.animationDuration.s]="getRandomDuration(drop, 0.5)"
+              [style.left.%]="weatherService.getRandomLeft(drop)"
+              [style.animationDelay.s]="weatherService.getRandomDelay(drop)"
+              [style.animationDuration.s]="weatherService.getRandomDuration(drop, 0.5)"
             ></div>
           </div>
 
           <!-- Snow Effect -->
           <div
             class="snow-container"
-            [class.fading]="isSnowFading"
-            *ngIf="isSnowing"
+            [class.fading]="weather.isSnowFading"
+            *ngIf="weather.isSnowing"
           >
             <div
-              *ngFor="let flake of snowFlakes"
+              *ngFor="let flake of weatherService.snowFlakes"
               class="snow-flake"
-              [style.left.%]="getRandomLeft(flake)"
-              [style.animationDelay.s]="getRandomDelay(flake)"
-              [style.animationDuration.s]="getRandomDuration(flake, 5)"
+              [style.left.%]="weatherService.getRandomLeft(flake)"
+              [style.animationDelay.s]="weatherService.getRandomDelay(flake)"
+              [style.animationDuration.s]="weatherService.getRandomDuration(flake, 5)"
             ></div>
           </div>
         </div>
