@@ -52,6 +52,10 @@ export class MovementsComponent implements OnInit, OnDestroy {
     return this.fromVillage.length > 0 || this.toVillage.length > 0;
   }
 
+  get villageCount(): number {
+    return this.userInformationService.userInformation?.villages?.length ?? 1;
+  }
+
   constructor(
     private http: HttpClient,
     private userInformationService: UserInformationService
@@ -184,20 +188,24 @@ export class MovementsComponent implements OnInit, OnDestroy {
     if (movement.type === 'oasis_return') {
       return 'Troops returning';
     }
+
     if (movement.type === 'attack') {
-      return isFromVillage
-        ? `Attack → ${movement.targetUsername}`
-        : `Attack from ${movement.senderUsername}`;
+      if (isFromVillage) {
+        return `You [${movement.senderVillageName}] → ${movement.targetUsername} [${movement.targetVillageName}]`;
+      }
+      return `${movement.senderUsername} [${movement.senderVillageName}] → You [${movement.targetVillageName}]`;
     }
     if (movement.type === 'support') {
-      return isFromVillage
-        ? `Support → ${movement.targetUsername}`
-        : `Support from ${movement.senderUsername}`;
+      if (isFromVillage) {
+        return `You [${movement.senderVillageName}] → ${movement.targetUsername} [${movement.targetVillageName}]`;
+      }
+      return `${movement.senderUsername} [${movement.senderVillageName}] → You [${movement.targetVillageName}]`;
     }
     if (movement.type === 'resources') {
-      return isFromVillage
-        ? `Resources → ${movement.targetUsername}`
-        : `Resources from ${movement.senderUsername}`;
+      if (isFromVillage) {
+        return `You [${movement.senderVillageName}] → ${movement.targetUsername} [${movement.targetVillageName}]`;
+      }
+      return `${movement.senderUsername} [${movement.senderVillageName}] → You [${movement.targetVillageName}]`;
     }
     if (movement.type === 'relic_transfer') {
       return isFromVillage

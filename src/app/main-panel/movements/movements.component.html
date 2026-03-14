@@ -1,18 +1,18 @@
 <div class="movements-container" *ngIf="hasMovements">
     <div class="movements-section" *ngIf="fromVillage.length > 0">
-        <div class="section-header">From your village</div>
+        <div class="section-header">From your {{ villageCount > 1 ? 'villages' : 'village' }}</div>
         <div class="movement-row" *ngFor="let m of fromVillage">
             <img class="movement-icon" [src]="getIcon(m)" alt="">
-            <span class="movement-name">{{getMovementName(m, true)}}</span>
+            <span class="movement-name" [title]="getMovementName(m, true)">{{getMovementName(m, true)}}</span>
             <span class="movement-timer">{{getCountdown(m)}}</span>
         </div>
     </div>
 
     <div class="movements-section" *ngIf="toVillage.length > 0">
-        <div class="section-header">To your village</div>
+        <div class="section-header">To your {{ villageCount > 1 ? 'villages' : 'village' }}</div>
         <div class="movement-row" *ngFor="let m of toVillage" [class.enemy]="isEnemyAttack(m)">
             <img class="movement-icon" [src]="getIcon(m)" alt="">
-            <span class="movement-name">{{getMovementName(m, false)}}</span>
+            <span class="movement-name" [title]="getMovementName(m, false)">{{getMovementName(m, false)}}</span>
             <span class="movement-timer">{{getCountdown(m)}}</span>
         </div>
     </div>
