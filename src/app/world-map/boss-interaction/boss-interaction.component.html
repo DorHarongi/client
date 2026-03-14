@@ -1,4 +1,5 @@
 <div class="flexContainer interactionContainer round-square">
+  <img src="assets/information.png" class="info-icon" (click)="showInfo = true" />
   <h3 class="center modal-title">Raid Boss</h3>
 
   <!-- Boss Info -->
@@ -70,7 +71,7 @@
 
     <!-- Rewards -->
     <div class="rewards-section" *ngIf="boss.tier !== 'mythic'">
-      <h5>Reward on defeat:</h5>
+      <h5>Reward on defeat (per clan member):</h5>
       <app-resources-amount
         [resources]="getRewardResources()"
       ></app-resources-amount>
@@ -198,3 +199,10 @@
 
   <p class="error-message center" *ngIf="errorMessage">{{ errorMessage }}</p>
 </div>
+
+<app-info-modal
+  *ngIf="showInfo"
+  [title]="getInfoTitle()"
+  [lines]="getInfoLines()"
+  (closed)="showInfo = false"
+></app-info-modal>

@@ -1,0 +1,11 @@
+<div class="info-overlay" (click)="close()">
+  <div class="info-dialog" (click)="$event.stopPropagation()">
+    <h4 class="info-title">{{ title }}</h4>
+    <div class="info-body">
+      <p *ngFor="let line of lines">{{ line }}</p>
+    </div>
+    <div class="info-actions">
+      <button class="info-close-btn" (click)="close()">Got it</button>
+    </div>
+  </div>
+</div>
