@@ -12,40 +12,38 @@
       >
     </div>
 
-    <div class="skill-table-wrapper">
-      <div class="skill-table">
-        <div class="skill-header-row">
-          <div class="skill-header-cell" *ngFor="let cat of categoryHeaders">
-            {{ cat }}
-          </div>
-        </div>
-        <div class="skill-body-row" *ngFor="let row of grid; let rowIdx = index">
-          <div
-            class="skill-cell"
-            *ngFor="let cell of row"
-            [ngClass]="getSkillState(cell)"
-            (click)="onSkillClick(cell)"
-          >
-            <img *ngIf="getSkillState(cell) === 'unlocked'" src="assets/success.png" class="skill-overlay-icon" />
-            <img *ngIf="getSkillState(cell) === 'locked'" src="assets/lock.png" class="skill-overlay-icon" />
-            <div class="skill-tier">Tier {{ cell.tier }}</div>
-            <div class="skill-bonus">+{{ cell.bonusPercent }}%</div>
-            <div class="skill-cost">
-              {{ cell.cost }} SP
-            </div>
-            <div class="skill-tooltip">
-              <div class="tooltip-title">
-                {{ cell.name }} (Tier {{ cell.tier }})
-              </div>
-              <div class="tooltip-line">{{ cell.description }}</div>
-              <div class="tooltip-line">Bonus: +{{ cell.bonusPercent }}%</div>
-              <div class="tooltip-line">
-                Cost: {{ cell.cost }} Skill Point{{ cell.cost === 1 ? "" : "s" }}
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="skill-table">
+      <div class="skill-header-cell corner-cell"></div>
+      <div class="skill-header-cell" *ngFor="let tier of tierHeaders">
+        {{ tier }}
       </div>
+
+      <ng-container *ngFor="let row of grid; let rowIdx = index">
+        <div class="skill-name-cell">{{ row[0].name }}</div>
+        <div
+          class="skill-cell"
+          *ngFor="let cell of row"
+          [ngClass]="getSkillState(cell)"
+          (click)="onSkillClick(cell)"
+        >
+          <img *ngIf="getSkillState(cell) === 'unlocked'" src="assets/success.png" class="skill-overlay-icon" />
+          <img *ngIf="getSkillState(cell) === 'locked'" src="assets/lock.png" class="skill-overlay-icon" />
+          <div class="skill-bonus">+{{ cell.bonusPercent }}%</div>
+          <div class="skill-cost">
+            {{ cell.cost }} SP
+          </div>
+          <div class="skill-tooltip" [ngClass]="{ 'tooltip-below': rowIdx < 2 }">
+            <div class="tooltip-title">
+              {{ cell.name }} (Tier {{ cell.tier }})
+            </div>
+            <div class="tooltip-line">{{ cell.description }}</div>
+            <div class="tooltip-line">Bonus: +{{ cell.bonusPercent }}%</div>
+            <div class="tooltip-line">
+              Cost: {{ cell.cost }} Skill Point{{ cell.cost === 1 ? "" : "s" }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
 
     <div class="skill-actions">
