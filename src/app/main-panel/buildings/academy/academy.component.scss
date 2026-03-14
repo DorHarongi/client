@@ -182,9 +182,10 @@ $tile-size: 70px;
         opacity: 1;
     }
 
-    // Available — green border + intense glow, clickable
+    // Available — green border + intense glow + pulse, clickable
     &.available {
         cursor: pointer;
+        animation: tile-pulse 2s ease-in-out infinite;
 
         .tile-icon-wrapper {
             border-color: $green-available;
@@ -199,6 +200,7 @@ $tile-size: 70px;
         }
 
         &:hover {
+            animation: none;
             transform: scale(1.08);
 
             .tile-icon-wrapper {
@@ -210,8 +212,14 @@ $tile-size: 70px;
         }
 
         &:active {
+            animation: none;
             transform: scale(0.96);
         }
+    }
+
+    @keyframes tile-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.06); }
     }
 
     // Unlocked — golden border + intense warm glow + checkmark badge

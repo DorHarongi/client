@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 const USER_KEY = 'user_info';
+const VILLAGE_INDEX_KEY = 'current_village_index';
 
 @Injectable({
   providedIn: 'root'
@@ -51,8 +52,10 @@ export class UserInformationService {
 
     if(!this.currentVillage && !this.currentVillageIndex) // first time when loading the app
     {
-      this.currentVillage = this.userInformation?.villages[0];
-      this.currentVillageIndex = 0;
+      const savedIndex = parseInt(sessionStorage.getItem(VILLAGE_INDEX_KEY) || '0', 10);
+      const idx = (savedIndex >= 0 && savedIndex < this.userInformation.villages.length) ? savedIndex : 0;
+      this.currentVillageIndex = idx;
+      this.currentVillage = this.userInformation?.villages[idx];
     }
     else // after a request to the server like training troops
     {
@@ -67,7 +70,7 @@ export class UserInformationService {
 
   clearUserInformation(): void {
     sessionStorage.removeItem(USER_KEY);
-    // Also clear in-memory user to prevent stale data
+    sessionStorage.removeItem(VILLAGE_INDEX_KEY);
     this.userInformation = null as any;
     this.currentVillage = null as any;
     this.currentVillageIndex = 0;
@@ -76,12 +79,12 @@ export class UserInformationService {
   switchVillage(index: number)
   {
     this.requestVillage(index).subscribe((village: Village)=>{
-      this.userInformation.villages[index] = village; // get updated village for updated resources, updated troops in case of attack
+      this.userInformation.villages[index] = village;
       this.currentVillageIndex = index;
       this.currentVillage = this.userInformation.villages[index];
       this.villageChagnedSubject.next();
-      // Update stored user
       sessionStorage.setItem(USER_KEY, JSON.stringify(this.userInformation));
+      sessionStorage.setItem(VILLAGE_INDEX_KEY, String(index));
     })
   }
 

@@ -103,10 +103,11 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscription = this.userInformationService.villageChanged$.subscribe(
       () => {
         this.village = this.userInformationService.currentVillage;
-        // Update URL to reflect current village
-        this.router.navigate(['home', this.village.villageName], {
-          replaceUrl: true,
-        });
+        if (this.router.url.startsWith('/home')) {
+          this.router.navigate(['home', this.village.villageName], {
+            replaceUrl: true,
+          });
+        }
       }
     );
   }
