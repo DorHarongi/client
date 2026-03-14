@@ -55,8 +55,6 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   sending: boolean = false;
   retreating: boolean = false;
   errorMessage: string = '';
-  spySent: boolean = false;
-  spyTravelTimeMs: number = 0;
 
   showInfo: boolean = false;
   oasisInfoLines: string[] = [
@@ -184,15 +182,15 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
         oasisId: this.oasis.id,
       })
       .subscribe({
-        next: (result) => {
+        next: () => {
           this.scouting = false;
-          this.spySent = true;
-          this.spyTravelTimeMs = result.travelTimeMs || 0;
           this.userInformationService.currentVillage.aliveSpies = Math.max(
             0,
             (this.userInformationService.currentVillage.aliveSpies || 0) - 1
           );
           this.userInformationService.notifyVillageChanged();
+          this.closed.emit();
+          this.router.navigate(['/home']);
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to spy on oasis';
@@ -487,17 +485,6 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       case 'Legendary': return 'rarity-legendary';
       default: return '';
     }
-  }
-
-  getFormattedSpyTravelTime(): string {
-    if (!this.spyTravelTimeMs || this.spyTravelTimeMs <= 0) return '—';
-    const totalSeconds = Math.floor(this.spyTravelTimeMs / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    if (hours > 0) return `${hours}h ${minutes}m`;
-    if (minutes > 0) return `${minutes}m ${seconds}s`;
-    return `${seconds}s`;
   }
 
   close(): void {

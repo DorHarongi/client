@@ -62,15 +62,11 @@
 
   </div>
 
-  <div *ngIf="spySent && !isClanOwned" class="spy-sent-notice center">
-    <p>Spy has been sent! Travel time: {{ getFormattedSpyTravelTime() }}</p>
-  </div>
-
   <div *ngIf="!showSendTroopsPanel && !isClanOwned">
     <div class="actions center">
       <button class="action-btn" (click)="findOnMap()">Find on Map</button>
-      <button *ngIf="!isOccupier" class="action-btn" (click)="scout()" [disabled]="scouting || spySent">
-        {{ scouting ? 'Spying...' : (spySent ? 'Spy Sent' : 'Spy') }}
+      <button *ngIf="!isOccupier" class="action-btn" (click)="scout()" [disabled]="scouting">
+        {{ scouting ? 'Spying...' : 'Spy Oasis' }}
       </button>
       <button class="action-btn" (click)="openSendTroopsPanel()">Send Troops</button>
       <button *ngIf="isOccupier" class="action-btn retreat-btn" (click)="retreat()" [disabled]="retreating">
