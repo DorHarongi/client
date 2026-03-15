@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://emperium.hopto.org:3000',
+  apiUrl: 'https://emperium.hopto.org:3000',
 };
