@@ -79,6 +79,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   armySpeed: number = 0;
   travelTimeMs: number = 0;
 
+  // Clan claim info
+  clanClaims: number = 0;
+  maxClaims: number = 0;
+
   subscription?: Subscription;
 
   constructor(
@@ -89,6 +93,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initMaxTroops();
     this.calculateDistance();
+    this.loadClanClaimInfo();
   }
 
   ngOnDestroy(): void {
@@ -120,6 +125,17 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       this.distance
     );
     this.distanceBonusText = getDistanceBonusText(this.distance);
+  }
+
+  loadClanClaimInfo(): void {
+    if (!this.currentUserClan || this.isMythicBoss()) return;
+    this.bossService.getClanClaimInfo(this.currentUsername).subscribe({
+      next: (info) => {
+        this.clanClaims = info.clanClaims;
+        this.maxClaims = info.maxClaims;
+      },
+      error: () => {},
+    });
   }
 
   getBossImagePath(): string {
@@ -355,6 +371,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
             this.boss.tier !== 'mythic'
           ) {
             this.boss.claimedByClanName = this.currentUserClan;
+            this.loadClanClaimInfo();
           }
         },
         error: (err) => {

@@ -52,6 +52,10 @@
       <p class="unclaimed">Unclaimed - Attack to claim for your clan!</p>
     </div>
 
+    <p class="clan-claims" *ngIf="boss.tier !== 'mythic' && currentUserClan && maxClaims > 0">
+      Clan claims: {{ clanClaims }}/{{ maxClaims }}
+    </p>
+
     <!-- Distance Bonus -->
     <div class="distance-section">
       <p class="distance-label">

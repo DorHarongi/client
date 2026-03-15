@@ -98,6 +98,10 @@ export class BossService {
         return this.http.post<{ success: boolean }>(`${environment.apiUrl}/bosses/reports/read/${reportId}/${username}`, {});
     }
 
+    getClanClaimInfo(username: string): Observable<{ clanClaims: number; maxClaims: number }> {
+        return this.http.get<{ clanClaims: number; maxClaims: number }>(`${environment.apiUrl}/bosses/clan-claims/${username}`);
+    }
+
     // Helper: Get distance multiplier for UI display
     getDistanceMultiplier(distance: number): number {
         return getDistanceDamageMultiplier(distance);
