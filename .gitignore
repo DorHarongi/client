@@ -41,6 +41,10 @@ yarn-error.log
 testem.log
 /typings
 
+# Capacitor Android/iOS
+/android
+/ios
+
 # System Files
 .DS_Store
 Thumbs.db
