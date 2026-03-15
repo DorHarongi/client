@@ -78,13 +78,12 @@
             💀
           </div>
           <!-- Oases -->
-          <div
+          <img
+            src="assets/oasis.png"
             class="minimap-oasis"
             *ngFor="let oasis of allOases"
             [ngStyle]="getMinimapOasisStyle(oasis)"
-          >
-            🏝️
-          </div>
+          />
           <div
             class="minimap-window"
             [ngStyle]="getMinimapWindowStyle()"

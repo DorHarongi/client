@@ -152,9 +152,7 @@ $your-color: #90EE90;     // Green - your own villages
   position: absolute;
   width: 8px;
   height: 8px;
-  font-size: 8px;
-  line-height: 8px;
-  text-align: center;
+  object-fit: contain;
 }
 
 .minimap-window {
