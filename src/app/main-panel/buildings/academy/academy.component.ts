@@ -246,8 +246,8 @@ export class AcademyComponent implements OnInit, OnDestroy {
   onTileHover(event: MouseEvent): void {
     const tile = event.currentTarget as HTMLElement;
     const rect = tile.getBoundingClientRect();
-    const spaceAbove = rect.top;
-    const tooltipHeight = 120;
-    this.hoveredTileBelow = spaceAbove < tooltipHeight;
+    const tooltip = tile.querySelector('.skill-tooltip') as HTMLElement;
+    const tooltipHeight = tooltip ? tooltip.offsetHeight + 10 : 130;
+    this.hoveredTileBelow = rect.top < tooltipHeight;
   }
 }
