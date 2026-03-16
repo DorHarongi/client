@@ -156,9 +156,6 @@ h5 {
 }
 
 .retreat-btn {
-  background-color: #FFB6C1 !important;
-  background-image: none !important;
-
   &:hover:not(:disabled) {
     filter: brightness(0.95);
   }

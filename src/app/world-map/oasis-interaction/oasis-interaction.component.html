@@ -177,15 +177,15 @@
         <div class="retreat-resources overflow">
           <div class="resource-row" *ngIf="retreatOverflow.wood > 0">
             <img src="assets/wood.jpg" class="resource-icon" />
-            <span class="overflow-amount">-{{ retreatOverflow.wood | number:'1.0-0' }}</span>
+            <span class="overflow-amount">{{ retreatOverflow.wood | number:'1.0-0' }}</span>
           </div>
           <div class="resource-row" *ngIf="retreatOverflow.stone > 0">
             <img src="assets/rock.jpg" class="resource-icon" />
-            <span class="overflow-amount">-{{ retreatOverflow.stone | number:'1.0-0' }}</span>
+            <span class="overflow-amount">{{ retreatOverflow.stone | number:'1.0-0' }}</span>
           </div>
           <div class="resource-row" *ngIf="retreatOverflow.crop > 0">
             <img src="assets/crop.jpg" class="resource-icon" />
-            <span class="overflow-amount">-{{ retreatOverflow.crop | number:'1.0-0' }}</span>
+            <span class="overflow-amount">{{ retreatOverflow.crop | number:'1.0-0' }}</span>
           </div>
         </div>
       </div>
