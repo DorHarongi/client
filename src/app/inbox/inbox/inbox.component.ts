@@ -485,8 +485,11 @@ export class InboxComponent implements OnInit, OnDestroy {
   openMessageModal(message: Message): void {
     this.selectedMessage = message;
     this.messageModalOpened = true;
-    
-    // Mark as read if not already
+
+    if (message.metadata?.bossReward) {
+      this.userInformationService.refreshUserInformation();
+    }
+
     if (!message.read) {
       this.markMessageAsRead(message);
     }

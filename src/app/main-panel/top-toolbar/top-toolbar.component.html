@@ -14,9 +14,10 @@
       (click)="goToStatistics()"
       title="Statistics"
     />
-    <div class="icon-with-badge" [class.nav-active]="isRoute('Inbox')" (click)="goToMessages()">
+    <div class="icon-with-badge" (click)="goToMessages()">
       <img
         class="icons clickable"
+        [class.nav-active]="isRoute('Inbox')"
         src="../../../assets/ancient-scroll.png"
         title="Messages"
       />
