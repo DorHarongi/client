@@ -141,7 +141,10 @@ body[data-theme]:not([data-theme="default"]) {
     .modal-container,
     .server-selected,
     .server-options,
-    .clan-chat {
+    .clan-chat,
+    .profile-card,
+    .title-dropdown-trigger,
+    .title-dropdown-list {
         background-image: none;
         background-color: var(--bg-primary);
         color: var(--text-primary);
