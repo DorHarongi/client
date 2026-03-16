@@ -248,7 +248,8 @@ export class AcademyComponent implements OnInit, OnDestroy {
     const rect = tile.getBoundingClientRect();
     const tooltip = tile.querySelector('.skill-tooltip') as HTMLElement;
     const measured = tooltip ? Math.max(tooltip.offsetHeight, tooltip.scrollHeight) : 0;
-    const tooltipHeight = Math.max(measured, 100) + 20;
-    this.hoveredTileBelow = rect.top < tooltipHeight;
+    const tooltipHeight = Math.max(measured, 100) + 10;
+    const toolbarHeight = Math.max(window.innerHeight * 0.075, 75);
+    this.hoveredTileBelow = rect.top - toolbarHeight < tooltipHeight;
   }
 }
