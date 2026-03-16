@@ -61,8 +61,27 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   showWithdrawModal: boolean = false;
   selectedWithdrawVillages: Set<string> = new Set();
   retreatStash: { wood: number; stone: number; crop: number } = { wood: 0, stone: 0, crop: 0 };
-  retreatOverflow: { wood: number; stone: number; crop: number } = { wood: 0, stone: 0, crop: 0 };
-  hasOverflow: boolean = false;
+
+  get retreatOverflow(): { wood: number; stone: number; crop: number } {
+    const village = this.userInformationService.currentVillage;
+    const levels = village.buildingsLevels;
+    const maxWood = warehouseStorageByLevel[levels.woodWarehouseLevel] || 0;
+    const maxStone = warehouseStorageByLevel[levels.stoneWarehouseLevel] || 0;
+    const maxCrop = warehouseStorageByLevel[levels.cropWarehouseLevel] || 0;
+    const freeWood = Math.max(0, maxWood - village.resourcesAmounts.woodAmount);
+    const freeStone = Math.max(0, maxStone - village.resourcesAmounts.stonesAmount);
+    const freeCrop = Math.max(0, maxCrop - village.resourcesAmounts.cropAmount);
+    return {
+      wood: Math.max(0, this.retreatStash.wood - freeWood),
+      stone: Math.max(0, this.retreatStash.stone - freeStone),
+      crop: Math.max(0, this.retreatStash.crop - freeCrop),
+    };
+  }
+
+  get hasOverflow(): boolean {
+    const o = this.retreatOverflow;
+    return o.wood > 0 || o.stone > 0 || o.crop > 0;
+  }
 
   showInfo: boolean = false;
   oasisInfoLines: string[] = [
@@ -480,24 +499,6 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       stone: Math.round(stash.stone || 0),
       crop: Math.round(stash.crop || 0),
     };
-
-    const village = this.userInformationService.currentVillage;
-    const levels = village.buildingsLevels;
-    const maxWood = warehouseStorageByLevel[levels.woodWarehouseLevel] || 0;
-    const maxStone = warehouseStorageByLevel[levels.stoneWarehouseLevel] || 0;
-    const maxCrop = warehouseStorageByLevel[levels.cropWarehouseLevel] || 0;
-
-    const freeWood = Math.max(0, maxWood - village.resourcesAmounts.woodAmount);
-    const freeStone = Math.max(0, maxStone - village.resourcesAmounts.stonesAmount);
-    const freeCrop = Math.max(0, maxCrop - village.resourcesAmounts.cropAmount);
-
-    this.retreatOverflow = {
-      wood: Math.max(0, this.retreatStash.wood - freeWood),
-      stone: Math.max(0, this.retreatStash.stone - freeStone),
-      crop: Math.max(0, this.retreatStash.crop - freeCrop),
-    };
-    this.hasOverflow = this.retreatOverflow.wood > 0 || this.retreatOverflow.stone > 0 || this.retreatOverflow.crop > 0;
-
     this.showRetreatConfirm = true;
   }
 
