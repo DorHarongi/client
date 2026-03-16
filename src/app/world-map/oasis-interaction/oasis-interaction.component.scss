@@ -246,9 +246,9 @@ h5 {
   font-weight: 500;
   font-size: 14px;
   padding: 10px 15px;
-  background: rgba(30, 144, 255, 0.1);
+  background: var(--bg-secondary, rgba(92, 61, 10, 0.15));
   border-radius: 6px;
-  border: 1px solid rgba(30, 144, 255, 0.3);
+  border: 1px solid var(--border-color, #7d5210);
   margin-bottom: 10px;
 }
 

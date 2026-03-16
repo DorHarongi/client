@@ -71,7 +71,7 @@
       <button *ngIf="!isOccupier" class="action-btn" (click)="scout()" [disabled]="scouting">
         {{ scouting ? 'Spying...' : 'Spy Oasis' }}
       </button>
-      <button class="action-btn" (click)="openSendTroopsPanel()" [disabled]="villageAlreadyAtOtherOasis">Send Troops</button>
+      <button *ngIf="!villageAlreadyAtOtherOasis" class="action-btn" (click)="openSendTroopsPanel()">Send Troops</button>
       <button *ngIf="isOccupier" class="action-btn retreat-btn" (click)="onRetreatClick()" [disabled]="retreating">
         {{ retreating ? 'Withdrawing...' : 'Withdraw Troops' }}
       </button>
