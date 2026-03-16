@@ -166,7 +166,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
   }
 
   isRoute(route: string): boolean {
-    return this.router.url === '/' + route;
+    return this.router.url.startsWith('/' + route);
   }
 
   goToHome() {
