@@ -54,6 +54,7 @@ interface Message {
     clanName?: string;
     requestUsername?: string;
     resources?: ResourcesMetadata;
+    received?: ResourcesMetadata;
     troops?: TroopsMetadata;
     bossReward?: BossRewardMetadata;
   };
@@ -374,6 +375,24 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   isOasisReturnMessage(type: string): boolean {
     return type === 'oasis_return';
+  }
+
+  hasOasisOverflow(message: Message): boolean {
+    const r = message.metadata?.received;
+    const s = message.metadata?.resources;
+    if (!r || !s) return false;
+    return r.wood < s.wood || r.stone < s.stone || r.crop < s.crop;
+  }
+
+  isOverflowResource(message: Message, resource: 'wood' | 'stone' | 'crop'): boolean {
+    const r = message.metadata?.received;
+    const s = message.metadata?.resources;
+    if (!r || !s) return false;
+    return r[resource] < s[resource];
+  }
+
+  getReceivedAmount(message: Message, resource: 'wood' | 'stone' | 'crop'): number {
+    return message.metadata?.received?.[resource] ?? 0;
   }
 
   claimBossReward(): void {

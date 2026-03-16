@@ -125,6 +125,23 @@
                     <span>{{selectedMessage.metadata?.resources?.crop | number}}</span>
                 </div>
             </div>
+            <div *ngIf="hasOasisOverflow(selectedMessage)" class="overflow-section">
+                <h5 class="center overflow-title">Actually Received (warehouse was full):</h5>
+                <div class="resources-display">
+                    <div class="resource-item">
+                        <img src="../../../assets/wood.jpg" class="resource-icon">
+                        <span [class.overflow-loss]="isOverflowResource(selectedMessage, 'wood')">{{getReceivedAmount(selectedMessage, 'wood') | number}}</span>
+                    </div>
+                    <div class="resource-item">
+                        <img src="../../../assets/rock.jpg" class="resource-icon">
+                        <span [class.overflow-loss]="isOverflowResource(selectedMessage, 'stone')">{{getReceivedAmount(selectedMessage, 'stone') | number}}</span>
+                    </div>
+                    <div class="resource-item">
+                        <img src="../../../assets/crop.jpg" class="resource-icon">
+                        <span [class.overflow-loss]="isOverflowResource(selectedMessage, 'crop')">{{getReceivedAmount(selectedMessage, 'crop') | number}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Troops Display for support troop messages -->

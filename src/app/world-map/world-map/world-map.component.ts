@@ -369,7 +369,10 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   closeOasisInteraction(): void {
     this.selectedOasis = null;
+    this.worldMapService.invalidateMapCache(this.windowStartX, this.windowStartY);
+    this.worldMapService.clearMinimapCache();
     this.loadMapWindow();
+    this.loadMinimap();
   }
 
   getMinimapWindowStyle(): any {

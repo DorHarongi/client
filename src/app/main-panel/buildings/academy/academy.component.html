@@ -17,6 +17,7 @@
               class="skill-tile"
               [ngClass]="getSkillState(cell)"
               (click)="onSkillClick(cell)"
+              (mouseenter)="onTileHover($event)"
             >
               <div class="tile-label">Tier {{ cell.tier }} · +{{ cell.bonusPercent }}%</div>
               <div class="tile-icon-wrapper">
@@ -26,7 +27,7 @@
                 <img *ngIf="getSkillState(cell) === 'locked'" src="assets/locked.png" class="tile-status-icon" />
               </div>
               <div class="tile-cost">{{ cell.cost }} SP</div>
-              <div class="skill-tooltip" [ngClass]="{ 'tooltip-below': rowIdx < 2 }">
+              <div class="skill-tooltip" [ngClass]="{ 'tooltip-below': hoveredTileBelow }">
                 <div class="tooltip-title">{{ cell.name }} (Tier {{ cell.tier }})</div>
                 <div class="tooltip-line">{{ cell.description }}</div>
                 <div class="tooltip-line">Bonus: +{{ cell.bonusPercent }}%</div>

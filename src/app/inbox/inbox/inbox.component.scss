@@ -360,3 +360,21 @@ tr, td{
         color: #2a6ea8 !important;
     }
 }
+
+.overflow-section {
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #c0392b;
+    border-radius: 5px;
+    background: rgba(192, 57, 43, 0.08);
+}
+
+.overflow-title {
+    color: #c0392b;
+    font-size: 0.9em;
+}
+
+.overflow-loss {
+    color: #c0392b;
+    font-weight: 700;
+}

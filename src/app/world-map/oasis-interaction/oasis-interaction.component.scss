@@ -244,6 +244,177 @@ h5 {
   margin-bottom: 10px;
 }
 
+.village-limit-message {
+  color: var(--text-content, #3d2914);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 15px;
+  background: rgba(30, 144, 255, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(30, 144, 255, 0.3);
+  margin-bottom: 10px;
+}
+
+.withdraw-dialog {
+  background-image: url(../../../assets/top-bg.png);
+  border-radius: 7px;
+  padding: 20px;
+  max-width: 600px;
+  width: 95%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 2px 2px 5px 2px;
+  border: 2px solid black;
+
+  h4 {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 1.2em;
+    color: var(--text-content, #3d2914);
+  }
+}
+
+.withdraw-subtitle {
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 0.9em;
+  color: var(--text-content-muted, #666);
+}
+
+.withdraw-village-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.withdraw-village-row {
+  padding: 8px 10px;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  background: var(--bg-secondary, #5c3d0a);
+  color: var(--text-primary, #f5f0e1);
+
+  &:hover {
+    filter: brightness(1.15);
+  }
+
+  &.selected {
+    outline: 3px solid #4CAF50;
+    outline-offset: -3px;
+    background: rgba(76, 175, 80, 0.15);
+  }
+}
+
+.withdraw-village-name {
+  font-weight: 700;
+  font-size: 0.9em;
+  margin-bottom: 4px;
+}
+
+.withdraw-troop-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+
+  th, td {
+    padding: 2px 4px;
+    text-align: center;
+  }
+}
+
+.withdraw-troop-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.withdraw-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background-image: url(../../../assets/top-bg.png);
+  border-radius: 7px;
+  padding: 25px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 2px 2px 5px 2px;
+  border: 2px solid black;
+
+  h4 {
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 1.3em;
+  }
+
+  .confirm-content {
+    text-align: center;
+    margin-bottom: 20px;
+
+    p {
+      margin: 6px 0;
+    }
+  }
+
+  .confirm-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+  }
+}
+
+.retreat-resources {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 10px 0;
+
+  &.overflow {
+    .resource-row {
+      color: #c0392b;
+    }
+  }
+}
+
+.overflow-warning {
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid #c0392b;
+  border-radius: 5px;
+  background: rgba(192, 57, 43, 0.08);
+}
+
+.warning-text {
+  color: #c0392b;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.overflow-amount {
+  color: #c0392b;
+  font-weight: 700;
+}
+
 @media (max-width: 768px) {
   .interactionContainer {
     min-width: unset;

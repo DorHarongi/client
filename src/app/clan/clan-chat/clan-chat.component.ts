@@ -43,8 +43,9 @@ export class ClanChatComponent implements OnInit, OnDestroy, AfterViewChecked {
             });
 
         const token = sessionStorage.getItem('auth_token') || '';
+        const serverId = sessionStorage.getItem('serverId') || '1';
         this.socket = io(`${environment.apiUrl}/chat`, {
-            auth: { token: `Bearer ${token}` },
+            auth: { token: `Bearer ${token}`, serverId },
         });
 
         this.socket.on('connect', () => {

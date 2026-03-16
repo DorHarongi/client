@@ -35,6 +35,7 @@ import {
   oasisTierConfigs,
   OasisTier,
   OASIS_HARVEST_RATE_PER_TROOP_PER_HOUR,
+  warehouseStorageByLevel,
 } from 'utils';
 import { OasisOnMap } from '../models/mapModels';
 
@@ -56,12 +57,19 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   retreating: boolean = false;
   errorMessage: string = '';
 
+  showRetreatConfirm: boolean = false;
+  showWithdrawModal: boolean = false;
+  selectedWithdrawVillages: Set<string> = new Set();
+  retreatStash: { wood: number; stone: number; crop: number } = { wood: 0, stone: 0, crop: 0 };
+  retreatOverflow: { wood: number; stone: number; crop: number } = { wood: 0, stone: 0, crop: 0 };
+  hasOverflow: boolean = false;
+
   showInfo: boolean = false;
   oasisInfoLines: string[] = [
     'An oasis can be controlled by one player at a time. To conquer it, you must defeat the army of its current owner.',
     'Once you control an oasis, your troops will start looting it. The more troops you station there, the faster the looting.',
-    'You can reinforce your oasis with troops from all of your villages to keep it secure.',
-    'You can retreat at any time and your troops will carry back the resources they have gathered so far.',
+    'Each village can only support one oasis at a time. You can reinforce the same oasis from multiple villages, but each village is locked to that oasis until you withdraw its troops.',
+    'You can withdraw troops at any time and they will carry back the resources they have gathered so far.',
     'Each oasis has a limited pool of resources. Higher rarity oases contain significantly more resources.',
     'Once all resources have been looted, the oasis disappears.',
     'You cannot tell whether an oasis is already claimed just by looking at the map. Scout it first to gather information before sending your troops.',
@@ -384,6 +392,19 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       this.oasisInfo.garrison.username === this.currentUsername;
   }
 
+  get villageAlreadyAtOtherOasis(): boolean {
+    const village = this.userInformationService.currentVillage;
+    if (!village?.oasisTroopsSent || village.oasisTroopsSent.length === 0) return false;
+    if (this.isOccupier) {
+      return village.oasisTroopsSent.some(e => e.oasisId !== this.oasis.id);
+    }
+    return village.oasisTroopsSent.length > 0;
+  }
+
+  get hasMultipleContributions(): boolean {
+    return this.garrisonContributions.length > 1;
+  }
+
   get isClanOwned(): boolean {
     return this.oasis.ownerType === 'clan' || !!this.oasisInfo?.clanOwner;
   }
@@ -440,7 +461,52 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
     return this.oasisInfo.garrison.totalForOccupier[resource];
   }
 
-  retreat(): void {
+  onRetreatClick(): void {
+    if (this.retreating) return;
+
+    if (this.hasMultipleContributions) {
+      this.selectedWithdrawVillages = new Set();
+      this.showWithdrawModal = true;
+      return;
+    }
+
+    this.openRetreatConfirm();
+  }
+
+  private openRetreatConfirm(): void {
+    const stash = this.oasisInfo?.garrison?.stash || { wood: 0, stone: 0, crop: 0 };
+    this.retreatStash = {
+      wood: Math.round(stash.wood || 0),
+      stone: Math.round(stash.stone || 0),
+      crop: Math.round(stash.crop || 0),
+    };
+
+    const village = this.userInformationService.currentVillage;
+    const levels = village.buildingsLevels;
+    const maxWood = warehouseStorageByLevel[levels.woodWarehouseLevel] || 0;
+    const maxStone = warehouseStorageByLevel[levels.stoneWarehouseLevel] || 0;
+    const maxCrop = warehouseStorageByLevel[levels.cropWarehouseLevel] || 0;
+
+    const freeWood = Math.max(0, maxWood - village.resourcesAmounts.woodAmount);
+    const freeStone = Math.max(0, maxStone - village.resourcesAmounts.stonesAmount);
+    const freeCrop = Math.max(0, maxCrop - village.resourcesAmounts.cropAmount);
+
+    this.retreatOverflow = {
+      wood: Math.max(0, this.retreatStash.wood - freeWood),
+      stone: Math.max(0, this.retreatStash.stone - freeStone),
+      crop: Math.max(0, this.retreatStash.crop - freeCrop),
+    };
+    this.hasOverflow = this.retreatOverflow.wood > 0 || this.retreatOverflow.stone > 0 || this.retreatOverflow.crop > 0;
+
+    this.showRetreatConfirm = true;
+  }
+
+  cancelRetreatConfirm(): void {
+    this.showRetreatConfirm = false;
+  }
+
+  confirmRetreat(): void {
+    this.showRetreatConfirm = false;
     if (this.retreating) return;
     this.retreating = true;
     this.errorMessage = '';
@@ -456,6 +522,57 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to retreat';
+          this.retreating = false;
+        },
+      });
+  }
+
+  toggleWithdrawVillage(villageName: string): void {
+    if (this.selectedWithdrawVillages.has(villageName)) {
+      this.selectedWithdrawVillages.delete(villageName);
+    } else {
+      this.selectedWithdrawVillages.add(villageName);
+    }
+  }
+
+  isVillageSelectedForWithdraw(villageName: string): boolean {
+    return this.selectedWithdrawVillages.has(villageName);
+  }
+
+  closeWithdrawModal(): void {
+    this.showWithdrawModal = false;
+    this.selectedWithdrawVillages.clear();
+  }
+
+  withdrawSelected(): void {
+    if (this.selectedWithdrawVillages.size === 0 || this.retreating) return;
+    this.doWithdraw(Array.from(this.selectedWithdrawVillages));
+  }
+
+  withdrawAll(): void {
+    if (this.retreating) return;
+    this.showWithdrawModal = false;
+    this.openRetreatConfirm();
+  }
+
+  private doWithdraw(villageNames: string[]): void {
+    this.retreating = true;
+    this.errorMessage = '';
+
+    this.subscription = this.http
+      .post<any>(`${environment.apiUrl}/oasis/retreat`, {
+        oasisId: this.oasis.id,
+        villageNames,
+      })
+      .subscribe({
+        next: () => {
+          this.retreating = false;
+          this.showWithdrawModal = false;
+          this.selectedWithdrawVillages.clear();
+          this.closed.emit();
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to withdraw troops';
           this.retreating = false;
         },
       });

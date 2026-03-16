@@ -86,6 +86,20 @@
     padding: 8px;
   }
 
+  .rewards-section ::ng-deep {
+    .resources-display {
+      gap: 2px;
+    }
+    .resource-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .amount {
+      font-size: 0.75em;
+      margin-right: 4px;
+    }
+  }
+
   .actions, .main-actions, .panel-actions {
     width: 100%;
     flex-wrap: wrap;

@@ -63,14 +63,17 @@
   </div>
 
   <div *ngIf="!showSendTroopsPanel && !isClanOwned">
+    <p *ngIf="villageAlreadyAtOtherOasis" class="village-limit-message center">
+      This village is already stationed at an oasis. Withdraw troops first to support another oasis.
+    </p>
     <div class="actions center">
       <button class="action-btn" (click)="findOnMap()">Find on Map</button>
       <button *ngIf="!isOccupier" class="action-btn" (click)="scout()" [disabled]="scouting">
         {{ scouting ? 'Spying...' : 'Spy Oasis' }}
       </button>
-      <button class="action-btn" (click)="openSendTroopsPanel()">Send Troops</button>
-      <button *ngIf="isOccupier" class="action-btn retreat-btn" (click)="retreat()" [disabled]="retreating">
-        {{ retreating ? 'Retreating...' : 'Retreat' }}
+      <button class="action-btn" (click)="openSendTroopsPanel()" [disabled]="villageAlreadyAtOtherOasis">Send Troops</button>
+      <button *ngIf="isOccupier" class="action-btn retreat-btn" (click)="onRetreatClick()" [disabled]="retreating">
+        {{ retreating ? 'Withdrawing...' : 'Withdraw Troops' }}
       </button>
       <button class="action-btn" (click)="close()">Close</button>
     </div>
@@ -102,6 +105,98 @@
   </div>
 
   <p class="error-message center" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>
+
+<div class="confirm-overlay" *ngIf="showWithdrawModal" (click)="closeWithdrawModal()">
+  <div class="withdraw-dialog" (click)="$event.stopPropagation()">
+    <h4>Withdraw Troops – {{ oasisName }}</h4>
+    <p class="withdraw-subtitle">Select villages to withdraw:</p>
+    <div class="withdraw-village-list">
+      <div
+        *ngFor="let contrib of garrisonContributions"
+        class="withdraw-village-row"
+        [class.selected]="isVillageSelectedForWithdraw(contrib.villageName)"
+        (click)="toggleWithdrawVillage(contrib.villageName)"
+      >
+        <div class="withdraw-village-name">{{ contrib.villageName }}</div>
+        <table class="withdraw-troop-table">
+          <tr>
+            <th><img class="withdraw-troop-icon" src="assets/spear.png" /></th>
+            <th><img class="withdraw-troop-icon" src="assets/sword.png" /></th>
+            <th><img class="withdraw-troop-icon" src="assets/axe.png" /></th>
+            <th><img class="withdraw-troop-icon" src="assets/bow.png" /></th>
+            <th><img class="withdraw-troop-icon" src="assets/hat.png" /></th>
+            <th><img class="withdraw-troop-icon" src="assets/horse.png" /></th>
+            <th><img class="withdraw-troop-icon" src="assets/trebuchet.png" /></th>
+          </tr>
+          <tr>
+            <td>{{ contrib.troops.spearFighters || 0 }}</td>
+            <td>{{ contrib.troops.swordFighters || 0 }}</td>
+            <td>{{ contrib.troops.axeFighters || 0 }}</td>
+            <td>{{ contrib.troops.archers || 0 }}</td>
+            <td>{{ contrib.troops.magicians || 0 }}</td>
+            <td>{{ contrib.troops.horsemen || 0 }}</td>
+            <td>{{ contrib.troops.catapults || 0 }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="withdraw-actions">
+      <button class="action-btn" (click)="withdrawSelected()" [disabled]="selectedWithdrawVillages.size === 0 || retreating">
+        {{ retreating ? 'Withdrawing...' : 'Withdraw Selected' }}
+      </button>
+      <button class="action-btn retreat-btn" (click)="withdrawAll()" [disabled]="retreating">
+        Withdraw All
+      </button>
+    </div>
+    <p class="error-message center" *ngIf="errorMessage">{{ errorMessage }}</p>
+  </div>
+</div>
+
+<div class="confirm-overlay" *ngIf="showRetreatConfirm" (click)="cancelRetreatConfirm()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <h4>Withdraw from {{ oasisName }}</h4>
+    <div class="confirm-content">
+      <p>Your troops will carry back:</p>
+      <div class="retreat-resources">
+        <div class="resource-row">
+          <img src="assets/wood.jpg" class="resource-icon" />
+          <span>{{ retreatStash.wood | number:'1.0-0' }}</span>
+        </div>
+        <div class="resource-row">
+          <img src="assets/rock.jpg" class="resource-icon" />
+          <span>{{ retreatStash.stone | number:'1.0-0' }}</span>
+        </div>
+        <div class="resource-row">
+          <img src="assets/crop.jpg" class="resource-icon" />
+          <span>{{ retreatStash.crop | number:'1.0-0' }}</span>
+        </div>
+      </div>
+      <div *ngIf="hasOverflow" class="overflow-warning">
+        <p class="warning-text">Your warehouses cannot hold all resources! The following will be lost:</p>
+        <div class="retreat-resources overflow">
+          <div class="resource-row" *ngIf="retreatOverflow.wood > 0">
+            <img src="assets/wood.jpg" class="resource-icon" />
+            <span class="overflow-amount">-{{ retreatOverflow.wood | number:'1.0-0' }}</span>
+          </div>
+          <div class="resource-row" *ngIf="retreatOverflow.stone > 0">
+            <img src="assets/rock.jpg" class="resource-icon" />
+            <span class="overflow-amount">-{{ retreatOverflow.stone | number:'1.0-0' }}</span>
+          </div>
+          <div class="resource-row" *ngIf="retreatOverflow.crop > 0">
+            <img src="assets/crop.jpg" class="resource-icon" />
+            <span class="overflow-amount">-{{ retreatOverflow.crop | number:'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="confirm-actions">
+      <button class="action-btn retreat-btn" (click)="confirmRetreat()" [disabled]="retreating">
+        {{ retreating ? 'Withdrawing...' : 'Withdraw' }}
+      </button>
+      <button class="action-btn" (click)="cancelRetreatConfirm()">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <app-info-modal

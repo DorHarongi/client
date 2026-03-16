@@ -54,6 +54,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
   pendingLearnCell: SkillCell | null = null;
 
   showResetConfirm: boolean = false;
+  hoveredTileBelow: boolean = false;
 
   subscription?: Subscription;
 
@@ -240,5 +241,13 @@ export class AcademyComponent implements OnInit, OnDestroy {
 
   cancelResetConfirm(): void {
     this.showResetConfirm = false;
+  }
+
+  onTileHover(event: MouseEvent): void {
+    const tile = event.currentTarget as HTMLElement;
+    const rect = tile.getBoundingClientRect();
+    const spaceAbove = rect.top;
+    const tooltipHeight = 120;
+    this.hoveredTileBelow = spaceAbove < tooltipHeight;
   }
 }
