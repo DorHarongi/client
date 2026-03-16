@@ -165,6 +165,10 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     this.router.navigate(['Inbox']);
   }
 
+  isRoute(route: string): boolean {
+    return this.router.url === '/' + route;
+  }
+
   goToHome() {
     this.router.navigate(['home']);
   }

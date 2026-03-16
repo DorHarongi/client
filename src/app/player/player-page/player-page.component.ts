@@ -122,11 +122,12 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
   }
 
   formatShieldTime(): string {
-    const hours = this.playerInfo?.beginnerShieldRemainingHours || 0;
-    if (hours < 1) {
-      return `${Math.ceil(hours * 60)} minutes`;
-    }
-    return `${hours.toFixed(1)} hours`;
+    const totalHours = this.playerInfo?.beginnerShieldRemainingHours || 0;
+    const h = Math.floor(totalHours);
+    const m = Math.ceil((totalHours - h) * 60);
+    if (h <= 0) return `${m} minutes`;
+    if (m <= 0) return `${h} hours`;
+    return `${h} hours ${m} minutes`;
   }
 
   changeTheme(event: Event): void {

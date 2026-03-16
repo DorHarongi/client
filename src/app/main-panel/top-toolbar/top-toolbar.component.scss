@@ -41,6 +41,13 @@
     cursor: pointer;
 }
 
+.nav-active {
+    filter: brightness(1.3) drop-shadow(0 2px 4px rgba(201, 169, 100, 0.7));
+    border-bottom: 3px solid #c9a964;
+    border-radius: 4px;
+    padding-bottom: 2px;
+}
+
 // Hide scrollbar on desktop but allow touch scroll on mobile
 @media (min-width: 769px) {
     #toolbar::-webkit-scrollbar { 

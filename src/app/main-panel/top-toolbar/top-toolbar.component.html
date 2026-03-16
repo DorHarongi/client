@@ -2,17 +2,19 @@
   <div class="left-side flex-container">
     <img
       class="icons clickable"
+      [class.nav-active]="isRoute('home')"
       src="../../../assets/village.png"
       (click)="goToHome()"
       title="Village"
     />
     <img
       class="icons clickable"
+      [class.nav-active]="isRoute('Statistics')"
       src="../../../assets/pie-chart.png"
       (click)="goToStatistics()"
       title="Statistics"
     />
-    <div class="icon-with-badge" (click)="goToMessages()">
+    <div class="icon-with-badge" [class.nav-active]="isRoute('Inbox')" (click)="goToMessages()">
       <img
         class="icons clickable"
         src="../../../assets/ancient-scroll.png"
@@ -22,6 +24,7 @@
     </div>
     <img
       class="icons clickable"
+      [class.nav-active]="isRoute('Map')"
       src="../../../assets/map.png"
       (click)="goToMap()"
       title="World Map"
