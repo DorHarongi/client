@@ -114,15 +114,15 @@
             <div class="resources-display">
                 <div class="resource-item">
                     <img src="../../../assets/wood.jpg" class="resource-icon">
-                    <span>{{selectedMessage.metadata?.resources?.wood | number}}</span>
+                    <span>{{selectedMessage.metadata?.resources?.wood | number:'1.0-0'}}</span>
                 </div>
                 <div class="resource-item">
                     <img src="../../../assets/rock.jpg" class="resource-icon">
-                    <span>{{selectedMessage.metadata?.resources?.stone | number}}</span>
+                    <span>{{selectedMessage.metadata?.resources?.stone | number:'1.0-0'}}</span>
                 </div>
                 <div class="resource-item">
                     <img src="../../../assets/crop.jpg" class="resource-icon">
-                    <span>{{selectedMessage.metadata?.resources?.crop | number}}</span>
+                    <span>{{selectedMessage.metadata?.resources?.crop | number:'1.0-0'}}</span>
                 </div>
             </div>
             <div *ngIf="hasOasisOverflow(selectedMessage)" class="overflow-section">

@@ -392,7 +392,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   }
 
   getReceivedAmount(message: Message, resource: 'wood' | 'stone' | 'crop'): number {
-    return message.metadata?.received?.[resource] ?? 0;
+    return Math.floor(message.metadata?.received?.[resource] ?? 0);
   }
 
   claimBossReward(): void {

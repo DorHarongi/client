@@ -285,54 +285,96 @@ h5 {
 }
 
 .withdraw-village-row {
-  padding: 8px 10px;
-  border: 1px solid black;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: background-color 0.15s ease;
-  background: var(--bg-secondary, #5c3d0a);
-  color: var(--text-primary, #f5f0e1);
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &:hover {
-    filter: brightness(1.15);
+    background: rgba(0, 0, 0, 0.04);
   }
 
   &.selected {
-    outline: 3px solid #4CAF50;
-    outline-offset: -3px;
-    background: rgba(76, 175, 80, 0.15);
+    outline: 2px solid #4CAF50;
+    outline-offset: -2px;
+    background: rgba(76, 175, 80, 0.08);
+  }
+
+  .troop-breakdown {
+    margin-bottom: 0;
+  }
+
+  .troop-row {
+    margin: 2px 0;
   }
 }
 
-.withdraw-village-name {
-  font-weight: 700;
-  font-size: 0.9em;
+.withdraw-village-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 4px;
 }
 
-.withdraw-troop-table {
-  width: 100%;
-  border-collapse: collapse;
+.withdraw-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #4CAF50;
+  flex-shrink: 0;
+}
+
+.withdraw-village-name {
+  font-size: 14px;
+  margin-bottom: 0;
+  color: #5a3e1b;
+}
+
+.withdraw-village-resources {
+  margin-top: 6px;
   font-size: 12px;
 
-  th, td {
-    padding: 2px 4px;
-    text-align: center;
+  .resource-share {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+
+    .resource-icon {
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 
-.withdraw-troop-icon {
-  width: 20px;
-  height: 20px;
-  display: block;
-  margin: 0 auto;
-  object-fit: contain;
+.withdraw-village-overflow {
+  margin-top: 4px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+
+  .resource-icon {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 .withdraw-actions {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   margin-top: 16px;
+
+  .action-btn {
+    width: auto;
+    min-width: 140px;
+  }
 }
 
 .confirm-overlay {
@@ -441,6 +483,35 @@ h5 {
   .action-btn {
     padding: 8px 15px;
     font-size: 13px;
+  }
+}
+
+:host-context(body[data-theme]:not([data-theme="default"])) {
+  .interactionContainer,
+  .withdraw-dialog,
+  .confirm-dialog {
+    background-image: none;
+    background-color: var(--bg-secondary);
+    color: var(--text-content);
+  }
+
+  .action-btn {
+    background-image: none;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border-color, #444);
+  }
+
+  .withdraw-village-name {
+    color: var(--text-content);
+  }
+
+  .village-contribution h5 {
+    color: var(--text-content);
+  }
+
+  .troop-row {
+    color: var(--text-content);
   }
 }
 

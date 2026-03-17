@@ -60,7 +60,15 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   showRetreatConfirm: boolean = false;
   showWithdrawModal: boolean = false;
   selectedWithdrawVillages: Set<string> = new Set();
-  retreatStash: { wood: number; stone: number; crop: number } = { wood: 0, stone: 0, crop: 0 };
+  get retreatStash(): { wood: number; stone: number; crop: number } {
+    const stash = this.oasisInfo?.garrison?.stash;
+    if (!stash) return { wood: 0, stone: 0, crop: 0 };
+    return {
+      wood: Math.floor(stash.wood || 0),
+      stone: Math.floor(stash.stone || 0),
+      crop: Math.floor(stash.crop || 0),
+    };
+  }
 
   get retreatOverflow(): { wood: number; stone: number; crop: number } {
     const village = this.userInformationService.currentVillage;
@@ -114,9 +122,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initMaxTroops();
-    if (this.oasis.ownerType === 'clan' || this.oasis.ownerType === 'mine') {
-      this.fetchOasisInfo();
-    }
+    this.fetchOasisInfo(false);
   }
 
   ngOnDestroy(): void {
@@ -153,16 +159,26 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
     const remaining = this.oasisInfo.resourcesRemaining;
     const stash = this.oasisInfo.garrison.stash;
 
+    const contribs = this.garrisonContributions;
+    const contribCounts = contribs.map((c: any) => this.getTotalTroopCount(c.troops));
+
     for (const res of ['wood', 'stone', 'crop'] as const) {
       const harvested = Math.min(harvestPerSecond, remaining[res] || 0);
       remaining[res] = Math.max(0, (remaining[res] || 0) - harvested);
       stash[res] = (stash[res] || 0) + harvested;
+
+      for (let i = 0; i < contribs.length; i++) {
+        if (!contribs[i].stash) contribs[i].stash = { wood: 0, stone: 0, crop: 0 };
+        const ratio = troopCount > 0 ? contribCounts[i] / troopCount : 0;
+        contribs[i].stash[res] = (contribs[i].stash[res] || 0) + harvested * ratio;
+      }
     }
   }
 
   private syncFromServer(): void {
     if (!this.isOccupier) return;
-    this.http.get<any>(`${environment.apiUrl}/oasis/info/${this.oasis.id}`)
+    const villageName = this.userInformationService.currentVillage?.villageName || '';
+    this.http.get<any>(`${environment.apiUrl}/oasis/info/${this.oasis.id}`, { params: { villageName } })
       .subscribe({
         next: (info) => { this.oasisInfo = info; },
         error: () => {},
@@ -226,11 +242,12 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       });
   }
 
-  private fetchOasisInfo(): void {
-    this.scouting = true;
+  private fetchOasisInfo(showScouting: boolean = true): void {
+    if (showScouting) this.scouting = true;
     this.errorMessage = '';
+    const villageName = this.userInformationService.currentVillage?.villageName || '';
     this.subscription = this.http
-      .get<any>(`${environment.apiUrl}/oasis/info/${this.oasis.id}`)
+      .get<any>(`${environment.apiUrl}/oasis/info/${this.oasis.id}`, { params: { villageName } })
       .subscribe({
         next: (info) => {
           this.oasisInfo = info;
@@ -412,12 +429,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   }
 
   get villageAlreadyAtOtherOasis(): boolean {
-    const village = this.userInformationService.currentVillage;
-    if (!village?.oasisTroopsSent || village.oasisTroopsSent.length === 0) return false;
-    if (this.isOccupier) {
-      return village.oasisTroopsSent.some(e => e.oasisId !== this.oasis.id);
-    }
-    return village.oasisTroopsSent.length > 0;
+    return !!this.oasisInfo?.villageAtOtherOasis;
   }
 
   get hasMultipleContributions(): boolean {
@@ -480,6 +492,57 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
     return this.oasisInfo.garrison.totalForOccupier[resource];
   }
 
+  getVillageResourceShare(villageName: string): { wood: number; stone: number; crop: number } {
+    const contribs = this.garrisonContributions;
+    const stash = this.retreatStash;
+    if (contribs.length <= 1) return stash;
+
+    const totalContribStash = contribs.reduce(
+      (sum: number, c: any) => sum + (c.stash?.wood || 0) + (c.stash?.stone || 0) + (c.stash?.crop || 0), 0,
+    );
+    const totalGarrisonStash = stash.wood + stash.stone + stash.crop;
+
+    if (totalContribStash >= totalGarrisonStash * 0.5 && totalContribStash > 0) {
+      const contrib = contribs.find((c: any) => c.villageName === villageName);
+      if (!contrib?.stash) return { wood: 0, stone: 0, crop: 0 };
+      return {
+        wood: Math.floor(contrib.stash.wood || 0),
+        stone: Math.floor(contrib.stash.stone || 0),
+        crop: Math.floor(contrib.stash.crop || 0),
+      };
+    }
+
+    const troopCounts = contribs.map((c: any) => this.getTotalTroopCount(c.troops));
+    const grandTotal = troopCounts.reduce((a: number, b: number) => a + b, 0);
+    if (grandTotal <= 0) return { wood: 0, stone: 0, crop: 0 };
+    const idx = contribs.findIndex((c: any) => c.villageName === villageName);
+    if (idx < 0) return { wood: 0, stone: 0, crop: 0 };
+    const ratio = troopCounts[idx] / grandTotal;
+    return {
+      wood: Math.floor(stash.wood * ratio),
+      stone: Math.floor(stash.stone * ratio),
+      crop: Math.floor(stash.crop * ratio),
+    };
+  }
+
+  getVillageOverflow(villageName: string): { wood: number; stone: number; crop: number } | null {
+    const share = this.getVillageResourceShare(villageName);
+    const village = this.userInformationService.userInformation?.villages?.find(
+      (v: any) => v.villageName === villageName
+    );
+    if (!village) return null;
+    const levels = village.buildingsLevels;
+    const freeWood = Math.max(0, (warehouseStorageByLevel[levels.woodWarehouseLevel] || 0) - village.resourcesAmounts.woodAmount);
+    const freeStone = Math.max(0, (warehouseStorageByLevel[levels.stoneWarehouseLevel] || 0) - village.resourcesAmounts.stonesAmount);
+    const freeCrop = Math.max(0, (warehouseStorageByLevel[levels.cropWarehouseLevel] || 0) - village.resourcesAmounts.cropAmount);
+    const overflow = {
+      wood: Math.max(0, share.wood - freeWood),
+      stone: Math.max(0, share.stone - freeStone),
+      crop: Math.max(0, share.crop - freeCrop),
+    };
+    return (overflow.wood > 0 || overflow.stone > 0 || overflow.crop > 0) ? overflow : null;
+  }
+
   onRetreatClick(): void {
     if (this.retreating) return;
 
@@ -489,17 +552,11 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.openRetreatConfirm();
-  }
-
-  private openRetreatConfirm(): void {
-    const stash = this.oasisInfo?.garrison?.stash || { wood: 0, stone: 0, crop: 0 };
-    this.retreatStash = {
-      wood: Math.round(stash.wood || 0),
-      stone: Math.round(stash.stone || 0),
-      crop: Math.round(stash.crop || 0),
-    };
-    this.showRetreatConfirm = true;
+    if (this.hasOverflow) {
+      this.showRetreatConfirm = true;
+    } else {
+      this.confirmRetreat();
+    }
   }
 
   cancelRetreatConfirm(): void {
@@ -553,7 +610,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   withdrawAll(): void {
     if (this.retreating) return;
     this.showWithdrawModal = false;
-    this.openRetreatConfirm();
+    this.confirmRetreat();
   }
 
   private doWithdraw(villageNames: string[]): void {
