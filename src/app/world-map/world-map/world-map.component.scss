@@ -118,6 +118,7 @@ $your-color: #90EE90;     // Green - your own villages
   background-color: #8B4513;
   cursor: grab;
   user-select: none;
+  overflow: hidden;
 
   &:active {
     cursor: grabbing;

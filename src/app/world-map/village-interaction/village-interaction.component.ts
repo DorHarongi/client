@@ -313,7 +313,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (user: User) => {
           this.userInformationService.setUserInformation(user);
-          this.router.navigateByUrl('home');
+          this.closed.emit();
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Attack failed';

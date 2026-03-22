@@ -30,7 +30,7 @@
   </div>
 
   <!-- Status Info -->
-  <div class="status-section center" *ngIf="!showAttackPanel && !attackSent">
+  <div class="status-section center" *ngIf="!showAttackPanel">
     <p class="location">Location: ({{ boss.x }}, {{ boss.y }})</p>
     <p class="time-remaining">{{ getTimeRemaining() }}</p>
 
@@ -178,26 +178,6 @@
       >
         Cancel
       </button>
-    </div>
-  </div>
-
-  <!-- Attack Sent Confirmation -->
-  <div *ngIf="attackSent" class="attack-result center">
-    <h4>Troops Marching!</h4>
-    <div class="result-details">
-      <p>
-        Your troops have been sent to attack <strong>{{ boss.name }}</strong
-        >.
-      </p>
-      <p>
-        Estimated travel time: <strong>{{ getFormattedAttackEta() }}</strong>
-      </p>
-      <p class="hint-text">
-        Results will appear in your Battle Reports once the troops arrive.
-      </p>
-    </div>
-    <div class="panel-actions">
-      <button class="action-btn" (click)="close()">Close</button>
     </div>
   </div>
 

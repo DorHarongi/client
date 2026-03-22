@@ -5,6 +5,12 @@
     background-image: url("../../../assets/right-bg.jpg");
     background-size: cover;
     background-attachment: fixed;
+    align-items: center;
+
+    form {
+        width: 300px;
+        max-width: 90%;
+    }
 }
 #registerText{
     align-self: center;
@@ -20,6 +26,7 @@
 
 .server-select-section {
     margin-top: 16px;
+    margin-bottom: 16px;
     position: relative;
 }
 
@@ -144,6 +151,10 @@
     cursor: pointer;
     color: #007bff;
     text-decoration: underline;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9rem;
 }
 
 .btn-link:hover {

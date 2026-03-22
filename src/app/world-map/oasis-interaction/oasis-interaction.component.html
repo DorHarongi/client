@@ -153,7 +153,7 @@
           </span>
         </div>
         <div class="withdraw-village-overflow" *ngIf="getVillageOverflow(contrib.villageName) as overflow">
-          <span class="warning-text">Overflow: </span>
+          <span class="warning-text">Wasted: </span>
           <span class="overflow-amount" *ngIf="overflow.wood > 0"><img src="assets/wood.jpg" class="resource-icon" /> {{ overflow.wood | number:'1.0-0' }} </span>
           <span class="overflow-amount" *ngIf="overflow.stone > 0"><img src="assets/rock.jpg" class="resource-icon" /> {{ overflow.stone | number:'1.0-0' }} </span>
           <span class="overflow-amount" *ngIf="overflow.crop > 0"><img src="assets/crop.jpg" class="resource-icon" /> {{ overflow.crop | number:'1.0-0' }} </span>
@@ -192,7 +192,7 @@
         </div>
       </div>
       <div *ngIf="hasOverflow" class="overflow-warning">
-        <p class="warning-text">Your warehouses cannot hold all resources! The following will be lost:</p>
+        <p class="warning-text">Your warehouses cannot hold all resources! The following will be wasted:</p>
         <div class="retreat-resources overflow">
           <div class="resource-row" *ngIf="retreatOverflow.wood > 0">
             <img src="assets/wood.jpg" class="resource-icon" />

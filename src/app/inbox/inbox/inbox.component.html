@@ -68,11 +68,11 @@
     </table>
     
     <div class="pagination center margin-top">
-        <p (click)="moveToPage(1)">&laquo;</p>
+        <p (click)="page !== 1 && moveToPage(1)" [class.disabled]="page === 1">&laquo;</p>
         <p *ngFor="let p of displayedPages" (click)="moveToPage(p)" [class.active]="page == p">
             {{ p }}
         </p>
-        <p (click)="moveToPage(numberOfPages)">&raquo;</p>
+        <p (click)="page !== numberOfPages && moveToPage(numberOfPages)" [class.disabled]="page === numberOfPages">&raquo;</p>
     </div>
     
     <button id = "back" class="buttons center" (click)="goBack()"> Back </button>
@@ -126,7 +126,7 @@
                 </div>
             </div>
             <div *ngIf="hasOasisOverflow(selectedMessage)" class="overflow-section">
-                <h5 class="center overflow-title">Actually Received (warehouse was full):</h5>
+                <h5 class="center overflow-title">Actually Received (excess was wasted):</h5>
                 <div class="resources-display">
                     <div class="resource-item">
                         <img src="../../../assets/wood.jpg" class="resource-icon">

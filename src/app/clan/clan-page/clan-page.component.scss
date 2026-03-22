@@ -170,6 +170,8 @@ $topToolbarMinHeight: 75px;
 
 .clickable {
     cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
     
     &:hover {
         color: #0056b3;

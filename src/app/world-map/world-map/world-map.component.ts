@@ -304,10 +304,18 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
   closeVillageInteraction(): void {
     this.selectedVillage = null;
+    this.worldMapService.invalidateMapCache(this.windowStartX, this.windowStartY);
+    this.worldMapService.clearMinimapCache();
+    this.loadMapWindow();
+    this.loadMinimap();
   }
 
   closeBossInteraction(): void {
     this.selectedBoss = null;
+    this.worldMapService.invalidateMapCache(this.windowStartX, this.windowStartY);
+    this.worldMapService.clearMinimapCache();
+    this.loadMapWindow();
+    this.loadMinimap();
   }
 
   onBossDefeated(): void {

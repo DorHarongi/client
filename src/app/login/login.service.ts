@@ -133,6 +133,9 @@ export class LoginService {
     this.isloggedIn = false;
     this.clearSession();
     this.userInformationService.clearUserInformation();
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.removeAttribute('data-theme');
+    }
     this.router.navigate(['login']);
   }
 

@@ -7,72 +7,84 @@
   --bg-primary: #7d5210;
   --bg-secondary: #5c3d0a;
   --accent: #b7950b;
+  --accent-highlight: #2e7d32;
   --text-primary: #f5e6c8;
   --text-muted: #c9b896;
   --text-content: #3d2914;
   --text-content-muted: #666;
   --border-color: rgba(0, 0, 0, 0.7);
   --bg-panel: rgba(30, 20, 10, 0.88);
+  --link-color: #007bff;
 }
 
 [data-theme="dark"] {
   --bg-primary: #1a1a2e;
   --bg-secondary: #16213e;
   --accent: #4a6fa5;
+  --accent-highlight: #5cb85c;
   --text-primary: #e8e8e8;
   --text-muted: #b0b0b0;
   --text-content: #d8d8e8;
   --text-content-muted: #8888a0;
   --border-color: rgba(255, 255, 255, 0.15);
   --bg-panel: rgba(22, 33, 62, 0.92);
+  --link-color: #6ca6e0;
 }
 
 [data-theme="ocean"] {
   --bg-primary: #0a2647;
   --bg-secondary: #144272;
   --accent: #4a8ac7;
+  --accent-highlight: #48c9b0;
   --text-primary: #e8f4fc;
   --text-muted: #b8d4e8;
   --text-content: #d8e8f4;
   --text-content-muted: #8ab4d0;
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(10, 38, 71, 0.92);
+  --link-color: #6cb8e6;
 }
 
 [data-theme="forest"] {
   --bg-primary: #1b4332;
   --bg-secondary: #2d6a4f;
   --accent: #6dbf8b;
+  --accent-highlight: #a8d86e;
   --text-primary: #d8f3dc;
   --text-muted: #95d5b2;
   --text-content: #c8e8d0;
   --text-content-muted: #80b898;
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(27, 67, 50, 0.92);
+  --link-color: #8cd8a8;
 }
 
 [data-theme="blood"] {
   --bg-primary: #3d0a0a;
   --bg-secondary: #6b1111;
   --accent: #d04040;
+  --accent-highlight: #e8a040;
   --text-primary: #fce8e8;
   --text-muted: #e8b8b8;
   --text-content: #f0d0d0;
   --text-content-muted: #c09898;
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(61, 10, 10, 0.92);
+  --link-color: #f0a0a0;
 }
 
 [data-theme="royal"] {
   --bg-primary: #240046;
   --bg-secondary: #3c096c;
   --accent: #9055d0;
+  --accent-highlight: #d4a84b;
   --text-primary: #e0aaff;
   --text-muted: #c77dff;
   --text-content: #d8c0f0;
   --text-content-muted: #b098c8;
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(36, 0, 70, 0.92);
+  --link-color: #c8a0f0;
 }
 
 html, body {
@@ -297,7 +309,17 @@ body[data-theme]:not([data-theme="default"]) {
     }
 
     .confirm-detail {
-        color: #27ae60;
+        color: var(--accent-highlight, #27ae60);
+    }
+
+    .success-message {
+        color: var(--accent-highlight, #28a745);
+    }
+
+    .beginner-shield {
+        color: var(--accent-highlight, #27ae60);
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: var(--accent-highlight, #27ae60);
     }
 
     /* ── Hover states ── */
@@ -666,6 +688,7 @@ body[data-theme]:not([data-theme="default"]) {
     }
 
     .quest-card {
+        background: rgba(255, 255, 255, 0.08);
         border-color: var(--border-color);
     }
 

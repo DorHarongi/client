@@ -58,6 +58,10 @@ export class ClanService {
     return this.http.get<ClanStatisticDTO[]>(`${environment.apiUrl}/clans/statistics/page/${page}`);
   }
 
+  getClanStatisticsPage(clanName: string): Observable<{ page: number }> {
+    return this.http.get<{ page: number }>(`${environment.apiUrl}/clans/statistics/page-for/${encodeURIComponent(clanName)}`);
+  }
+
   requestToJoinClan(clanName: string, username: string, message?: string): Observable<{ success: boolean }> {
     return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/join`, {
       clanName,

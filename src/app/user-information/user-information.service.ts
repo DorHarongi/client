@@ -41,25 +41,31 @@ export class UserInformationService {
 
   setUserInformation(user: User)
   {
+    if (!user) return;
+
     this.userInformation = user;
-    // Apply theme
     const theme = (user as any).theme || 'default';
     if (typeof document !== 'undefined' && document.body) {
       document.body.setAttribute('data-theme', theme);
     }
-    // Store in session for refresh persistence
     sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+
+    if (!this.userInformation?.villages?.length) {
+      return;
+    }
 
     if(!this.currentVillage && !this.currentVillageIndex) // first time when loading the app
     {
       const savedIndex = parseInt(sessionStorage.getItem(VILLAGE_INDEX_KEY) || '0', 10);
       const idx = (savedIndex >= 0 && savedIndex < this.userInformation.villages.length) ? savedIndex : 0;
       this.currentVillageIndex = idx;
-      this.currentVillage = this.userInformation?.villages[idx];
+      this.currentVillage = this.userInformation.villages[idx];
     }
     else // after a request to the server like training troops
     {
-      this.currentVillage = this.userInformation.villages[this.currentVillageIndex];
+      const idx = Math.min(this.currentVillageIndex, this.userInformation.villages.length - 1);
+      this.currentVillageIndex = idx;
+      this.currentVillage = this.userInformation.villages[idx];
       this.villageChagnedSubject.next();
     }
   }
@@ -74,6 +80,9 @@ export class UserInformationService {
     this.userInformation = null as any;
     this.currentVillage = null as any;
     this.currentVillageIndex = 0;
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.removeAttribute('data-theme');
+    }
   }
 
   switchVillage(index: number)

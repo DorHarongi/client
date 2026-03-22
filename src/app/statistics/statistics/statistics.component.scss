@@ -96,9 +96,15 @@ $topToolbarMinHeight: 75px;
     border-radius: 5px;
   }
   
-  .pagination p:hover:not(.active) {
+  .pagination p:hover:not(.active):not(.disabled) {
     background-color: #ddd;
     border-radius: 5px;
+  }
+
+  .pagination p.disabled {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
   }
 
   .leaderboard-tabs {

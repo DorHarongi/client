@@ -69,7 +69,7 @@ export class AcademyComponent implements OnInit, OnDestroy {
       'academy',
       'Academy',
       academyLevel,
-      'The Academy grants Skill Points which you can invest in powerful skills. Each level gives +2 points.',
+      'The Academy is the center of knowledge where the character of your village is formed. Upgrade it to gain more Skill Points, letting you learn and improve the village attributes you wish to develop.',
       academyUpgradeMaterialCostByLevels[academyLevel + 1]
     );
 

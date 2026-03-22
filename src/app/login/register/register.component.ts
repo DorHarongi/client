@@ -52,7 +52,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         document.body.removeAttribute('data-theme');
 
         this.registerForm = this.formBuilder.group({
-            username: ['', [Validators.required, Validators.minLength(3)]],
+            username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(15), Validators.pattern(/\S/)]],
             password: ['', [Validators.required, Validators.minLength(6)]],
             confirmPassword: ['', Validators.required]
         }, { validator: this.passwordMatchValidator });

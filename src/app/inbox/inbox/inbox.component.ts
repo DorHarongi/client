@@ -541,13 +541,14 @@ export class InboxComponent implements OnInit, OnDestroy {
   }
 
   getDisplaySubject(message: Message): string {
-    // Fix subjects that contain "undefined" due to missing senderUsername
-    if (message.subject && message.subject.includes('undefined')) {
-      // Use actual senderUsername if available, otherwise 'Unknown'
-      const replacement = message.senderUsername || 'Unknown';
-      return message.subject.replace('undefined', replacement);
+    let subject = message.subject || 'No subject';
+    if (subject.includes('undefined') && message.senderUsername) {
+      subject = subject.replace('undefined', message.senderUsername);
     }
-    return message.subject || 'No subject';
+    subject = subject.replace(/\{(player|village|coords|clan|oasis|boss):([^}]+)\}/g,
+      (_match, _type, payload) => payload.split('|')[0]
+    );
+    return subject;
   }
 
   navigateToPlayer(username: string): void {

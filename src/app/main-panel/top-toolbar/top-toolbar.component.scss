@@ -33,7 +33,12 @@
     .theme-container select {
         color: var(--text-primary);
         border-color: var(--text-muted);
-        background-color: rgba(0, 0, 0, 0.3);
+        background: rgba(0, 0, 0, 0.3);
+
+        option {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
     }
 }
 
@@ -43,9 +48,8 @@
 
 .nav-active {
     filter: brightness(1.3) drop-shadow(0 2px 4px rgba(255, 143, 0, 0.7));
-    border-bottom: 3px solid #ff8f00;
+    box-shadow: inset 0 -3px 0 #ff8f00;
     border-radius: 4px;
-    padding-bottom: 2px;
 }
 
 // Hide scrollbar on desktop but allow touch scroll on mobile

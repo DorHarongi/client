@@ -401,6 +401,57 @@ $tile-size: 70px;
     }
 }
 
+:host-context(body[data-theme]:not([data-theme="default"])) {
+    .skill-tooltip {
+        background-image: none;
+        background-color: var(--bg-primary);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+
+        .tooltip-title,
+        .tooltip-line {
+            color: var(--text-primary);
+        }
+    }
+
+    .skill-row {
+        background-image: none;
+        background-color: var(--bg-primary);
+        border-color: var(--border-color);
+    }
+
+    .buttons,
+    .reset-btn {
+        background-image: none;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    .confirm-dialog {
+        background-image: none;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    .skill-row-name {
+        color: var(--text-content);
+    }
+
+    .skill-points .used-points {
+        color: var(--accent);
+    }
+
+    .skill-tile .tile-label {
+        color: var(--text-content-muted);
+    }
+
+    .skill-tile.unlocked .tile-label {
+        color: var(--accent);
+    }
+}
+
 // Mobile
 @media (max-width: 600px) {
     .academy-content {

@@ -172,6 +172,15 @@ $topToolbarMinHeight: 75px;
     &:hover {
         background-color: rgba(139, 69, 19, 0.2);
     }
+
+    td:first-child {
+        color: #007bff;
+        text-decoration: underline;
+    }
+}
+
+.villages-table td:first-child {
+    font-weight: 600;
 }
 
 .click-hint {

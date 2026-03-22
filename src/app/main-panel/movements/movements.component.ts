@@ -46,6 +46,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
   toVillage: Movement[] = [];
   private subscription?: Subscription;
   private tickSub?: Subscription;
+  private refreshPending = false;
+  private refreshTimer?: ReturnType<typeof setTimeout>;
   private visibilityHandler = () => this.onVisibilityChange();
 
   get hasMovements(): boolean {
@@ -69,6 +71,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopPolling();
+    if (this.refreshTimer) clearTimeout(this.refreshTimer);
     document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 
@@ -84,7 +87,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   private startPolling(): void {
     this.stopPolling();
     this.subscription = interval(5000).subscribe(() => this.loadMovements());
-    this.tickSub = interval(1000).subscribe(() => {});
+    this.tickSub = interval(1000).subscribe(() => this.checkForCompletedMovements());
   }
 
   private stopPolling(): void {
@@ -92,6 +95,19 @@ export class MovementsComponent implements OnInit, OnDestroy {
     this.subscription = undefined;
     this.tickSub?.unsubscribe();
     this.tickSub = undefined;
+  }
+
+  private checkForCompletedMovements(): void {
+    if (this.refreshPending) return;
+    const now = Date.now();
+    const hasCompleted = [...this.fromVillage, ...this.toVillage]
+      .some(m => new Date(m.arrivalTime).getTime() <= now);
+    if (hasCompleted) {
+      this.refreshPending = true;
+      this.userInformationService.refreshUserInformation();
+      this.loadMovements();
+      this.refreshTimer = setTimeout(() => this.refreshPending = false, 3000);
+    }
   }
 
   loadMovements(): void {
@@ -161,32 +177,38 @@ export class MovementsComponent implements OnInit, OnDestroy {
     if (movement.type === 'return') {
       return 'assets/swords.png';
     }
-    if (movement.type === 'oasis_garrison' || movement.type === 'oasis_attack') {
+    if (movement.type === 'oasis_garrison' || movement.type === 'oasis_attack' || movement.type === 'oasis_return') {
       return 'assets/oasis.png';
     }
     return 'assets/swords.png';
   }
 
   getMovementName(movement: Movement, isFromVillage: boolean): string {
+    const multiVillage = this.villageCount > 1;
+
     if (movement.type === 'boss_attack') {
-      return movement.targetVillageName;
+      const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
+      return `${movement.targetVillageName}${from}`;
     }
     if (movement.type === 'spy') {
-      return `Spy → ${movement.targetUsername}`;
+      const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
+      return `Spy${from} → ${movement.targetUsername} [${movement.targetVillageName}]`;
     }
     if (movement.type === 'spy_return') {
-      return 'Spy returning';
+      const dest = movement.targetVillageName || movement.senderVillageName;
+      return dest ? `Spy returning → ${dest}` : 'Spy returning';
     }
     if (movement.type === 'oasis_garrison') {
-      return isFromVillage
-        ? 'Troops → Oasis'
-        : 'Troops to oasis';
+      const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
+      return `Troops${from} → Oasis`;
     }
     if (movement.type === 'oasis_attack') {
-      return 'Attack → Oasis';
+      const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
+      return `Attack${from} → Oasis`;
     }
     if (movement.type === 'oasis_return') {
-      return 'Troops returning';
+      const dest = movement.targetVillageName || movement.senderVillageName;
+      return dest ? `Troops returning → ${dest}` : 'Troops returning';
     }
 
     if (movement.type === 'attack') {
@@ -208,12 +230,15 @@ export class MovementsComponent implements OnInit, OnDestroy {
       return `${movement.senderUsername} [${movement.senderVillageName}] → You [${movement.targetVillageName}]`;
     }
     if (movement.type === 'relic_transfer') {
-      return isFromVillage
-        ? `Relic → ${movement.targetUsername}`
-        : `Relic from ${movement.senderUsername}`;
+      if (isFromVillage) {
+        const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
+        return `Relic${from} → ${movement.targetUsername} [${movement.targetVillageName}]`;
+      }
+      return `Relic from ${movement.senderUsername} [${movement.senderVillageName}] → ${movement.targetVillageName}`;
     }
     if (movement.type === 'return') {
-      return 'Troops returning';
+      const dest = movement.targetVillageName || movement.senderVillageName;
+      return dest ? `Troops returning → ${dest}` : 'Troops returning';
     }
     return movement.type;
   }

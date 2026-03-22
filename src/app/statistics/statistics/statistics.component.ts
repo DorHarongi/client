@@ -58,6 +58,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   subscription3!: Subscription;
   subscription4!: Subscription;
   username: string;
+  initialPageLoaded = false;
+  initialClanPageLoaded = false;
 
   leaderboardCategory: 'bossDamage' | 'resourcesStolen' | 'successfulDefenses' = 'bossDamage';
 
@@ -66,14 +68,46 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   }
 
   loadData(): void {
-    this.page = 1;
     this.loading = true;
     if (this.viewMode === 'players') {
       this.getNumberOfUserStatisticsPages();
-      this.getUserStatistics();
+      if (this.page === 1 && !this.initialPageLoaded) {
+        this.http.get<{ page: number }>(`${environment.apiUrl}/users/statistics/page-for/${encodeURIComponent(this.username)}`)
+          .subscribe({
+            next: (res) => {
+              this.page = res.page || 1;
+              this.initialPageLoaded = true;
+              this.getUserStatistics();
+            },
+            error: () => {
+              this.page = 1;
+              this.initialPageLoaded = true;
+              this.getUserStatistics();
+            },
+          });
+      } else {
+        this.getUserStatistics();
+      }
     } else if (this.viewMode === 'clans') {
       this.getNumberOfClanStatisticsPages();
-      this.getClanStatistics();
+      const clanName = this.userInformationService.userInformation?.clanName;
+      if (this.page === 1 && !this.initialClanPageLoaded && clanName) {
+        this.clanService.getClanStatisticsPage(clanName)
+          .subscribe({
+            next: (res) => {
+              this.page = res.page || 1;
+              this.initialClanPageLoaded = true;
+              this.getClanStatistics();
+            },
+            error: () => {
+              this.page = 1;
+              this.initialClanPageLoaded = true;
+              this.getClanStatistics();
+            },
+          });
+      } else {
+        this.getClanStatistics();
+      }
     } else {
       this.loadLeaderboards();
     }
@@ -82,6 +116,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   switchToPlayers(): void {
     if (this.viewMode !== 'players') {
       this.viewMode = 'players';
+      this.page = 1;
+      this.initialPageLoaded = false;
       this.loadData();
     }
   }
@@ -89,6 +125,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   switchToClans(): void {
     if (this.viewMode !== 'clans') {
       this.viewMode = 'clans';
+      this.page = 1;
+      this.initialClanPageLoaded = false;
       this.loadData();
     }
   }
@@ -96,6 +134,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   switchToLeaderboards(): void {
     if (this.viewMode !== 'leaderboards') {
       this.viewMode = 'leaderboards';
+      this.page = 1;
       this.loadData();
     }
   }

@@ -576,6 +576,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.retreating = false;
+          this.userInformationService.refreshUserInformation();
           this.closed.emit();
         },
         error: (err) => {
@@ -627,6 +628,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
           this.retreating = false;
           this.showWithdrawModal = false;
           this.selectedWithdrawVillages.clear();
+          this.userInformationService.refreshUserInformation();
           this.closed.emit();
         },
         error: (err) => {

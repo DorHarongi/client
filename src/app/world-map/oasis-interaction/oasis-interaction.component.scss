@@ -242,13 +242,13 @@ h5 {
 }
 
 .village-limit-message {
-  color: var(--text-content, #3d2914);
+  color: var(--text-content, #5a3e1b);
   font-weight: 500;
   font-size: 14px;
   padding: 10px 15px;
-  background: var(--bg-secondary, rgba(92, 61, 10, 0.15));
+  background: rgba(0, 0, 0, 0.06);
   border-radius: 6px;
-  border: 1px solid var(--border-color, #7d5210);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
   margin-bottom: 10px;
 }
 
@@ -512,6 +512,10 @@ h5 {
 
   .troop-row {
     color: var(--text-content);
+  }
+
+  .village-limit-message {
+    background: rgba(255, 255, 255, 0.06);
   }
 }
 

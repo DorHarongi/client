@@ -16,7 +16,7 @@ interface CachedMapWindow {
   timestamp: number;
 }
 
-const CACHE_DURATION_MS = 5 * 60 * 1000; // Cache for 5 minutes
+const CACHE_DURATION_MS = 2 * 60 * 1000; // Cache for 2 minutes
 
 @Injectable({
   providedIn: 'root'

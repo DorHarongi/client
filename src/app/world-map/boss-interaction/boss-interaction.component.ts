@@ -58,10 +58,6 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   errorMessage: string = '';
   loading: boolean = false;
 
-  // Attack result
-  attackSent: boolean = false;
-  attackTravelTimeMs: number = 0;
-
   // Damage leaderboard
   showLeaderboard: boolean = false;
   showInfo: boolean = false;
@@ -357,22 +353,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
         troops: this.chosenTroops,
       })
       .subscribe({
-        next: (result) => {
+        next: () => {
           this.loading = false;
-          this.attackSent = true;
-          this.attackTravelTimeMs = result.travelTimeMs;
-          this.showAttackPanel = false;
-
           this.userInformationService.refreshUserInformation();
-
-          if (
-            !this.boss.claimedByClanName &&
-            this.currentUserClan &&
-            this.boss.tier !== 'mythic'
-          ) {
-            this.boss.claimedByClanName = this.currentUserClan;
-            this.loadClanClaimInfo();
-          }
+          this.closed.emit();
         },
         error: (err) => {
           this.loading = false;
@@ -389,17 +373,6 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       });
   }
 
-  getFormattedAttackEta(): string {
-    if (!this.attackTravelTimeMs || this.attackTravelTimeMs <= 0)
-      return 'Arriving soon';
-    const totalSeconds = Math.floor(this.attackTravelTimeMs / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    if (hours > 0) return `${hours}h ${minutes}m`;
-    if (minutes > 0) return `${minutes}m ${seconds}s`;
-    return `${seconds}s`;
-  }
 
   toggleLeaderboard(): void {
     if (this.showLeaderboard) {
