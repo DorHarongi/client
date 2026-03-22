@@ -116,6 +116,7 @@ body {
     color: #007bff !important;
     cursor: pointer !important;
     text-decoration: underline !important;
+    font-weight: unset !important;
 
     &:hover {
         color: #0056b3 !important;
@@ -300,6 +301,7 @@ body[data-theme]:not([data-theme="default"]) {
     td.clickable {
         cursor: pointer !important;
         text-decoration: underline !important;
+        font-weight: unset !important;
     }
 
     /* ── Tooltips ── */
