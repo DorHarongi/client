@@ -48,8 +48,18 @@
 
 .nav-active {
     filter: brightness(1.3) drop-shadow(0 2px 4px rgba(255, 143, 0, 0.7));
-    box-shadow: inset 0 -3px 0 #ff8f00;
-    border-radius: 4px;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        width: 60%;
+        height: 3px;
+        background: #ff8f00;
+        border-radius: 2px;
+    }
 }
 
 // Hide scrollbar on desktop but allow touch scroll on mobile

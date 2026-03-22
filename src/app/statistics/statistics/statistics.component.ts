@@ -256,7 +256,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     const key = this.leaderboardCategory === 'bossDamage' ? 'playerBossDamage'
       : this.leaderboardCategory === 'resourcesStolen' ? 'playerResourcesStolen'
       : 'playerSuccessfulDefenses';
-    return this.previousWeekArchive[key] || [];
+    return (this.previousWeekArchive[key] || []).filter((p: any) => p.stat > 0);
   }
 
   getPreviousWeekClans(): any[] {
@@ -264,7 +264,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     const key = this.leaderboardCategory === 'bossDamage' ? 'clanBossDamage'
       : this.leaderboardCategory === 'resourcesStolen' ? 'clanResourcesStolen'
       : 'clanSuccessfulDefenses';
-    return this.previousWeekArchive[key] || [];
+    return (this.previousWeekArchive[key] || []).filter((c: any) => (c.totalStat || c.stat) > 0);
   }
 
   formatArchiveWeekEnding(iso: string): string {
