@@ -46,8 +46,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   toVillage: Movement[] = [];
   private subscription?: Subscription;
   private tickSub?: Subscription;
-  private refreshPending = false;
-  private refreshTimer?: ReturnType<typeof setTimeout>;
+  private arrivalTimers: ReturnType<typeof setTimeout>[] = [];
   private visibilityHandler = () => this.onVisibilityChange();
 
   get hasMovements(): boolean {
@@ -71,7 +70,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopPolling();
-    if (this.refreshTimer) clearTimeout(this.refreshTimer);
+    this.clearArrivalTimers();
     document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 
@@ -87,7 +86,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   private startPolling(): void {
     this.stopPolling();
     this.subscription = interval(5000).subscribe(() => this.loadMovements());
-    this.tickSub = interval(1000).subscribe(() => this.checkForCompletedMovements());
+    this.tickSub = interval(1000).subscribe(() => {});
   }
 
   private stopPolling(): void {
@@ -97,16 +96,27 @@ export class MovementsComponent implements OnInit, OnDestroy {
     this.tickSub = undefined;
   }
 
-  private checkForCompletedMovements(): void {
-    if (this.refreshPending) return;
+  private clearArrivalTimers(): void {
+    for (const t of this.arrivalTimers) clearTimeout(t);
+    this.arrivalTimers = [];
+  }
+
+  private scheduleArrivalRefreshes(): void {
+    this.clearArrivalTimers();
     const now = Date.now();
-    const hasCompleted = [...this.fromVillage, ...this.toVillage]
-      .some(m => new Date(m.arrivalTime).getTime() <= now);
-    if (hasCompleted) {
-      this.refreshPending = true;
-      this.userInformationService.refreshUserInformation();
-      this.loadMovements();
-      this.refreshTimer = setTimeout(() => this.refreshPending = false, 3000);
+    const seen = new Set<number>();
+
+    for (const m of [...this.fromVillage, ...this.toVillage]) {
+      const arrival = new Date(m.arrivalTime).getTime();
+      if (arrival <= now || seen.has(arrival)) continue;
+      seen.add(arrival);
+
+      const delay = arrival - now + 300;
+      const timer = setTimeout(() => {
+        this.userInformationService.refreshUserInformation();
+        this.loadMovements();
+      }, delay);
+      this.arrivalTimers.push(timer);
     }
   }
 
@@ -143,6 +153,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
             new Date(a.arrivalTime).getTime() -
             new Date(b.arrivalTime).getTime()
         );
+
+        this.scheduleArrivalRefreshes();
       });
   }
 
