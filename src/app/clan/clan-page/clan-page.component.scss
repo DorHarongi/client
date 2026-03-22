@@ -81,6 +81,17 @@ $topToolbarMinHeight: 75px;
     &:hover {
         background-color: rgba(0, 0, 0, 0.05);
     }
+
+    &.own-row {
+        background-color: rgba(183, 149, 11, 0.15);
+        font-weight: 600;
+    }
+}
+
+.you-badge {
+    font-weight: normal;
+    font-size: 0.85em;
+    opacity: 0.7;
 }
 
 .bordered {

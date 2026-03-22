@@ -6,6 +6,11 @@
     background-attachment: fixed;
     flex-wrap: nowrap !important;
     align-items: center;
+
+    form {
+        width: 300px;
+        max-width: 90%;
+    }
 }
 .login-logo {
     align-self: center;

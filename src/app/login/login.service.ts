@@ -5,6 +5,7 @@ import { Observable, interval, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { User } from '../main-panel/models/User';
 import { UserInformationService } from '../user-information/user-information.service';
+import { WorldMapService } from '../world-map/services/world-map.service';
 import { environment } from '../../environments/environment';
 
 interface LoginResponse {
@@ -24,7 +25,7 @@ export class LoginService {
   isloggedIn: boolean;
   private refreshSubscription?: Subscription;
 
-  constructor(private http: HttpClient, private userInformationService: UserInformationService, private router: Router) {
+  constructor(private http: HttpClient, private userInformationService: UserInformationService, private worldMapService: WorldMapService, private router: Router) {
     this.isloggedIn = false;
     this.checkExistingSession();
    }
@@ -133,6 +134,8 @@ export class LoginService {
     this.isloggedIn = false;
     this.clearSession();
     this.userInformationService.clearUserInformation();
+    this.worldMapService.clearAllMapCache();
+    this.worldMapService.clearMinimapCache();
     if (typeof document !== 'undefined' && document.body) {
       document.body.removeAttribute('data-theme');
     }
