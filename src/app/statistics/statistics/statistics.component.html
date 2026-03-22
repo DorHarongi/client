@@ -90,6 +90,7 @@
       <tr
         *ngFor="let clan of clansInPage; let i = index"
         class="center bordered"
+        [class.player-himself]="clan.clanName == userClanName"
       >
         <td>{{ (page - 1) * 10 + i + 1 }}</td>
         <td class="clickable" (click)="goToClan(clan.clanName)">
@@ -151,6 +152,7 @@
           <tr
             *ngFor="let p of playerLeaderboard; let i = index"
             class="center bordered"
+            [class.player-himself]="p.username == username"
           >
             <td>{{ i + 1 }}</td>
             <td class="clickable" (click)="goToPlayer(p.username)">
@@ -178,6 +180,7 @@
           <tr
             *ngFor="let c of clanLeaderboard; let i = index"
             class="center bordered"
+            [class.player-himself]="c._id == userClanName"
           >
             <td>{{ i + 1 }}</td>
             <td class="clickable" (click)="goToClan(c._id)">{{ c._id }}</td>
@@ -208,6 +211,7 @@
           <tr
             *ngFor="let p of getPreviousWeekPlayers(); let i = index"
             class="center bordered"
+            [class.player-himself]="p.username == username"
           >
             <td>{{ i + 1 }}</td>
             <td class="clickable" (click)="goToPlayer(p.username)">
@@ -233,6 +237,7 @@
           <tr
             *ngFor="let c of getPreviousWeekClans(); let i = index"
             class="center bordered"
+            [class.player-himself]="c._id == userClanName"
           >
             <td>{{ i + 1 }}</td>
             <td class="clickable" (click)="goToClan(c._id)">{{ c._id }}</td>

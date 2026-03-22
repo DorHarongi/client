@@ -8,7 +8,7 @@ import {
   Output,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject, takeUntil } from 'rxjs';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { User } from 'src/app/main-panel/models/User';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
@@ -74,6 +74,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   travelTimeMs: number = 0;
 
   subscription?: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
@@ -85,10 +86,18 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     this.isOwnVillage = this.village.ownerUsername === this.currentUsername;
     this.loadPlayerInfo();
     this.initMaxTroops();
+
+    this.userInformationService.villageChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.initMaxTroops());
+
+    this.userInformationService.refreshUserInformation();
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   initMaxTroops(): void {
@@ -317,6 +326,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Attack failed';
+          this.userInformationService.refreshUserInformation();
         },
       });
   }
@@ -368,6 +378,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to send support';
+          this.userInformationService.refreshUserInformation();
         },
       });
   }
@@ -402,6 +413,7 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to send resources';
+          this.userInformationService.refreshUserInformation();
         },
       });
   }

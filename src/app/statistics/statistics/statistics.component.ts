@@ -27,6 +27,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     private clanService: ClanService
   ) {
     this.username = userInformationService.userInformation.username;
+    this.userClanName = userInformationService.userInformation.clanName || '';
    }
 
   ngOnDestroy(): void {
@@ -34,6 +35,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.subscription2 && this.subscription2.unsubscribe();
     this.subscription3 && this.subscription3.unsubscribe();
     this.subscription4 && this.subscription4.unsubscribe();
+    this.pageForSub?.unsubscribe();
   }
 
   page: number = 1;
@@ -57,7 +59,9 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   subscription2!: Subscription;
   subscription3!: Subscription;
   subscription4!: Subscription;
+  private pageForSub?: Subscription;
   username: string;
+  userClanName: string;
   initialPageLoaded = false;
   initialClanPageLoaded = false;
 
@@ -69,17 +73,21 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   loadData(): void {
     this.loading = true;
+    this.pageForSub?.unsubscribe();
     if (this.viewMode === 'players') {
       this.getNumberOfUserStatisticsPages();
       if (this.page === 1 && !this.initialPageLoaded) {
-        this.http.get<{ page: number }>(`${environment.apiUrl}/users/statistics/page-for/${encodeURIComponent(this.username)}`)
+        this.pageForSub = this.http.get<{ page: number }>(`${environment.apiUrl}/users/statistics/page-for/${encodeURIComponent(this.username)}`)
           .subscribe({
             next: (res) => {
+              if (this.viewMode !== 'players') return;
               this.page = res.page || 1;
               this.initialPageLoaded = true;
+              this.updateDisplayedPages();
               this.getUserStatistics();
             },
             error: () => {
+              if (this.viewMode !== 'players') return;
               this.page = 1;
               this.initialPageLoaded = true;
               this.getUserStatistics();
@@ -92,14 +100,17 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       this.getNumberOfClanStatisticsPages();
       const clanName = this.userInformationService.userInformation?.clanName;
       if (this.page === 1 && !this.initialClanPageLoaded && clanName) {
-        this.clanService.getClanStatisticsPage(clanName)
+        this.pageForSub = this.clanService.getClanStatisticsPage(clanName)
           .subscribe({
             next: (res) => {
+              if (this.viewMode !== 'clans') return;
               this.page = res.page || 1;
               this.initialClanPageLoaded = true;
+              this.updateDisplayedPages();
               this.getClanStatistics();
             },
             error: () => {
+              if (this.viewMode !== 'clans') return;
               this.page = 1;
               this.initialClanPageLoaded = true;
               this.getClanStatistics();

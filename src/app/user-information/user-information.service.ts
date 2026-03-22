@@ -43,6 +43,12 @@ export class UserInformationService {
   {
     if (!user) return;
 
+    // Guard against MongoDB ModifyResult wrappers (driver v4.x returns { value, ok })
+    if ((user as any).value && !(user as any).username) {
+      user = (user as any).value;
+      if (!user) return;
+    }
+
     this.userInformation = user;
     const theme = (user as any).theme || 'default';
     if (typeof document !== 'undefined' && document.body) {
