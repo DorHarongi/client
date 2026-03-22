@@ -6,6 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
@@ -83,7 +84,8 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
 
   constructor(
     private bossService: BossService,
-    private userInformationService: UserInformationService
+    private userInformationService: UserInformationService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -414,6 +416,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       'Defeat the boss before it disappears to earn a generous resource reward for every member of your clan.',
       'The closer you are to the boss, the more damage your troops will deal. Higher rarity bosses have more HP and deal more damage back to your troops.',
     ];
+  }
+
+  viewClan(clanName: string): void {
+    this.router.navigate(['clan', clanName]);
   }
 
   close(): void {

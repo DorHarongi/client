@@ -8,7 +8,7 @@
   </div>
 
   <div *ngIf="isClanOwned && !isOccupier" class="clan-owned-section center">
-    <p class="clan-owned-message">This oasis is occupied by <strong>{{ clanOwnerName }}</strong> from your clan.</p>
+    <p class="clan-owned-message">This oasis is occupied by <strong><a class="inline-link" (click)="viewPlayer(clanOwnerName)">{{ clanOwnerName }}</a></strong> from your clan.</p>
     <div class="actions center">
       <button class="action-btn" (click)="findOnMap()">Find on Map</button>
       <button class="action-btn" (click)="close()">Close</button>

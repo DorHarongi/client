@@ -664,6 +664,10 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
     }
   }
 
+  viewPlayer(username: string): void {
+    this.router.navigate(['player', username]);
+  }
+
   close(): void {
     this.closed.emit();
   }

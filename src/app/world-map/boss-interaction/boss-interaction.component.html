@@ -42,7 +42,7 @@
         Claimed by your clan!
       </p>
       <p *ngIf="isClaimedByOtherClan()" class="claimed-by-other">
-        Claimed by: {{ boss.claimedByClanName }}
+        Claimed by: <a class="inline-link" (click)="viewClan(boss.claimedByClanName)">{{ boss.claimedByClanName }}</a>
       </p>
     </div>
     <div
