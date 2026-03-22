@@ -112,6 +112,16 @@ body {
     margin: 0;
 }
 
+.inline-link {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+        color: #0056b3;
+    }
+}
+
 .flexContainer{
     display: flex;
     flex-direction: column;
@@ -272,12 +282,24 @@ body[data-theme]:not([data-theme="default"]) {
     .clan-link,
     .inline-link,
     .report-link,
-    .btn-link {
-        color: var(--accent);
+    .btn-link,
+    .clickable-row td:first-child {
+        color: var(--accent) !important;
 
         &:hover {
-            color: var(--text-primary);
+            color: var(--text-primary) !important;
         }
+    }
+
+    .member-link,
+    .clan-link,
+    .inline-link,
+    .report-link,
+    .btn-link,
+    .clickable-row td:first-child,
+    td.clickable {
+        cursor: pointer !important;
+        text-decoration: underline !important;
     }
 
     /* ── Tooltips ── */
