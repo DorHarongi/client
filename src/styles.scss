@@ -113,12 +113,12 @@ body {
 }
 
 .inline-link {
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
+    color: #007bff !important;
+    cursor: pointer !important;
+    text-decoration: underline !important;
 
     &:hover {
-        color: #0056b3;
+        color: #0056b3 !important;
     }
 }
 
