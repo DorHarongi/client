@@ -3,6 +3,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
+import { QuestService } from 'src/app/quests/quest.service';
 import { BuildingTypes } from '../models/BuildingTypes';
 import { Village } from '../models/Village';
 import { IntervalService } from '../services/interval.service';
@@ -18,6 +19,25 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   village!: Village;
   subscription!: Subscription;
   routeSubscription!: Subscription;
+  private questSub!: Subscription;
+
+  highlightedBuildingIndices: Set<number> = new Set();
+
+  private static readonly buildingNameToIndex: Record<string, number> = {
+    centerBuilding: BuildingTypes.CenterBuilding,
+    woodWarehouse: BuildingTypes.WoodWarehouse,
+    woodFactory: BuildingTypes.WoodFactory,
+    stoneWarehouse: BuildingTypes.StoneWarehouse,
+    stoneMine: BuildingTypes.StoneMine,
+    cropWarehouse: BuildingTypes.CropWarehouse,
+    cropFarm: BuildingTypes.CropFarm,
+    arsenal: BuildingTypes.Arsenal,
+    quarters: BuildingTypes.Quarters,
+    wall: BuildingTypes.Wall,
+    embassy: BuildingTypes.Embassy,
+    academy: BuildingTypes.Academy,
+    stable: BuildingTypes.Stable,
+  };
 
   // Sanitized clip-path values (Angular strips unsanitized polygon() values)
   sanitizedPolygons: SafeStyle[] = [];
@@ -58,6 +78,7 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private userInformationService: UserInformationService,
+    private questService: QuestService,
     private router: Router,
     private route: ActivatedRoute,
     private intervalService: IntervalService,
@@ -74,6 +95,7 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.subscription) this.subscription.unsubscribe();
     if (this.routeSubscription) this.routeSubscription.unsubscribe();
     if (this.weatherSub) this.weatherSub.unsubscribe();
+    if (this.questSub) this.questSub.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -110,6 +132,29 @@ export class MainPanelComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     );
+
+    this.updateQuestHighlight();
+    this.questSub = this.questService.onQuestCompleted$.subscribe(() => {
+      this.updateQuestHighlight();
+    });
+  }
+
+  private updateQuestHighlight(): void {
+    this.highlightedBuildingIndices = new Set();
+    const user = this.userInformationService.userInformation;
+    if (!user) return;
+    const quest = this.questService.getCurrentQuest(user.currentQuestIndex || 1);
+    if (!quest) return;
+
+    if (quest.highlightBuildings?.length) {
+      for (const name of quest.highlightBuildings) {
+        const idx = MainPanelComponent.buildingNameToIndex[name];
+        if (idx !== undefined) this.highlightedBuildingIndices.add(idx);
+      }
+    } else if (quest.condition.buildingName) {
+      const idx = MainPanelComponent.buildingNameToIndex[quest.condition.buildingName];
+      if (idx !== undefined) this.highlightedBuildingIndices.add(idx);
+    }
   }
 
   ngAfterViewInit(): void {

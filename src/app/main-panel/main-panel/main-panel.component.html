@@ -198,6 +198,7 @@
       <div
         *ngFor="let polygon of sanitizedPolygons; let i = index"
         class="building-hitbox"
+        [class.quest-target]="highlightedBuildingIndices.has(i)"
         [style.clip-path]="polygon"
         (click)="handleClickedBuilding(i)"
         (mouseenter)="handleHoveredBuilding($event, i)"
