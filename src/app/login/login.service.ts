@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, interval, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import posthog from 'posthog-js';
 import { User } from '../main-panel/models/User';
 import { UserInformationService } from '../user-information/user-information.service';
 import { WorldMapService } from '../world-map/services/world-map.service';
@@ -42,7 +43,10 @@ export class LoginService {
         }
         this.isloggedIn = true;
         this.startTokenRefresh(expiryTime - Date.now());
-        // User info will be restored by UserInformationService
+        const user = this.userInformationService.userInformation;
+        if (user?.username) {
+          posthog.identify(user.username);
+        }
       } else {
         this.clearSession();
         this.userInformationService.clearUserInformation();
@@ -110,6 +114,7 @@ export class LoginService {
          this.isloggedIn = true;
          this.storeToken(response.token, response.ttlMinutes);
          this.userInformationService.setUserInformation(response.user);
+         posthog.identify(response.user.username);
          this.router.navigate(['home']);
        })
      );
@@ -125,6 +130,7 @@ export class LoginService {
          this.isloggedIn = true;
          this.storeToken(response.token, response.ttlMinutes);
          this.userInformationService.setUserInformation(response.user);
+         posthog.identify(response.user.username);
          this.router.navigate(['home']);
        })
      );
@@ -136,6 +142,7 @@ export class LoginService {
     this.userInformationService.clearUserInformation();
     this.worldMapService.clearAllMapCache();
     this.worldMapService.clearMinimapCache();
+    posthog.reset();
     if (typeof document !== 'undefined' && document.body) {
       document.body.removeAttribute('data-theme');
     }
