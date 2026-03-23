@@ -7,7 +7,7 @@ import { environment } from './environments/environment';
 
 if (environment.posthogKey) {
   posthog.init(environment.posthogKey, {
-    api_host: 'https://us.i.posthog.com',
+    api_host: 'https://eu.i.posthog.com',
     autocapture: true,
   });
 }
