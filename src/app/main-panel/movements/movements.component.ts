@@ -216,7 +216,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
     if (movement.type === 'oasis_attack') {
       const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
-      return `Attack${from} → Oasis`;
+      return `Troops${from} → Oasis`;
     }
     if (movement.type === 'oasis_return') {
       const dest = movement.targetVillageName || movement.senderVillageName;
