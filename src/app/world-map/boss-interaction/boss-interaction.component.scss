@@ -333,13 +333,20 @@
 .stat-row {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .stat-icon {
   width: 20px;
   height: 20px;
+}
+
+.stat-hint {
+  font-size: 0.85em;
+  font-weight: normal;
+  color: #999;
 }
 
 .damage-preview {

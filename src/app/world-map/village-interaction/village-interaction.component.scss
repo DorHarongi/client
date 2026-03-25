@@ -117,8 +117,9 @@ h5 {
 .stat-row {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 .stat-icon {
