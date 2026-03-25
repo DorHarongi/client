@@ -88,14 +88,14 @@
           <img src="assets/swords.png" class="stat-icon"> Attack:
           {{ effectiveAttack | number }}
         </div>
-        <div class="stat-hint">(with bonuses)</div>
+        <div class="stat-hint" *ngIf="hasAttackBonus">(with bonuses)</div>
       </div>
       <div class="stat-row with-hint">
         <div class="stat-main">
           <img src="assets/shield.png" class="stat-icon"> Defense:
           {{ effectiveDefense | number }}
         </div>
-        <div class="stat-hint">(with bonuses)</div>
+        <div class="stat-hint" *ngIf="hasDefenseBonus">(with bonuses)</div>
       </div>
       <div class="stat-row with-hint travel-stats" *ngIf="armySpeed > 0">
         <div class="stat-main">

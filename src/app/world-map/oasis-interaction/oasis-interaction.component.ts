@@ -653,6 +653,16 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
     this.router.navigate(['player', username]);
   }
 
+  get hasAttackBonus(): boolean {
+    const skills = (this.userInformationService.currentVillage as any)?.skills;
+    return skills ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0 : false;
+  }
+
+  get hasDefenseBonus(): boolean {
+    const skills = (this.userInformationService.currentVillage as any)?.skills;
+    return skills ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD) > 0 : false;
+  }
+
   close(): void {
     this.closed.emit();
   }

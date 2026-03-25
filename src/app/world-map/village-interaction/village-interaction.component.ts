@@ -406,6 +406,19 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     return idx >= 0 ? idx : 0;
   }
 
+  get hasAttackBonus(): boolean {
+    const skills = (this.userInformationService.currentVillage as any)?.skills;
+    return skills ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0 : false;
+  }
+
+  get hasSupportDefenseBonus(): boolean {
+    const recipientVillage = this.playerInfo?.villages?.find(
+      (v: any) => v.villageName === this.village.villageName,
+    );
+    const skills = recipientVillage?.skills;
+    return skills ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD) > 0 : false;
+  }
+
   close(): void {
     this.closed.emit();
   }

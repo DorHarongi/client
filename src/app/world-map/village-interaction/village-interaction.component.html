@@ -57,7 +57,7 @@
                     <img src="assets/swords.png" class="stat-icon"> Attack:
                     {{displayAttack | number}}
                 </div>
-                <div class="stat-hint">(with bonuses)</div>
+                <div class="stat-hint" *ngIf="hasAttackBonus">(with bonuses)</div>
             </div>
             <div class="stat-row with-hint travel-stats" *ngIf="armySpeed > 0">
                 <div class="stat-main">
@@ -82,7 +82,7 @@
                     <img src="assets/shield.png" class="stat-icon"> Defense:
                     {{supportDisplayDefense | number}}
                 </div>
-                <div class="stat-hint">(with bonuses)</div>
+                <div class="stat-hint" *ngIf="hasSupportDefenseBonus">(with bonuses)</div>
             </div>
             <div class="stat-row with-hint travel-stats" *ngIf="armySpeed > 0">
                 <div class="stat-main">{{armySpeed}} tiles/min</div>

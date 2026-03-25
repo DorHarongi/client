@@ -18,7 +18,9 @@ import {
   calculateTravelTimeMs,
   getArmySpeed,
   getDistanceBonusText,
+  getSkillBonus,
   RELIC_NAMES,
+  SkillCategory,
 } from 'utils';
 import { BossOnMap } from '../models/mapModels';
 import { BossService, TroopsAmounts } from '../services/boss.service';
@@ -399,6 +401,14 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
 
   viewClan(clanName: string): void {
     this.router.navigate(['clan', clanName]);
+  }
+
+  get hasAttackBonus(): boolean {
+    const skills = (this.userInformationService.currentVillage as any)?.skills;
+    const hasSharperBlades = skills
+      ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0
+      : false;
+    return hasSharperBlades || this.damageMultiplier !== 1;
   }
 
   close(): void {
