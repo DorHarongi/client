@@ -56,7 +56,6 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   totalAttack: number = 0;
   totalDefense: number = 0;
   effectiveAttack: number = 0;
-  effectiveDefense: number = 0;
 
   // Travel stats
   armySpeed: number = 0;
@@ -182,7 +181,6 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       this.totalAttack = 0;
       this.totalDefense = 0;
       this.effectiveAttack = 0;
-      this.effectiveDefense = 0;
       return;
     }
     const village = this.userInformationService.currentVillage;
@@ -190,12 +188,10 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     const stats = calculateTroopStats(this.chosenTroops, {
       skills: (village as any)?.skills,
       applyAttackSkillBonus: true,
-      applyDefenseSkillBonus: true,
     });
     this.totalAttack = stats.baseAttack;
     this.totalDefense = stats.baseDefense;
     this.effectiveAttack = stats.effectiveAttack;
-    this.effectiveDefense = stats.effectiveDefense;
   }
 
   updateTravelStats(): void {
@@ -239,16 +235,6 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   /** Attack with Sharper Blades bonus (for display in attack confirmation). */
   get displayAttack(): number {
     return this.effectiveAttack;
-  }
-
-  /** Defense with Heroic Shield bonus (for display in attack confirmation). */
-  get displayDefense(): number {
-    return this.effectiveDefense;
-  }
-
-  /** Keep UI consistent by showing your effective attack value in support panel. */
-  get supportDisplayAttack(): number {
-    return this.displayAttack;
   }
 
   /**

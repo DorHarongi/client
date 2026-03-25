@@ -148,27 +148,20 @@
       [maxPossibleTroops]="maxPossibleTroops"
       (onTroopsChange)="troopsChanged($event)"
     ></app-troops-choosing>
-    <div class="total-stats center" *ngIf="baseAttack > 0 || baseDefense > 0">
-      <div class="stat-row">
+    <div class="total-stats center" *ngIf="baseAttack > 0">
+      <div class="stat-row with-hint">
         <div class="stat-main">
           <img src="assets/swords.png" class="stat-icon" /> Attack:
           {{ effectiveAttack | number }}
         </div>
         <div class="stat-hint">(with bonuses)</div>
       </div>
-      <div class="stat-row">
+      <div class="stat-row with-hint travel-stats" *ngIf="armySpeed > 0">
         <div class="stat-main">
-          <img src="assets/shield.png" class="stat-icon" /> Defense:
-          {{ effectiveDefense | number }}
+          <img src="assets/speed.png" class="stat-icon" />
+          {{ armySpeed }} tiles/min
         </div>
-        <div class="stat-hint">(with bonuses)</div>
-      </div>
-      <div class="stat-row" *ngIf="armySpeed > 0">
-        <img src="assets/speed.png" class="stat-icon" />
-        {{ armySpeed }} tiles/min
-      </div>
-      <div class="stat-row" *ngIf="armySpeed > 0">
-        ETA: {{ getFormattedTravelTime() }}
+        <div class="stat-hint">ETA: {{ getFormattedTravelTime() }}</div>
       </div>
     </div>
     <div class="panel-actions center">

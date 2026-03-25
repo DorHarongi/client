@@ -57,9 +57,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
 
   // Troop stats
   baseAttack: number = 0;
-  baseDefense: number = 0;
   effectiveAttack: number = 0;
-  effectiveDefense: number = 0;
 
   // Travel stats
   armySpeed: number = 0;
@@ -221,9 +219,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   updateTotalStats(): void {
     if (!this.chosenTroops) {
       this.baseAttack = 0;
-      this.baseDefense = 0;
       this.effectiveAttack = 0;
-      this.effectiveDefense = 0;
       return;
     }
     const village = this.userInformationService.currentVillage;
@@ -231,13 +227,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     const stats = calculateTroopStats(this.chosenTroops, {
       skills: (village as any)?.skills,
       applyAttackSkillBonus: true,
-      applyDefenseSkillBonus: true,
       attackMultiplier: this.damageMultiplier,
     });
     this.baseAttack = stats.baseAttack;
-    this.baseDefense = stats.baseDefense;
     this.effectiveAttack = stats.effectiveAttack;
-    this.effectiveDefense = stats.effectiveDefense;
   }
 
   updateTravelStats(): void {
