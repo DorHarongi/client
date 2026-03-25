@@ -210,9 +210,16 @@ h5 {
 
 .stat-row {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  font-weight: bold;
+}
+
+.stat-main {
+  display: flex;
   align-items: center;
   gap: 4px;
-  font-weight: bold;
   white-space: nowrap;
 }
 
