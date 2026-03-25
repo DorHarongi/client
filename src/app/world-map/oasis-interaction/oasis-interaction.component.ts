@@ -10,28 +10,15 @@ import {
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
+import { calculateTroopStats } from 'src/app/shared/troop-stats.util';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
 import {
-  archerAttackingStat,
-  archerDefenceStat,
-  axeFighterAttackingStat,
-  axeFighterDefenceStat,
   calculateDistance,
   calculateTravelTimeMs,
-  catapultsAttackingStat,
-  catapultsDefenceStat,
   getArmySpeed,
   getSkillBonus,
-  horsemenAttackingStat,
-  horsemenDefenceStat,
-  magicianAttackingStat,
-  magicianDefenceStat,
   SkillCategory,
-  spearFighterAttackingStat,
-  spearFighterDefenceStat,
-  swordFighterAttackingStat,
-  swordFighterDefenceStat,
   oasisTierConfigs,
   OasisTier,
   OASIS_HARVEST_RATE_PER_TROOP_PER_HOUR,
@@ -105,8 +92,10 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   maxPossibleTroops!: TroopsAmounts;
   chosenTroops!: TroopsAmounts;
 
-  totalAttack: number = 0;
-  totalDefense: number = 0;
+  baseAttack: number = 0;
+  baseDefense: number = 0;
+  effectiveAttack: number = 0;
+  effectiveDefense: number = 0;
   armySpeed: number = 0;
   travelTimeMs: number = 0;
 
@@ -280,27 +269,23 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
 
   updateTotalStats(): void {
     if (!this.chosenTroops) {
-      this.totalAttack = 0;
-      this.totalDefense = 0;
+      this.baseAttack = 0;
+      this.baseDefense = 0;
+      this.effectiveAttack = 0;
+      this.effectiveDefense = 0;
       return;
     }
-    this.totalAttack =
-      this.chosenTroops.spearFighters * spearFighterAttackingStat +
-      this.chosenTroops.swordFighters * swordFighterAttackingStat +
-      this.chosenTroops.axeFighters * axeFighterAttackingStat +
-      this.chosenTroops.archers * archerAttackingStat +
-      this.chosenTroops.magicians * magicianAttackingStat +
-      this.chosenTroops.horsemen * horsemenAttackingStat +
-      this.chosenTroops.catapults * catapultsAttackingStat;
+    const currentVillage = this.userInformationService.currentVillage;
 
-    this.totalDefense =
-      this.chosenTroops.spearFighters * spearFighterDefenceStat +
-      this.chosenTroops.swordFighters * swordFighterDefenceStat +
-      this.chosenTroops.axeFighters * axeFighterDefenceStat +
-      this.chosenTroops.archers * archerDefenceStat +
-      this.chosenTroops.magicians * magicianDefenceStat +
-      this.chosenTroops.horsemen * horsemenDefenceStat +
-      this.chosenTroops.catapults * catapultsDefenceStat;
+    const stats = calculateTroopStats(this.chosenTroops, {
+      skills: (currentVillage as any)?.skills,
+      applyAttackSkillBonus: true,
+      applyDefenseSkillBonus: true,
+    });
+    this.baseAttack = stats.baseAttack;
+    this.baseDefense = stats.baseDefense;
+    this.effectiveAttack = stats.effectiveAttack;
+    this.effectiveDefense = stats.effectiveDefense;
   }
 
   updateTravelStats(): void {

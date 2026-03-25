@@ -9,29 +9,16 @@ import {
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
+import { calculateTroopStats } from 'src/app/shared/troop-stats.util';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import {
-  archerAttackingStat,
-  archerDefenceStat,
-  axeFighterAttackingStat,
-  axeFighterDefenceStat,
   bossImages,
   bossRewardAmounts,
   calculateDistance,
   calculateTravelTimeMs,
-  catapultsAttackingStat,
-  catapultsDefenceStat,
   getArmySpeed,
   getDistanceBonusText,
-  horsemenAttackingStat,
-  horsemenDefenceStat,
-  magicianAttackingStat,
-  magicianDefenceStat,
   RELIC_NAMES,
-  spearFighterAttackingStat,
-  spearFighterDefenceStat,
-  swordFighterAttackingStat,
-  swordFighterDefenceStat,
 } from 'utils';
 import { BossOnMap } from '../models/mapModels';
 import { BossService, TroopsAmounts } from '../services/boss.service';
@@ -69,8 +56,10 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   }[] = [];
 
   // Troop stats
-  totalAttack: number = 0;
-  totalDefense: number = 0;
+  baseAttack: number = 0;
+  baseDefense: number = 0;
+  effectiveAttack: number = 0;
+  effectiveDefense: number = 0;
 
   // Travel stats
   armySpeed: number = 0;
@@ -231,27 +220,24 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
 
   updateTotalStats(): void {
     if (!this.chosenTroops) {
-      this.totalAttack = 0;
-      this.totalDefense = 0;
+      this.baseAttack = 0;
+      this.baseDefense = 0;
+      this.effectiveAttack = 0;
+      this.effectiveDefense = 0;
       return;
     }
-    this.totalAttack =
-      (this.chosenTroops.spearFighters || 0) * spearFighterAttackingStat +
-      (this.chosenTroops.swordFighters || 0) * swordFighterAttackingStat +
-      (this.chosenTroops.axeFighters || 0) * axeFighterAttackingStat +
-      (this.chosenTroops.archers || 0) * archerAttackingStat +
-      (this.chosenTroops.magicians || 0) * magicianAttackingStat +
-      (this.chosenTroops.horsemen || 0) * horsemenAttackingStat +
-      (this.chosenTroops.catapults || 0) * catapultsAttackingStat;
+    const village = this.userInformationService.currentVillage;
 
-    this.totalDefense =
-      (this.chosenTroops.spearFighters || 0) * spearFighterDefenceStat +
-      (this.chosenTroops.swordFighters || 0) * swordFighterDefenceStat +
-      (this.chosenTroops.axeFighters || 0) * axeFighterDefenceStat +
-      (this.chosenTroops.archers || 0) * archerDefenceStat +
-      (this.chosenTroops.magicians || 0) * magicianDefenceStat +
-      (this.chosenTroops.horsemen || 0) * horsemenDefenceStat +
-      (this.chosenTroops.catapults || 0) * catapultsDefenceStat;
+    const stats = calculateTroopStats(this.chosenTroops, {
+      skills: (village as any)?.skills,
+      applyAttackSkillBonus: true,
+      applyDefenseSkillBonus: true,
+      attackMultiplier: this.damageMultiplier,
+    });
+    this.baseAttack = stats.baseAttack;
+    this.baseDefense = stats.baseDefense;
+    this.effectiveAttack = stats.effectiveAttack;
+    this.effectiveDefense = stats.effectiveDefense;
   }
 
   updateTravelStats(): void {

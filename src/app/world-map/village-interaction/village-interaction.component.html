@@ -53,10 +53,12 @@
         <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
         <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
             <div class="stat-row">
-                <img src="assets/swords.png" class="stat-icon"> {{displayAttack | number}}
+                <img src="assets/swords.png" class="stat-icon"> Attack:
+                {{displayAttack | number}} <span class="stat-hint">(with bonuses)</span>
             </div>
             <div class="stat-row">
-                <img src="assets/shield.png" class="stat-icon"> {{displayDefense | number}}
+                <img src="assets/shield.png" class="stat-icon"> Defense:
+                {{displayDefense | number}} <span class="stat-hint">(with bonuses)</span>
             </div>
             <div class="stat-row" *ngIf="armySpeed > 0">
                 <img src="assets/speed.png" class="stat-icon"> {{armySpeed}} tiles/min
@@ -75,15 +77,17 @@
     <div *ngIf="showSupportPanel">
         <h5 class="center">Send Support to {{village.villageName}}</h5>
         <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
-        <div class="total-stats center" *ngIf="armySpeed > 0">
+        <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
             <div class="stat-row">
-                <img src="assets/swords.png" class="stat-icon"> {{totalAttack | number}}
+                <img src="assets/swords.png" class="stat-icon"> Attack:
+                {{supportDisplayAttack | number}} <span class="stat-hint">(with bonuses)</span>
             </div>
             <div class="stat-row">
-                <img src="assets/shield.png" class="stat-icon"> {{totalDefense | number}}
+                <img src="assets/shield.png" class="stat-icon"> Defense:
+                {{supportDisplayDefense | number}} <span class="stat-hint">(with bonuses)</span>
             </div>
-            <div class="stat-row">{{armySpeed}} tiles/min</div>
-            <div class="stat-row">Support will arrive in {{getFormattedTravelTime()}}</div>
+            <div class="stat-row" *ngIf="armySpeed > 0">{{armySpeed}} tiles/min</div>
+            <div class="stat-row" *ngIf="armySpeed > 0">Support will arrive in {{getFormattedTravelTime()}}</div>
         </div>
         <div class="panel-actions center">
             <button class="action-btn" (click)="sendSupport()" [disabled]="!hasSelectedTroops()">Send Support</button>

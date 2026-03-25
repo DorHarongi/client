@@ -82,12 +82,14 @@
   <div *ngIf="showSendTroopsPanel && !isClanOwned">
     <h5 class="center">Send Troops to {{ oasisName }}</h5>
     <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
-    <div class="total-stats center" *ngIf="totalAttack > 0 || totalDefense > 0">
+    <div class="total-stats center" *ngIf="baseAttack > 0 || baseDefense > 0">
       <div class="stat-row">
-        <img src="assets/swords.png" class="stat-icon"> {{ totalAttack | number }}
+        <img src="assets/swords.png" class="stat-icon"> Attack:
+        {{ effectiveAttack | number }} <span class="stat-hint">(with bonuses)</span>
       </div>
       <div class="stat-row">
-        <img src="assets/shield.png" class="stat-icon"> {{ totalDefense | number }}
+        <img src="assets/shield.png" class="stat-icon"> Defense:
+        {{ effectiveDefense | number }} <span class="stat-hint">(with bonuses)</span>
       </div>
       <div class="stat-row" *ngIf="armySpeed > 0">
         <img src="assets/speed.png" class="stat-icon"> {{ armySpeed }} tiles/min

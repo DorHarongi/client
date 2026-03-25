@@ -11,28 +11,15 @@ import { Router } from '@angular/router';
 import { Subscription, Subject, takeUntil } from 'rxjs';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { User } from 'src/app/main-panel/models/User';
+import { calculateTroopStats } from 'src/app/shared/troop-stats.util';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
 import {
-  archerAttackingStat,
-  archerDefenceStat,
-  axeFighterAttackingStat,
-  axeFighterDefenceStat,
   calculateDistance,
   calculateTravelTimeMs,
-  catapultsAttackingStat,
-  catapultsDefenceStat,
   getArmySpeed,
   getSkillBonus,
-  horsemenAttackingStat,
-  horsemenDefenceStat,
-  magicianAttackingStat,
-  magicianDefenceStat,
   SkillCategory,
-  spearFighterAttackingStat,
-  spearFighterDefenceStat,
-  swordFighterAttackingStat,
-  swordFighterDefenceStat,
 } from 'utils';
 import { VillageOnMap } from '../models/mapModels';
 
@@ -68,6 +55,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   // Troop stats
   totalAttack: number = 0;
   totalDefense: number = 0;
+  effectiveAttack: number = 0;
+  effectiveDefense: number = 0;
 
   // Travel stats
   armySpeed: number = 0;
@@ -192,25 +181,21 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     if (!this.chosenTroops) {
       this.totalAttack = 0;
       this.totalDefense = 0;
+      this.effectiveAttack = 0;
+      this.effectiveDefense = 0;
       return;
     }
-    this.totalAttack =
-      this.chosenTroops.spearFighters * spearFighterAttackingStat +
-      this.chosenTroops.swordFighters * swordFighterAttackingStat +
-      this.chosenTroops.axeFighters * axeFighterAttackingStat +
-      this.chosenTroops.archers * archerAttackingStat +
-      this.chosenTroops.magicians * magicianAttackingStat +
-      this.chosenTroops.horsemen * horsemenAttackingStat +
-      this.chosenTroops.catapults * catapultsAttackingStat;
+    const village = this.userInformationService.currentVillage;
 
-    this.totalDefense =
-      this.chosenTroops.spearFighters * spearFighterDefenceStat +
-      this.chosenTroops.swordFighters * swordFighterDefenceStat +
-      this.chosenTroops.axeFighters * axeFighterDefenceStat +
-      this.chosenTroops.archers * archerDefenceStat +
-      this.chosenTroops.magicians * magicianDefenceStat +
-      this.chosenTroops.horsemen * horsemenDefenceStat +
-      this.chosenTroops.catapults * catapultsDefenceStat;
+    const stats = calculateTroopStats(this.chosenTroops, {
+      skills: (village as any)?.skills,
+      applyAttackSkillBonus: true,
+      applyDefenseSkillBonus: true,
+    });
+    this.totalAttack = stats.baseAttack;
+    this.totalDefense = stats.baseDefense;
+    this.effectiveAttack = stats.effectiveAttack;
+    this.effectiveDefense = stats.effectiveDefense;
   }
 
   updateTravelStats(): void {
@@ -253,22 +238,31 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
 
   /** Attack with Sharper Blades bonus (for display in attack confirmation). */
   get displayAttack(): number {
-    const village = this.userInformationService.currentVillage;
-    const skills = (village as any)?.skills;
-    const bonus = skills
-      ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES)
-      : 0;
-    return Math.floor(this.totalAttack * (1 + bonus));
+    return this.effectiveAttack;
   }
 
   /** Defense with Heroic Shield bonus (for display in attack confirmation). */
   get displayDefense(): number {
-    const village = this.userInformationService.currentVillage;
-    const skills = (village as any)?.skills;
-    const bonus = skills
-      ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD)
-      : 0;
-    return Math.floor(this.totalDefense * (1 + bonus));
+    return this.effectiveDefense;
+  }
+
+  /** Keep UI consistent by showing your effective attack value in support panel. */
+  get supportDisplayAttack(): number {
+    return this.displayAttack;
+  }
+
+  /**
+   * Support troops defend under recipient village conditions.
+   * Apply recipient village Heroic Shield when available to mirror backend.
+   */
+  get supportDisplayDefense(): number {
+    const recipientVillage = this.playerInfo?.villages?.find(
+      (v: any) => v.villageName === this.village.villageName,
+    );
+    return calculateTroopStats(this.chosenTroops, {
+      skills: recipientVillage?.skills,
+      applyDefenseSkillBonus: true,
+    }).effectiveDefense;
   }
 
   getFormattedTravelTime(): string {
