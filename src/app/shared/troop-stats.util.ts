@@ -92,12 +92,14 @@ export function calculateTroopStats(
       : 0);
   const attackMultiplier = options?.attackMultiplier || 1;
   const defenseMultiplier = options?.defenseMultiplier || 1;
+  const attackMultiplierBonus = attackMultiplier - 1;
+  const defenseMultiplierBonus = defenseMultiplier - 1;
 
   const effectiveAttack = Math.floor(
-    baseAttack * (1 + attackSkillBonus) * attackMultiplier,
+    baseAttack * (1 + attackSkillBonus + attackMultiplierBonus),
   );
   const effectiveDefense = Math.floor(
-    baseDefense * (1 + defenseSkillBonus) * defenseMultiplier,
+    baseDefense * (1 + defenseSkillBonus + defenseMultiplierBonus),
   );
 
   return {
