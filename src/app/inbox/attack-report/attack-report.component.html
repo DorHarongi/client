@@ -113,7 +113,7 @@
 
     <app-resources-amount 
         *ngIf="!isBossReport"
-        [label]="isOasisReport ? 'Looted from oasis:' : 'Loot stolen:'"
+        [label]="isOasisReport ? 'Captured resources:' : 'Loot stolen:'"
         [resources]="getLootResources()">
     </app-resources-amount>
 
