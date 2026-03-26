@@ -35,7 +35,7 @@
 
     <div *ngIf="isOasisReport && attackReport.attackerWon && !isUserAttacker" class="oasis-report-header">
         <h4 class="oasis-conquest-title oasis-lost">Oasis Lost!</h4>
-        <p>{{ attackReport.attackerName }} has seized your oasis.</p>
+        <p>{{ attackReport.attackerName }} has taken over your oasis.</p>
     </div>
 
     <div *ngFor="let troopTypeKeyValue of troopDictionariesByType | keyvalue">
