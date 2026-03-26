@@ -208,8 +208,15 @@ export class AcademyComponent implements OnInit, OnDestroy {
     this.pendingLearnCell = null;
   }
 
+  get canAffordReset(): boolean {
+    const res = this.userInformationService.currentVillage.resourcesAmounts;
+    return res.woodAmount >= this.resetCost.wood
+      && res.stonesAmount >= this.resetCost.stones
+      && res.cropAmount >= this.resetCost.crop;
+  }
+
   onResetClick(): void {
-    if (this.loading || this.usedPoints <= 0) return;
+    if (this.loading || this.usedPoints <= 0 || !this.canAffordReset) return;
     this.showResetConfirm = true;
   }
 

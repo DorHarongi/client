@@ -44,7 +44,8 @@
       <button
         class="reset-btn"
         (click)="onResetClick()"
-        [disabled]="loading || usedPoints <= 0"
+        [disabled]="loading || usedPoints <= 0 || !canAffordReset"
+        [title]="usedPoints > 0 && !canAffordReset ? 'Not enough resources' : ''"
       >
         {{ loading ? "Processing..." : "Reset Skills" }}
       </button>
@@ -101,7 +102,7 @@
       <p class="warning">All skill points will be refunded.</p>
     </div>
     <div class="confirm-actions">
-      <button (click)="confirmResetSkills()" [disabled]="loading">Reset</button>
+      <button (click)="confirmResetSkills()" [disabled]="loading || !canAffordReset">Reset</button>
       <button class="cancel-btn" (click)="cancelResetConfirm()">Cancel</button>
     </div>
   </div>
