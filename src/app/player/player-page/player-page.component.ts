@@ -83,7 +83,10 @@ export class PlayerPageComponent implements OnInit, OnDestroy {
 
   loadPlayerInfo(): void {
     this.loading = true;
-    this.subscription = this.http.get<any>(`${environment.apiUrl}/users/profile/${this.username}`)
+    const endpoint = this.isOwnProfile
+      ? `${environment.apiUrl}/users/${this.username}`
+      : `${environment.apiUrl}/users/profile/${this.username}`;
+    this.subscription = this.http.get<any>(endpoint)
       .subscribe({
         next: (user) => {
           this.playerInfo = user;

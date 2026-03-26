@@ -237,18 +237,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     return this.effectiveAttack;
   }
 
-  /**
-   * Support troops defend under recipient village conditions.
-   * Apply recipient village Heroic Shield when available to mirror backend.
-   */
   get supportDisplayDefense(): number {
-    const recipientVillage = this.playerInfo?.villages?.find(
-      (v: any) => v.villageName === this.village.villageName,
-    );
-    return calculateTroopStats(this.chosenTroops, {
-      skills: recipientVillage?.skills,
-      applyDefenseSkillBonus: true,
-    }).effectiveDefense;
+    return calculateTroopStats(this.chosenTroops, {}).baseDefense;
   }
 
   getFormattedTravelTime(): string {
@@ -409,14 +399,6 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   get hasAttackBonus(): boolean {
     const skills = (this.userInformationService.currentVillage as any)?.skills;
     return skills ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0 : false;
-  }
-
-  get hasSupportDefenseBonus(): boolean {
-    const recipientVillage = this.playerInfo?.villages?.find(
-      (v: any) => v.villageName === this.village.villageName,
-    );
-    const skills = recipientVillage?.skills;
-    return skills ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD) > 0 : false;
   }
 
   close(): void {
