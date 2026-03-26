@@ -54,6 +54,8 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
   totalDefense: number = 0;
   sharperBladesBonus: number = 0;
   heroicShieldBonus: number = 0;
+  baseAttack: number = 0;
+  baseDefense: number = 0;
   get sharperBladesPercent(): string { return (this.sharperBladesBonus * 100).toFixed(0); }
   get heroicShieldPercent(): string { return (this.heroicShieldBonus * 100).toFixed(0); }
 
@@ -151,6 +153,8 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
       (troops.magicians + support.magicians) * magicianDefenceStat +
       (troops.horsemen + support.horsemen) * horsemenDefenceStat +
       (troops.catapults + support.catapults) * catapultsDefenceStat;
+    this.baseAttack = baseAttack;
+    this.baseDefense = baseDefense;
     this.sharperBladesBonus = getSkillBonus(v.skills, SkillCategory.SHARPER_BLADES);
     this.heroicShieldBonus = getSkillBonus(v.skills, SkillCategory.HEROIC_SHIELD);
     this.totalAttack = Math.floor(baseAttack * (1 + this.sharperBladesBonus));

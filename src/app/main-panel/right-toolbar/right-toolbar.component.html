@@ -71,10 +71,10 @@
     <div class="subContainer" id="villagePower">
         <h4> Village Statistics </h4>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/swords.png">
-            <h5> Attack: {{totalAttack | number}} <span class="skill-bonus" *ngIf="sharperBladesBonus > 0">(+{{sharperBladesPercent}}%)</span></h5>
+            <h5> Attack: {{totalAttack | number}} <span class="skill-bonus" *ngIf="sharperBladesBonus > 0 && baseAttack > 0">(+{{sharperBladesPercent}}%)</span></h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/shield.png">
-            <h5> Defense: {{totalDefense | number}} <span class="skill-bonus" *ngIf="heroicShieldBonus > 0">(+{{heroicShieldPercent}}%)</span></h5>
+            <h5> Defense: {{totalDefense | number}} <span class="skill-bonus" *ngIf="heroicShieldBonus > 0 && baseDefense > 0">(+{{heroicShieldPercent}}%)</span></h5>
         </div>
     </div>
 </div>
