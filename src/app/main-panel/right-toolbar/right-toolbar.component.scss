@@ -128,7 +128,6 @@ h4 {
 
 .troops-container{
     justify-content: start;
-    align-items: baseline;
     margin-left: 16px;
 }
 
@@ -265,5 +264,5 @@ li {
 
 .skill-bonus {
     color: var(--positive-color, #27ae60);
-    font-size: 0.85em;
+    font-weight: normal;
 }
