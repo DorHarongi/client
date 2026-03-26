@@ -71,7 +71,7 @@ h5 {
 }
 
 .trait-info {
-    color: #8B4513;
+    color: var(--text-content-muted);
     font-style: italic;
 }
 
@@ -84,7 +84,7 @@ h5 {
     margin-top: 0.75rem;
     margin-bottom: 1rem;
     padding: 0.75rem 1rem;
-    border: 2px solid #8B4513;
+    border: 2px solid var(--border-color);
     border-radius: 8px;
     background: url(../../../assets/top-bg.png) center/cover;
     background-size: auto;
@@ -94,19 +94,19 @@ h5 {
     margin-top: 0;
     text-align: center;
     font-size: 1.2rem;
-    color: #000;
+    color: var(--text-content);
 }
 .boss-image-row { text-align: center; margin: 0.5rem 0; }
 .boss-report-image { max-width: 150px; height: auto; } /* 25% bigger than 120px */
 .boss-name {
     text-align: center;
-    color: #000;
+    color: var(--text-content);
     font-size: 1.15rem;
     font-weight: 700;
     margin: 0.35rem 0;
 }
 .boss-hp-block { margin: 0.5rem 0; }
-.boss-hp-block .hp-line { margin: 0.2rem 0; color: #1a1a1a; }
+.boss-hp-block .hp-line { margin: 0.2rem 0; color: var(--text-content); }
 .hp-progress-bar {
     width: 100%;
     height: 1.25rem;
