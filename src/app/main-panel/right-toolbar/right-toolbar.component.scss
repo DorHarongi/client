@@ -264,5 +264,8 @@ li {
 
 .skill-bonus {
     color: var(--positive-color, #27ae60);
+    font-size: 0.85em;
     font-weight: normal;
+    position: relative;
+    top: -1.75px;
 }
