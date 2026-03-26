@@ -261,7 +261,7 @@
 
   &.bonus { color: #27ae60; }
   &.penalty { color: #e74c3c; }
-  &.neutral { color: #333; }
+  &.neutral { color: var(--text-content, #333); }
 }
 
 .rewards-section {

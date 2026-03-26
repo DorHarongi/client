@@ -98,15 +98,17 @@
           <tr>
             <th>Username</th>
             <th>Role</th>
+            <th>Population</th>
             <th>Weekly Raid Damage</th>
             <th *ngIf="isMember">Relics</th>
             <th *ngIf="isLeader">Actions</th>
           </tr>
-          <tr *ngFor="let member of clanInfo.members" class="member-row" [class.own-row]="member === currentUsername">
+          <tr *ngFor="let member of sortedMembers" class="member-row" [class.own-row]="member === currentUsername">
             <td class="clickable" (click)="goToMember(member)">{{ member }}<span *ngIf="member === currentUsername" class="you-badge"> (You)</span></td>
             <td>
               {{ member === clanInfo.leaderUsername ? "Leader" : "Member" }}
             </td>
+            <td>{{ getMemberPopulation(member) | number }}</td>
             <td>{{ formatDamage(getMemberRaidDamage(member)) }}</td>
             <td *ngIf="isMember">
               {{ getMemberRelics(member).join(", ") || "-" }}

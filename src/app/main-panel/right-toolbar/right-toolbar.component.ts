@@ -52,6 +52,10 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
 
   totalAttack: number = 0;
   totalDefense: number = 0;
+  sharperBladesBonus: number = 0;
+  heroicShieldBonus: number = 0;
+  get sharperBladesPercent(): string { return (this.sharperBladesBonus * 100).toFixed(0); }
+  get heroicShieldPercent(): string { return (this.heroicShieldBonus * 100).toFixed(0); }
 
   villages: Array<string> = [];
   activeVillage: number = 0;
@@ -147,10 +151,10 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
       (troops.magicians + support.magicians) * magicianDefenceStat +
       (troops.horsemen + support.horsemen) * horsemenDefenceStat +
       (troops.catapults + support.catapults) * catapultsDefenceStat;
-    const sharperBlades = getSkillBonus(v.skills, SkillCategory.SHARPER_BLADES);
-    const heroicShield = getSkillBonus(v.skills, SkillCategory.HEROIC_SHIELD);
-    this.totalAttack = Math.floor(baseAttack * (1 + sharperBlades));
-    this.totalDefense = Math.floor(baseDefense * (1 + heroicShield));
+    this.sharperBladesBonus = getSkillBonus(v.skills, SkillCategory.SHARPER_BLADES);
+    this.heroicShieldBonus = getSkillBonus(v.skills, SkillCategory.HEROIC_SHIELD);
+    this.totalAttack = Math.floor(baseAttack * (1 + this.sharperBladesBonus));
+    this.totalDefense = Math.floor(baseDefense * (1 + this.heroicShieldBonus));
   }
 
   switchToVillage(index: number) // clicked on a differnet village

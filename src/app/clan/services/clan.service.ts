@@ -28,6 +28,7 @@ export interface ClanStatisticDTO {
 export interface ClanMemberRaidStatsDTO {
     username: string;
     weeklyRaidDamage: number;
+    totalPopulation: number;
 }
 
 @Injectable({

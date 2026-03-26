@@ -156,9 +156,21 @@ export class ClanPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  get sortedMembers(): string[] {
+    if (this.memberRaidStats.length > 0) {
+      return this.memberRaidStats.map((s) => s.username);
+    }
+    return this.clanInfo?.members || [];
+  }
+
   getMemberRaidDamage(username: string): number {
     const stat = this.memberRaidStats.find((s) => s.username === username);
     return stat?.weeklyRaidDamage || 0;
+  }
+
+  getMemberPopulation(username: string): number {
+    const stat = this.memberRaidStats.find((s) => s.username === username);
+    return stat?.totalPopulation || 0;
   }
 
   formatDamage(damage: number): string {
