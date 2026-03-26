@@ -19,8 +19,8 @@ $your-color: #90EE90;
 .map-grid {
   display: flex;
   flex-direction: column;
-  border: 2px solid black;
-  background-color: #8B4513;
+  border: 2px solid var(--map-cell-border, black);
+  background-color: var(--map-grid-bg, #8B4513);
   flex-shrink: 0;
 }
 
@@ -31,17 +31,17 @@ $your-color: #90EE90;
 .grid-cell {
   width: var(--cell-size);
   height: var(--cell-size);
-  border: 1px dotted #654321;
+  border: 1px dotted var(--map-cell-border, #654321);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
   cursor: var(--cell-cursor);
-  background-color: #DEB887;
+  background-color: var(--map-bg, #DEB887);
 
   &:hover {
-    background-color: #D2B48C;
+    background-color: var(--map-bg-hover, #D2B48C);
   }
 
   // --- Village ownership ---
@@ -73,9 +73,9 @@ $your-color: #90EE90;
 
   &.available {
     cursor: pointer;
-    background-color: #C8E6C9;
+    background-color: var(--map-available-bg, #C8E6C9);
     &:hover {
-      background-color: #A5D6A7;
+      background-color: var(--map-available-hover, #A5D6A7);
       box-shadow: inset 0 0 10px rgba(0, 128, 0, 0.5);
     }
   }
@@ -161,7 +161,7 @@ $your-color: #90EE90;
   // --- Inner elements ---
   .coords {
     font-size: var(--coords-font-size);
-    color: #666;
+    color: var(--map-coords-color, #666);
     position: absolute;
     top: var(--coords-top);
     left: var(--coords-left);

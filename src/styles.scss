@@ -15,6 +15,14 @@
   --border-color: rgba(0, 0, 0, 0.7);
   --bg-panel: rgba(30, 20, 10, 0.88);
   --link-color: #007bff;
+  --map-bg: #DEB887;
+  --map-bg-hover: #D2B48C;
+  --map-grid-bg: #8B4513;
+  --map-cell-border: #654321;
+  --map-coords-color: #666;
+  --map-available-bg: #C8E6C9;
+  --map-available-hover: #A5D6A7;
+  --arrow-color: rgba(0, 0, 0, 0.7);
 }
 
 [data-theme="dark"] {
@@ -29,6 +37,14 @@
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(30, 30, 30, 0.94);
   --link-color: #8cb4d4;
+  --map-bg: #3a3a3a;
+  --map-bg-hover: #454545;
+  --map-grid-bg: #222;
+  --map-cell-border: #555;
+  --map-coords-color: #999;
+  --map-available-bg: #2d5a2d;
+  --map-available-hover: #367036;
+  --arrow-color: #d0d0d0;
 }
 
 [data-theme="ocean"] {
@@ -43,6 +59,14 @@
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(10, 38, 71, 0.92);
   --link-color: #6cb8e6;
+  --map-bg: #1a3a4a;
+  --map-bg-hover: #204555;
+  --map-grid-bg: #0e2530;
+  --map-cell-border: #2a5060;
+  --map-coords-color: #5a8a9a;
+  --map-available-bg: #2a7a50;
+  --map-available-hover: #309060;
+  --arrow-color: #b0d4e8;
 }
 
 [data-theme="forest"] {
@@ -57,6 +81,14 @@
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(27, 67, 50, 0.92);
   --link-color: #8cd8a8;
+  --map-bg: #2a4a2a;
+  --map-bg-hover: #335833;
+  --map-grid-bg: #1a2e1a;
+  --map-cell-border: #3a5a3a;
+  --map-coords-color: #6a8a6a;
+  --map-available-bg: #3a8a3a;
+  --map-available-hover: #44a044;
+  --arrow-color: #b0d8b8;
 }
 
 [data-theme="blood"] {
@@ -71,6 +103,14 @@
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(61, 10, 10, 0.92);
   --link-color: #f0a0a0;
+  --map-bg: #4a2828;
+  --map-bg-hover: #553030;
+  --map-grid-bg: #2a1515;
+  --map-cell-border: #6a3a3a;
+  --map-coords-color: #8a6a6a;
+  --map-available-bg: #2d5a2d;
+  --map-available-hover: #367036;
+  --arrow-color: #e0b8b8;
 }
 
 [data-theme="royal"] {
@@ -85,6 +125,14 @@
   --border-color: rgba(255, 255, 255, 0.12);
   --bg-panel: rgba(36, 0, 70, 0.92);
   --link-color: #c8a0f0;
+  --map-bg: #2e2040;
+  --map-bg-hover: #382848;
+  --map-grid-bg: #1a1028;
+  --map-cell-border: #483660;
+  --map-coords-color: #7a6890;
+  --map-available-bg: #2a5040;
+  --map-available-hover: #306048;
+  --arrow-color: #c8b0e0;
 }
 
 html, body {
@@ -769,11 +817,16 @@ body[data-theme]:not([data-theme="default"]) {
         background-image: none;
         background-color: var(--bg-primary);
         color: var(--text-primary);
-        border-color: var(--border-color);
+        border-color: var(--arrow-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     }
 
     .minimap {
         border-color: var(--border-color);
+    }
+
+    .map-grid {
+        border-color: var(--map-cell-border);
     }
 
     /* ── Server select ── */
