@@ -185,9 +185,8 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
     return this.userInformationService.userInformation?.theme || 'default';
   }
 
-  changeTheme(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const theme = select.value || 'default';
+  onThemeChange(theme: string): void {
+    theme = theme || 'default';
     this.http.post(`${environment.apiUrl}/users/theme`, { theme }).subscribe({
       next: () => {
         (this.userInformationService.userInformation as any).theme = theme;

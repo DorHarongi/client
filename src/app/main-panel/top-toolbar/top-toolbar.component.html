@@ -34,8 +34,8 @@
   <div class="theme-container">
     <span class="theme-label">Theme:</span>
     <select
-      [value]="currentTheme()"
-      (change)="changeTheme($event)"
+      [ngModel]="currentTheme()"
+      (ngModelChange)="onThemeChange($event)"
       title="Theme"
     >
       <option value="default">Default</option>
