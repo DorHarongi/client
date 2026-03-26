@@ -1,6 +1,16 @@
 <div class = "flexContainer attackContainer round-square">
    <h4 class="center"> Attack {{defenderName }} </h4>
    <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
+   <div class="total-stats center" *ngIf="totalAttack > 0">
+        <div class="stat-row">
+            <img src="assets/swords.png" class="stat-icon"> Attack: {{displayAttack | number}}
+            <span class="stat-hint" *ngIf="hasAttackBonus">(with bonuses)</span>
+        </div>
+        <div class="stat-row" *ngIf="armySpeed > 0">
+            <img src="assets/speed.png" class="stat-icon"> {{armySpeed}} tiles/min
+            <span class="stat-hint">ETA: {{getFormattedTravelTime()}}</span>
+        </div>
+    </div>
    <div id="actions" class="center">
         <button id = "attack" class="buttons center" (click)="attackVillage()" [disabled]="!hasSelectedTroops()"> Attack </button>
         <button id = "back" class="buttons center" (click)="goBack()"> Back </button>

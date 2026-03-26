@@ -168,5 +168,6 @@
     *ngIf="showAttackPopup" 
     [defenderName]="playerInfo.username" 
     [defenderVillageIndex]="attackVillageIndex"
+    [defenderLocation]="playerInfo.villages[attackVillageIndex]?.location"
     (closed)="closeAttackPopup()">
 </app-attack>
