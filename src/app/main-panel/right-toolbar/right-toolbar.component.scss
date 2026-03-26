@@ -48,10 +48,6 @@
         }
     }
     .rename-modal {
-        background-color: var(--bg-primary) !important;
-        background-blend-mode: multiply;
-        border-color: rgba(255, 255, 255, 0.15) !important;
-
         h4, .rename-input, .rename-input::placeholder {
             color: var(--text-primary) !important;
         }

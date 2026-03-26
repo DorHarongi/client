@@ -77,7 +77,13 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
 
     this.userInformationService.villageChanged$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.initMaxTroops());
+      .subscribe(() => {
+        if (this.chosenTroops) {
+          this.updateMaximumPossibleTroops();
+        } else {
+          this.initMaxTroops();
+        }
+      });
 
     this.userInformationService.refreshUserInformation();
   }

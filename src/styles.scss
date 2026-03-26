@@ -167,7 +167,9 @@ body[data-theme]:not([data-theme="default"]) {
     .clan-chat,
     .profile-card,
     .title-dropdown-trigger,
-    .title-dropdown-list {
+    .title-dropdown-list,
+    .withdraw-dialog,
+    .rename-modal {
         background-image: none;
         background-color: var(--bg-primary);
         color: var(--text-primary);
@@ -742,8 +744,14 @@ body[data-theme]:not([data-theme="default"]) {
     }
 
     /* ── Attack report ── */
-    .trait-info,
+    .trait-info {
+        border-color: var(--border-color);
+    }
+
     .boss-report-section {
+        background-image: none;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
         border-color: var(--border-color);
     }
 
@@ -758,6 +766,9 @@ body[data-theme]:not([data-theme="default"]) {
 
     /* ── World map ── */
     .nav-arrow {
+        background-image: none;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
         border-color: var(--border-color);
     }
 
