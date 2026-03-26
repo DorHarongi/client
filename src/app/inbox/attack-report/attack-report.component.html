@@ -28,9 +28,14 @@
         </div>
     </div>
 
-    <div *ngIf="isOasisReport && attackReport.attackerWon" class="oasis-report-header">
+    <div *ngIf="isOasisReport && attackReport.attackerWon && isUserAttacker" class="oasis-report-header">
         <h4 class="oasis-conquest-title">Oasis Conquered!</h4>
         <p>You have taken control of this oasis.</p>
+    </div>
+
+    <div *ngIf="isOasisReport && attackReport.attackerWon && !isUserAttacker" class="oasis-report-header">
+        <h4 class="oasis-conquest-title oasis-lost">Oasis Lost!</h4>
+        <p>{{ attackReport.attackerName }} has seized your oasis.</p>
     </div>
 
     <div *ngFor="let troopTypeKeyValue of troopDictionariesByType | keyvalue">
@@ -113,9 +118,9 @@
 
     <app-resources-amount 
         *ngIf="!isBossReport"
-        [label]="isOasisReport ? 'Captured resources:' : 'Loot stolen:'"
+        [label]="isOasisReport ? (isUserAttacker ? 'Captured resources:' : 'Resources lost:') : 'Loot stolen:'"
         [resources]="getLootResources()">
     </app-resources-amount>
 
-    <button id = "back" class="buttons center" (click)="goBack()"> Back </button>
+    <button id = "back" class="buttons center" style="margin-top: 20px;" (click)="goBack()"> Back </button>
 </div>
