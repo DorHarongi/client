@@ -52,10 +52,10 @@ $your-color: #90EE90;     // Green - your own villages
 
 .nav-arrow {
   background-image: url(../../../assets/top-bg.png);
-  border: 1px black solid;
+  border: 1px var(--border-color) solid;
   outline: none;
   border-radius: 0.25rem;
-  box-shadow: 2px 2px 2px 2px;
+  box-shadow: 2px 2px 2px 2px var(--border-color);
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -82,23 +82,23 @@ $your-color: #90EE90;     // Green - your own villages
 
 .arrow-up {
   border-width: 0 8px 12px 8px;
-  border-color: transparent transparent black transparent;
+  border-color: transparent transparent var(--border-color) transparent;
 }
 
 .arrow-down {
   border-width: 12px 8px 0 8px;
-  border-color: black transparent transparent transparent;
+  border-color: var(--border-color) transparent transparent transparent;
 }
 
 .arrow-left {
   border-width: 8px 12px 8px 0;
-  border-color: transparent black transparent transparent;
+  border-color: transparent var(--border-color) transparent transparent;
   margin-left: -2px;
 }
 
 .arrow-right {
   border-width: 8px 0 8px 12px;
-  border-color: transparent transparent transparent black;
+  border-color: transparent transparent transparent var(--border-color);
   margin-right: -2px;
 }
 
