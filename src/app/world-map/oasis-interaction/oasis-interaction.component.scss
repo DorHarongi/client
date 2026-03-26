@@ -190,7 +190,7 @@ h5 {
   }
 
   &:hover:not(:disabled) {
-    background-color: #e0e0e0;
+    filter: brightness(1.3);
   }
 }
 
