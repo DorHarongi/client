@@ -1,5 +1,5 @@
 <div class = "flexContainer toolbarContainer">
-    <div class="subContainer" id=production>
+    <div class="subContainer" id=production [class.has-bonus]="goldRushBonus > 0">
         <h4> Production </h4>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/crop.jpg">
             <h5> Crop: {{cropProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span></h5>
