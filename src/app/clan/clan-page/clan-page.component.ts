@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
-import { MAX_CLAN_MEMBERS } from 'utils';
+import { MAX_CLAN_MEMBERS, embassyMinimumLevelForClanJoin } from 'utils';
 import {
   ClanDTO,
   ClanMemberRaidStatsDTO,
@@ -422,11 +422,15 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   canJoin(): boolean {
+    const hasEmbassy = this.userInformationService.userInformation.villages?.some(
+      (v: any) => v.buildingsLevels?.embassyLevel >= embassyMinimumLevelForClanJoin,
+    );
     return (
       !this.isMember &&
       !this.currentUserClan &&
       !this.hasAlreadyRequested &&
-      !this.isClanFull()
+      !this.isClanFull() &&
+      !!hasEmbassy
     );
   }
 
