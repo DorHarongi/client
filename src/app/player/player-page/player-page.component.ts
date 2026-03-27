@@ -7,7 +7,7 @@ import { VillageOnMap } from 'src/app/world-map/models/mapModels';
 import { environment } from 'src/environments/environment';
 import { ACHIEVEMENTS } from 'utils';
 
-const MAX_MESSAGE_LENGTH = 100;
+const MAX_MESSAGE_LENGTH = 150;
 const MAX_INTRO_LENGTH = 200;
 
 @Component({
