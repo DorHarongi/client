@@ -2,13 +2,13 @@
     <div class="subContainer" id=production>
         <h4> Production </h4>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/crop.jpg">
-            <h5> Crop: {{cropProduction | number:'1.0-0'}} per hour </h5>
+            <h5> Crop: {{cropProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span></h5>
         </div>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/wood.jpg">
-            <h5> Wood: {{woodProduction | number:'1.0-0'}} per hour </h5>
+            <h5> Wood: {{woodProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span></h5>
         </div>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/rock.jpg">
-            <h5> Stone: {{stoneProduction | number:'1.0-0'}} per hour </h5>
+            <h5> Stone: {{stoneProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span></h5>
         </div>
     </div>
     <div class="subContainer" id="villages">
