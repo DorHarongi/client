@@ -99,6 +99,11 @@
 
     &.has-bonus {
         width: 275px;
+
+        h5 {
+            white-space: nowrap;
+            font-size: 1rem;
+        }
     }
 }
 
@@ -106,6 +111,15 @@
     overflow: visible;
     min-height: fit-content;
     height: auto;
+
+    &.has-bonus {
+        width: 275px;
+
+        h5 {
+            white-space: nowrap;
+            font-size: 1.1rem;
+        }
+    }
 }
 
 h5{
@@ -128,11 +142,6 @@ h4 {
 
 .production-container {
     justify-content: center;
-}
-
-.has-bonus .production-container h5 {
-    white-space: nowrap;
-    font-size: 1rem;
 }
 
 .troops-container{

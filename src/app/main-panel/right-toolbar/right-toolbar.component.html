@@ -68,7 +68,7 @@
             <h5> Catapults: {{clanCatapults | number}} </h5>
         </div>
     </div>
-    <div class="subContainer" id="villagePower">
+    <div class="subContainer" id="villagePower" [class.has-bonus]="sharperBladesBonus > 0 || heroicShieldBonus > 0">
         <h4> Village Statistics </h4>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/swords.png">
             <h5> Attack: {{totalAttack | number}} <span class="skill-bonus" *ngIf="sharperBladesBonus > 0 && baseAttack > 0">(+{{sharperBladesPercent}}%)</span></h5>
