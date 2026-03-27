@@ -138,13 +138,13 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
     const troops = v.troops;
     const support = v.clanTroops || { spearFighters: 0, swordFighters: 0, axeFighters: 0, archers: 0, magicians: 0, horsemen: 0, catapults: 0 };
     const baseAttack =
-      (troops.spearFighters + support.spearFighters) * spearFighterAttackingStat +
-      (troops.swordFighters + support.swordFighters) * swordFighterAttackingStat +
-      (troops.axeFighters + support.axeFighters) * axeFighterAttackingStat +
-      (troops.archers + support.archers) * archerAttackingStat +
-      (troops.magicians + support.magicians) * magicianAttackingStat +
-      (troops.horsemen + support.horsemen) * horsemenAttackingStat +
-      (troops.catapults + support.catapults) * catapultsAttackingStat;
+      troops.spearFighters * spearFighterAttackingStat +
+      troops.swordFighters * swordFighterAttackingStat +
+      troops.axeFighters * axeFighterAttackingStat +
+      troops.archers * archerAttackingStat +
+      troops.magicians * magicianAttackingStat +
+      troops.horsemen * horsemenAttackingStat +
+      troops.catapults * catapultsAttackingStat;
     const baseDefense =
       (troops.spearFighters + support.spearFighters) * spearFighterDefenceStat +
       (troops.swordFighters + support.swordFighters) * swordFighterDefenceStat +
