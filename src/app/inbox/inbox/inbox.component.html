@@ -209,31 +209,35 @@
             <button class="small-btn accept" (click)="handleClanRequest(selectedMessage, true); closeMessageModal()">Accept</button>
             <button class="small-btn decline" (click)="handleClanRequest(selectedMessage, false); closeMessageModal()">Decline</button>
         </div>
-        <!-- Reply form for player messages -->
-        <div *ngIf="isPlayerMessage(selectedMessage) && showReplyForm" class="reply-form">
-            <textarea
-                [(ngModel)]="replyContent"
-                placeholder="Type your reply..."
-                [maxlength]="maxReplyLength"
-                rows="3"
-                class="reply-textarea">
-            </textarea>
-            <div class="reply-char-counter" [class.limit-reached]="replyContent.length >= maxReplyLength">
-                {{replyContent.length}}/{{maxReplyLength}}
-            </div>
-            <p class="reply-error" *ngIf="replyError">{{replyError}}</p>
-            <div class="reply-actions">
-                <button class="action-btn reply-send-btn" (click)="sendReply()" [disabled]="replySending || !replyContent.trim()">
-                    {{replySending ? 'Sending...' : 'Send'}}
-                </button>
-                <button class="action-btn reply-cancel-btn" (click)="toggleReplyForm()">Cancel</button>
-            </div>
-        </div>
         <p class="reply-success center" *ngIf="replySuccess">{{replySuccess}}</p>
 
         <div class="modal-bottom-actions">
-            <button *ngIf="isPlayerMessage(selectedMessage) && !showReplyForm && !replySuccess" class="buttons reply-btn" (click)="toggleReplyForm()">Reply</button>
+            <button *ngIf="isPlayerMessage(selectedMessage) && !replySuccess" class="buttons reply-btn" (click)="toggleReplyForm()">Reply</button>
             <button class="buttons modal-close-btn" (click)="closeMessageModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Reply Modal -->
+<div *ngIf="showReplyForm && selectedMessage" class="modal-overlay reply-overlay" (click)="toggleReplyForm()">
+    <div class="flexContainer reply-modal round-square" (click)="$event.stopPropagation()">
+        <h4 class="center">Reply to {{selectedMessage.senderUsername}}</h4>
+        <textarea
+            [(ngModel)]="replyContent"
+            placeholder="Type your reply..."
+            [maxlength]="maxReplyLength"
+            rows="4"
+            class="reply-textarea">
+        </textarea>
+        <div class="reply-char-counter" [class.limit-reached]="replyContent.length >= maxReplyLength">
+            {{replyContent.length}}/{{maxReplyLength}}
+        </div>
+        <p class="reply-error" *ngIf="replyError">{{replyError}}</p>
+        <div class="modal-bottom-actions">
+            <button class="buttons reply-send-btn" (click)="sendReply()" [disabled]="replySending || !replyContent.trim()">
+                {{replySending ? 'Sending...' : 'Send'}}
+            </button>
+            <button class="buttons" (click)="toggleReplyForm()">Cancel</button>
         </div>
     </div>
 </div>
