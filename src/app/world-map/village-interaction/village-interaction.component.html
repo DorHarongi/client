@@ -50,22 +50,9 @@
     <!-- Attack Panel -->
     <div *ngIf="showAttackPanel">
         <h5 class="center">Attack {{village.villageName}}</h5>
-        <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
-        <div class="total-stats center" *ngIf="totalAttack > 0">
-            <div class="stat-row with-hint">
-                <div class="stat-main">
-                    <img src="assets/swords.png" class="stat-icon"> Attack:
-                    {{displayAttack | number}}
-                </div>
-                <div class="stat-hint" *ngIf="hasAttackBonus">(with bonuses)</div>
-            </div>
-            <div class="stat-row with-hint travel-stats" *ngIf="armySpeed > 0">
-                <div class="stat-main">
-                    <img src="assets/speed.png" class="stat-icon"> {{armySpeed}} tiles/min
-                </div>
-                <div class="stat-hint">ETA: {{getFormattedTravelTime()}}</div>
-            </div>
-        </div>
+        <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"
+            [showAttack]="true" [showETA]="true" [applyAttackBonus]="true"
+            [targetLocation]="{ x: village.x, y: village.y }"></app-troops-choosing>
         <div class="panel-actions center">
             <button class="action-btn" (click)="attack()" [disabled]="!hasSelectedTroops()">Attack</button>
             <button class="action-btn" (click)="cancelPanel()">Cancel</button>
@@ -75,20 +62,9 @@
     <!-- Support Panel -->
     <div *ngIf="showSupportPanel">
         <h5 class="center">Send Support to {{village.villageName}}</h5>
-        <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"></app-troops-choosing>
-        <div class="total-stats center" *ngIf="totalDefense > 0">
-            <div class="stat-row with-hint">
-                <div class="stat-main">
-                    <img src="assets/shield.png" class="stat-icon"> Defense:
-                    {{supportDisplayDefense | number}}
-                </div>
-                
-            </div>
-            <div class="stat-row with-hint travel-stats" *ngIf="armySpeed > 0">
-                <div class="stat-main">{{armySpeed}} tiles/min</div>
-                <div class="stat-hint">Support will arrive in {{getFormattedTravelTime()}}</div>
-            </div>
-        </div>
+        <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"
+            [showDefense]="true" [showETA]="true"
+            [targetLocation]="{ x: village.x, y: village.y }"></app-troops-choosing>
         <div class="panel-actions center">
             <button class="action-btn" (click)="sendSupport()" [disabled]="!hasSelectedTroops()">Send Support</button>
             <button class="action-btn" (click)="cancelPanel()">Back</button>

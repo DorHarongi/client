@@ -10,15 +10,9 @@ import {
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
-import { calculateTroopStats } from 'src/app/shared/troop-stats.util';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
 import {
-  calculateDistance,
-  calculateTravelTimeMs,
-  getArmySpeed,
-  getSkillBonus,
-  SkillCategory,
   oasisTierConfigs,
   OasisTier,
   OASIS_HARVEST_RATE_PER_TROOP_PER_HOUR,
@@ -92,12 +86,6 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   maxPossibleTroops!: TroopsAmounts;
   chosenTroops!: TroopsAmounts;
 
-  baseAttack: number = 0;
-  baseDefense: number = 0;
-  effectiveAttack: number = 0;
-  effectiveDefense: number = 0;
-  armySpeed: number = 0;
-  travelTimeMs: number = 0;
 
   private subscription?: Subscription;
   private harvestInterval: any;
@@ -263,85 +251,6 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   troopsChanged(troops: TroopsAmounts): void {
     this.chosenTroops = troops;
     this.updateMaximumPossibleTroops();
-    this.updateTotalStats();
-    this.updateTravelStats();
-  }
-
-  updateTotalStats(): void {
-    if (!this.chosenTroops) {
-      this.baseAttack = 0;
-      this.baseDefense = 0;
-      this.effectiveAttack = 0;
-      this.effectiveDefense = 0;
-      return;
-    }
-    const currentVillage = this.userInformationService.currentVillage;
-
-    const stats = calculateTroopStats(this.chosenTroops, {
-      skills: (currentVillage as any)?.skills,
-      applyAttackSkillBonus: true,
-      applyDefenseSkillBonus: true,
-    });
-    this.baseAttack = stats.baseAttack;
-    this.baseDefense = stats.baseDefense;
-    this.effectiveAttack = stats.effectiveAttack;
-    this.effectiveDefense = stats.effectiveDefense;
-  }
-
-  updateTravelStats(): void {
-    if (!this.chosenTroops) {
-      this.armySpeed = 0;
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    const currentVillage = this.userInformationService.currentVillage;
-    if (!currentVillage?.location) {
-      this.armySpeed = 0;
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    this.armySpeed = getArmySpeed(this.chosenTroops as any);
-    if (this.armySpeed <= 0) {
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    const distance = calculateDistance(
-      currentVillage.location.x,
-      currentVillage.location.y,
-      this.oasis.x,
-      this.oasis.y,
-    );
-
-    const skills = (currentVillage as any)?.skills;
-    const quickStepBonus = skills
-      ? getSkillBonus(skills, SkillCategory.QUICK_STEP)
-      : 0;
-    this.travelTimeMs = calculateTravelTimeMs(
-      distance,
-      this.armySpeed,
-      quickStepBonus,
-    );
-  }
-
-  getFormattedTravelTime(): string {
-    if (!this.travelTimeMs || this.travelTimeMs <= 0) {
-      return '—';
-    }
-    const totalSeconds = Math.floor(this.travelTimeMs / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    }
-    if (minutes > 0) {
-      return `${minutes}m ${seconds}s`;
-    }
-    return `${seconds}s`;
   }
 
   updateMaximumPossibleTroops(): void {
@@ -651,16 +560,6 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
 
   viewPlayer(username: string): void {
     this.router.navigate(['player', username]);
-  }
-
-  get hasAttackBonus(): boolean {
-    const skills = (this.userInformationService.currentVillage as any)?.skills;
-    return skills ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0 : false;
-  }
-
-  get hasDefenseBonus(): boolean {
-    const skills = (this.userInformationService.currentVillage as any)?.skills;
-    return skills ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD) > 0 : false;
   }
 
   close(): void {

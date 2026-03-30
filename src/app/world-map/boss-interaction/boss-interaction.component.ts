@@ -9,18 +9,13 @@ import {
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ResourcesDisplayAmounts } from 'src/app/main-panel/resources-amount/resources-amount.component';
-import { calculateTroopStats } from 'src/app/shared/troop-stats.util';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import {
   bossImages,
   bossRewardAmounts,
   calculateDistance,
-  calculateTravelTimeMs,
-  getArmySpeed,
   getDistanceBonusText,
-  getSkillBonus,
   RELIC_NAMES,
-  SkillCategory,
 } from 'utils';
 import { BossOnMap } from '../models/mapModels';
 import { BossService, TroopsAmounts } from '../services/boss.service';
@@ -57,13 +52,6 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     players: { username: string; damage: number }[];
   }[] = [];
 
-  // Troop stats
-  baseAttack: number = 0;
-  effectiveAttack: number = 0;
-
-  // Travel stats
-  armySpeed: number = 0;
-  travelTimeMs: number = 0;
 
   // Clan claim info
   clanClaims: number = 0;
@@ -214,77 +202,6 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
   troopsChanged(troops: TroopsAmounts): void {
     this.chosenTroops = troops;
     this.updateMaximumPossibleTroops();
-    this.updateTotalStats();
-    this.updateTravelStats();
-  }
-
-  updateTotalStats(): void {
-    if (!this.chosenTroops) {
-      this.baseAttack = 0;
-      this.effectiveAttack = 0;
-      return;
-    }
-    const village = this.userInformationService.currentVillage;
-
-    const stats = calculateTroopStats(this.chosenTroops, {
-      skills: (village as any)?.skills,
-      applyAttackSkillBonus: true,
-      attackMultiplier: this.damageMultiplier,
-    });
-    this.baseAttack = stats.baseAttack;
-    this.effectiveAttack = stats.effectiveAttack;
-  }
-
-  updateTravelStats(): void {
-    if (!this.chosenTroops) {
-      this.armySpeed = 0;
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    const village = this.userInformationService.currentVillage;
-    if (!village?.location) {
-      this.armySpeed = 0;
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    this.armySpeed = getArmySpeed(this.chosenTroops as any);
-    if (this.armySpeed <= 0) {
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    const distance = calculateDistance(
-      village.location.x,
-      village.location.y,
-      this.boss.x,
-      this.boss.y
-    );
-    const quickStepBonus = 0; // Skill integration will apply later
-    this.travelTimeMs = calculateTravelTimeMs(
-      distance,
-      this.armySpeed,
-      quickStepBonus
-    );
-  }
-
-  getFormattedTravelTime(): string {
-    if (!this.travelTimeMs || this.travelTimeMs <= 0) {
-      return '—';
-    }
-    const totalSeconds = Math.floor(this.travelTimeMs / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    }
-    if (minutes > 0) {
-      return `${minutes}m ${seconds}s`;
-    }
-    return `${seconds}s`;
   }
 
   updateMaximumPossibleTroops(): void {
@@ -401,14 +318,6 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
 
   viewClan(clanName: string): void {
     this.router.navigate(['clan', clanName]);
-  }
-
-  get hasAttackBonus(): boolean {
-    const skills = (this.userInformationService.currentVillage as any)?.skills;
-    const hasSharperBlades = skills
-      ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0
-      : false;
-    return hasSharperBlades || this.damageMultiplier !== 1;
   }
 
   close(): void {

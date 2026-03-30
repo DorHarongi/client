@@ -80,10 +80,11 @@ export class ClanService {
     });
   }
 
-  leaveClan(clanName: string, username: string): Observable<{ success: boolean }> {
+  leaveClan(clanName: string, username: string, newLeaderUsername?: string): Observable<{ success: boolean }> {
     return this.http.post<{ success: boolean }>(`${environment.apiUrl}/clans/leave`, {
       clanName,
-      username
+      username,
+      ...(newLeaderUsername ? { newLeaderUsername } : {}),
     });
   }
 

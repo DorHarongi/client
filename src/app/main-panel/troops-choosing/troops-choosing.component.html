@@ -218,3 +218,33 @@
             </td>
         </tr>
     </table>
+    <div class="total-stats center" *ngIf="showTotalStats">
+        <div class="stat-row" *ngIf="showAttack && effectiveAttack > 0 && showBaseHints">
+            <img src="assets/swords.png" class="stat-icon"> {{ effectiveAttack | number }}
+            <span class="stat-hint">(base)</span>
+        </div>
+        <div class="stat-row with-hint" *ngIf="showAttack && effectiveAttack > 0 && !showBaseHints">
+            <div class="stat-main">
+                <img src="assets/swords.png" class="stat-icon"> Attack:
+                {{ effectiveAttack | number }}
+            </div>
+            <div class="stat-hint" *ngIf="hasAttackBonus">(with bonuses)</div>
+        </div>
+        <div class="stat-row" *ngIf="showDefense && effectiveDefense > 0 && showBaseHints">
+            <img src="assets/shield.png" class="stat-icon"> {{ effectiveDefense | number }}
+            <span class="stat-hint">(base)</span>
+        </div>
+        <div class="stat-row with-hint" *ngIf="showDefense && effectiveDefense > 0 && !showBaseHints">
+            <div class="stat-main">
+                <img src="assets/shield.png" class="stat-icon"> Defense:
+                {{ effectiveDefense | number }}
+            </div>
+            <div class="stat-hint" *ngIf="hasDefenseBonus">(with bonuses)</div>
+        </div>
+        <div class="stat-row with-hint travel-stats" *ngIf="showETA && armySpeed > 0">
+            <div class="stat-main">
+                <img src="assets/speed.png" class="stat-icon"> {{ armySpeed }} tiles/min
+            </div>
+            <div class="stat-hint">ETA: {{ getFormattedTravelTime() }}</div>
+        </div>
+    </div>

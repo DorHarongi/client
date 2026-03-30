@@ -48,7 +48,8 @@
         </div>
         <div *ngIf = "troopTypeKeyValue.key == 'defender' && !isBossReport" >
             <h5> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: <a class="report-link" (click)="navigateToPlayer(attackReport.defenderName)">{{attackReport.defenderName}}</a></h5>
-            <h5> {{ isOasisReport ? 'Oasis' : 'Village' }}: <a *ngIf="attackReport.defenderVillageX != null" class="report-link" (click)="navigateToMap(attackReport.defenderVillageX, attackReport.defenderVillageY)">{{attackReport.defenderVillageName}}</a><span *ngIf="attackReport.defenderVillageX == null">{{attackReport.defenderVillageName}}</span></h5>
+            <h5 *ngIf="!isOasisReport"> Village: <a *ngIf="attackReport.defenderVillageX != null" class="report-link" (click)="navigateToMap(attackReport.defenderVillageX, attackReport.defenderVillageY)">{{attackReport.defenderVillageName}}</a><span *ngIf="attackReport.defenderVillageX == null">{{attackReport.defenderVillageName}}</span></h5>
+            <h5 *ngIf="isOasisReport"> Oasis: <a *ngIf="attackReport.oasisX != null" class="report-link" (click)="navigateToMap(attackReport.oasisX, attackReport.oasisY)">{{attackReport.oasisName || attackReport.defenderVillageName}}</a><span *ngIf="attackReport.oasisX == null">{{attackReport.oasisName || attackReport.defenderVillageName}}</span></h5>
             <h5 *ngIf ="!userAttackedAndLost"> Defender army defence: {{attackReport.defenderTotalArmyDefence | number}}</h5>
         </div>
         <div *ngIf = "troopTypeKeyValue.key == 'support' && !userAttackedAndLost && !isBossReport" >
@@ -112,7 +113,8 @@
 
     <ng-template #noneOfYourArmyReturned>
         <h5 *ngIf="!isBossReport && userAttackedAndLost"> {{ isOasisReport ? 'Oasis Defender' : 'Defender' }}: <a class="report-link" (click)="navigateToPlayer(attackReport.defenderName)">{{attackReport.defenderName}}</a></h5>
-        <h5 *ngIf="!isBossReport && userAttackedAndLost"> {{ isOasisReport ? 'Oasis' : 'Village' }}: <a *ngIf="attackReport.defenderVillageX != null" class="report-link" (click)="navigateToMap(attackReport.defenderVillageX, attackReport.defenderVillageY)">{{attackReport.defenderVillageName}}</a><span *ngIf="attackReport.defenderVillageX == null">{{attackReport.defenderVillageName}}</span></h5>
+        <h5 *ngIf="!isBossReport && userAttackedAndLost && !isOasisReport"> Village: <a *ngIf="attackReport.defenderVillageX != null" class="report-link" (click)="navigateToMap(attackReport.defenderVillageX, attackReport.defenderVillageY)">{{attackReport.defenderVillageName}}</a><span *ngIf="attackReport.defenderVillageX == null">{{attackReport.defenderVillageName}}</span></h5>
+        <h5 *ngIf="!isBossReport && userAttackedAndLost && isOasisReport"> Oasis: <a *ngIf="attackReport.oasisX != null" class="report-link" (click)="navigateToMap(attackReport.oasisX, attackReport.oasisY)">{{attackReport.oasisName || attackReport.defenderVillageName}}</a><span *ngIf="attackReport.oasisX == null">{{attackReport.oasisName || attackReport.defenderVillageName}}</span></h5>
         <h5 *ngIf="!isBossReport && userAttackedAndLost">None of your soldiers returned.</h5>
     </ng-template>
 

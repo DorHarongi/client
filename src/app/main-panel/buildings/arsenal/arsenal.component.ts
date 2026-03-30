@@ -7,28 +7,14 @@ import { QuestService } from 'src/app/quests/quest.service';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
 import {
-  archerAttackingStat,
-  archerDefenceStat,
   archerMaterialsCost,
   arsenalUpgradeMaterialCostByLevels,
-  axeFighterAttackingStat,
-  axeFighterDefenceStat,
   axeFighterMaterialsCost,
-  catapultsAttackingStat,
-  catapultsDefenceStat,
   catapultsMaterialsCost,
-  horsemenAttackingStat,
-  horsemenDefenceStat,
   horsemenMaterialsCost,
-  magicianAttackingStat,
-  magicianDefenceStat,
   magicianMaterialsCost,
   MaterialsCost,
-  spearFighterAttackingStat,
-  spearFighterDefenceStat,
   spearFighterMaterialsCost,
-  swordFighterAttackingStat,
-  swordFighterDefenceStat,
   swordFighterMaterialsCost,
   troopUnlockByLevel,
 } from 'utils';
@@ -46,8 +32,6 @@ export class ArsenalComponent implements OnInit, OnDestroy {
   buildingInformation: Building;
   nextLevelUnlock: string;
   totalMaterialsCost: MaterialsCost = { wood: 0, stones: 0, crop: 0 };
-  totalAttack: number = 0;
-  totalDefense: number = 0;
   troops: TroopsAmounts = new TroopsAmounts(0, 0, 0, 0, 0, 0, 0);
   maxPossibleTroops: TroopsAmounts;
   subscription!: Subscription;
@@ -160,28 +144,7 @@ export class ArsenalComponent implements OnInit, OnDestroy {
   updateTroops(troopsAmounts: TroopsAmounts) {
     this.troops = troopsAmounts;
     this.updateMaterialsCost();
-    this.updateTotalStats();
     this.maxPossibleTroops = this.calculateMaxTroopsAmounts();
-  }
-
-  updateTotalStats(): void {
-    this.totalAttack =
-      this.troops.spearFighters * spearFighterAttackingStat +
-      this.troops.swordFighters * swordFighterAttackingStat +
-      this.troops.axeFighters * axeFighterAttackingStat +
-      this.troops.archers * archerAttackingStat +
-      this.troops.magicians * magicianAttackingStat +
-      this.troops.horsemen * horsemenAttackingStat +
-      this.troops.catapults * catapultsAttackingStat;
-
-    this.totalDefense =
-      this.troops.spearFighters * spearFighterDefenceStat +
-      this.troops.swordFighters * swordFighterDefenceStat +
-      this.troops.axeFighters * axeFighterDefenceStat +
-      this.troops.archers * archerDefenceStat +
-      this.troops.magicians * magicianDefenceStat +
-      this.troops.horsemen * horsemenDefenceStat +
-      this.troops.catapults * catapultsDefenceStat;
   }
 
   checkFreePopulation(): number {

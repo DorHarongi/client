@@ -11,16 +11,8 @@ import { Router } from '@angular/router';
 import { Subscription, Subject, takeUntil } from 'rxjs';
 import { TroopsAmounts } from 'src/app/main-panel/models/troopsAmounts';
 import { User } from 'src/app/main-panel/models/User';
-import { calculateTroopStats } from 'src/app/shared/troop-stats.util';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
-import {
-  calculateDistance,
-  calculateTravelTimeMs,
-  getArmySpeed,
-  getSkillBonus,
-  SkillCategory,
-} from 'utils';
 import { VillageOnMap } from '../models/mapModels';
 
 @Component({
@@ -51,15 +43,6 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   resourcesCrop: number = 0;
 
   errorMessage: string = '';
-
-  // Troop stats
-  totalAttack: number = 0;
-  totalDefense: number = 0;
-  effectiveAttack: number = 0;
-
-  // Travel stats
-  armySpeed: number = 0;
-  travelTimeMs: number = 0;
 
   subscription?: Subscription;
   private destroy$ = new Subject<void>();
@@ -159,14 +142,12 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     this.showAttackPanel = true;
     this.showSupportPanel = false;
     this.showResourcesPanel = false;
-    this.updateTravelStats();
   }
 
   openSupportPanel(): void {
     this.showSupportPanel = true;
     this.showAttackPanel = false;
     this.showResourcesPanel = false;
-    this.updateTravelStats();
   }
 
   openResourcesPanel(): void {
@@ -178,91 +159,6 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   troopsChanged(troops: TroopsAmounts): void {
     this.chosenTroops = troops;
     this.updateMaximumPossibleTroops();
-    this.updateTotalStats();
-    this.updateTravelStats();
-  }
-
-  updateTotalStats(): void {
-    if (!this.chosenTroops) {
-      this.totalAttack = 0;
-      this.totalDefense = 0;
-      this.effectiveAttack = 0;
-      return;
-    }
-    const village = this.userInformationService.currentVillage;
-
-    const stats = calculateTroopStats(this.chosenTroops, {
-      skills: (village as any)?.skills,
-      applyAttackSkillBonus: true,
-    });
-    this.totalAttack = stats.baseAttack;
-    this.totalDefense = stats.baseDefense;
-    this.effectiveAttack = stats.effectiveAttack;
-  }
-
-  updateTravelStats(): void {
-    if (!this.chosenTroops) {
-      this.armySpeed = 0;
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    const currentVillage = this.userInformationService.currentVillage;
-    if (!currentVillage?.location) {
-      this.armySpeed = 0;
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    this.armySpeed = getArmySpeed(this.chosenTroops as any);
-    if (this.armySpeed <= 0) {
-      this.travelTimeMs = 0;
-      return;
-    }
-
-    const distance = calculateDistance(
-      currentVillage.location.x,
-      currentVillage.location.y,
-      this.village.x,
-      this.village.y
-    );
-
-    const skills = (currentVillage as any)?.skills;
-    const quickStepBonus = skills
-      ? getSkillBonus(skills, SkillCategory.QUICK_STEP)
-      : 0;
-    this.travelTimeMs = calculateTravelTimeMs(
-      distance,
-      this.armySpeed,
-      quickStepBonus
-    );
-  }
-
-  /** Attack with Sharper Blades bonus (for display in attack confirmation). */
-  get displayAttack(): number {
-    return this.effectiveAttack;
-  }
-
-  get supportDisplayDefense(): number {
-    return calculateTroopStats(this.chosenTroops, {}).baseDefense;
-  }
-
-  getFormattedTravelTime(): string {
-    if (!this.travelTimeMs || this.travelTimeMs <= 0) {
-      return '—';
-    }
-    const totalSeconds = Math.floor(this.travelTimeMs / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    }
-    if (minutes > 0) {
-      return `${minutes}m ${seconds}s`;
-    }
-    return `${seconds}s`;
   }
 
   updateMaximumPossibleTroops(): void {
@@ -400,11 +296,6 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       (v: any) => v.villageName === this.village.villageName
     );
     return idx >= 0 ? idx : 0;
-  }
-
-  get hasAttackBonus(): boolean {
-    const skills = (this.userInformationService.currentVillage as any)?.skills;
-    return skills ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0 : false;
   }
 
   close(): void {

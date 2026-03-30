@@ -76,6 +76,7 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   // Confirmation dialogs
   showLeaveConfirm = false;
   leaveIsDeleting = false;
+  leaveNewLeader = '';
 
   showKickConfirm = false;
   pendingKickUsername = '';
@@ -236,13 +237,15 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   leaveClan(): void {
     this.leaveIsDeleting =
       this.isLeader && this.clanInfo?.members.length === 1;
+    this.leaveNewLeader = '';
     this.showLeaveConfirm = true;
   }
 
   confirmLeave(): void {
     this.showLeaveConfirm = false;
+    const newLeader = this.leaveNewLeader || undefined;
     this.clanService
-      .leaveClan(this.clanName, this.currentUsername)
+      .leaveClan(this.clanName, this.currentUsername, newLeader)
       .subscribe({
         next: () => {
           this.userInformationService.updateUser();

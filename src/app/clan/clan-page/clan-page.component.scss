@@ -508,6 +508,23 @@ $topToolbarMinHeight: 75px;
     }
 }
 
+.leader-transfer-section {
+    text-align: center;
+
+    p {
+        margin-bottom: 10px;
+    }
+}
+
+.leader-select {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #8B4513;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 .confirm-btn {
     background-image: url(../../../assets/top-bg.png);
     background-size: cover;

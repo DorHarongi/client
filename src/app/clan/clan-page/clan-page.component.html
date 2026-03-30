@@ -340,17 +340,28 @@
 <!-- Leave/Delete Clan Confirmation -->
 <div class="confirm-overlay" *ngIf="showLeaveConfirm" (click)="cancelLeave()">
   <div class="confirm-dialog" (click)="$event.stopPropagation()">
-    <h4>{{ leaveIsDeleting ? 'Delete Clan' : 'Leave Clan' }}</h4>
+    <h4>{{ leaveIsDeleting ? 'Delete Clan' : isLeader ? 'Transfer Leadership & Leave' : 'Leave Clan' }}</h4>
     <div class="confirm-content">
       <p *ngIf="leaveIsDeleting">
         You are the only member. This will <strong>permanently delete</strong> the clan.
       </p>
-      <p *ngIf="!leaveIsDeleting">
+      <p *ngIf="!leaveIsDeleting && !isLeader">
         Are you sure you want to leave <strong>{{ clanName }}</strong>?
       </p>
+      <div *ngIf="!leaveIsDeleting && isLeader" class="leader-transfer-section">
+        <p>Choose who will become the new leader:</p>
+        <select class="leader-select" [(ngModel)]="leaveNewLeader">
+          <option value="">-- Select new leader --</option>
+          <option *ngFor="let m of clanInfo!.members" [value]="m" [hidden]="m === currentUsername">
+            {{ m }}
+          </option>
+        </select>
+      </div>
     </div>
     <div class="confirm-actions">
-      <button class="confirm-btn confirm-btn-danger" (click)="confirmLeave()">
+      <button class="confirm-btn confirm-btn-danger"
+              (click)="confirmLeave()"
+              [disabled]="!leaveIsDeleting && isLeader && !leaveNewLeader">
         {{ leaveIsDeleting ? 'Delete' : 'Leave' }}
       </button>
       <button class="confirm-btn confirm-btn-cancel" (click)="cancelLeave()">Cancel</button>

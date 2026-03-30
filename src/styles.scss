@@ -216,12 +216,26 @@ body[data-theme]:not([data-theme="default"]) {
     .profile-card,
     .title-dropdown-trigger,
     .title-dropdown-list,
+    .withdraw-btn,
     .withdraw-dialog,
     .rename-modal {
         background-image: none;
         background-color: var(--bg-primary);
         color: var(--text-primary);
         border-color: var(--border-color);
+    }
+
+    /* ── Select dropdowns ── */
+    .relic-transfer-modal select,
+    .leader-select {
+        color: var(--text-primary);
+        border-color: var(--text-muted);
+        background-color: var(--bg-secondary, var(--bg-primary));
+
+        option {
+            background-color: var(--bg-secondary, var(--bg-primary));
+            color: var(--text-primary);
+        }
     }
 
     /* ── Toggle buttons ── */
