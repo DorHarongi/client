@@ -147,6 +147,10 @@ export class ArsenalComponent implements OnInit, OnDestroy {
     this.maxPossibleTroops = this.calculateMaxTroopsAmounts();
   }
 
+  getOriginalFreePopulation(): number {
+    return Village.getFreePopulation(this.userInformationService.currentVillage);
+  }
+
   checkFreePopulation(): number {
     let village: Village = this.userInformationService.currentVillage;
     let pendingTrainCount =

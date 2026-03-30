@@ -7,5 +7,11 @@ import { Component, Input } from '@angular/core';
 })
 export class FreePopulationComponent {
   @Input() freePopulation: number = 0;
+  @Input() originalFreePopulation?: number;
   @Input() noPopulationText: string = '';
+
+  get showWarning(): boolean {
+    const baseline = this.originalFreePopulation ?? this.freePopulation;
+    return baseline <= 0 && !!this.noPopulationText;
+  }
 }

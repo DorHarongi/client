@@ -61,6 +61,10 @@ export class CropFarmComponent implements OnInit, OnDestroy {
     this.cropWorkers = workers;
   }
 
+  getOriginalFreePopulation(): number {
+    return Village.getFreePopulation(this.userInformationService.currentVillage);
+  }
+
   getFreePopulation(): number {
     const village = this.userInformationService.currentVillage;
     const pendingDelta = this.cropWorkers - village.resourcesWorkers.cropWorkers;

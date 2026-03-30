@@ -60,6 +60,10 @@ export class WoodFactoryComponent implements OnInit, OnDestroy {
     this.woodWorkers = workers;
   }
 
+  getOriginalFreePopulation(): number {
+    return Village.getFreePopulation(this.userInformationService.currentVillage);
+  }
+
   getFreePopulation(): number {
     const village = this.userInformationService.currentVillage;
     const pendingDelta = this.woodWorkers - village.resourcesWorkers.woodWorkers;

@@ -8,7 +8,7 @@
             <app-troops-choosing (onTroopsChange)="updateTroops($event)" [maxPossibleTroops]="maxPossibleTroops"
                 [showAttack]="true" [showDefense]="true" [showBaseHints]="true"> </app-troops-choosing>
             <app-materials-cost [materialsCost]="totalMaterialsCost"></app-materials-cost>
-            <app-free-population [freePopulation]="checkFreePopulation()" noPopulationText="You can't train any troops"></app-free-population>
+            <app-free-population [freePopulation]="checkFreePopulation()" [originalFreePopulation]="getOriginalFreePopulation()" noPopulationText="You can't train any troops"></app-free-population>
             <button id = "train" class ="buttons" (click)="trainTroops()" [disabled]="!canTrain()"> Train </button>
         </div>
     </div>

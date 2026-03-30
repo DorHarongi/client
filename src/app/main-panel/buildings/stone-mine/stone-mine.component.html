@@ -6,7 +6,7 @@
         </div>
         <h5> Worker bonus: {{singleWorkerProductionPerHour | number}} per hour </h5>
         <app-hire-workers [workers]="stoneWorkers" (onWorkersChange)="updateWorkers($event)"></app-hire-workers>
-        <app-free-population [freePopulation]="getFreePopulation()" noPopulationText="You can't hire any workers"></app-free-population>
+        <app-free-population [freePopulation]="getFreePopulation()" [originalFreePopulation]="getOriginalFreePopulation()" noPopulationText="You can't hire any workers"></app-free-population>
         <button id="hire" class="buttons" (click)="hireWorkers()"> Hire </button>
     </div>
 </app-building>
