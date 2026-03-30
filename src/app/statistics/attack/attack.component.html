@@ -3,7 +3,7 @@
    <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"
         [showAttack]="true" [showETA]="true" [applyAttackBonus]="true" [targetLocation]="defenderLocation"></app-troops-choosing>
    <div id="actions" class="center">
-        <button id = "attack" class="buttons center" (click)="attackVillage()" [disabled]="!hasSelectedTroops()"> Attack </button>
+        <button id = "attack" class="buttons center" (click)="attackVillage()" [disabled]="!hasSelectedTroops()"> {{ getActionButtonText() }} </button>
         <button id = "back" class="buttons center" (click)="goBack()"> Back </button>
     </div>  
 </div>

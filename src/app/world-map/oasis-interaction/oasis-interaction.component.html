@@ -64,14 +64,11 @@
 
   <div *ngIf="!showSendTroopsPanel && !isClanOwned">
     <p *ngIf="villageAlreadyAtOtherOasis" class="village-limit-message center">
-      This village is already stationed at an oasis. Withdraw troops first to support another oasis.
+      This village is already stationed at an oasis. You can only send spies.
     </p>
     <div class="actions center">
       <button class="action-btn" (click)="findOnMap()">Find on Map</button>
-      <button *ngIf="!isOccupier" class="action-btn" (click)="scout()" [disabled]="scouting">
-        {{ scouting ? 'Spying...' : 'Spy Oasis' }}
-      </button>
-      <button *ngIf="!villageAlreadyAtOtherOasis" class="action-btn" (click)="openSendTroopsPanel()">Send Troops</button>
+      <button class="action-btn" (click)="openSendTroopsPanel()">Send Troops or Spy</button>
       <button *ngIf="isOccupier" class="action-btn retreat-btn" (click)="onRetreatClick()" [disabled]="retreating">
         {{ retreating ? 'Withdrawing...' : 'Withdraw Troops' }}
       </button>
@@ -80,14 +77,15 @@
   </div>
 
   <div *ngIf="showSendTroopsPanel && !isClanOwned">
-    <h5 class="center">Send Troops to {{ oasisName }}</h5>
+    <h5 class="center">{{ villageAlreadyAtOtherOasis ? 'Spy' : 'Send Troops or Spy' }} {{ oasisName }}</h5>
     <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"
         [showAttack]="true" [showDefense]="true" [showETA]="true"
         [applyAttackBonus]="true" [applyDefenseBonus]="true"
+        [spiesOnly]="villageAlreadyAtOtherOasis"
         [targetLocation]="{ x: oasis.x, y: oasis.y }"></app-troops-choosing>
     <div class="panel-actions center">
       <button class="action-btn" (click)="sendTroops()" [disabled]="!hasSelectedTroops() || sending">
-        {{ sending ? 'Sending...' : 'Send Troops' }}
+        {{ sending ? 'Sending...' : getActionButtonText() }}
       </button>
       <button class="action-btn" (click)="cancelPanel()">Cancel</button>
     </div>

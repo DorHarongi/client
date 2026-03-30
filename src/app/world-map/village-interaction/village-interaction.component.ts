@@ -80,7 +80,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   initMaxTroops(): void {
-    const userTroops = this.userInformationService.currentVillage.troops;
+    const village = this.userInformationService.currentVillage;
+    const userTroops = village.troops;
     this.maxPossibleTroops = new TroopsAmounts(
       userTroops.spearFighters,
       userTroops.swordFighters,
@@ -88,7 +89,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       userTroops.archers,
       userTroops.magicians,
       userTroops.horsemen,
-      userTroops.catapults
+      userTroops.catapults,
+      village.aliveSpies || 0
     );
   }
 
@@ -164,7 +166,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   updateMaximumPossibleTroops(): void {
-    const current = this.userInformationService.currentVillage.troops;
+    const village = this.userInformationService.currentVillage;
+    const current = village.troops;
     this.maxPossibleTroops.spearFighters =
       current.spearFighters - this.chosenTroops.spearFighters;
     this.maxPossibleTroops.swordFighters =
@@ -179,6 +182,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       current.horsemen - this.chosenTroops.horsemen;
     this.maxPossibleTroops.catapults =
       current.catapults - this.chosenTroops.catapults;
+    this.maxPossibleTroops.spies =
+      (village.aliveSpies || 0) - (this.chosenTroops.spies || 0);
   }
 
   attack(): void {
@@ -214,8 +219,15 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       this.chosenTroops.archers +
       this.chosenTroops.magicians +
       this.chosenTroops.horsemen +
-      this.chosenTroops.catapults;
+      this.chosenTroops.catapults +
+      (this.chosenTroops.spies || 0);
     return total > 0;
+  }
+
+  getActionButtonText(): string {
+    if (!this.chosenTroops) return 'Attack';
+    if ((this.chosenTroops.spies || 0) > 0) return 'Spy';
+    return 'Attack';
   }
 
   hasSelectedResources(): boolean {
@@ -381,41 +393,5 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     return `${h} hours ${m} minutes`;
   }
 
-  sendSpy(): void {
-    if (this.isOwnVillage || this.isSameClan) {
-      return;
-    }
-    this.errorMessage = '';
-    const attackerVillageName =
-      this.userInformationService.currentVillage?.villageName;
-    if (!attackerVillageName) {
-      this.errorMessage = 'Could not determine your current village.';
-      return;
-    }
-    this.subscription = this.http
-      .post<{ success: boolean; travelTimeMs: number }>(
-        `${environment.apiUrl}/scouting/scout`,
-        {
-          attackerVillageName,
-          defenderUsername: this.village.ownerUsername,
-          defenderVillageName: this.village.villageName,
-        }
-      )
-      .subscribe({
-        next: () => {
-          if (this.userInformationService.currentVillage) {
-            this.userInformationService.currentVillage.aliveSpies = Math.max(
-              0,
-              (this.userInformationService.currentVillage.aliveSpies || 0) - 1
-            );
-            this.userInformationService.notifyVillageChanged();
-          }
-          this.closed.emit();
-        },
-        error: (err) => {
-          this.errorMessage = err.error?.message || 'Failed to send spies';
-        },
-      });
-  }
 
 }

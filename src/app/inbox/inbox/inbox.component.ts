@@ -253,9 +253,13 @@ export class InboxComponent implements OnInit, OnDestroy {
   {
     if (attackReport.reportType === 'spy') {
       const isAttacker = attackReport.attackerName === this.username;
+      const isMulti = (attackReport.spySentCount || 0) > 1;
       if (isAttacker) {
         if (attackReport.attackerWon) {
           return `You scouted ${attackReport.defenderName} [${attackReport.defenderVillageName}]`;
+        }
+        if (isMulti) {
+          return `All ${attackReport.spySentCount} spies to ${attackReport.defenderName} [${attackReport.defenderVillageName}] were caught`;
         }
         return `Your scout to ${attackReport.defenderName} [${attackReport.defenderVillageName}] has been caught`;
       }
@@ -263,8 +267,12 @@ export class InboxComponent implements OnInit, OnDestroy {
     }
 
     if (attackReport.reportType === 'oasis_spy') {
+      const isMulti = (attackReport.spySentCount || 0) > 1;
       if (attackReport.attackerWon) {
         return `You spied on ${attackReport.oasisName || attackReport.defenderVillageName}`;
+      }
+      if (isMulti) {
+        return `All ${attackReport.spySentCount} spies to ${attackReport.oasisName || attackReport.defenderVillageName} were caught`;
       }
       return `Your spy to ${attackReport.oasisName || attackReport.defenderVillageName} was caught`;
     }

@@ -53,4 +53,7 @@ export interface AttackReport {
     oasisX?: number;
     oasisY?: number;
     oasisResources?: { wood: number; stone: number; crop: number };
+
+    spySentCount?: number;
+    spyCaughtCount?: number;
 } 

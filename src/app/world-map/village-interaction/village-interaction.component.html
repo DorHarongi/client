@@ -29,17 +29,11 @@
                 </button>
             </div>
 
-            <button class="action-btn" 
-                    *ngIf="!isOwnVillage && !isSameClan" 
-                    (click)="sendSpy()">
-                Spy village
-            </button>
-
             <button class="action-btn attack-btn" 
                     *ngIf="!isOwnVillage && !isSameClan" 
                     (click)="openAttackPanel()"
-                    [disabled]="getEnergy() < 1 || hasBeginnerShield()">
-                Attack Village
+                    [disabled]="hasBeginnerShield()">
+                Attack or Spy
             </button>
             <p *ngIf="hasBeginnerShield() && !isOwnVillage && !isSameClan" class="shield-warning">
                 This player has beginner protection ({{formatShieldTime()}} remaining)
@@ -47,14 +41,14 @@
         </div>
     </div>
 
-    <!-- Attack Panel -->
+    <!-- Attack / Spy Panel -->
     <div *ngIf="showAttackPanel">
-        <h5 class="center">Attack {{village.villageName}}</h5>
+        <h5 class="center">Attack or Spy {{village.villageName}}</h5>
         <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"
             [showAttack]="true" [showETA]="true" [applyAttackBonus]="true"
             [targetLocation]="{ x: village.x, y: village.y }"></app-troops-choosing>
         <div class="panel-actions center">
-            <button class="action-btn" (click)="attack()" [disabled]="!hasSelectedTroops()">Attack</button>
+            <button class="action-btn" (click)="attack()" [disabled]="!hasSelectedTroops()">{{ getActionButtonText() }}</button>
             <button class="action-btn" (click)="cancelPanel()">Cancel</button>
         </div>
     </div>
@@ -63,7 +57,7 @@
     <div *ngIf="showSupportPanel">
         <h5 class="center">Send Support to {{village.villageName}}</h5>
         <app-troops-choosing [maxPossibleTroops]="maxPossibleTroops" (onTroopsChange)="troopsChanged($event)"
-            [showDefense]="true" [showETA]="true"
+            [showDefense]="true" [showETA]="true" [showSpies]="false"
             [targetLocation]="{ x: village.x, y: village.y }"></app-troops-choosing>
         <div class="panel-actions center">
             <button class="action-btn" (click)="sendSupport()" [disabled]="!hasSelectedTroops()">Send Support</button>

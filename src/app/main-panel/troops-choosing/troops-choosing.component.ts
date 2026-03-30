@@ -9,7 +9,7 @@ import { spearFighterMinimumArsenalLevel, swordFighterMinimumArsenalLevel, axeFi
   catapultsDefenceStat,
   spearFighterMovementSpeed, swordFighterMovementSpeed, axeFighterMovementSpeed,
   archerMovementSpeed, magicianMovementSpeed, horsemenMovementSpeed, catapultsMovementSpeed,
-  calculateDistance, calculateTravelTimeMs, getArmySpeed, getSkillBonus, SkillCategory } from 'utils'
+  SPY_SPEED, calculateDistance, calculateTravelTimeMs, getArmySpeed, getSkillBonus, SkillCategory } from 'utils'
 
 @Component({
   selector: 'app-troops-choosing',
@@ -30,6 +30,8 @@ export class TroopsChoosingComponent implements OnInit {
   @Input() applyDefenseBonus: boolean = false;
   @Input() attackMultiplier: number = 1;
   @Input() showBaseHints: boolean = false;
+  @Input() showSpies: boolean = true;
+  @Input() spiesOnly: boolean = false;
 
   baseAttack: number = 0;
   baseDefense: number = 0;
@@ -73,6 +75,7 @@ export class TroopsChoosingComponent implements OnInit {
   magicianMovementSpeed: number = magicianMovementSpeed;
   horsemenMovementSpeed: number = horsemenMovementSpeed;
   catapultsMovementSpeed: number = catapultsMovementSpeed;
+  spyMovementSpeed: number = SPY_SPEED;
 
 
   canTrainSpearFighters: boolean;
@@ -96,7 +99,8 @@ export class TroopsChoosingComponent implements OnInit {
         this.maxPossibleTroops.archers,
         this.maxPossibleTroops.magicians,
         this.maxPossibleTroops.horsemen,
-        this.maxPossibleTroops.catapults
+        this.maxPossibleTroops.catapults,
+        this.maxPossibleTroops.spies || 0
       );
     }
   }
@@ -106,8 +110,21 @@ export class TroopsChoosingComponent implements OnInit {
     return this.initialTroops || this._initialTroopsSnapshot;
   }
 
-  // Check if troop type should be disabled (has 0 in village initially)
+  hasCombatTroops(): boolean {
+    return this.troops.spearFighters > 0 || this.troops.swordFighters > 0 ||
+           this.troops.axeFighters > 0 || this.troops.archers > 0 ||
+           this.troops.magicians > 0 || this.troops.horsemen > 0 ||
+           this.troops.catapults > 0;
+  }
+
+  hasSpies(): boolean {
+    return (this.troops.spies || 0) > 0;
+  }
+
   isDisabled(troopType: string): boolean {
+    if (this.spiesOnly) return true;
+    if (this.hasSpies()) return true;
+
     const initial = this.getInitialTroops();
     if (!initial) return false;
     
@@ -121,6 +138,12 @@ export class TroopsChoosingComponent implements OnInit {
       case 'catapults': return !this.canTrainCatapults || initial.catapults <= 0;
       default: return false;
     }
+  }
+
+  isSpyDisabled(): boolean {
+    if (this.hasCombatTroops()) return true;
+    const initial = this.getInitialTroops();
+    return initial ? (initial.spies || 0) <= 0 : false;
   }
 
   spearFightersInputChange(value: any)
@@ -217,6 +240,18 @@ export class TroopsChoosingComponent implements OnInit {
     this.onTroopsUpdated();
   }
 
+  spiesInputChange(value: any)
+  {
+    this.troops.spies = this.fixInputValue(value, this.troops.spies || 0, (this.maxPossibleTroops.spies || 0));
+    this.onTroopsUpdated();
+  }
+
+  maxSpies()
+  {
+    this.troops.spies = (this.troops.spies || 0) + (this.maxPossibleTroops.spies || 0);
+    this.onTroopsUpdated();
+  }
+
   private onTroopsUpdated(): void {
     this.onTroopsChange.emit(this.troops);
     this.updateStats();
@@ -245,7 +280,8 @@ export class TroopsChoosingComponent implements OnInit {
   }
 
   private updateTravelStats(): void {
-    if (!this.showETA || !this.targetLocation || !this.hasTroops()) {
+    const hasAnything = this.hasCombatTroops() || this.hasSpies();
+    if (!this.showETA || !this.targetLocation || !hasAnything) {
       this.armySpeed = 0;
       this.travelTimeMs = 0;
       return;
@@ -258,7 +294,7 @@ export class TroopsChoosingComponent implements OnInit {
       return;
     }
 
-    this.armySpeed = getArmySpeed(this.troops as any);
+    this.armySpeed = this.hasSpies() ? SPY_SPEED : getArmySpeed(this.troops as any);
     if (this.armySpeed <= 0) {
       this.travelTimeMs = 0;
       return;
@@ -296,14 +332,12 @@ export class TroopsChoosingComponent implements OnInit {
 
   get showTotalStats(): boolean {
     return (this.showAttack && this.effectiveAttack > 0) ||
-           (this.showDefense && this.effectiveDefense > 0);
+           (this.showDefense && this.effectiveDefense > 0) ||
+           (this.showETA && this.armySpeed > 0);
   }
 
   private hasTroops(): boolean {
-    return this.troops.spearFighters > 0 || this.troops.swordFighters > 0 ||
-           this.troops.axeFighters > 0 || this.troops.archers > 0 ||
-           this.troops.magicians > 0 || this.troops.horsemen > 0 ||
-           this.troops.catapults > 0;
+    return this.hasCombatTroops();
   }
 
 }

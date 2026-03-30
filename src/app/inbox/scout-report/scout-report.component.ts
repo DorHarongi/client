@@ -58,4 +58,20 @@ export class ScoutReportComponent {
     return (t.spearFighters || 0) + (t.swordFighters || 0) + (t.axeFighters || 0) +
       (t.archers || 0) + (t.magicians || 0) + (t.horsemen || 0) + (t.catapults || 0) > 0;
   }
+
+  get isMultiSpy(): boolean {
+    return (this.report.spySentCount || 0) > 1;
+  }
+
+  get spySentCount(): number {
+    return this.report.spySentCount || 1;
+  }
+
+  get spyCaughtCount(): number {
+    return this.report.spyCaughtCount || 0;
+  }
+
+  get spySurvivedCount(): number {
+    return this.spySentCount - this.spyCaughtCount;
+  }
 }

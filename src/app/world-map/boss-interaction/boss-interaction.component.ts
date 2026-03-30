@@ -85,6 +85,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       magicians: userTroops.magicians,
       horsemen: userTroops.horsemen,
       catapults: userTroops.catapults,
+      spies: 0,
     };
   }
 
@@ -223,6 +224,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       magicians: current.magicians - (this.chosenTroops?.magicians || 0),
       horsemen: current.horsemen - (this.chosenTroops?.horsemen || 0),
       catapults: current.catapults - (this.chosenTroops?.catapults || 0),
+      spies: 0,
     };
   }
 

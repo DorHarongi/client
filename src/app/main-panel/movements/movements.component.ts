@@ -26,6 +26,7 @@ interface Movement {
   status: 'in_transit' | 'completed';
   bossId?: string;
   relicId?: string;
+  spyCount?: number;
 }
 
 const RELIC_ICON_MAP: Record<string, string> = {
@@ -204,11 +205,13 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
     if (movement.type === 'spy') {
       const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
-      return `Spy${from} → ${movement.targetUsername} [${movement.targetVillageName}]`;
+      const label = (movement.spyCount || 1) > 1 ? 'Spies' : 'Spy';
+      return `${label}${from} → ${movement.targetUsername} [${movement.targetVillageName}]`;
     }
     if (movement.type === 'spy_return') {
       const dest = movement.targetVillageName || movement.senderVillageName;
-      return dest ? `Spy returning → ${dest}` : 'Spy returning';
+      const label = (movement.spyCount || 1) > 1 ? 'Spies returning' : 'Spy returning';
+      return dest ? `${label} → ${dest}` : label;
     }
     if (movement.type === 'oasis_garrison') {
       const from = multiVillage ? ` [${movement.senderVillageName}]` : '';

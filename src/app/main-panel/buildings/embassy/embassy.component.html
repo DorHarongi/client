@@ -72,7 +72,7 @@
             <h4>Withdraw Support from {{selectedSupport.recipientUsername}} - {{selectedSupport.recipientVillageName}}</h4>
             <p>Select troops to withdraw:</p>
             <app-troops-choosing [maxPossibleTroops]="maxWithdrawTroops" (onTroopsChange)="troopsChanged($event)"
-                [showDefense]="true" [showETA]="true"></app-troops-choosing>
+                [showDefense]="true" [showETA]="true" [showSpies]="false"></app-troops-choosing>
             <p class="error-message" *ngIf="withdrawError">{{withdrawError}}</p>
             <div class="withdraw-actions">
                 <button class="action-btn" (click)="withdrawSupport()">Withdraw</button>

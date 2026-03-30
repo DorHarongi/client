@@ -163,7 +163,8 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   }
 
   initMaxTroops(): void {
-    const userTroops = this.userInformationService.currentVillage.troops;
+    const village = this.userInformationService.currentVillage;
+    const userTroops = village.troops;
     this.maxPossibleTroops = new TroopsAmounts(
       userTroops.spearFighters,
       userTroops.swordFighters,
@@ -172,6 +173,7 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       userTroops.magicians,
       userTroops.horsemen,
       userTroops.catapults,
+      village.aliveSpies || 0
     );
   }
 
@@ -181,43 +183,6 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
     });
   }
 
-  scout(): void {
-    if (this.oasis.ownerType === 'clan' || this.oasis.ownerType === 'mine') {
-      this.fetchOasisInfo();
-      return;
-    }
-
-    this.scouting = true;
-    this.errorMessage = '';
-    const villageName = this.userInformationService.currentVillage?.villageName;
-    if (!villageName) {
-      this.errorMessage = 'Could not determine your current village.';
-      this.scouting = false;
-      return;
-    }
-
-    this.subscription = this.http
-      .post<any>(`${environment.apiUrl}/scouting/scout-oasis`, {
-        attackerVillageName: villageName,
-        oasisId: this.oasis.id,
-      })
-      .subscribe({
-        next: () => {
-          this.scouting = false;
-          this.userInformationService.currentVillage.aliveSpies = Math.max(
-            0,
-            (this.userInformationService.currentVillage.aliveSpies || 0) - 1
-          );
-          this.userInformationService.notifyVillageChanged();
-          this.closed.emit();
-          this.router.navigate(['/home']);
-        },
-        error: (err) => {
-          this.errorMessage = err.error?.message || 'Failed to spy on oasis';
-          this.scouting = false;
-        },
-      });
-  }
 
   private fetchOasisInfo(showScouting: boolean = true): void {
     if (showScouting) this.scouting = true;
@@ -256,7 +221,8 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   }
 
   updateMaximumPossibleTroops(): void {
-    const current = this.userInformationService.currentVillage.troops;
+    const village = this.userInformationService.currentVillage;
+    const current = village.troops;
     this.maxPossibleTroops.spearFighters =
       current.spearFighters - this.chosenTroops.spearFighters;
     this.maxPossibleTroops.swordFighters =
@@ -271,6 +237,8 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       current.horsemen - this.chosenTroops.horsemen;
     this.maxPossibleTroops.catapults =
       current.catapults - this.chosenTroops.catapults;
+    this.maxPossibleTroops.spies =
+      (village.aliveSpies || 0) - (this.chosenTroops.spies || 0);
   }
 
   hasSelectedTroops(): boolean {
@@ -282,8 +250,15 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
       this.chosenTroops.archers +
       this.chosenTroops.magicians +
       this.chosenTroops.horsemen +
-      this.chosenTroops.catapults;
+      this.chosenTroops.catapults +
+      (this.chosenTroops.spies || 0);
     return total > 0;
+  }
+
+  getActionButtonText(): string {
+    if (!this.chosenTroops) return 'Send Troops';
+    if ((this.chosenTroops.spies || 0) > 0) return 'Spy';
+    return 'Send Troops';
   }
 
   sendTroops(): void {

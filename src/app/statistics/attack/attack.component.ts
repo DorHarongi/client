@@ -25,9 +25,10 @@ export class AttackComponent implements OnInit, OnDestroy {
 
 
   constructor(private userInformationService: UserInformationService, private http: HttpClient, private router: Router) {
-    let userTroops = this.userInformationService.currentVillage.troops;
+    let village = this.userInformationService.currentVillage;
+    let userTroops = village.troops;
     this.maxPossibleTroops = new TroopsAmounts(userTroops.spearFighters, userTroops.swordFighters, userTroops.axeFighters,
-      userTroops.archers, userTroops.magicians, userTroops.horsemen, userTroops.catapults);
+      userTroops.archers, userTroops.magicians, userTroops.horsemen, userTroops.catapults, village.aliveSpies || 0);
    }
 
   ngOnDestroy(): void {
@@ -61,8 +62,15 @@ export class AttackComponent implements OnInit, OnDestroy {
     if (!this.chosenTroops) return false;
     const total = this.chosenTroops.spearFighters + this.chosenTroops.swordFighters + 
       this.chosenTroops.axeFighters + this.chosenTroops.archers + 
-      this.chosenTroops.magicians + this.chosenTroops.horsemen + this.chosenTroops.catapults;
+      this.chosenTroops.magicians + this.chosenTroops.horsemen + this.chosenTroops.catapults +
+      (this.chosenTroops.spies || 0);
     return total > 0;
+  }
+
+  getActionButtonText(): string {
+    if (!this.chosenTroops) return 'Attack';
+    if ((this.chosenTroops.spies || 0) > 0) return 'Spy';
+    return 'Attack';
   }
 
   goBack(){
@@ -83,6 +91,7 @@ export class AttackComponent implements OnInit, OnDestroy {
     this.maxPossibleTroops.magicians = this.userInformationService.currentVillage.troops.magicians - this.chosenTroops.magicians;
     this.maxPossibleTroops.horsemen = this.userInformationService.currentVillage.troops.horsemen - this.chosenTroops.horsemen;
     this.maxPossibleTroops.catapults = this.userInformationService.currentVillage.troops.catapults - this.chosenTroops.catapults;
+    this.maxPossibleTroops.spies = (this.userInformationService.currentVillage.aliveSpies || 0) - (this.chosenTroops.spies || 0);
   }
 
 }

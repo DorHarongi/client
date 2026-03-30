@@ -13,6 +13,7 @@ export interface TroopsAmounts {
     magicians: number;
     horsemen: number;
     catapults: number;
+    spies: number;
 }
 
 export interface RaidReport {
