@@ -263,6 +263,12 @@ tr, td{
     margin-bottom: 15px;
 }
 
+.modal-bottom-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
 .modal-close-btn {
     width: 80px;
     height: 35px;
@@ -388,18 +394,9 @@ tr, td{
     font-weight: 700;
 }
 
-.reply-section {
-    margin: 15px 0;
-}
-
 .reply-btn {
-    background-image: url(../../../assets/top-bg.png);
-    border: 1px black solid;
-    outline: none;
-    border-radius: 0.25rem;
-    box-shadow: 2px 2px 2px 2px;
-    padding: 8px 20px;
-    cursor: pointer;
+    width: 80px;
+    height: 35px;
 }
 
 .reply-form {
