@@ -246,6 +246,8 @@ export class OasisInteractionComponent implements OnInit, OnDestroy {
   cancelPanel(): void {
     this.showSendTroopsPanel = false;
     this.errorMessage = '';
+    this.chosenTroops = null!;
+    this.initMaxTroops();
   }
 
   troopsChanged(troops: TroopsAmounts): void {

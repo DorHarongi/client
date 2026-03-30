@@ -231,6 +231,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
     this.showSupportPanel = false;
     this.showResourcesPanel = false;
     this.errorMessage = '';
+    this.chosenTroops = null!;
+    this.initMaxTroops();
   }
 
   sendSupport(): void {

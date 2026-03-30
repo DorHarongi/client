@@ -199,6 +199,13 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
   }
 
+  cancelAttack(): void {
+    this.showAttackPanel = false;
+    this.errorMessage = '';
+    this.chosenTroops = null!;
+    this.initMaxTroops();
+  }
+
   troopsChanged(troops: TroopsAmounts): void {
     this.chosenTroops = troops;
     this.updateMaximumPossibleTroops();
