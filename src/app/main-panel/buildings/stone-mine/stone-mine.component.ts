@@ -61,6 +61,10 @@ export class StoneMineComponent implements OnInit, OnDestroy {
     this.stoneWorkers = workers;
   }
 
+  getOriginalFreePopulation(): number {
+    return Village.getFreePopulation(this.userInformationService.currentVillage);
+  }
+
   getFreePopulation(): number {
     const village = this.userInformationService.currentVillage;
     const pendingDelta = this.stoneWorkers - village.resourcesWorkers.stoneWorkers;

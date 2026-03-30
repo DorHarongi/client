@@ -11,7 +11,8 @@ export class FreePopulationComponent {
   @Input() noPopulationText: string = '';
 
   get showWarning(): boolean {
-    const baseline = this.originalFreePopulation ?? this.freePopulation;
-    return baseline <= 0 && !!this.noPopulationText;
+    if (!this.noPopulationText) return false;
+    const original = this.originalFreePopulation ?? this.freePopulation;
+    return original <= 0 && this.freePopulation <= 0;
   }
 }
