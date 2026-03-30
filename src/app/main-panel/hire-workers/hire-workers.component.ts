@@ -41,6 +41,11 @@ export class HireWorkersComponent implements OnInit {
     return value;
   }
 
+  hasFreePopulation(): boolean {
+    let village: Village = this.userInformationService.currentVillage;
+    return Village.getFreePopulation(village) > 0;
+  }
+
   maxWorkers() {
     this.workers = this.maxPossibleWorkers;
     this.maxPossibleWorkers = 0;

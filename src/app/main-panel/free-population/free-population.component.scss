@@ -1,23 +1,24 @@
 .free-population {
     text-align: center;
-    margin: 8px 0;
+    margin: 10px 0;
 }
 
 .pop-info {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    font-size: 14px;
+    gap: 6px;
+    font-size: 17px;
+    font-weight: 500;
 }
 
 .pop-icon {
-    width: 16px;
-    height: 16px;
+    width: 22px;
+    height: 22px;
 }
 
 .no-pop-warning {
     color: #dc3545;
-    font-size: 13px;
-    margin-top: 4px;
+    font-size: 15px;
+    margin-top: 5px;
     font-style: italic;
 }
