@@ -190,6 +190,17 @@ body[data-theme]:not([data-theme="default"]) .flexContainer {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   Disabled buttons (all themes)
+   ═══════════════════════════════════════════════════════════════════ */
+.buttons:disabled,
+.action-btn:disabled,
+.confirm-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    Non-default theme: global overrides
    All rules below only apply when a non-default theme is active.
    ═══════════════════════════════════════════════════════════════════ */
