@@ -27,9 +27,7 @@ $topToolbarMinHeight: 75px;
   padding: 10px 25px;
   cursor: pointer;
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
   
   &.active {
     background-image: none;
