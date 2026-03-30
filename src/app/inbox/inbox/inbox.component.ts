@@ -561,12 +561,8 @@ export class InboxComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: () => {
         this.replySending = false;
-        this.replySuccess = 'Reply sent!';
+        this.showReplyForm = false;
         this.replyContent = '';
-        setTimeout(() => {
-          this.showReplyForm = false;
-          this.replySuccess = '';
-        }, 2000);
       },
       error: (err) => {
         this.replySending = false;

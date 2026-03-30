@@ -209,10 +209,8 @@
             <button class="small-btn accept" (click)="handleClanRequest(selectedMessage, true); closeMessageModal()">Accept</button>
             <button class="small-btn decline" (click)="handleClanRequest(selectedMessage, false); closeMessageModal()">Decline</button>
         </div>
-        <p class="reply-success center" *ngIf="replySuccess">{{replySuccess}}</p>
-
         <div class="modal-bottom-actions">
-            <button *ngIf="isPlayerMessage(selectedMessage) && !replySuccess" class="buttons reply-btn" (click)="toggleReplyForm()">Reply</button>
+            <button *ngIf="isPlayerMessage(selectedMessage)" class="buttons reply-btn" (click)="toggleReplyForm()">Reply</button>
             <button class="buttons modal-close-btn" (click)="closeMessageModal()">Close</button>
         </div>
     </div>
