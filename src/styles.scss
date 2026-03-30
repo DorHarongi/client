@@ -755,6 +755,26 @@ body[data-theme]:not([data-theme="default"]) {
         background-color: rgba(255, 255, 255, 0.06);
     }
 
+    /* ── Reply form in inbox ── */
+    .reply-textarea {
+        background: var(--bg-panel, transparent);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    .reply-btn,
+    .reply-send-btn,
+    .reply-cancel-btn {
+        background-image: none;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    .reply-char-counter {
+        color: var(--text-muted);
+    }
+
     /* ── Quest widgets ── */
     .quest-widget,
     .clan-quest-widget,

@@ -99,6 +99,13 @@ export class InboxComponent implements OnInit, OnDestroy {
   clanRequestError: string = '';
   claimingReward: boolean = false;
   rewardClaimSuccess: boolean = false;
+
+  showReplyForm: boolean = false;
+  replyContent: string = '';
+  replySending: boolean = false;
+  replySuccess: string = '';
+  replyError: string = '';
+  maxReplyLength: number = 150;
   
   // Unread counts for badges
   unreadReportsCount: number = 0;
@@ -519,6 +526,53 @@ export class InboxComponent implements OnInit, OnDestroy {
     this.selectedMessage = null;
     this.rewardClaimSuccess = false;
     this.clanRequestError = '';
+    this.showReplyForm = false;
+    this.replyContent = '';
+    this.replySuccess = '';
+    this.replyError = '';
+  }
+
+  isPlayerMessage(message: Message): boolean {
+    return message.type === 'player_message';
+  }
+
+  toggleReplyForm(): void {
+    this.showReplyForm = !this.showReplyForm;
+    this.replyContent = '';
+    this.replySuccess = '';
+    this.replyError = '';
+  }
+
+  sendReply(): void {
+    if (!this.selectedMessage?.senderUsername || !this.replyContent.trim()) return;
+
+    if (this.replyContent.length > this.maxReplyLength) {
+      this.replyError = `Message cannot exceed ${this.maxReplyLength} characters`;
+      return;
+    }
+
+    this.replySending = true;
+    this.replyError = '';
+
+    this.http.post(`${environment.apiUrl}/messages/send`, {
+      senderUsername: this.username,
+      recipientUsername: this.selectedMessage.senderUsername,
+      content: this.replyContent.trim()
+    }).subscribe({
+      next: () => {
+        this.replySending = false;
+        this.replySuccess = 'Reply sent!';
+        this.replyContent = '';
+        setTimeout(() => {
+          this.showReplyForm = false;
+          this.replySuccess = '';
+        }, 2000);
+      },
+      error: (err) => {
+        this.replySending = false;
+        this.replyError = err.error?.message || 'Failed to send reply';
+      }
+    });
   }
 
   markMessageAsRead(message: Message): void {

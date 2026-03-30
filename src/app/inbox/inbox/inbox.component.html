@@ -209,6 +209,33 @@
             <button class="small-btn accept" (click)="handleClanRequest(selectedMessage, true); closeMessageModal()">Accept</button>
             <button class="small-btn decline" (click)="handleClanRequest(selectedMessage, false); closeMessageModal()">Decline</button>
         </div>
+        <!-- Reply for player messages -->
+        <div *ngIf="isPlayerMessage(selectedMessage)" class="reply-section center">
+            <button class="action-btn reply-btn" (click)="toggleReplyForm()" *ngIf="!showReplyForm && !replySuccess">
+                Reply
+            </button>
+            <div *ngIf="showReplyForm" class="reply-form">
+                <textarea
+                    [(ngModel)]="replyContent"
+                    placeholder="Type your reply..."
+                    [maxlength]="maxReplyLength"
+                    rows="3"
+                    class="reply-textarea">
+                </textarea>
+                <div class="reply-char-counter" [class.limit-reached]="replyContent.length >= maxReplyLength">
+                    {{replyContent.length}}/{{maxReplyLength}}
+                </div>
+                <p class="reply-error" *ngIf="replyError">{{replyError}}</p>
+                <div class="reply-actions">
+                    <button class="action-btn reply-send-btn" (click)="sendReply()" [disabled]="replySending || !replyContent.trim()">
+                        {{replySending ? 'Sending...' : 'Send'}}
+                    </button>
+                    <button class="action-btn reply-cancel-btn" (click)="toggleReplyForm()">Cancel</button>
+                </div>
+            </div>
+            <p class="reply-success" *ngIf="replySuccess">{{replySuccess}}</p>
+        </div>
+
         <button class="buttons center modal-close-btn" (click)="closeMessageModal()">Close</button>
     </div>
 </div>

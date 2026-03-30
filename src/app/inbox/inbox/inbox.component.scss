@@ -27,6 +27,9 @@ $topToolbarMinHeight: 75px;
   padding: 10px 25px;
   cursor: pointer;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   
   &.active {
     background-image: none;
@@ -383,4 +386,76 @@ tr, td{
 .overflow-loss {
     color: #c0392b;
     font-weight: 700;
+}
+
+.reply-section {
+    margin: 15px 0;
+}
+
+.reply-btn {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 8px 20px;
+    cursor: pointer;
+}
+
+.reply-form {
+    margin-top: 10px;
+}
+
+.reply-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #7d5210;
+    border-radius: 5px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+    background: transparent;
+}
+
+.reply-char-counter {
+    text-align: right;
+    font-size: 12px;
+    margin-top: 3px;
+    opacity: 0.7;
+
+    &.limit-reached {
+        color: #dc3545;
+        font-weight: bold;
+    }
+}
+
+.reply-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.reply-send-btn,
+.reply-cancel-btn {
+    background-image: url(../../../assets/top-bg.png);
+    border: 1px black solid;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 2px 2px 2px 2px;
+    padding: 8px 18px;
+    cursor: pointer;
+}
+
+.reply-success {
+    color: #27ae60;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.reply-error {
+    color: #dc3545;
+    margin-top: 5px;
+    font-size: 13px;
 }
