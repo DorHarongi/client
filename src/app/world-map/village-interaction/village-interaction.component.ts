@@ -42,6 +42,8 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   resourcesStones: number = 0;
   resourcesCrop: number = 0;
 
+  showResourceConfirm: boolean = false;
+
   errorMessage: string = '';
 
   subscription?: Subscription;
@@ -256,7 +258,6 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
   }
 
   sendResources(): void {
-    // Validate non-negative amounts
     if (
       this.resourcesWood < 0 ||
       this.resourcesStones < 0 ||
@@ -265,7 +266,39 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
       this.errorMessage = 'Resource amounts cannot be negative';
       return;
     }
+    this.errorMessage = '';
 
+    const resources = {
+      woodAmount: Math.max(0, this.resourcesWood),
+      stonesAmount: Math.max(0, this.resourcesStones),
+      cropAmount: Math.max(0, this.resourcesCrop),
+    };
+
+    this.http
+      .post<{ hasSpace: boolean }>(
+        `${environment.apiUrl}/interactions/check-resource-space`,
+        {
+          recipientUsername: this.village.ownerUsername,
+          recipientVillageName: this.village.villageName,
+          resources,
+        },
+      )
+      .subscribe({
+        next: (result) => {
+          if (result.hasSpace) {
+            this.doSendResources();
+          } else {
+            this.showResourceConfirm = true;
+          }
+        },
+        error: (err) => {
+          this.errorMessage =
+            err.error?.message || 'Failed to check resource space';
+        },
+      });
+  }
+
+  doSendResources(): void {
     this.subscription = this.http
       .post<User>(`${environment.apiUrl}/interactions/send-resources`, {
         senderUsername: this.currentUsername,
@@ -288,6 +321,15 @@ export class VillageInteractionComponent implements OnInit, OnDestroy {
           this.userInformationService.refreshUserInformation();
         },
       });
+  }
+
+  confirmSendResources(): void {
+    this.showResourceConfirm = false;
+    this.doSendResources();
+  }
+
+  cancelResourceConfirm(): void {
+    this.showResourceConfirm = false;
   }
 
   getDefenderVillageIndex(): number {

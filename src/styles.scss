@@ -238,6 +238,11 @@ body[data-theme]:not([data-theme="default"]) {
         }
     }
 
+    /* ── Confirm warning text ── */
+    .confirm-warning {
+        color: var(--text-muted);
+    }
+
     /* ── Toggle buttons ── */
     .toggle-btn.active {
         background-image: none;

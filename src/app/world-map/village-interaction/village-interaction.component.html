@@ -100,3 +100,29 @@
     <p class="error-message center" *ngIf="errorMessage">{{errorMessage}}</p>
     <button id="back" class="buttons center" (click)="close()">Close</button>
 </div>
+
+<!-- Resource Send Confirmation -->
+<div class="confirm-overlay" *ngIf="showResourceConfirm" (click)="cancelResourceConfirm()">
+    <div class="confirm-dialog" (click)="$event.stopPropagation()">
+        <h4>Send Resources</h4>
+        <div class="confirm-content">
+            <p>Send resources to <strong>{{village.ownerUsername}}</strong>?</p>
+            <div class="confirm-resources">
+                <span *ngIf="resourcesWood > 0">
+                    <img class="resource-icon" src="assets/wood.jpg"> {{resourcesWood | number}}
+                </span>
+                <span *ngIf="resourcesStones > 0">
+                    <img class="resource-icon" src="assets/rock.jpg"> {{resourcesStones | number}}
+                </span>
+                <span *ngIf="resourcesCrop > 0">
+                    <img class="resource-icon" src="assets/crop.jpg"> {{resourcesCrop | number}}
+                </span>
+            </div>
+            <p class="confirm-warning">The recipient does not have enough warehouse space for all resources. Some materials will be lost.</p>
+        </div>
+        <div class="confirm-actions">
+            <button class="confirm-btn" (click)="confirmSendResources()">Send Anyway</button>
+            <button class="confirm-btn confirm-btn-cancel" (click)="cancelResourceConfirm()">Cancel</button>
+        </div>
+    </div>
+</div>
