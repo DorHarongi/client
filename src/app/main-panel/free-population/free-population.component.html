@@ -1,0 +1,9 @@
+<div class="free-population">
+    <div class="pop-info">
+        <img src="assets/population.png" class="pop-icon" alt="population">
+        <span>Free population: {{freePopulation | number}}</span>
+    </div>
+    <div class="no-pop-warning" *ngIf="freePopulation <= 0 && noPopulationText">
+        {{noPopulationText}}
+    </div>
+</div>

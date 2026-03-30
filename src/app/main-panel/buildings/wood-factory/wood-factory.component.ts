@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { woodFactoryUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, getSkillBonus, SkillCategory } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
+import { Village } from '../../models/Village';
 import { ResourcesWorkers } from '../../models/resourcesWorkers';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -57,6 +58,12 @@ export class WoodFactoryComponent implements OnInit, OnDestroy {
   updateWorkers(workers: number)
   {
     this.woodWorkers = workers;
+  }
+
+  getFreePopulation(): number {
+    const village = this.userInformationService.currentVillage;
+    const pendingDelta = this.woodWorkers - village.resourcesWorkers.woodWorkers;
+    return Village.getFreePopulation(village) - pendingDelta;
   }
 
   hireWorkers()

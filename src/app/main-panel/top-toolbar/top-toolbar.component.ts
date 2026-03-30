@@ -216,12 +216,7 @@ export class TopToolbarComponent implements OnInit, OnDestroy {
 
     this.maximumPopulation =
       quartersPopulationByLevel[village.buildingsLevels.quartersLevel];
-    this.usedPopulation =
-      Village.getTotalTroops(village) +
-      Village.getTotalWorkers(village) +
-      Village.getTotalSupportSent(village) +
-      Village.getTotalOasisTroops(village) +
-      (village.troopsInTransit || 0);
+    this.usedPopulation = Village.getUsedPopulation(village);
 
     this.stableLevel = village.buildingsLevels?.stableLevel ?? 0;
     this.maxSpies = this.stableLevel > 0 ? getMaxSpies(this.stableLevel) : 0;

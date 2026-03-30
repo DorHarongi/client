@@ -1,0 +1,23 @@
+.free-population {
+    text-align: center;
+    margin: 8px 0;
+}
+
+.pop-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.pop-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.no-pop-warning {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 4px;
+    font-style: italic;
+}

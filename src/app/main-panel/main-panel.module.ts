@@ -24,6 +24,7 @@ import { TroopsChoosingComponent } from './troops-choosing/troops-choosing.compo
 import { HireWorkersComponent } from './hire-workers/hire-workers.component';
 import { ResourcesAmountComponent } from './resources-amount/resources-amount.component';
 import { MovementsComponent } from './movements/movements.component';
+import { FreePopulationComponent } from './free-population/free-population.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -50,7 +51,8 @@ import { SharedModule } from '../shared/shared.module';
     TroopsChoosingComponent,
     HireWorkersComponent,
     ResourcesAmountComponent,
-    MovementsComponent
+    MovementsComponent,
+    FreePopulationComponent
   ],
   imports: [
     CommonModule,

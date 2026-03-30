@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { stoneMineUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, getSkillBonus, SkillCategory } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
+import { Village } from '../../models/Village';
 import { ResourcesWorkers } from '../../models/resourcesWorkers';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -58,6 +59,12 @@ export class StoneMineComponent implements OnInit, OnDestroy {
   updateWorkers(workers: number)
   {
     this.stoneWorkers = workers;
+  }
+
+  getFreePopulation(): number {
+    const village = this.userInformationService.currentVillage;
+    const pendingDelta = this.stoneWorkers - village.resourcesWorkers.stoneWorkers;
+    return Village.getFreePopulation(village) - pendingDelta;
   }
 
   hireWorkers()

@@ -1,5 +1,6 @@
 <app-building [building]="buildingInformation">
     <div extraInformation class="center">
+        <app-free-population [freePopulation]="getFreePopulation()" noPopulationText="You can't hire any workers"></app-free-population>
         <h5> Current production: {{currentProductionPerHour | number}} per hour</h5>
         <div *ngIf = "nextLevelProductionPerHour">
             <h5> Next level production: {{nextLevelProductionPerHour | number}} per hour </h5>

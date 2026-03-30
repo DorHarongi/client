@@ -77,15 +77,19 @@ export class Village {
     return total;
   }
 
-  static getFreePopulation(village: Village): number {
-    const max =
-      quartersPopulationByLevel[village.buildingsLevels.quartersLevel];
-    const used =
+  static getUsedPopulation(village: Village): number {
+    return (
       Village.getTotalTroops(village) +
       Village.getTotalWorkers(village) +
       Village.getTotalSupportSent(village) +
       Village.getTotalOasisTroops(village) +
-      (village.troopsInTransit || 0);
-    return max - used;
+      (village.troopsInTransit || 0)
+    );
+  }
+
+  static getFreePopulation(village: Village): number {
+    const max =
+      quartersPopulationByLevel[village.buildingsLevels.quartersLevel];
+    return max - Village.getUsedPopulation(village);
   }
 }

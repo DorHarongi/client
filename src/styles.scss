@@ -243,6 +243,14 @@ body[data-theme]:not([data-theme="default"]) {
         color: var(--text-muted);
     }
 
+    /* ── Free population display ── */
+    .free-population .pop-info {
+        color: var(--text-primary);
+    }
+    .free-population .no-pop-warning {
+        color: var(--accent, #dc3545);
+    }
+
     /* ── Toggle buttons ── */
     .toggle-btn.active {
         background-image: none;

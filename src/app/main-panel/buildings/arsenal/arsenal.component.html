@@ -3,6 +3,7 @@
         <div *ngIf = "nextLevelUnlock">
             <h5> Next level unlocks: {{nextLevelUnlock}} </h5>
         </div>
+        <app-free-population [freePopulation]="checkFreePopulation()" noPopulationText="You can't train any troops"></app-free-population>
         <div id="trainTroops">
             <h5 class="center"> Train troops: </h5>
             <app-troops-choosing (onTroopsChange)="updateTroops($event)" [maxPossibleTroops]="maxPossibleTroops"

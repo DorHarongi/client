@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { cropFarmUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, getSkillBonus, SkillCategory } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
+import { Village } from '../../models/Village';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ResourcesWorkers } from '../../models/resourcesWorkers';
@@ -58,6 +59,12 @@ export class CropFarmComponent implements OnInit, OnDestroy {
   updateWorkers(workers: number)
   {
     this.cropWorkers = workers;
+  }
+
+  getFreePopulation(): number {
+    const village = this.userInformationService.currentVillage;
+    const pendingDelta = this.cropWorkers - village.resourcesWorkers.cropWorkers;
+    return Village.getFreePopulation(village) - pendingDelta;
   }
 
   hireWorkers()
