@@ -3,11 +3,11 @@
     <h2 id="titleText" class="center margin-top">Inbox</h2>
 
     <div class="toggle-container center">
-        <button class="toggle-btn with-badge" [class.active]="viewMode === 'reports'" (click)="switchToReports()">
+        <button class="toggle-btn" [class.active]="viewMode === 'reports'" (click)="switchToReports()">
             Battle Reports
             <span class="tab-badge" *ngIf="unreadReportsCount > 0">{{unreadReportsCount}}</span>
         </button>
-        <button class="toggle-btn with-badge" [class.active]="viewMode === 'messages'" (click)="switchToMessages()">
+        <button class="toggle-btn" [class.active]="viewMode === 'messages'" (click)="switchToMessages()">
             Messages
             <span class="tab-badge" *ngIf="unreadMessagesCount > 0">{{unreadMessagesCount}}</span>
         </button>
