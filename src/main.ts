@@ -10,7 +10,7 @@ if (environment.posthogKey) {
     api_host: 'https://eu.i.posthog.com',
     autocapture: true,
     session_recording: {
-      sample_rate: 1,
+      sampleRate: 1,
     },
   });
 }
