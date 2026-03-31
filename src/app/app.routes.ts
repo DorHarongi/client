@@ -18,6 +18,7 @@ import { WoodFactoryComponent } from './main-panel/buildings/wood-factory/wood-f
 import { WoodWarehouseComponent } from './main-panel/buildings/wood-warehouse/wood-warehouse.component';
  
 import { MainPanelComponent} from './main-panel/main-panel/main-panel.component';
+import { MainPanelV2Component } from './main-panel/main-panel-v2/main-panel-v2.component';
 import { StatisticsComponent } from './statistics/statistics/statistics.component';
 import { WorldMapComponent } from './world-map/world-map/world-map.component';
 import { PlayerPageComponent } from './player/player-page/player-page.component';
@@ -27,6 +28,7 @@ import { ClanPageComponent } from './clan/clan-page/clan-page.component';
 export const appRoutes: Routes = [
   { path: 'home', component: MainPanelComponent, canActivate : [AuthGuardService] },
   { path: 'home/:villageName', component: MainPanelComponent, canActivate : [AuthGuardService] },
+  { path: 'test', component: MainPanelV2Component, canActivate : [AuthGuardService] },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
   { path: 'server-select', redirectTo: 'home', pathMatch: 'full' },

@@ -26,12 +26,16 @@ import { ResourcesAmountComponent } from './resources-amount/resources-amount.co
 import { MovementsComponent } from './movements/movements.component';
 import { FreePopulationComponent } from './free-population/free-population.component';
 import { SharedModule } from '../shared/shared.module';
+import { RightToolbarV2Component } from './right-toolbar-v2/right-toolbar-v2.component';
+import { MainPanelV2Component } from './main-panel-v2/main-panel-v2.component';
 
 @NgModule({
   declarations: [
     MainPanelComponent,
     TopToolbarComponent,
     RightToolbarComponent,
+    RightToolbarV2Component,
+    MainPanelV2Component,
     WoodFactoryComponent,
     BuildingComponent,
     CenterBuildingComponent,
