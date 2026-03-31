@@ -1,16 +1,18 @@
 $topToolbarHeight: max(7.5vh, 75px);
 
+:host {
+    flex: 1;
+    min-width: 0;
+}
+
 .toolbarContainer {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: auto;
-    gap: clamp(12px, 2vh, 30px);
-    padding: clamp(15px, 2.5vh, 30px);
+    gap: clamp(10px, 2.8vh, 30px);
+    padding: clamp(12px, 2.8vh, 30px);
     border-left: 2px black solid;
-    justify-content: stretch;
-    align-content: start;
     flex: 1;
-    min-width: 500px;
     background-image: url("../../../assets/right-bg.jpg");
     background-size: cover;
     overflow: hidden;
@@ -30,10 +32,7 @@ $topToolbarHeight: max(7.5vh, 75px);
     background-position: center;
     border: 2px black solid;
     box-shadow: 2px 2px 2px 2px;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    padding: clamp(4px, 0.8vh, 10px) clamp(6px, 1vh, 12px);
+    padding: clamp(2px, 0.4vh, 6px) clamp(4px, 0.7vh, 10px);
 }
 
 :host-context(body[data-theme]:not([data-theme="default"])) .subContainer {
@@ -82,6 +81,10 @@ $topToolbarHeight: max(7.5vh, 75px);
     }
 }
 
+#villagePower {
+    grid-column: 1 / -1;
+}
+
 #production, #villages, #troops, #clanTroops, #villagePower {
     overflow: hidden;
 }
@@ -89,27 +92,26 @@ $topToolbarHeight: max(7.5vh, 75px);
 #production.has-bonus, #villagePower.has-bonus {
     h5 {
         white-space: nowrap;
-        font-size: clamp(0.75rem, 1.5vh, 1rem);
+        font-size: clamp(0.78rem, 1.5vh, 1rem);
     }
 }
 
 h4 {
-    margin-top: clamp(6px, 1.2vh, 20px);
-    margin-bottom: clamp(6px, 1.2vh, 20px);
+    margin-top: clamp(5px, 2.3vh, 25px);
+    margin-bottom: clamp(5px, 2.3vh, 25px);
     text-align: center;
     font-size: clamp(0.85rem, 1.8vh, 1.17rem);
-    flex-shrink: 0;
 }
 
 h5 {
     text-align: center;
-    font-size: clamp(0.78rem, 1.5vh, 1.15rem);
+    font-size: clamp(0.78rem, 1.7vh, 1.15rem);
     margin: 0;
 }
 
 .flex-container {
-    margin-top: clamp(2px, 0.5vh, 8px);
-    margin-bottom: clamp(2px, 0.5vh, 8px);
+    margin-top: clamp(2px, 0.93vh, 10px);
+    margin-bottom: clamp(2px, 0.93vh, 10px);
     display: flex;
     width: 100%;
     align-items: center;
@@ -125,9 +127,9 @@ h5 {
 }
 
 .material {
-    width: clamp(18px, 2.5vh, 25px);
-    height: clamp(18px, 2.5vh, 25px);
-    margin-right: clamp(4px, 0.6vh, 7px);
+    width: clamp(18px, 2.3vh, 25px);
+    height: clamp(18px, 2.3vh, 25px);
+    margin-right: clamp(4px, 0.65vh, 7px);
     flex-shrink: 0;
 }
 
@@ -136,8 +138,7 @@ li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: clamp(1px, 0.4vh, 3px) 10px;
-    font-size: clamp(0.8rem, 1.5vh, 1rem);
+    padding: clamp(1px, 0.2vh, 2px) 10px;
 
     &:hover {
         background-color: rgba(0, 0, 0, 0.05);
@@ -153,7 +154,7 @@ li {
 }
 
 .edit-icon {
-    font-size: clamp(10px, 1.3vh, 12px);
+    font-size: 12px;
     opacity: 0.6;
     cursor: pointer;
 
@@ -166,7 +167,82 @@ li {
     text-decoration: underline;
 }
 
-// Rename Modal (unchanged — it's an overlay, not constrained by toolbar)
+// ── Mobile: main panel switches to column at 1200px ──
+@media (max-width: 1200px) {
+    .toolbarContainer {
+        height: auto;
+        overflow: visible;
+        border-left: none;
+        min-width: unset;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .subContainer {
+        padding: 8px 10px;
+    }
+
+    h4 {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    .flex-container {
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+
+    .material {
+        width: 22px;
+        height: 22px;
+        margin-right: 6px;
+    }
+}
+
+// ── Narrow mobile: single column ──
+@media (max-width: 600px) {
+    .toolbarContainer {
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    #villagePower {
+        grid-column: 1;
+    }
+
+    .subContainer {
+        padding: 6px 8px;
+    }
+
+    h4 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    h5 {
+        font-size: 0.9rem;
+    }
+
+    .flex-container {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+
+    .material {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+}
+
+// ── Rename Modal (overlay, not constrained by toolbar) ──
 .modal-overlay {
     position: fixed;
     top: 0;
