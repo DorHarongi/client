@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
@@ -20,11 +20,15 @@ const MAX_VILLAGE_NAME_LENGTH = 20;
   templateUrl: './right-toolbar.component.html',
   styleUrls: ['./right-toolbar.component.scss']
 })
-export class RightToolbarComponent implements OnInit, OnDestroy {
+export class RightToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
+  private static readonly MAX_COLUMNS = 7;
+  private resizeObserver?: ResizeObserver;
+  private rafId = 0;
 
   constructor(
     private userInformationService: UserInformationService,
-    private http: HttpClient
+    private http: HttpClient,
+    private el: ElementRef
   ) { 
 
   }
@@ -93,9 +97,45 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
 
   }
 
+  ngAfterViewInit(): void {
+    this.scheduleColumnUpdate();
+
+    const toolbar = this.el.nativeElement.querySelector('.toolbarContainer');
+    if (toolbar) {
+      this.resizeObserver = new ResizeObserver(() => this.scheduleColumnUpdate());
+      this.resizeObserver.observe(toolbar);
+    }
+  }
+
   ngOnDestroy(): void {
     if(this.subscription)
       this.subscription.unsubscribe();
+    this.resizeObserver?.disconnect();
+    cancelAnimationFrame(this.rafId);
+  }
+
+  private scheduleColumnUpdate(): void {
+    cancelAnimationFrame(this.rafId);
+    this.rafId = requestAnimationFrame(() => this.updateColumns());
+  }
+
+  private updateColumns(): void {
+    const toolbar = this.el.nativeElement.querySelector('.toolbarContainer');
+    if (!toolbar || window.innerWidth <= 1200) return;
+
+    toolbar.removeAttribute('data-columns');
+    toolbar.style.overflowY = '';
+    void toolbar.offsetHeight;
+
+    if (toolbar.scrollHeight <= toolbar.clientHeight + 1) return;
+
+    for (let cols = 2; cols <= RightToolbarComponent.MAX_COLUMNS; cols++) {
+      toolbar.setAttribute('data-columns', cols.toString());
+      void toolbar.offsetHeight;
+      if (toolbar.scrollHeight <= toolbar.clientHeight + 1) return;
+    }
+
+    toolbar.style.overflowY = 'auto';
   }
 
   updateVillage()
@@ -162,6 +202,7 @@ export class RightToolbarComponent implements OnInit, OnDestroy {
     this.goldRushBonus = getSkillBonus(v.skills, SkillCategory.GOLD_RUSH);
     this.totalAttack = Math.floor(baseAttack * (1 + this.sharperBladesBonus));
     this.totalDefense = Math.floor(baseDefense * (1 + this.heroicShieldBonus));
+    this.scheduleColumnUpdate();
   }
 
   switchToVillage(index: number) // clicked on a differnet village
