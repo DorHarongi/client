@@ -33,10 +33,6 @@ $topToolbarHeight: max(7.5vh, 75px);
     border: 2px black solid;
     box-shadow: 2px 2px 2px 2px;
     overflow: hidden;
-    columns: 2;
-    column-fill: auto;
-    column-gap: clamp(6px, 1vh, 16px);
-    max-height: clamp(120px, 31vh, 400px);
 }
 
 :host-context(body[data-theme]:not([data-theme="default"])) .subContainer {
@@ -102,7 +98,6 @@ h4 {
     margin-top: clamp(5px, 2.31vh, 25px);
     text-align: center;
     margin-bottom: clamp(5px, 2.31vh, 25px);
-    column-span: all;
 }
 
 h5 {
@@ -116,7 +111,6 @@ h5 {
     display: flex;
     width: 100%;
     align-items: center;
-    break-inside: avoid;
 }
 
 .production-container {
@@ -141,7 +135,6 @@ li {
     justify-content: space-between;
     align-items: center;
     padding: 2px 10px;
-    break-inside: avoid;
 
     &:hover {
         background-color: rgba(0, 0, 0, 0.05);
@@ -181,10 +174,28 @@ li {
     top: -1.75px;
 }
 
-// ── Short desktop viewports: allow more columns ──
-@media (min-width: 1201px) and (max-height: 500px) {
+// ── Short desktop viewports: grid-based multi-column inside containers ──
+// At 1080p and above everything fits single-column. Below 850px height,
+// containers switch to a 2+ column grid so rows pair up (table-aligned).
+@media (min-width: 1201px) and (max-height: 850px) {
     .subContainer {
-        columns: 3;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: clamp(4px, 0.8vh, 12px);
+        align-items: center;
+    }
+
+    h4 {
+        grid-column: 1 / -1;
+    }
+
+    ul {
+        grid-column: 1 / -1;
+    }
+
+    .flex-container {
+        margin-top: clamp(1px, 0.46vh, 5px);
+        margin-bottom: clamp(1px, 0.46vh, 5px);
     }
 
     .troops-container {
@@ -196,13 +207,19 @@ li {
     }
 }
 
-@media (min-width: 1201px) and (max-height: 350px) {
+@media (min-width: 1201px) and (max-height: 500px) {
     .subContainer {
-        columns: 4;
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .troops-container {
         margin-left: 4px;
+    }
+}
+
+@media (min-width: 1201px) and (max-height: 350px) {
+    .subContainer {
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
@@ -217,12 +234,6 @@ li {
         gap: 15px;
         padding: 18px;
         padding-bottom: 24px;
-    }
-
-    .subContainer {
-        columns: unset;
-        max-height: unset;
-        overflow: visible;
     }
 
     #villagePower {
