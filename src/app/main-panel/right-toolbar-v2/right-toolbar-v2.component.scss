@@ -181,6 +181,31 @@ li {
     top: -1.75px;
 }
 
+// ── Short desktop viewports: allow more columns ──
+@media (min-width: 1201px) and (max-height: 500px) {
+    .subContainer {
+        columns: 3;
+    }
+
+    .troops-container {
+        margin-left: 8px;
+    }
+
+    #production.has-bonus h5, #villagePower.has-bonus h5 {
+        white-space: normal;
+    }
+}
+
+@media (min-width: 1201px) and (max-height: 350px) {
+    .subContainer {
+        columns: 4;
+    }
+
+    .troops-container {
+        margin-left: 4px;
+    }
+}
+
 // ── Mobile: main panel stacks vertically ──
 @media (max-width: 1200px) {
     .toolbarContainer {
