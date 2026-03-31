@@ -183,6 +183,7 @@ li {
         display: grid;
         column-gap: clamp(4px, 0.8vh, 12px);
         align-items: start;
+        overflow: visible;
     }
 
     h4 {
