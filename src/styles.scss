@@ -456,6 +456,14 @@ body[data-theme]:not([data-theme="default"]) {
         border-bottom-color: var(--border-color);
     }
 
+    .info-close-btn {
+        background-image: none;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+        box-shadow: none;
+    }
+
     /* ── Various accent-colored text ── */
     .relic-name,
     .relic-reward,
