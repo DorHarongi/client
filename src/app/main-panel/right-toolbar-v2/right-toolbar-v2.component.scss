@@ -81,6 +81,12 @@ $topToolbarHeight: max(7.5vh, 75px);
     }
 }
 
+#villagePower {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - clamp(5px, 1.39vh, 15px));
+}
+
 #production.has-bonus, #villagePower.has-bonus {
     h5 {
         white-space: nowrap;
@@ -96,7 +102,7 @@ h4 {
 
 h5 {
     text-align: center;
-    font-size: 1.15rem;
+    font-size: clamp(0.78rem, 1.7vh, 1.15rem);
 }
 
 .flex-container {
@@ -176,9 +182,13 @@ li {
         overflow: auto;
         border-left: none;
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 12px;
-        padding-bottom: 20px;
+        gap: 15px;
+        padding: 18px;
+        padding-bottom: 24px;
+    }
+
+    #villagePower {
+        width: calc(50% - 7.5px);
     }
 
     h4 {
@@ -209,9 +219,13 @@ li {
 
 @media (max-width: 480px) {
     .toolbarContainer {
-        gap: 8px;
-        padding: 8px;
-        padding-bottom: 16px;
+        gap: 10px;
+        padding: 12px;
+        padding-bottom: 20px;
+    }
+
+    #villagePower {
+        width: calc(50% - 5px);
     }
 
     h4 {
