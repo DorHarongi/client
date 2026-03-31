@@ -287,6 +287,11 @@ li {
     .troops-container {
         margin-left: 10px;
     }
+
+    #production.has-bonus h5, #villagePower.has-bonus h5 {
+        white-space: nowrap;
+        font-size: 0.75rem;
+    }
 }
 
 @media (max-width: 480px) {
