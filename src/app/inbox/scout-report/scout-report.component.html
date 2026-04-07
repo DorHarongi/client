@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <!-- Caught oasis spy -->
+  <!-- Caught oasis spy - attacker view -->
   <div *ngIf="isOasisSpy && !wasSuccessful && isAttacker" class="caught-section">
     <h5 *ngIf="!isMultiSpy">Your spy to
       <a *ngIf="report.oasisX != null" class="report-link" (click)="navigateToMap(report.oasisX, report.oasisY)">{{ report.oasisName || report.defenderVillageName }}</a>
@@ -71,6 +71,14 @@
       have been caught.</h5>
     <p *ngIf="!isMultiSpy">Your spy was detected and eliminated. No intelligence was gathered.</p>
     <p *ngIf="isMultiSpy">All of your spies were detected and eliminated. No intelligence was gathered.</p>
+  </div>
+
+  <!-- Caught oasis spy - defender (oasis owner) view -->
+  <div *ngIf="isOasisSpy && !wasSuccessful && !isAttacker" class="caught-section">
+    <h5><a class="report-link" (click)="navigateToPlayer(report.attackerName)">{{ report.attackerName }}</a> tried to spy on your oasis
+      <a *ngIf="report.oasisX != null" class="report-link" (click)="navigateToMap(report.oasisX, report.oasisY)">{{ report.oasisName || report.defenderVillageName }}</a><span *ngIf="report.oasisX == null">{{ report.oasisName || report.defenderVillageName }}</span>.</h5>
+    <p *ngIf="!isMultiSpy">An enemy spy was intercepted and eliminated at your oasis.</p>
+    <p *ngIf="isMultiSpy">{{ spySentCount }} enemy spies were intercepted at your oasis. All spies have been eliminated.</p>
   </div>
 
   <!-- Successful village spy - attacker view -->

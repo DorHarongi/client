@@ -282,14 +282,19 @@ export class InboxComponent implements OnInit, OnDestroy {
     }
 
     if (attackReport.reportType === 'oasis_spy') {
+      const isAttacker = attackReport.attackerName === this.username;
+      const oasisLabel = attackReport.oasisName || attackReport.defenderVillageName;
       const isMulti = (attackReport.spySentCount || 0) > 1;
-      if (attackReport.attackerWon) {
-        return `You spied on ${attackReport.oasisName || attackReport.defenderVillageName}`;
+      if (isAttacker) {
+        if (attackReport.attackerWon) {
+          return `You spied on ${oasisLabel}`;
+        }
+        if (isMulti) {
+          return `All ${attackReport.spySentCount} spies to ${oasisLabel} were caught`;
+        }
+        return `Your spy to ${oasisLabel} was caught`;
       }
-      if (isMulti) {
-        return `All ${attackReport.spySentCount} spies to ${attackReport.oasisName || attackReport.defenderVillageName} were caught`;
-      }
-      return `Your spy to ${attackReport.oasisName || attackReport.defenderVillageName} was caught`;
+      return `${attackReport.attackerName} tried to spy on your oasis ${oasisLabel}`;
     }
 
     if (attackReport.reportType === 'oasis') {
