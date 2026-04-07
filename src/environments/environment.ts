@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000',
   posthogKey: '',
+  posthogHost: 'https://eu.i.posthog.com',
 };
 
 /*
