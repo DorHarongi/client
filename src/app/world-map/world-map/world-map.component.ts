@@ -55,9 +55,10 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   showMapLoader: boolean = false;
   private mapLoaderTimeout: any = null;
 
-  // Debounced map loading during minimap drag
+  // Throttled map loading during minimap drag
   private dragLoadTimeout: any = null;
-  private readonly DRAG_DEBOUNCE_MS = 300;
+  private dragThrottleActive: boolean = false;
+  private readonly DRAG_THROTTLE_MS = 300;
 
   constructor(
     private router: Router,
@@ -133,11 +134,13 @@ export class WorldMapComponent implements OnInit, OnDestroy {
       });
   }
 
-  private debouncedLoadMapWindow(): void {
-    clearTimeout(this.dragLoadTimeout);
+  private throttledLoadMapWindow(): void {
+    if (this.dragThrottleActive) return;
+    this.dragThrottleActive = true;
+    this.loadMapWindow();
     this.dragLoadTimeout = setTimeout(() => {
-      this.loadMapWindow();
-    }, this.DRAG_DEBOUNCE_MS);
+      this.dragThrottleActive = false;
+    }, this.DRAG_THROTTLE_MS);
   }
 
   loadMinimap(): void {
@@ -253,7 +256,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     if (!this.isDragging || !this.minimapElement) return;
     event.preventDefault();
     this.updateMinimapPosition(event);
-    this.debouncedLoadMapWindow();
+    this.throttledLoadMapWindow();
   }
 
   private onMinimapDragEnd(event: MouseEvent): void {
@@ -266,6 +269,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.minimapElement = null;
 
     clearTimeout(this.dragLoadTimeout);
+    this.dragThrottleActive = false;
     this.loadMapWindow();
   }
 
@@ -292,7 +296,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
       event.touches[0].clientX,
       event.touches[0].clientY
     );
-    this.debouncedLoadMapWindow();
+    this.throttledLoadMapWindow();
   }
 
   private onMinimapTouchEnd(event: TouchEvent): void {
@@ -305,6 +309,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.minimapElement = null;
 
     clearTimeout(this.dragLoadTimeout);
+    this.dragThrottleActive = false;
     this.loadMapWindow();
   }
 
