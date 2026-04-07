@@ -233,7 +233,7 @@
             rows="4"
             class="reply-textarea">
         </textarea>
-        <div class="reply-char-counter" [class.limit-reached]="replyContent.length >= maxReplyLength">
+        <div class="reply-char-counter" [class.limit-reached]="replyContent.length > maxReplyLength">
             {{replyContent.length}}/{{maxReplyLength}}
         </div>
         <p class="reply-error" *ngIf="replyError">{{replyError}}</p>

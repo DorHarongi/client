@@ -138,7 +138,7 @@
                     [maxlength]="maxMessageLength"
                     rows="3">
                 </textarea>
-                <div class="char-counter" [class.limit-reached]="messageContent.length >= maxMessageLength">
+                <div class="char-counter" [class.limit-reached]="messageContent.length > maxMessageLength">
                     {{messageContent.length}}/{{maxMessageLength}}
                 </div>
                 <p class="success-message" *ngIf="messageSuccess">{{messageSuccess}}</p>
