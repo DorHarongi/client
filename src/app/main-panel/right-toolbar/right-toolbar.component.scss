@@ -87,10 +87,12 @@ $topToolbarHeight: max(7.5vh, 75px);
     width: calc(50% - clamp(5px, 1.39vh, 15px));
 }
 
-#production.has-bonus, #villagePower.has-bonus {
-    h5 {
-        white-space: nowrap;
-        font-size: 1rem;
+@media (min-width: 1201px) {
+    #production.has-bonus, #villagePower.has-bonus {
+        h5 {
+            white-space: nowrap;
+            font-size: 1rem;
+        }
     }
 }
 
@@ -300,9 +302,17 @@ li {
         margin-left: 10px;
     }
 
-    #production.has-bonus h5, #villagePower.has-bonus h5 {
-        white-space: normal;
-        font-size: 0.7rem;
+    #production.has-bonus, #villagePower.has-bonus {
+        overflow: visible;
+
+        h5 {
+            white-space: normal;
+            font-size: 0.7rem;
+        }
+    }
+
+    #villagePower.has-bonus {
+        width: calc(70% - 7.5px);
     }
 }
 
@@ -315,6 +325,10 @@ li {
 
     #villagePower {
         width: calc(50% - 5px);
+    }
+
+    #villagePower.has-bonus {
+        width: calc(70% - 5px);
     }
 
     h4 {
