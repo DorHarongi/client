@@ -313,6 +313,7 @@ export class BossInteractionComponent implements OnInit, OnDestroy {
       return [
         'This is an Ancient Titan — an extremely powerful mythic boss. All clans, ready yourselves for battle — you will need to give everything you have got to bring it down.',
         'Each Ancient Titan guards a unique Divine Relic. The clan that deals the most total damage will claim the relic once the titan falls.',
+        'Each relic bestows a unique bonus to the village that holds it.',
         'Relics can be stolen by defeating the village where the relic is being kept, so protect it carefully and entrust it only to the most loyal member of your clan.',
         'The first clan to collect all 5 Divine Relics will achieve ultimate victory and win the game.',
       ];

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
+import { RELIC_NAMES } from 'utils';
 
 interface RelicDoc {
   relicId: string;
@@ -11,14 +12,6 @@ interface RelicDoc {
   transferCooldownUntil: string | null;
   obtainedAt: string | null;
 }
-
-const RELIC_NAMES: Record<string, string> = {
-  apple_of_immortality: 'Apple of Immortality',
-  eternal_flame: 'Eternal Flame',
-  chalice_of_ascension: 'Chalice of Ascension',
-  all_seeing_orb: 'All-Seeing Orb',
-  sigil_of_thunder: 'Sigil of Thunder'
-};
 
 @Component({
   selector: 'app-embassy-relics',
@@ -35,7 +28,6 @@ export class EmbassyRelicsComponent implements OnInit {
   clanMembers: { username: string; villages: { villageName: string }[] }[] = [];
   transferError = '';
   showTransferModal = false;
-  today = new Date();
 
   constructor(
     private http: HttpClient,
@@ -61,7 +53,11 @@ export class EmbassyRelicsComponent implements OnInit {
   }
 
   relicName(id: string): string {
-    return RELIC_NAMES[id] || id;
+    return RELIC_NAMES.find(r => r.id === id)?.name || id;
+  }
+
+  relicBonus(id: string): string {
+    return RELIC_NAMES.find(r => r.id === id)?.bonusLabel || '';
   }
 
   isHeldByMe(r: RelicDoc): boolean {

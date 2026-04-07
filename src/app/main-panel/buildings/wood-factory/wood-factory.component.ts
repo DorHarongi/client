@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { woodFactoryUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, getSkillBonus, SkillCategory } from 'utils';
+import { woodFactoryUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, getEffectiveProductionMultiplier } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { Village } from '../../models/Village';
@@ -33,9 +33,7 @@ export class WoodFactoryComponent implements OnInit, OnDestroy {
   ) {
     const village = this.userInformationService.currentVillage;
 
-    // Calculate Gold Rush multiplier from skills
-    const goldRushBonus = getSkillBonus(village.skills, SkillCategory.GOLD_RUSH);
-    const productionMultiplier = 1 + goldRushBonus;
+    const productionMultiplier = getEffectiveProductionMultiplier(village.skills, village.heldRelicIds || []);
      
     this.buildingInformation = new Building("woodFactory", "Wood Factory", village.buildingsLevels.woodFactoryLevel, 
     "The wood factory produces the wood of your village. The higher its level and the more wood workers you employ there, the faster the production is.",

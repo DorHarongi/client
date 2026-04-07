@@ -6,6 +6,8 @@ import {
   catapultsAttackingStat,
   catapultsDefenceStat,
   getSkillBonus,
+  getRelicAttackBonus,
+  getRelicDefenseBonus,
   horsemenAttackingStat,
   horsemenDefenceStat,
   magicianAttackingStat,
@@ -36,6 +38,7 @@ export interface TroopStatsResult {
 
 export interface TroopStatsOptions {
   skills?: any;
+  heldRelicIds?: string[];
   applyAttackSkillBonus?: boolean;
   applyDefenseSkillBonus?: boolean;
   attackSkillBonus?: number;
@@ -80,6 +83,7 @@ export function calculateTroopStats(
     safe(troops.catapults) * catapultsDefenceStat;
 
   const skills = options?.skills;
+  const relicIds = options?.heldRelicIds || [];
   const attackSkillBonus =
     options?.attackSkillBonus ??
     (options?.applyAttackSkillBonus && skills
@@ -90,16 +94,18 @@ export function calculateTroopStats(
     (options?.applyDefenseSkillBonus && skills
       ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD)
       : 0);
+  const relicAttack = options?.applyAttackSkillBonus ? getRelicAttackBonus(relicIds) : 0;
+  const relicDefense = options?.applyDefenseSkillBonus ? getRelicDefenseBonus(relicIds) : 0;
   const attackMultiplier = options?.attackMultiplier || 1;
   const defenseMultiplier = options?.defenseMultiplier || 1;
   const attackMultiplierBonus = attackMultiplier - 1;
   const defenseMultiplierBonus = defenseMultiplier - 1;
 
   const effectiveAttack = Math.floor(
-    baseAttack * (1 + attackSkillBonus + attackMultiplierBonus),
+    baseAttack * (1 + attackSkillBonus + relicAttack + attackMultiplierBonus),
   );
   const effectiveDefense = Math.floor(
-    baseDefense * (1 + defenseSkillBonus + defenseMultiplierBonus),
+    baseDefense * (1 + defenseSkillBonus + relicDefense + defenseMultiplierBonus),
   );
 
   return {

@@ -1,14 +1,14 @@
 <div class = "flexContainer toolbarContainer">
-    <div class="subContainer" id=production [class.has-bonus]="goldRushBonus > 0">
+    <div class="subContainer" id=production [class.has-bonus]="goldRushBonus > 0 || relicProductionBonus > 0">
         <h4> Production </h4>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/crop.jpg">
-            <h5> Crop: {{cropProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span></h5>
+            <h5> Crop: {{cropProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span><span class="relic-bonus" *ngIf="relicProductionBonus > 0">(+{{relicProductionPercent}}%)</span></h5>
         </div>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/wood.jpg">
-            <h5> Wood: {{woodProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span></h5>
+            <h5> Wood: {{woodProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span><span class="relic-bonus" *ngIf="relicProductionBonus > 0">(+{{relicProductionPercent}}%)</span></h5>
         </div>
         <div class="production-container flex-container"> <img class="material" src="../../../assets/rock.jpg">
-            <h5> Stone: {{stoneProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span></h5>
+            <h5> Stone: {{stoneProduction | number:'1.0-0'}} per hour <span class="skill-bonus" *ngIf="goldRushBonus > 0">(+{{goldRushPercent}}%)</span><span class="relic-bonus" *ngIf="relicProductionBonus > 0">(+{{relicProductionPercent}}%)</span></h5>
         </div>
     </div>
     <div class="subContainer" id="villages">
@@ -68,13 +68,13 @@
             <h5> Catapults: {{clanCatapults | number}} </h5>
         </div>
     </div>
-    <div class="subContainer" id="villagePower" [class.has-bonus]="sharperBladesBonus > 0 || heroicShieldBonus > 0">
+    <div class="subContainer" id="villagePower" [class.has-bonus]="sharperBladesBonus > 0 || heroicShieldBonus > 0 || relicAttackBonus > 0 || relicDefenseBonus > 0">
         <h4> Village Statistics </h4>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/swords.png">
-            <h5> Attack: {{totalAttack | number}} <span class="skill-bonus" *ngIf="sharperBladesBonus > 0 && baseAttack > 0">(+{{sharperBladesPercent}}%)</span></h5>
+            <h5> Attack: {{totalAttack | number}} <span class="skill-bonus" *ngIf="sharperBladesBonus > 0 && baseAttack > 0">(+{{sharperBladesPercent}}%)</span><span class="relic-bonus" *ngIf="relicAttackBonus > 0 && baseAttack > 0">(+{{relicAttackPercent}}%)</span></h5>
         </div>
         <div class="troops-container flex-container"> <img class="material" src="../../../assets/shield.png">
-            <h5> Defense: {{totalDefense | number}} <span class="skill-bonus" *ngIf="heroicShieldBonus > 0 && baseDefense > 0">(+{{heroicShieldPercent}}%)</span></h5>
+            <h5> Defense: {{totalDefense | number}} <span class="skill-bonus" *ngIf="heroicShieldBonus > 0 && baseDefense > 0">(+{{heroicShieldPercent}}%)</span><span class="relic-bonus" *ngIf="relicDefenseBonus > 0 && baseDefense > 0">(+{{relicDefensePercent}}%)</span></h5>
         </div>
     </div>
 </div>

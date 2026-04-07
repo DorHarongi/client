@@ -11,6 +11,8 @@ import {
   spearFighterDefenceStat, swordFighterDefenceStat, axeFighterDefenceStat, archerDefenceStat,
   magicianDefenceStat, horsemenDefenceStat, catapultsDefenceStat,
   getSkillBonus, SkillCategory,
+  getRelicAttackBonus, getRelicDefenseBonus, getRelicProductionBonus,
+  getEffectiveAttackMultiplier, getEffectiveDefenseMultiplier,
 } from 'utils';
 
 const MAX_VILLAGE_NAME_LENGTH = 20;
@@ -59,11 +61,17 @@ export class RightToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
   sharperBladesBonus: number = 0;
   heroicShieldBonus: number = 0;
   goldRushBonus: number = 0;
+  relicAttackBonus: number = 0;
+  relicDefenseBonus: number = 0;
+  relicProductionBonus: number = 0;
   baseAttack: number = 0;
   baseDefense: number = 0;
   get sharperBladesPercent(): string { return (this.sharperBladesBonus * 100).toFixed(0); }
   get heroicShieldPercent(): string { return (this.heroicShieldBonus * 100).toFixed(0); }
   get goldRushPercent(): string { return (this.goldRushBonus * 100).toFixed(0); }
+  get relicAttackPercent(): string { return (this.relicAttackBonus * 100).toFixed(0); }
+  get relicDefensePercent(): string { return (this.relicDefenseBonus * 100).toFixed(0); }
+  get relicProductionPercent(): string { return (this.relicProductionBonus * 100).toFixed(0); }
 
   villages: Array<string> = [];
   activeVillage: number = 0;
@@ -200,8 +208,12 @@ export class RightToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sharperBladesBonus = getSkillBonus(v.skills, SkillCategory.SHARPER_BLADES);
     this.heroicShieldBonus = getSkillBonus(v.skills, SkillCategory.HEROIC_SHIELD);
     this.goldRushBonus = getSkillBonus(v.skills, SkillCategory.GOLD_RUSH);
-    this.totalAttack = Math.floor(baseAttack * (1 + this.sharperBladesBonus));
-    this.totalDefense = Math.floor(baseDefense * (1 + this.heroicShieldBonus));
+    const heldRelics = v.heldRelicIds || [];
+    this.relicAttackBonus = getRelicAttackBonus(heldRelics);
+    this.relicDefenseBonus = getRelicDefenseBonus(heldRelics);
+    this.relicProductionBonus = getRelicProductionBonus(heldRelics);
+    this.totalAttack = Math.floor(baseAttack * getEffectiveAttackMultiplier(v.skills, heldRelics));
+    this.totalDefense = Math.floor(baseDefense * getEffectiveDefenseMultiplier(v.skills, heldRelics));
     this.scheduleColumnUpdate();
   }
 

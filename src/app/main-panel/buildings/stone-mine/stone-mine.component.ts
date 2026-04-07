@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { stoneMineUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, getSkillBonus, SkillCategory } from 'utils';
+import { stoneMineUpgradeMaterialCostByLevels, factoriesProductionSpeedByLevel, singleWorkerProductionSpeedPerSecond, getEffectiveProductionMultiplier } from 'utils';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { Building } from '../../classes/Building';
 import { Village } from '../../models/Village';
@@ -33,9 +33,7 @@ export class StoneMineComponent implements OnInit, OnDestroy {
   ) {
     const village = this.userInformationService.currentVillage;
 
-    // Calculate Gold Rush multiplier from skills
-    const goldRushBonus = getSkillBonus(village.skills, SkillCategory.GOLD_RUSH);
-    const productionMultiplier = 1 + goldRushBonus;
+    const productionMultiplier = getEffectiveProductionMultiplier(village.skills, village.heldRelicIds || []);
     
     this.buildingInformation = new Building("stoneMine", "Stone Mine", village.buildingsLevels.stoneMineLevel, 
     "The stone mine produces the stones of your village. The higher its level and the more stone workers you employ there, the faster the production is.",

@@ -24,6 +24,7 @@ export class Village {
   troopsInTransit!: number;
   aliveSpies!: number;
   spyDeathTimestamps!: Date[];
+  heldRelicIds!: string[];
 
   static getTotalTroops(village: Village): number {
     const t = village.troops;

@@ -2,7 +2,10 @@
   <h4>Divine Relics</h4>
   <div class="relic-list">
     <div *ngFor="let r of relics" class="relic-row">
-      <span class="relic-name">{{ relicName(r.relicId) }}</span>
+      <div class="relic-title-line">
+        <span class="relic-name">{{ relicName(r.relicId) }}</span>
+        <span class="relic-bonus">{{ relicBonus(r.relicId) }}</span>
+      </div>
       <span *ngIf="r.holderUsername" class="holder">Held by {{ r.holderUsername }} ({{ r.holderVillageName }})</span>
       <span *ngIf="!r.holderUsername && r.holderClanName === clanName" class="holder in-transit">In transit</span>
       <span *ngIf="!r.holderUsername && r.holderClanName !== clanName" class="holder">Unclaimed</span>

@@ -9,7 +9,8 @@ import { spearFighterMinimumArsenalLevel, swordFighterMinimumArsenalLevel, axeFi
   catapultsDefenceStat,
   spearFighterMovementSpeed, swordFighterMovementSpeed, axeFighterMovementSpeed,
   archerMovementSpeed, magicianMovementSpeed, horsemenMovementSpeed, catapultsMovementSpeed,
-  SPY_SPEED, calculateDistance, calculateTravelTimeMs, getArmySpeed, getSkillBonus, SkillCategory } from 'utils'
+  SPY_SPEED, calculateDistance, calculateTravelTimeMs, getArmySpeed, getSkillBonus, SkillCategory,
+  getEffectiveSpeedBonus, getRelicAttackBonus, getRelicDefenseBonus } from 'utils'
 
 @Component({
   selector: 'app-troops-choosing',
@@ -269,6 +270,7 @@ export class TroopsChoosingComponent implements OnInit {
     const village = this.userInformationService.currentVillage;
     const stats = calculateTroopStats(this.troops, {
       skills: (village as any)?.skills,
+      heldRelicIds: village.heldRelicIds || [],
       applyAttackSkillBonus: this.applyAttackBonus,
       applyDefenseSkillBonus: this.applyDefenseBonus,
       attackMultiplier: this.attackMultiplier,
@@ -305,8 +307,9 @@ export class TroopsChoosingComponent implements OnInit {
       this.targetLocation.x, this.targetLocation.y
     );
     const skills = (currentVillage as any)?.skills;
-    const quickStepBonus = skills ? getSkillBonus(skills, SkillCategory.QUICK_STEP) : 0;
-    this.travelTimeMs = calculateTravelTimeMs(distance, this.armySpeed, quickStepBonus);
+    const heldRelicIds = currentVillage.heldRelicIds || [];
+    const speedBonus = skills ? getEffectiveSpeedBonus(skills, heldRelicIds) : 0;
+    this.travelTimeMs = calculateTravelTimeMs(distance, this.armySpeed, speedBonus);
   }
 
   getFormattedTravelTime(): string {
@@ -321,13 +324,19 @@ export class TroopsChoosingComponent implements OnInit {
   }
 
   get hasAttackBonus(): boolean {
-    const skills = (this.userInformationService.currentVillage as any)?.skills;
-    return this.applyAttackBonus && skills ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0 : false;
+    const v = this.userInformationService.currentVillage;
+    const skills = (v as any)?.skills;
+    const hasSkill = skills ? getSkillBonus(skills, SkillCategory.SHARPER_BLADES) > 0 : false;
+    const hasRelic = getRelicAttackBonus(v.heldRelicIds || []) > 0;
+    return this.applyAttackBonus && (hasSkill || hasRelic);
   }
 
   get hasDefenseBonus(): boolean {
-    const skills = (this.userInformationService.currentVillage as any)?.skills;
-    return this.applyDefenseBonus && skills ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD) > 0 : false;
+    const v = this.userInformationService.currentVillage;
+    const skills = (v as any)?.skills;
+    const hasSkill = skills ? getSkillBonus(skills, SkillCategory.HEROIC_SHIELD) > 0 : false;
+    const hasRelic = getRelicDefenseBonus(v.heldRelicIds || []) > 0;
+    return this.applyDefenseBonus && (hasSkill || hasRelic);
   }
 
   get showTotalStats(): boolean {
