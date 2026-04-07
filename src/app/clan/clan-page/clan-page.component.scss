@@ -349,6 +349,12 @@ $topToolbarMinHeight: 75px;
 
     &.clickable {
         cursor: pointer;
+        text-decoration: none;
+
+        .relic-name {
+            text-decoration: underline;
+        }
+
         &:hover {
             background: rgba(212, 168, 75, 0.25);
         }
@@ -367,6 +373,7 @@ $topToolbarMinHeight: 75px;
 .relic-holder {
     font-size: 0.85em;
     color: #5a3d2b;
+    margin-left: auto;
 }
 
 .relic-in-transit {
@@ -377,6 +384,7 @@ $topToolbarMinHeight: 75px;
 .relic-empty {
     font-size: 0.85em;
     color: #999;
+    margin-left: auto;
 }
 
 .relic-transfer-modal {

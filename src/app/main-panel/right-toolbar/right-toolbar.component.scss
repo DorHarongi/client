@@ -305,6 +305,14 @@ li {
     #production.has-bonus, #villagePower.has-bonus {
         padding: 0 7px;
 
+        .flex-container {
+            align-items: flex-start;
+        }
+
+        .material {
+            margin-top: 2px;
+        }
+
         h5 {
             white-space: normal;
             font-size: 0.7rem;
