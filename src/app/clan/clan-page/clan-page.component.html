@@ -151,6 +151,7 @@
             (click)="onRelicClick(id)"
           >
             <span class="relic-name">{{ getRelicName(id) }}</span>
+            <span class="relic-bonus">{{ getRelicBonus(id) }}</span>
             <span
               *ngIf="getRelicHolder(id)?.holderClanName === clanName && getRelicHolder(id)?.holderUsername"
               class="relic-holder"

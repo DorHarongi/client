@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserInformationService } from 'src/app/user-information/user-information.service';
 import { environment } from 'src/environments/environment';
-import { MAX_CLAN_MEMBERS, embassyMinimumLevelForClanJoin } from 'utils';
+import { MAX_CLAN_MEMBERS, embassyMinimumLevelForClanJoin, RELIC_NAMES } from 'utils';
 import {
   ClanDTO,
   ClanMemberRaidStatsDTO,
@@ -463,6 +463,10 @@ export class ClanPageComponent implements OnInit, OnDestroy {
 
   getRelicName(id: string): string {
     return RELIC_DISPLAY_NAMES[id] || id;
+  }
+
+  getRelicBonus(id: string): string {
+    return RELIC_NAMES.find(r => r.id === id)?.bonusLabel || '';
   }
 
   isClanRelic(id: string): boolean {

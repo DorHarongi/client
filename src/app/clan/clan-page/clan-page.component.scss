@@ -334,8 +334,9 @@ $topToolbarMinHeight: 75px;
 
 .relic-item {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 0 8px;
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -356,6 +357,11 @@ $topToolbarMinHeight: 75px;
 
 .relic-name {
     font-weight: 700;
+}
+
+.relic-bonus {
+    font-size: 0.85em;
+    color: var(--positive-color, #27ae60);
 }
 
 .relic-holder {
