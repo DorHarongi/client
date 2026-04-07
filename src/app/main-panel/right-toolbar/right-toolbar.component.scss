@@ -303,11 +303,11 @@ li {
     }
 
     #production.has-bonus, #villagePower.has-bonus {
-        overflow: visible;
-
         h5 {
             white-space: normal;
             font-size: 0.7rem;
+            min-width: 0;
+            overflow-wrap: break-word;
         }
     }
 }
