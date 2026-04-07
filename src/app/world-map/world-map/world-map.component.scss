@@ -214,6 +214,34 @@ $your-color: #90EE90;     // Green - your own villages
   display: block;
 }
 
+.map-grid-wrapper {
+  position: relative;
+}
+
+.map-loader-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--map-loader-bg, rgba(0, 0, 0, 0.35));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.map-loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--map-loader-track, rgba(255, 255, 255, 0.25));
+  border-top-color: var(--map-loader-accent, #fff);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .buttons {
   background-image: url(../../../assets/top-bg.png);
   border: 1px black solid;

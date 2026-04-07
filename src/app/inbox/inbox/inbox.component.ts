@@ -85,6 +85,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   username: string;
   attackReportsInPage: Array<AttackReport> = [];
   messagesInPage: Array<Message> = [];
+  dataLoading: boolean = true;
   attackReportPopupOpened: boolean = false;
   clickedAttackReport!: AttackReport;
   
@@ -205,17 +206,31 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   getAttackReports()
   {
+    this.dataLoading = true;
     this.subscription2 = this.http.get<any>(`${environment.apiUrl}/reports/attackReports/${this.username}/${this.page}`, 
-     ).subscribe((attackReports)=>{
-        this.attackReportsInPage = attackReports;
+     ).subscribe({
+        next: (attackReports) => {
+          this.attackReportsInPage = attackReports;
+          this.dataLoading = false;
+        },
+        error: () => {
+          this.dataLoading = false;
+        },
     });
   }
 
   getMessages()
   {
+    this.dataLoading = true;
     this.subscription4 = this.http.get<Message[]>(`${environment.apiUrl}/messages/${this.username}/page/${this.page}?type=messages`)
-      .subscribe((messages)=>{
-        this.messagesInPage = messages;
+      .subscribe({
+        next: (messages) => {
+          this.messagesInPage = messages;
+          this.dataLoading = false;
+        },
+        error: () => {
+          this.dataLoading = false;
+        },
       });
   }
 

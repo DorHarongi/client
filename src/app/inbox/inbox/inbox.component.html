@@ -31,7 +31,10 @@
             <td>{{getAttackResult(attackReport)}}</td>
             <td> {{attackReport.date | date:'d/MM/yyyy H:mm'}} </td>
         </tr>
-        <tr *ngIf="attackReportsInPage.length === 0">
+        <tr *ngIf="dataLoading">
+            <td colspan="3" class="center">Loading...</td>
+        </tr>
+        <tr *ngIf="!dataLoading && attackReportsInPage.length === 0">
             <td colspan="3" class="center">No battle reports</td>
         </tr>
     </table>
@@ -62,7 +65,10 @@
                 <span *ngIf="!hasActions(message)">-</span>
             </td>
         </tr>
-        <tr *ngIf="messagesInPage.length === 0">
+        <tr *ngIf="dataLoading">
+            <td colspan="4" class="center">Loading...</td>
+        </tr>
+        <tr *ngIf="!dataLoading && messagesInPage.length === 0">
             <td colspan="4" class="center">No messages</td>
         </tr>
     </table>

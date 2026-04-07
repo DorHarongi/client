@@ -25,14 +25,19 @@
             >
               <span class="arrow-left"></span>
             </button>
-            <app-map-grid
-              [gridCells]="gridCells"
-              [currentUsername]="currentUsername"
-              [currentUserClan]="currentUserClan"
-              [extraCellClassFn]="extraCellClassFn"
-              (cellClick)="onCellClick($event)"
-            >
-            </app-map-grid>
+            <div class="map-grid-wrapper">
+              <app-map-grid
+                [gridCells]="gridCells"
+                [currentUsername]="currentUsername"
+                [currentUserClan]="currentUserClan"
+                [extraCellClassFn]="extraCellClassFn"
+                (cellClick)="onCellClick($event)"
+              >
+              </app-map-grid>
+              <div class="map-loader-overlay" *ngIf="showMapLoader">
+                <span class="map-loader-spinner"></span>
+              </div>
+            </div>
             <button
               class="nav-arrow right"
               (click)="moveRight()"

@@ -94,7 +94,8 @@
 
       <div class="members-section">
         <h4>Members</h4>
-        <table class="members-table bordered">
+        <p *ngIf="!memberStatsLoaded" class="center">Loading members...</p>
+        <table class="members-table bordered" *ngIf="memberStatsLoaded">
           <tr>
             <th>Username</th>
             <th>Role</th>

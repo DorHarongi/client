@@ -50,6 +50,15 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   private boundTouchMove: (event: TouchEvent) => void;
   private boundTouchEnd: (event: TouchEvent) => void;
 
+  // Map loading state (delayed loader shows after 1s)
+  mapLoading: boolean = false;
+  showMapLoader: boolean = false;
+  private mapLoaderTimeout: any = null;
+
+  // Debounced map loading during minimap drag
+  private dragLoadTimeout: any = null;
+  private readonly DRAG_DEBOUNCE_MS = 300;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -93,7 +102,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     this.subscription1?.unsubscribe();
     this.subscription2?.unsubscribe();
     this.queryParamSub?.unsubscribe();
-    // Clean up drag event listeners
+    clearTimeout(this.mapLoaderTimeout);
+    clearTimeout(this.dragLoadTimeout);
     document.removeEventListener('mousemove', this.boundMouseMove);
     document.removeEventListener('mouseup', this.boundMouseUp);
     document.removeEventListener('touchmove', this.boundTouchMove);
@@ -101,6 +111,14 @@ export class WorldMapComponent implements OnInit, OnDestroy {
   }
 
   loadMapWindow(): void {
+    this.subscription1?.unsubscribe();
+
+    this.mapLoading = true;
+    clearTimeout(this.mapLoaderTimeout);
+    this.mapLoaderTimeout = setTimeout(() => {
+      if (this.mapLoading) this.showMapLoader = true;
+    }, 1000);
+
     this.subscription1 = this.worldMapService
       .getMapWindow(this.windowStartX, this.windowStartY)
       .subscribe((response: MapWindowResponse) => {
@@ -109,7 +127,17 @@ export class WorldMapComponent implements OnInit, OnDestroy {
         this.oases = response.oases || [];
         this.worldSize = response.worldSize;
         this.buildGrid();
+        this.mapLoading = false;
+        this.showMapLoader = false;
+        clearTimeout(this.mapLoaderTimeout);
       });
+  }
+
+  private debouncedLoadMapWindow(): void {
+    clearTimeout(this.dragLoadTimeout);
+    this.dragLoadTimeout = setTimeout(() => {
+      this.loadMapWindow();
+    }, this.DRAG_DEBOUNCE_MS);
   }
 
   loadMinimap(): void {
@@ -225,19 +253,19 @@ export class WorldMapComponent implements OnInit, OnDestroy {
     if (!this.isDragging || !this.minimapElement) return;
     event.preventDefault();
     this.updateMinimapPosition(event);
+    this.debouncedLoadMapWindow();
   }
 
   private onMinimapDragEnd(event: MouseEvent): void {
     if (!this.isDragging) return;
 
-    // Remove global listeners
     document.removeEventListener('mousemove', this.boundMouseMove);
     document.removeEventListener('mouseup', this.boundMouseUp);
 
     this.isDragging = false;
     this.minimapElement = null;
 
-    // Load the map window at the final position
+    clearTimeout(this.dragLoadTimeout);
     this.loadMapWindow();
   }
 
@@ -264,6 +292,7 @@ export class WorldMapComponent implements OnInit, OnDestroy {
       event.touches[0].clientX,
       event.touches[0].clientY
     );
+    this.debouncedLoadMapWindow();
   }
 
   private onMinimapTouchEnd(event: TouchEvent): void {
@@ -274,6 +303,8 @@ export class WorldMapComponent implements OnInit, OnDestroy {
 
     this.isDragging = false;
     this.minimapElement = null;
+
+    clearTimeout(this.dragLoadTimeout);
     this.loadMapWindow();
   }
 

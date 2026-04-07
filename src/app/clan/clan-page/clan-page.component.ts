@@ -72,6 +72,7 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   newDescription: string = '';
 
   memberRaidStats: ClanMemberRaidStatsDTO[] = [];
+  memberStatsLoaded: boolean = false;
 
   // Confirmation dialogs
   showLeaveConfirm = false;
@@ -147,12 +148,15 @@ export class ClanPageComponent implements OnInit, OnDestroy {
   }
 
   loadMemberRaidStats(): void {
+    this.memberStatsLoaded = false;
     this.clanService.getClanMemberRaidStats(this.clanName).subscribe({
       next: (stats) => {
         this.memberRaidStats = stats;
+        this.memberStatsLoaded = true;
       },
       error: () => {
         this.memberRaidStats = [];
+        this.memberStatsLoaded = true;
       },
     });
   }
