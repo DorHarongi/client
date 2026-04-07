@@ -29,7 +29,7 @@ interface RelicDoc {
 const RELIC_CENTERS: { id: string; x: number; y: number }[] = [
   { id: 'eternal_flame', x: 318, y: 109 },
   { id: 'chalice_of_ascension', x: 422, y: 146 },
-  { id: 'sigil_of_creation', x: 427, y: 240 },
+  { id: 'sigil_of_thunder', x: 427, y: 240 },
   { id: 'all_seeing_orb', x: 210, y: 239 },
   { id: 'apple_of_immortality', x: 215, y: 139 },
 ];
@@ -38,7 +38,7 @@ const RELIC_DISPLAY_NAMES: Record<string, string> = {
   eternal_flame: 'Eternal Flame',
   chalice_of_ascension: 'Chalice of Ascension',
   all_seeing_orb: 'All-Seeing Orb',
-  sigil_of_creation: 'Sigil of Creation',
+  sigil_of_thunder: 'Sigil of Thunder',
 };
 
 @Component({

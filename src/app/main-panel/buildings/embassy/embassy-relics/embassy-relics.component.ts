@@ -17,7 +17,7 @@ const RELIC_NAMES: Record<string, string> = {
   eternal_flame: 'Eternal Flame',
   chalice_of_ascension: 'Chalice of Ascension',
   all_seeing_orb: 'All-Seeing Orb',
-  sigil_of_creation: 'Sigil of Creation'
+  sigil_of_thunder: 'Sigil of Thunder'
 };
 
 @Component({

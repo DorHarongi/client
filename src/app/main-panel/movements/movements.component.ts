@@ -34,7 +34,7 @@ const RELIC_ICON_MAP: Record<string, string> = {
   eternal_flame: 'assets/flame.png',
   chalice_of_ascension: 'assets/chalice.png',
   all_seeing_orb: 'assets/orn.png',
-  sigil_of_creation: 'assets/sigil.png',
+  sigil_of_thunder: 'assets/sigil.png',
 };
 
 @Component({

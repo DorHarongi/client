@@ -5,10 +5,10 @@ const RELIC_ICON_MAP: Record<string, string> = {
   eternal_flame: 'assets/flame.png',
   chalice_of_ascension: 'assets/chalice.png',
   all_seeing_orb: 'assets/orn.png',
-  sigil_of_creation: 'assets/sigil.png',
+  sigil_of_thunder: 'assets/sigil.png',
 };
 
-const RELIC_IDS = ['apple_of_immortality', 'eternal_flame', 'chalice_of_ascension', 'all_seeing_orb', 'sigil_of_creation'];
+const RELIC_IDS = ['apple_of_immortality', 'eternal_flame', 'chalice_of_ascension', 'all_seeing_orb', 'sigil_of_thunder'];
 
 @Component({
   selector: 'app-relic-medallion',
