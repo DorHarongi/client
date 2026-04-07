@@ -310,10 +310,6 @@ li {
             font-size: 0.7rem;
         }
     }
-
-    #villagePower.has-bonus {
-        width: calc(70% - 7.5px);
-    }
 }
 
 @media (max-width: 480px) {
@@ -325,10 +321,6 @@ li {
 
     #villagePower {
         width: calc(50% - 5px);
-    }
-
-    #villagePower.has-bonus {
-        width: calc(70% - 5px);
     }
 
     h4 {
