@@ -197,33 +197,27 @@ export class MovementsComponent implements OnInit, OnDestroy {
   }
 
   getMovementName(movement: Movement, isFromVillage: boolean): string {
-    const multiVillage = this.villageCount > 1;
-
     if (movement.type === 'boss_attack') {
-      const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
-      return `${movement.targetVillageName}${from}`;
+      return `You [${movement.senderVillageName}] → ${movement.targetVillageName}`;
     }
     if (movement.type === 'spy') {
-      const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
       const label = (movement.spyCount || 1) > 1 ? 'Spies' : 'Spy';
-      return `${label}${from} → ${movement.targetUsername} [${movement.targetVillageName}]`;
+      return `${label} [${movement.senderVillageName}] → ${movement.targetUsername} [${movement.targetVillageName}]`;
     }
     if (movement.type === 'spy_return') {
       const dest = movement.targetVillageName || movement.senderVillageName;
-      const label = (movement.spyCount || 1) > 1 ? 'Spies returning' : 'Spy returning';
-      return dest ? `${label} → ${dest}` : label;
+      const label = (movement.spyCount || 1) > 1 ? 'Spies' : 'Spy';
+      return dest ? `${label} returning → You [${dest}]` : `${label} returning`;
     }
     if (movement.type === 'oasis_garrison') {
-      const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
-      return `Troops${from} → Oasis`;
+      return `Troops [${movement.senderVillageName}] → Oasis`;
     }
     if (movement.type === 'oasis_attack') {
-      const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
-      return `Troops${from} → Oasis`;
+      return `Troops [${movement.senderVillageName}] → Oasis`;
     }
     if (movement.type === 'oasis_return') {
       const dest = movement.targetVillageName || movement.senderVillageName;
-      return dest ? `Troops returning → ${dest}` : 'Troops returning';
+      return dest ? `Troops returning → You [${dest}]` : 'Troops returning';
     }
 
     if (movement.type === 'attack') {
@@ -246,14 +240,13 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
     if (movement.type === 'relic_transfer') {
       if (isFromVillage) {
-        const from = multiVillage ? ` [${movement.senderVillageName}]` : '';
-        return `Relic${from} → ${movement.targetUsername} [${movement.targetVillageName}]`;
+        return `Relic [${movement.senderVillageName}] → ${movement.targetUsername} [${movement.targetVillageName}]`;
       }
-      return `Relic from ${movement.senderUsername} [${movement.senderVillageName}] → ${movement.targetVillageName}`;
+      return `Relic from ${movement.senderUsername} [${movement.senderVillageName}] → You [${movement.targetVillageName}]`;
     }
     if (movement.type === 'return') {
       const dest = movement.targetVillageName || movement.senderVillageName;
-      return dest ? `Troops returning → ${dest}` : 'Troops returning';
+      return dest ? `Troops returning → You [${dest}]` : 'Troops returning';
     }
     return movement.type;
   }
