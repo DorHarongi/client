@@ -135,23 +135,11 @@
       </table>
     </div>
 
-    <div *ngIf="hasDefenderResources" class="oasis-resources-section">
-      <h5>Village Resources</h5>
-      <div class="resources-display">
-        <div class="resource-item">
-          <img src="../../../../assets/wood.jpg" class="resource-icon">
-          <span>{{ report.defenderResources!.wood | number }}</span>
-        </div>
-        <div class="resource-item">
-          <img src="../../../../assets/rock.jpg" class="resource-icon">
-          <span>{{ report.defenderResources!.stone | number }}</span>
-        </div>
-        <div class="resource-item">
-          <img src="../../../../assets/crop.jpg" class="resource-icon">
-          <span>{{ report.defenderResources!.crop | number }}</span>
-        </div>
-      </div>
-    </div>
+    <app-resources-amount
+      *ngIf="hasDefenderResources"
+      label="Village Resources:"
+      [resources]="report.defenderResources!">
+    </app-resources-amount>
   </div>
 
   <!-- Caught spy - attacker view (village) -->
