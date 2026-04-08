@@ -157,5 +157,5 @@
     <p *ngIf="isMultiSpy">{{ spySentCount }} enemy spies were intercepted at <a *ngIf="report.defenderVillageX != null" class="report-link" (click)="navigateToMap(report.defenderVillageX, report.defenderVillageY)">{{ report.defenderVillageName }}</a><span *ngIf="report.defenderVillageX == null">{{ report.defenderVillageName }}</span>. All spies have been eliminated.</p>
   </div>
 
-  <button id="back" class="buttons center" (click)="goBack()"> Back </button>
+  <button id="back" class="buttons center" style="margin-top: 20px;" (click)="goBack()"> Back </button>
 </div>
