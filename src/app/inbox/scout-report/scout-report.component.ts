@@ -59,6 +59,11 @@ export class ScoutReportComponent {
       (t.archers || 0) + (t.magicians || 0) + (t.horsemen || 0) + (t.catapults || 0) > 0;
   }
 
+  get hasDefenderResources(): boolean {
+    const r = this.report.defenderResources;
+    return !!r && ((r.wood || 0) + (r.stone || 0) + (r.crop || 0)) > 0;
+  }
+
   get isMultiSpy(): boolean {
     return (this.report.spySentCount || 0) > 1;
   }

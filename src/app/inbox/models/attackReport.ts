@@ -56,4 +56,6 @@ export interface AttackReport {
 
     spySentCount?: number;
     spyCaughtCount?: number;
+
+    defenderResources?: { wood: number; stone: number; crop: number };
 } 
