@@ -54,7 +54,6 @@ export class RightToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
   clanMagicians: number = 0;
   clanHorsemen: number = 0;
   clanCatapults: number = 0;
-  hasClan: boolean = false;
 
   totalAttack: number = 0;
   totalDefense: number = 0;
@@ -163,7 +162,6 @@ export class RightToolbarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.catapults = this.userInformationService.currentVillage.troops.catapults;
 
     // Update support troops (from clan members)
-    this.hasClan = !!this.userInformationService.userInformation.clanName;
     
     const clanTroops = this.userInformationService.currentVillage.clanTroops;
     if (clanTroops) {
