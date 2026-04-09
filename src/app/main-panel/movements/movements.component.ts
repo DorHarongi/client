@@ -28,6 +28,8 @@ interface Movement {
   relicId?: string;
   spyCount?: number;
   isOasis?: boolean;
+  originVillageName?: string;
+  oasisName?: string;
 }
 
 const RELIC_ICON_MAP: Record<string, string> = {
@@ -210,8 +212,11 @@ export class MovementsComponent implements OnInit, OnDestroy {
     }
     if (movement.type === 'spy_return') {
       const label = (movement.spyCount || 1) > 1 ? 'Spies' : 'Spy';
-      const dest = movement.senderVillageName;
-      return dest ? `${label} returning → You [${dest}]` : `${label} returning`;
+      const from = movement.targetVillageName;
+      const to = movement.senderVillageName;
+      if (from && to) return `${label} returning [${from}] → You [${to}]`;
+      if (to) return `${label} returning → You [${to}]`;
+      return `${label} returning`;
     }
     if (movement.type === 'oasis_garrison') {
       return `Troops [${movement.senderVillageName}] → Oasis`;
@@ -220,8 +225,11 @@ export class MovementsComponent implements OnInit, OnDestroy {
       return `Troops [${movement.senderVillageName}] → Oasis`;
     }
     if (movement.type === 'oasis_return') {
-      const dest = movement.targetVillageName || movement.senderVillageName;
-      return dest ? `Troops returning → You [${dest}]` : 'Troops returning';
+      const from = movement.oasisName;
+      const to = movement.targetVillageName || movement.senderVillageName;
+      if (from && to) return `Troops returning [${from}] → You [${to}]`;
+      if (to) return `Troops returning → You [${to}]`;
+      return 'Troops returning';
     }
 
     if (movement.type === 'attack') {
@@ -249,8 +257,11 @@ export class MovementsComponent implements OnInit, OnDestroy {
       return `Relic from ${movement.senderUsername} [${movement.senderVillageName}] → You [${movement.targetVillageName}]`;
     }
     if (movement.type === 'return') {
-      const dest = movement.targetVillageName || movement.senderVillageName;
-      return dest ? `Troops returning → You [${dest}]` : 'Troops returning';
+      const from = movement.originVillageName;
+      const to = movement.targetVillageName || movement.senderVillageName;
+      if (from && to) return `Troops returning [${from}] → You [${to}]`;
+      if (to) return `Troops returning → You [${to}]`;
+      return 'Troops returning';
     }
     return movement.type;
   }
