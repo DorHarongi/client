@@ -229,8 +229,12 @@
                 </div>
             </td>
             <td *ngIf="showSpies">
-                <div class="attackDefence attack"></div>
-                <div class="attackDefence"></div>
+                <div class="attackDefence attack" style="visibility: hidden;">
+                    <img class="attackDefenceIcons" src="../../../../assets/battle.png">0
+                </div>
+                <div class="attackDefence" style="visibility: hidden;">
+                    <img class="attackDefenceIcons" src="../../../../assets/shield.png">0
+                </div>
                 <div class="attackDefence speed-stat">
                     <img class="attackDefenceIcons" src="../../../../assets/speed.png">
                     {{spyMovementSpeed}}
